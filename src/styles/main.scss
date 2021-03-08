@@ -1,0 +1,14 @@
+@import "./theme";
+
+:root,
+html,
+body {
+  background: $dark;
+  color: $light;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

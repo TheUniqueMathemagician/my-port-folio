@@ -1,8 +1,10 @@
+import Main from "./pages/Main";
+
 const App = () => {
   return (
     <div>
       <header>Header</header>
-      <main>Main</main>
+      <Main></Main>
       <footer>Footer</footer>
     </div>
   );
