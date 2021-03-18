@@ -1,4 +1,7 @@
-$dark: #10141c;
-$medium: lighten($dark, 50);
-$light: lighten($dark, 90);
-$primary: #1b97bd;
+$dark: #333333;
+$light: white;
+
+$primary: #bec0ff;
+$secondary: #ff82ce;
+
+$linear: linear-gradient(90deg, $secondary 0%, $primary 100%);

@@ -1,11 +1,10 @@
 import { StrictMode } from "react";
 import { render } from "react-dom";
-import App from "./App";
-import "./styles/main.scss";
+import "./styles/global.scss";
 
 render(
   <StrictMode>
-    <App />
+    <main></main>
   </StrictMode>,
   document.getElementById("root")
 );
