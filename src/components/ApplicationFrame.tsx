@@ -1,4 +1,4 @@
-import { useState, DragEvent, useRef, ElementType, useEffect } from "react";
+import { useState, useRef, ElementType, useEffect, useCallback } from "react";
 import style from "styled-components";
 
 const Card = style.div`
@@ -42,6 +42,13 @@ const ApplicationFrame: ElementType<State> = ({ children }) => {
 
   const cardRef = useRef<HTMLDivElement>(null);
 
+  const dropHandler = useCallback((e: globalThis.DragEvent) => {
+    setPosition({
+      x: e.pageX - offset.x,
+      y: e.pageY - offset.y,
+    });
+  }, [offset])
+  
   const dragStartHandler = (e: React.DragEvent) => {
     const card = cardRef.current;
     if (!card) return;
@@ -52,22 +59,15 @@ const ApplicationFrame: ElementType<State> = ({ children }) => {
     return false;
   };
 
-  const dropHandler = (e: globalThis.DragEvent) => {
-    setPosition({
-      x: e.pageX - offset.x,
-      y: e.pageY - offset.y,
-    });
-  };
-
   useEffect(() => {
     document.addEventListener("drop", dropHandler);
-  });
+  },[dropHandler]);
 
   useEffect(() => {
     return () => {
       document.removeEventListener("drop", dropHandler);
     };
-  });
+  },[dropHandler]);
 
   return (
     <Card
