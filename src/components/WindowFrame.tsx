@@ -22,7 +22,7 @@ const WindowFrame: ElementType<State> = ({ children }) => {
   const [boundaries, setBoundaries] = useState({ x1: 0, y1: 0, x2: 0, y2: 0 });
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const resizeHandler = useCallback((e: globalThis.UIEvent) => {
+  const resizeHandler = useCallback(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     setBoundaries({
@@ -34,6 +34,7 @@ const WindowFrame: ElementType<State> = ({ children }) => {
   }, []);
 
   useLayoutEffect(() => {
+    resizeHandler();
     window.addEventListener("resize", resizeHandler);
     return () => {
       window.removeEventListener("resize", resizeHandler);

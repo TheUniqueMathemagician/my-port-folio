@@ -36,6 +36,10 @@ const RedButton = style.button`
   outline: none;
   cursor: pointer;
   box-shadow: 0 0 6px 0 #00000033;
+  :active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
+    transform: scale(0.9);
+  }
 `;
 
 const OrangeButton = style.button`
@@ -48,6 +52,10 @@ const OrangeButton = style.button`
   outline: none;
   cursor: pointer;
   box-shadow: 0 0 6px 0 #00000033;
+  :active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
+    transform: scale(0.9);
+  }
 `;
 
 const GreenButton = style.button`
@@ -60,6 +68,10 @@ const GreenButton = style.button`
   outline: none;
   cursor: pointer;
   box-shadow: 0 0 6px 0 #00000033;
+  :active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
+    transform: scale(0.9);
+  }
 `;
 
 const Background = style.div`
@@ -69,9 +81,13 @@ const Background = style.div`
   position: relative;
 `;
 
-interface State {}
+interface State {
+  onRed?: (e: MouseEvent) => void;
+  onOrange?: (e: MouseEvent) => void;
+  onGreen?: (e: MouseEvent) => void;
+}
 
-const Window: ElementType<State> = ({ children }) => {
+const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -81,7 +97,7 @@ const Window: ElementType<State> = ({ children }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  const MouseDownHandler = useCallback((e: MouseEvent) => {
+  const mouseDownHandler = useCallback((e: MouseEvent) => {
     e.preventDefault();
 
     const card = cardRef.current;
@@ -94,8 +110,7 @@ const Window: ElementType<State> = ({ children }) => {
 
     setDragging(true);
   }, []);
-
-  const MouseMoveHandler = useCallback(
+  const mouseMoveHandler = useCallback(
     (e: globalThis.MouseEvent) => {
       e.preventDefault();
 
@@ -124,31 +139,61 @@ const Window: ElementType<State> = ({ children }) => {
     },
     [offset, frameContext, headerRef]
   );
-
-  const MouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
+  const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
     document.body.style.cursor = "";
     e.preventDefault();
     setDragging(false);
   }, []);
 
+  const redActionHandler = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (onRed) {
+        onRed(e);
+      }
+    },
+    [onRed]
+  );
+  const orangeActionHandler = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (onOrange) {
+        onOrange(e);
+      }
+    },
+    [onOrange]
+  );
+  const greenActionHandler = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (onGreen) {
+        onGreen(e);
+      }
+    },
+    [onGreen]
+  );
+
   useLayoutEffect(() => {
     if (dragging) {
-      document.addEventListener("mousemove", MouseMoveHandler);
-      document.addEventListener("mouseup", MouseUpHandler);
+      document.addEventListener("mousemove", mouseMoveHandler);
+      document.addEventListener("mouseup", mouseUpHandler);
     } else {
-      document.removeEventListener("mousemove", MouseMoveHandler);
-      document.removeEventListener("mouseup", MouseUpHandler);
+      document.removeEventListener("mousemove", mouseMoveHandler);
+      document.removeEventListener("mouseup", mouseUpHandler);
     }
     return () => {
       if (dragging) {
-        document.addEventListener("mousemove", MouseMoveHandler);
-        document.addEventListener("mouseup", MouseUpHandler);
+        document.addEventListener("mousemove", mouseMoveHandler);
+        document.addEventListener("mouseup", mouseUpHandler);
       } else {
-        document.removeEventListener("mousemove", MouseMoveHandler);
-        document.removeEventListener("mouseup", MouseUpHandler);
+        document.removeEventListener("mousemove", mouseMoveHandler);
+        document.removeEventListener("mouseup", mouseUpHandler);
       }
     };
-  }, [dragging, MouseMoveHandler, MouseUpHandler]);
+  }, [dragging, mouseMoveHandler, mouseUpHandler]);
 
   return (
     <Card
@@ -161,15 +206,15 @@ const Window: ElementType<State> = ({ children }) => {
       draggable="false"
     >
       <Header
-        onMouseDown={MouseDownHandler}
+        onMouseDown={mouseDownHandler}
         style={{ cursor: dragging ? "grabbing" : "grab" }}
         onDrag={() => false}
         draggable="false"
         ref={headerRef}
       >
-        <RedButton></RedButton>
-        <OrangeButton></OrangeButton>
-        <GreenButton></GreenButton>
+        <RedButton onClick={(e) => redActionHandler(e)}></RedButton>
+        <OrangeButton onClick={(e) => orangeActionHandler(e)}></OrangeButton>
+        <GreenButton onClick={(e) => greenActionHandler(e)}></GreenButton>
       </Header>
       <Background>{children}</Background>
     </Card>
