@@ -1,34 +1,45 @@
-import { createContext, ElementType, useCallback, useEffect } from "react";
+import {
+  createContext,
+  ElementType,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
-const context = createContext({ dragging: false });
+const context = createContext({ x1: 0, y1: 0, x2: 0, y2: 0 });
 
 interface State {}
 
 const WindowFrame: ElementType<State> = ({ children }) => {
-  const MouseMoveHandler = useCallback((e: globalThis.MouseEvent) => {
-    // console.log("move");
+  const [boundaries, setBoundaries] = useState({ x1: 0, y1: 0, x2: 0, y2: 0 });
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const resizeHandler = useCallback((e: globalThis.UIEvent) => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    setBoundaries({
+      x1: wrapper.offsetLeft,
+      x2: wrapper.offsetLeft + wrapper.clientWidth,
+      y1: wrapper.offsetTop,
+      y2: wrapper.offsetTop + wrapper.clientHeight,
+    });
   }, []);
 
-  const MouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
-    // console.log("up");
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("mousemove", MouseMoveHandler);
-    document.addEventListener("mouseup", MouseUpHandler);
+  useLayoutEffect(() => {
+    window.addEventListener("resize", resizeHandler);
     return () => {
-      document.removeEventListener("mousemove", MouseMoveHandler);
-      document.removeEventListener("mouseup", MouseUpHandler);
+      window.removeEventListener("resize", resizeHandler);
     };
-  }, [MouseMoveHandler, MouseUpHandler]);
+  }, [resizeHandler]);
 
   return (
-    <div>
-      <context.Provider value={{ dragging: false }}>
-        {children}
-      </context.Provider>
+    <div ref={wrapperRef} style={{ height: "100%" }}>
+      <context.Provider value={boundaries}>{children}</context.Provider>
     </div>
   );
 };
 
 export default WindowFrame;
+
+export { context };

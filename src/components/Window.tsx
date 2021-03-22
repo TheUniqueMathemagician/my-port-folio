@@ -2,12 +2,14 @@ import {
   ElementType,
   MouseEvent,
   useCallback,
+  useContext,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 
 import style from "styled-components";
+import { context as FrameContext } from "./WindowFrame";
 
 const Card = style.div`
   position: fixed;
@@ -74,10 +76,12 @@ const Window: ElementType<State> = ({ children }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
 
+  const frameContext = useContext(FrameContext);
+
   const cardRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const MouseDownHandler = useCallback((e: MouseEvent) => {
-    console.log("down");
     e.preventDefault();
 
     const card = cardRef.current;
@@ -93,19 +97,36 @@ const Window: ElementType<State> = ({ children }) => {
 
   const MouseMoveHandler = useCallback(
     (e: globalThis.MouseEvent) => {
-      console.log("move");
       e.preventDefault();
 
-      setPosition({
-        x: e.pageX - offset.x,
-        y: e.pageY - offset.y,
-      });
+      document.body.style.cursor = "grabbing";
+
+      const header = headerRef.current;
+      if (!header) return;
+
+      let x = e.pageX - offset.x;
+      let y = e.pageY - offset.y;
+
+      if (x < frameContext.x1) {
+        x = frameContext.x1;
+      }
+      if (y < frameContext.y1) {
+        y = frameContext.y1;
+      }
+      if (x + header.clientWidth > frameContext.x2) {
+        x = frameContext.x2 - header.clientWidth;
+      }
+      if (y + header.clientHeight > frameContext.y2) {
+        y = frameContext.y2 - header.clientHeight;
+      }
+
+      setPosition({ x, y });
     },
-    [offset]
+    [offset, frameContext, headerRef]
   );
 
   const MouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
-    console.log("up");
+    document.body.style.cursor = "";
     e.preventDefault();
     setDragging(false);
   }, []);
@@ -144,6 +165,7 @@ const Window: ElementType<State> = ({ children }) => {
         style={{ cursor: dragging ? "grabbing" : "grab" }}
         onDrag={() => false}
         draggable="false"
+        ref={headerRef}
       >
         <RedButton></RedButton>
         <OrangeButton></OrangeButton>

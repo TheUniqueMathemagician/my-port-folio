@@ -5,6 +5,10 @@ import WindowFrame from "../components/WindowFrame";
 const Footer = style.footer`
   background-color: var(--dark, #3333337F);
   min-height: 40px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 const Main = () => {
