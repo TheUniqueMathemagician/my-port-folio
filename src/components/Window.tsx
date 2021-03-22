@@ -12,7 +12,7 @@ import style from "styled-components";
 import { context as FrameContext } from "./WindowFrame";
 
 const Card = style.div`
-  position: fixed;
+  position: absolute;
   transition: opacity .3s ease;
   backdrop-filter: blur(6px);
   border-radius: 16px;

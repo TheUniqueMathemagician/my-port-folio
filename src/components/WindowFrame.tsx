@@ -7,6 +7,13 @@ import {
   useState,
 } from "react";
 
+import style from "styled-components";
+
+const Frame = style.div`
+  position: relative;
+  overflow: hidden;
+`;
+
 const context = createContext({ x1: 0, y1: 0, x2: 0, y2: 0 });
 
 interface State {}
@@ -34,9 +41,9 @@ const WindowFrame: ElementType<State> = ({ children }) => {
   }, [resizeHandler]);
 
   return (
-    <div ref={wrapperRef} style={{ height: "100%" }}>
+    <Frame ref={wrapperRef} style={{ height: "100%" }}>
       <context.Provider value={boundaries}>{children}</context.Provider>
-    </div>
+    </Frame>
   );
 };
 
