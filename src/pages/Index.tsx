@@ -1,5 +1,6 @@
 import style from "styled-components";
-import ApplicationFrame from "../components/ApplicationFrame";
+import Window from "../components/Window";
+import WindowFrame from "../components/WindowFrame";
 
 const Footer = style.footer`
   background-color: var(--dark, #3333337F);
@@ -10,7 +11,11 @@ const Main = () => {
   return (
     <>
       <main onDragOver={(e) => e.preventDefault()}>
-        <ApplicationFrame>Coucou</ApplicationFrame>
+        <WindowFrame>
+          <Window></Window>
+          <Window></Window>
+          <Window></Window>
+        </WindowFrame>
       </main>
       <Footer></Footer>
     </>
