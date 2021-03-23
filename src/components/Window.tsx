@@ -98,6 +98,8 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
   const headerRef = useRef<HTMLDivElement>(null);
 
   const mouseDownHandler = useCallback((e: MouseEvent) => {
+    if (e.button !== 0) return;
+
     e.preventDefault();
 
     const card = cardRef.current;
