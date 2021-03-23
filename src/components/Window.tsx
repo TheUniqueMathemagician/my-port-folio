@@ -97,7 +97,7 @@ const Window: ElementType<Props> = ({
         }
       }
 
-      if (e.pageX + 1 <= boundariesContext.x1) {
+      if (e.pageX - 1 <= boundariesContext.x1) {
         position.x = 0;
         position.y = 0;
         setSnap("left");
@@ -105,7 +105,7 @@ const Window: ElementType<Props> = ({
         position.x = "50%";
         position.y = 0;
         setSnap("right");
-      } else if (e.pageY + 1 <= boundariesContext.y1) {
+      } else if (e.pageY - 1 <= boundariesContext.y1) {
         position.x = 0;
         position.y = 0;
         setSnap("top");
@@ -128,8 +128,11 @@ const Window: ElementType<Props> = ({
       if (onRed) {
         onRed(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onRed]
+    [onRed, sendToFront]
   );
   const orangeActionHandler = useCallback(
     (e: MouseEvent) => {
@@ -138,8 +141,11 @@ const Window: ElementType<Props> = ({
       if (onOrange) {
         onOrange(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onOrange]
+    [onOrange, sendToFront]
   );
   const greenActionHandler = useCallback(
     (e: MouseEvent) => {
@@ -148,8 +154,11 @@ const Window: ElementType<Props> = ({
       if (onGreen) {
         onGreen(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onGreen]
+    [onGreen, sendToFront]
   );
 
   useLayoutEffect(() => {
