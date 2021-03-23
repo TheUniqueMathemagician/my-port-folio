@@ -2,7 +2,7 @@
   position: absolute;
   display: grid;
   grid-template-rows: auto 1fr;
-  transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+  transition: width 0.3s ease, height 0.3s ease;
   backdrop-filter: blur(6px);
   border-radius: 16px;
   box-shadow: 0 0 20px 4px #33333333;
@@ -17,6 +17,7 @@
     background: #ffffff7f;
     border-radius: 0 0 16px 16px;
     position: relative;
+    color: #333333;
   }
   button {
     height: 14px;

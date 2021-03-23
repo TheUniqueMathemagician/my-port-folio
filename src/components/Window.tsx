@@ -9,12 +9,14 @@ import {
 } from "react";
 
 import styles from "./Window.module.scss";
-import { context as FrameContext } from "./WindowFrame";
+import { BoundariesContext } from "./WindowFrame";
 
 interface Props {
   onRed?: (e: MouseEvent) => void;
   onOrange?: (e: MouseEvent) => void;
   onGreen?: (e: MouseEvent) => void;
+  sendToFront?: () => void;
+  zIndex?: number;
 }
 
 type SnapState = null | "top" | "left" | "right";
@@ -29,9 +31,16 @@ interface OffsetState {
   y: number;
 }
 
-const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
-  const [minHeight, setMinHeight] = useState<number>(300);
-  const [minWidth, setMinWidth] = useState<number>(500);
+const Window: ElementType<Props> = ({
+  children,
+  onRed,
+  onOrange,
+  onGreen,
+  sendToFront,
+  zIndex,
+}) => {
+  const [minHeight, setMinHeight] = useState<number>(0);
+  const [minWidth, setMinWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(300);
   const [width, setWidth] = useState<number>(500);
   const [snap, setSnap] = useState<SnapState>(null);
@@ -39,18 +48,20 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
   const [position, setPosition] = useState<PositionState>({ x: 0, y: 0 });
   const [dragging, setDragging] = useState<boolean>(false);
 
-  const frameContext = useContext(FrameContext);
+  const boundariesContext = useContext(BoundariesContext);
 
   const windowRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
+  const mainMouseDownHandler = useCallback(() => {
+    if (!sendToFront) return;
+    sendToFront();
+  }, [sendToFront]);
   const mouseDownHandler = useCallback((e: MouseEvent) => {
     if (e.button !== 0) return;
-
-    e.preventDefault();
-
     const card = windowRef.current;
     if (!card) return;
+    e.preventDefault();
 
     setOffset({
       x: e.pageX - parseInt(card.style.left),
@@ -72,29 +83,29 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
       };
 
       if (!snap) {
-        if (position.x < frameContext.x1 - header.clientWidth + 10) {
-          position.x = frameContext.x1 - header.clientWidth + 10;
+        if (position.x < boundariesContext.x1 - header.clientWidth + 10) {
+          position.x = boundariesContext.x1 - header.clientWidth + 10;
         }
-        if (position.y < frameContext.y1) {
-          position.y = frameContext.y1;
+        if (position.y < boundariesContext.y1) {
+          position.y = boundariesContext.y1;
         }
-        if (position.x > frameContext.x2 - 10) {
-          position.x = frameContext.x2 - 10;
+        if (position.x > boundariesContext.x2 - 10) {
+          position.x = boundariesContext.x2 - 10;
         }
-        if (position.y > frameContext.y2 - header.clientHeight) {
-          position.y = frameContext.y2 - header.clientHeight;
+        if (position.y > boundariesContext.y2 - header.clientHeight) {
+          position.y = boundariesContext.y2 - header.clientHeight;
         }
       }
 
-      if (e.pageX + 1 <= frameContext.x1) {
+      if (e.pageX + 1 <= boundariesContext.x1) {
         position.x = 0;
         position.y = 0;
         setSnap("left");
-      } else if (e.pageX + 1 >= frameContext.x2) {
+      } else if (e.pageX + 1 >= boundariesContext.x2) {
         position.x = "50%";
         position.y = 0;
         setSnap("right");
-      } else if (e.pageY + 1 <= frameContext.y1) {
+      } else if (e.pageY + 1 <= boundariesContext.y1) {
         position.x = 0;
         position.y = 0;
         setSnap("top");
@@ -104,7 +115,7 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
 
       setPosition(position);
     },
-    [offset, frameContext, headerRef, snap]
+    [offset, boundariesContext, headerRef, snap]
   );
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
     e.preventDefault();
@@ -167,7 +178,7 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
       };
       setOffset(offset);
     } else {
-      window.style.transition = "top 0.3s ease, left 0.3s ease";
+      window.style.transition = "top 0.2s ease, left 0.2s ease";
     }
   }, [snap, width]);
 
@@ -175,6 +186,7 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
     <section
       className={styles.window}
       style={{
+        zIndex,
         top: position.y,
         left: position.x,
         minHeight,
@@ -185,6 +197,7 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
       ref={windowRef}
       onDragStart={() => false}
       draggable="false"
+      onMouseDown={mainMouseDownHandler}
     >
       <div
         className={styles.header}
@@ -201,16 +214,19 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
           className={styles.red}
           style={{ pointerEvents: dragging ? "none" : "all" }}
           onClick={(e) => redActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
         ></button>
         <button
           className={styles.orange}
           style={{ pointerEvents: dragging ? "none" : "all" }}
           onClick={(e) => orangeActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
         ></button>
         <button
           className={styles.green}
           style={{ pointerEvents: dragging ? "none" : "all" }}
           onClick={(e) => greenActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
         ></button>
       </div>
       <div

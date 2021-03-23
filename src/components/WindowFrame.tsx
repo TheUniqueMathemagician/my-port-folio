@@ -1,20 +1,45 @@
 import {
+  Children,
+  cloneElement,
   createContext,
   ElementType,
+  ReactElement,
+  isValidElement,
   useCallback,
   useLayoutEffect,
   useRef,
   useState,
+  useEffect,
 } from "react";
 
 import styles from "./WindowFrame.module.scss";
 
-const context = createContext({ x1: 0, y1: 0, x2: 0, y2: 0 });
+interface BoundariesState {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+const BoundariesContext = createContext<BoundariesState>({
+  x1: 0,
+  y1: 0,
+  x2: 0,
+  y2: 0,
+});
 
-interface State {}
+interface Props {}
 
-const WindowFrame: ElementType<State> = ({ children }) => {
-  const [boundaries, setBoundaries] = useState({ x1: 0, y1: 0, x2: 0, y2: 0 });
+const WindowFrame: ElementType<Props> = ({ children }) => {
+  const [boundaries, setBoundaries] = useState<BoundariesState>({
+    x1: 0,
+    y1: 0,
+    x2: 0,
+    y2: 0,
+  });
+  const [zIndex, setZIndex] = useState<number[]>(
+    Children.map(children, (_, i) => i) ?? []
+  );
+
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const resizeHandler = useCallback(() => {
@@ -36,13 +61,29 @@ const WindowFrame: ElementType<State> = ({ children }) => {
     };
   }, [resizeHandler]);
 
+  useEffect(() => {
+    setZIndex(Children.map(children, (_, i) => i) ?? []);
+  }, [children]);
+
   return (
     <div className={styles["window-frame"]} ref={wrapperRef}>
-      <context.Provider value={boundaries}>{children}</context.Provider>
+      <BoundariesContext.Provider value={boundaries}>
+        {Children.map(children, (child, i) => {
+          if (!isValidElement(child)) return;
+          return cloneElement(child as ReactElement<any>, {
+            zIndex: zIndex.indexOf(i),
+            sendToFront: () => {
+              const _zIndex = [...zIndex];
+              _zIndex.push(_zIndex.splice(_zIndex.indexOf(i), 1)[0]);
+              setZIndex(_zIndex);
+            },
+          });
+        })}
+      </BoundariesContext.Provider>
     </div>
   );
 };
 
 export default WindowFrame;
 
-export { context };
+export { BoundariesContext };
