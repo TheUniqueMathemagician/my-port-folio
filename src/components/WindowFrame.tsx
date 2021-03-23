@@ -7,12 +7,7 @@ import {
   useState,
 } from "react";
 
-import style from "styled-components";
-
-const Frame = style.div`
-  position: relative;
-  overflow: hidden;
-`;
+import styles from "./WindowFrame.module.scss";
 
 const context = createContext({ x1: 0, y1: 0, x2: 0, y2: 0 });
 
@@ -42,9 +37,9 @@ const WindowFrame: ElementType<State> = ({ children }) => {
   }, [resizeHandler]);
 
   return (
-    <Frame ref={wrapperRef} style={{ height: "100%" }}>
+    <div className={styles["window-frame"]} ref={wrapperRef}>
       <context.Provider value={boundaries}>{children}</context.Provider>
-    </Frame>
+    </div>
   );
 };
 

@@ -8,78 +8,8 @@ import {
   useState,
 } from "react";
 
-import style from "styled-components";
+import styles from "./Window.module.scss";
 import { context as FrameContext } from "./WindowFrame";
-
-const Card = style.div`
-  position: absolute;
-  transition: opacity .3s ease;
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-`;
-
-const Header = style.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 8px;
-  background: #3333337F;
-  border-radius: 16px 16px 0 0;
-`;
-
-const RedButton = style.button`
-  background: #FF5853;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const OrangeButton = style.button`
-  background: #FFBC40;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const GreenButton = style.button`
-  background: #45D97E;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const Background = style.div`
-  background: #ffffff7f;
-  border-radius: 0 0 16px 16px;
-  min-height: 500px;
-  position: relative;
-`;
 
 interface State {
   onRed?: (e: MouseEvent) => void;
@@ -88,6 +18,9 @@ interface State {
 }
 
 const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
+  const minHeight = 300;
+  const minWidth = 500;
+
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -124,16 +57,16 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
       let x = e.pageX - offset.x;
       let y = e.pageY - offset.y;
 
-      if (x < frameContext.x1) {
-        x = frameContext.x1;
+      if (x < frameContext.x1 - header.clientWidth + 10) {
+        x = frameContext.x1 - header.clientWidth + 10;
       }
-      if (y < frameContext.y1) {
-        y = frameContext.y1;
+      if (y < frameContext.y1 - header.clientHeight + 10) {
+        y = frameContext.y1 - header.clientHeight + 10;
       }
-      if (x + header.clientWidth > frameContext.x2) {
-        x = frameContext.x2 - header.clientWidth;
+      if (x > frameContext.x2 - 10) {
+        x = frameContext.x2 - 10;
       }
-      if (y + header.clientHeight > frameContext.y2) {
+      if (y > frameContext.y2 - header.clientHeight) {
         y = frameContext.y2 - header.clientHeight;
       }
 
@@ -198,28 +131,44 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
   }, [dragging, mouseMoveHandler, mouseUpHandler]);
 
   return (
-    <Card
+    <section
+      className={styles.window}
       style={{
         top: position.y,
         left: position.x,
+        minHeight,
+        minWidth,
       }}
       ref={cardRef}
       onDragStart={() => false}
       draggable="false"
     >
-      <Header
+      <div
+        className={styles.header}
         onMouseDown={mouseDownHandler}
         style={{ cursor: dragging ? "grabbing" : "grab" }}
         onDrag={() => false}
         draggable="false"
         ref={headerRef}
       >
-        <RedButton onClick={(e) => redActionHandler(e)}></RedButton>
-        <OrangeButton onClick={(e) => orangeActionHandler(e)}></OrangeButton>
-        <GreenButton onClick={(e) => greenActionHandler(e)}></GreenButton>
-      </Header>
-      <Background>{children}</Background>
-    </Card>
+        <button
+          className={styles.red}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => redActionHandler(e)}
+        ></button>
+        <button
+          className={styles.orange}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => orangeActionHandler(e)}
+        ></button>
+        <button
+          className={styles.green}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => greenActionHandler(e)}
+        ></button>
+      </div>
+      <div className={styles.background}>{children}</div>
+    </section>
   );
 };
 
