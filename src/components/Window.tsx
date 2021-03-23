@@ -3,7 +3,6 @@ import {
   MouseEvent,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -143,6 +142,7 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
   );
 
   useLayoutEffect(() => {
+    document.body.style.cursor = dragging ? "grabbing" : "";
     document.removeEventListener("mousemove", mouseMoveHandler);
     document.removeEventListener("mouseup", mouseUpHandler);
     if (dragging) {
@@ -150,19 +150,24 @@ const Window: ElementType<Props> = ({ children, onRed, onOrange, onGreen }) => {
       document.addEventListener("mouseup", mouseUpHandler);
     }
     return () => {
+      document.body.style.cursor = dragging ? "grabbing" : "";
       document.removeEventListener("mousemove", mouseMoveHandler);
       document.removeEventListener("mouseup", mouseUpHandler);
     };
   }, [dragging, mouseMoveHandler, mouseUpHandler]);
   useLayoutEffect(() => {
     const header = headerRef.current;
-    if (!header) return;
+    const window = windowRef.current;
+    if (!header || !window) return;
     if (!snap) {
+      window.style.transition = "";
       const offset: OffsetState = {
         x: width / 2,
         y: header.clientHeight / 2,
       };
       setOffset(offset);
+    } else {
+      window.style.transition = "top 0.3s ease, left 0.3s ease";
     }
   }, [snap, width]);
 
