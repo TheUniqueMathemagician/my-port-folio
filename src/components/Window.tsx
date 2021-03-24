@@ -3,7 +3,6 @@ import {
   MouseEvent,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState
@@ -27,7 +26,7 @@ enum SnapState {
   right
 }
 
-type Position = "" | number | "50%" | "100%";
+type Position = null | number | "50%" | "100%";
 interface PositionState {
   bottom: Position;
   left: Position;
@@ -48,6 +47,12 @@ const Window: ElementType<Props> = ({
   sendToFront,
   zIndex
 }) => {
+  // Locals
+
+  const borderOffset = 16;
+
+  // States
+
   const [minHeight, setMinHeight] = useState<number>(500);
   const [minWidth, setMinWidth] = useState<number>(300);
   const [height, setHeight] = useState<number>(300);
@@ -55,69 +60,49 @@ const Window: ElementType<Props> = ({
   const [snap, setSnap] = useState<SnapState>(SnapState.none);
   const [offset, setOffset] = useState<OffsetState>({ x: 0, y: 0 });
   const [position, setPosition] = useState<PositionState>({
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0
+    bottom: null,
+    left: null,
+    right: null,
+    top: null
   });
   const [dragging, setDragging] = useState<boolean>(false);
 
+  // Contexts
+
   const boundariesContext = useContext(BoundariesContext);
+
+  // Refs
 
   const windowRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    console.log("reloaded");
-  });
+  // Callbacks
 
   const mainMouseDownHandler = useCallback(() => {
     if (!sendToFront) return;
     sendToFront();
   }, [sendToFront]);
+
   const mouseDownHandler = useCallback((e: MouseEvent) => {
     if (e.button !== 0) return;
-    const card = windowRef.current;
-    if (!card) return;
+    const window = windowRef.current;
+    if (!window) return;
     e.preventDefault();
 
     setOffset({
-      x: e.pageX - (parseInt(card.style.left) ?? 0),
-      y: e.pageY - (parseInt(card.style.top) ?? 0)
+      x: e.pageX - (parseInt(window.style.left) || 0),
+      y: e.pageY - (parseInt(window.style.top) || 0)
     });
 
     setDragging(true);
   }, []);
+
   const mouseMoveHandler = useCallback(
     (e: globalThis.MouseEvent) => {
-      e.preventDefault();
-
       const header = headerRef.current;
       if (!header) return;
 
-      let _position: PositionState = {
-        left: "",
-        top: "",
-        right: "",
-        bottom: ""
-      };
-
-      if (!snap) {
-        _position.left = e.pageX - offset.x;
-        _position.top = e.pageY - offset.y;
-        if (_position.left < boundariesContext.x1 - header.clientWidth + 10) {
-          _position.left = boundariesContext.x1 - header.clientWidth + 10;
-        }
-        if (_position.top < boundariesContext.y1) {
-          _position.top = boundariesContext.y1;
-        }
-        if (_position.top > boundariesContext.x2 - 10) {
-          _position.top = boundariesContext.x2 - 10;
-        }
-        if (_position.top > boundariesContext.y2 - header.clientHeight) {
-          _position.top = boundariesContext.y2 - header.clientHeight;
-        }
-      }
+      e.preventDefault();
 
       if (e.pageX - 1 <= boundariesContext.x1) {
         setSnap(SnapState.left);
@@ -126,17 +111,43 @@ const Window: ElementType<Props> = ({
       } else if (e.pageY - 1 <= boundariesContext.y1) {
         setSnap(SnapState.top);
       } else {
+        const _position: PositionState = {
+          left: null,
+          top: null,
+          right: null,
+          bottom: null
+        };
+        _position.left = e.pageX - offset.x;
+        _position.top = e.pageY - offset.y;
+
+        if (
+          _position.left <
+          boundariesContext.x1 - header.clientWidth + borderOffset
+        ) {
+          _position.left =
+            boundariesContext.x1 - header.clientWidth + borderOffset;
+        }
+        if (_position.top < boundariesContext.y1) {
+          _position.top = boundariesContext.y1;
+        }
+        if (_position.left > boundariesContext.x2 - borderOffset) {
+          _position.top = boundariesContext.x2 - borderOffset;
+        }
+        if (_position.top > boundariesContext.y2 - header.clientHeight) {
+          _position.top = boundariesContext.y2 - header.clientHeight;
+        }
+        setPosition(_position);
         setSnap(SnapState.none);
       }
-
-      setPosition(_position);
     },
-    [offset, boundariesContext, headerRef, snap]
+    [offset, boundariesContext, headerRef]
   );
+
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
     e.preventDefault();
     setDragging(false);
   }, []);
+
   const redActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
@@ -150,6 +161,7 @@ const Window: ElementType<Props> = ({
     },
     [onRed, sendToFront]
   );
+
   const orangeActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
@@ -163,6 +175,7 @@ const Window: ElementType<Props> = ({
     },
     [onOrange, sendToFront]
   );
+
   const greenActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
@@ -176,6 +189,8 @@ const Window: ElementType<Props> = ({
     },
     [onGreen, sendToFront]
   );
+
+  // Layout Effects
 
   useLayoutEffect(() => {
     if (dragging) {
@@ -191,19 +206,25 @@ const Window: ElementType<Props> = ({
       }
     };
   }, [dragging, mouseMoveHandler, mouseUpHandler]);
+
   useLayoutEffect(() => {
     const header = headerRef.current;
-    if (!header) return;
-    if (!snap) {
-      const offset: OffsetState = {
+    if (header && !snap) {
+      setOffset({
         x: header.clientWidth / 2,
         y: header.clientHeight / 2
-      };
-      setOffset(offset);
+      });
     }
   }, [snap]);
 
+  // Render
+
   let sectionClasses: string[] = [styles.window];
+  let top: Position | "" = "";
+  let left: Position | "" = "";
+  let right: Position | "" = "";
+  let bottom: Position | "" = "";
+
   switch (snap) {
     case SnapState.left:
       sectionClasses.push(styles["snap-left"]);
@@ -215,6 +236,33 @@ const Window: ElementType<Props> = ({
       sectionClasses.push(styles["snap-top"]);
       break;
     default:
+      if (position.top) top = position.top;
+      if (position.left) left = position.left;
+      if (position.right) right = position.right;
+      if (position.bottom) bottom = position.bottom;
+
+      const header = headerRef.current;
+      if (header) {
+        if (position.left) {
+          if (
+            position.left <
+            boundariesContext.x1 - header.clientWidth + borderOffset
+          ) {
+            left = boundariesContext.x1 - header.clientWidth + borderOffset;
+          }
+          if (position.left > boundariesContext.x2 - borderOffset) {
+            left = boundariesContext.x2 - borderOffset;
+          }
+        }
+        if (position.top) {
+          if (position.top < boundariesContext.y1) {
+            top = boundariesContext.y1;
+          }
+          if (position.top > boundariesContext.y2 - header.clientHeight) {
+            top = boundariesContext.y2 - header.clientHeight;
+          }
+        }
+      }
       break;
   }
 
@@ -223,10 +271,10 @@ const Window: ElementType<Props> = ({
       className={sectionClasses.join(" ")}
       style={{
         zIndex,
-        top: position.top,
-        left: position.left,
-        right: position.right,
-        bottom: position.bottom,
+        top,
+        left,
+        right,
+        bottom,
         minHeight,
         minWidth
       }}
