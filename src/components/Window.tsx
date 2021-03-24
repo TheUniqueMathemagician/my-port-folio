@@ -19,7 +19,12 @@ interface Props {
   zIndex?: number;
 }
 
-type SnapState = null | "top" | "left" | "right";
+enum SnapState {
+  none,
+  top,
+  left,
+  right
+}
 
 interface PositionState {
   x: number | "50%" | "100%";
@@ -43,7 +48,7 @@ const Window: ElementType<Props> = ({
   const [minWidth, setMinWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(300);
   const [width, setWidth] = useState<number>(500);
-  const [snap, setSnap] = useState<SnapState>(null);
+  const [snap, setSnap] = useState<SnapState>(SnapState.none);
   const [offset, setOffset] = useState<OffsetState>({ x: 0, y: 0 });
   const [position, setPosition] = useState<PositionState>({ x: 0, y: 0 });
   const [dragging, setDragging] = useState<boolean>(false);
@@ -100,17 +105,17 @@ const Window: ElementType<Props> = ({
       if (e.pageX - 1 <= boundariesContext.x1) {
         position.x = 0;
         position.y = 0;
-        setSnap("left");
+        setSnap(SnapState.left);
       } else if (e.pageX + 1 >= boundariesContext.x2) {
         position.x = "50%";
         position.y = 0;
-        setSnap("right");
+        setSnap(SnapState.right);
       } else if (e.pageY - 1 <= boundariesContext.y1) {
         position.x = 0;
         position.y = 0;
-        setSnap("top");
+        setSnap(SnapState.top);
       } else {
-        setSnap(null);
+        setSnap(SnapState.none);
       }
 
       setPosition(position);
@@ -200,8 +205,9 @@ const Window: ElementType<Props> = ({
         left: position.x,
         minHeight,
         minWidth,
+        borderRadius: snap ? "0" : "",
         height: snap ? "100%" : height,
-        width: snap === "top" ? "100%" : snap ? "50%" : width
+        width: snap === SnapState.top ? "100%" : snap ? "50%" : width
       }}
       ref={windowRef}
       onDragStart={() => false}
