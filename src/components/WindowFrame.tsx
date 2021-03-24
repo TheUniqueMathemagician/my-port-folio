@@ -4,7 +4,7 @@ import {
   useCallback,
   useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 
 import style from "styled-components";
@@ -29,7 +29,7 @@ const WindowFrame: ElementType<State> = ({ children }) => {
       x1: wrapper.offsetLeft,
       x2: wrapper.offsetLeft + wrapper.clientWidth,
       y1: wrapper.offsetTop,
-      y2: wrapper.offsetTop + wrapper.clientHeight,
+      y2: wrapper.offsetTop + wrapper.clientHeight
     });
   }, []);
 

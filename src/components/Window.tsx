@@ -5,7 +5,7 @@ import {
   useContext,
   useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 
 import style from "styled-components";
@@ -105,7 +105,7 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
 
     setOffset({
       x: e.pageX - parseInt(card.style.left),
-      y: e.pageY - parseInt(card.style.top),
+      y: e.pageY - parseInt(card.style.top)
     });
 
     setDragging(true);
@@ -199,7 +199,7 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
     <Card
       style={{
         top: position.y,
-        left: position.x,
+        left: position.x
       }}
       ref={cardRef}
       onDragStart={() => false}
