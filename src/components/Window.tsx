@@ -27,8 +27,8 @@ enum SnapState {
 }
 
 interface PositionState {
-  x: number | "50%" | "100%";
-  y: number | "50%" | "100%";
+  x: number;
+  y: number;
 }
 
 interface OffsetState {
@@ -107,7 +107,7 @@ const Window: ElementType<Props> = ({
         position.y = 0;
         setSnap(SnapState.left);
       } else if (e.pageX + 1 >= boundariesContext.x2) {
-        position.x = "50%";
+        position.x = (boundariesContext.x2 - boundariesContext.x1) / 2;
         position.y = 0;
         setSnap(SnapState.right);
       } else if (e.pageY - 1 <= boundariesContext.y1) {
@@ -192,7 +192,7 @@ const Window: ElementType<Props> = ({
       };
       setOffset(offset);
     } else {
-      window.style.transition = "top 0.2s ease, left 0.2s ease";
+      window.style.transition = "top 0.3s ease, left 0.3s ease";
     }
   }, [snap, width]);
 
