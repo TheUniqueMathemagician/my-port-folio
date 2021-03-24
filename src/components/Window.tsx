@@ -8,100 +8,60 @@ import {
   useState
 } from "react";
 
-import style from "styled-components";
-import { context as FrameContext } from "./WindowFrame";
+import styles from "./Window.module.scss";
+import { BoundariesContext } from "./WindowFrame";
 
-const Card = style.div`
-  position: absolute;
-  transition: opacity .3s ease;
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-`;
-
-const Header = style.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 8px;
-  background: #3333337F;
-  border-radius: 16px 16px 0 0;
-`;
-
-const RedButton = style.button`
-  background: #FF5853;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const OrangeButton = style.button`
-  background: #FFBC40;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const GreenButton = style.button`
-  background: #45D97E;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  border: 0;
-  margin-right: 8px;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 0 6px 0 #00000033;
-  :active {
-    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-  }
-`;
-
-const Background = style.div`
-  background: #ffffff7f;
-  border-radius: 0 0 16px 16px;
-  min-height: 500px;
-  position: relative;
-`;
-
-interface State {
+interface Props {
   onRed?: (e: MouseEvent) => void;
   onOrange?: (e: MouseEvent) => void;
   onGreen?: (e: MouseEvent) => void;
+  sendToFront?: () => void;
+  zIndex?: number;
 }
 
-const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [dragging, setDragging] = useState(false);
+type SnapState = null | "top" | "left" | "right";
 
-  const frameContext = useContext(FrameContext);
+interface PositionState {
+  x: number | "50%" | "100%";
+  y: number | "50%" | "100%";
+}
 
-  const cardRef = useRef<HTMLDivElement>(null);
+interface OffsetState {
+  x: number;
+  y: number;
+}
+
+const Window: ElementType<Props> = ({
+  children,
+  onRed,
+  onOrange,
+  onGreen,
+  sendToFront,
+  zIndex
+}) => {
+  const [minHeight, setMinHeight] = useState<number>(0);
+  const [minWidth, setMinWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(300);
+  const [width, setWidth] = useState<number>(500);
+  const [snap, setSnap] = useState<SnapState>(null);
+  const [offset, setOffset] = useState<OffsetState>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<PositionState>({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  const boundariesContext = useContext(BoundariesContext);
+
+  const windowRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
+  const mainMouseDownHandler = useCallback(() => {
+    if (!sendToFront) return;
+    sendToFront();
+  }, [sendToFront]);
   const mouseDownHandler = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-
-    const card = cardRef.current;
+    if (e.button !== 0) return;
+    const card = windowRef.current;
     if (!card) return;
+    e.preventDefault();
 
     setOffset({
       x: e.pageX - parseInt(card.style.left),
@@ -114,37 +74,53 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
     (e: globalThis.MouseEvent) => {
       e.preventDefault();
 
-      document.body.style.cursor = "grabbing";
-
       const header = headerRef.current;
       if (!header) return;
 
-      let x = e.pageX - offset.x;
-      let y = e.pageY - offset.y;
+      let position: PositionState = {
+        x: e.pageX - offset.x,
+        y: e.pageY - offset.y
+      };
 
-      if (x < frameContext.x1) {
-        x = frameContext.x1;
-      }
-      if (y < frameContext.y1) {
-        y = frameContext.y1;
-      }
-      if (x + header.clientWidth > frameContext.x2) {
-        x = frameContext.x2 - header.clientWidth;
-      }
-      if (y + header.clientHeight > frameContext.y2) {
-        y = frameContext.y2 - header.clientHeight;
+      if (!snap) {
+        if (position.x < boundariesContext.x1 - header.clientWidth + 10) {
+          position.x = boundariesContext.x1 - header.clientWidth + 10;
+        }
+        if (position.y < boundariesContext.y1) {
+          position.y = boundariesContext.y1;
+        }
+        if (position.x > boundariesContext.x2 - 10) {
+          position.x = boundariesContext.x2 - 10;
+        }
+        if (position.y > boundariesContext.y2 - header.clientHeight) {
+          position.y = boundariesContext.y2 - header.clientHeight;
+        }
       }
 
-      setPosition({ x, y });
+      if (e.pageX - 1 <= boundariesContext.x1) {
+        position.x = 0;
+        position.y = 0;
+        setSnap("left");
+      } else if (e.pageX + 1 >= boundariesContext.x2) {
+        position.x = "50%";
+        position.y = 0;
+        setSnap("right");
+      } else if (e.pageY - 1 <= boundariesContext.y1) {
+        position.x = 0;
+        position.y = 0;
+        setSnap("top");
+      } else {
+        setSnap(null);
+      }
+
+      setPosition(position);
     },
-    [offset, frameContext, headerRef]
+    [offset, boundariesContext, headerRef, snap]
   );
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
-    document.body.style.cursor = "";
     e.preventDefault();
     setDragging(false);
   }, []);
-
   const redActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
@@ -152,8 +128,11 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
       if (onRed) {
         onRed(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onRed]
+    [onRed, sendToFront]
   );
   const orangeActionHandler = useCallback(
     (e: MouseEvent) => {
@@ -162,8 +141,11 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
       if (onOrange) {
         onOrange(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onOrange]
+    [onOrange, sendToFront]
   );
   const greenActionHandler = useCallback(
     (e: MouseEvent) => {
@@ -172,52 +154,98 @@ const Window: ElementType<State> = ({ children, onRed, onOrange, onGreen }) => {
       if (onGreen) {
         onGreen(e);
       }
+      if (sendToFront) {
+        sendToFront();
+      }
     },
-    [onGreen]
+    [onGreen, sendToFront]
   );
 
   useLayoutEffect(() => {
+    document.body.style.cursor = dragging ? "grabbing" : "";
+    document.removeEventListener("mousemove", mouseMoveHandler);
+    document.removeEventListener("mouseup", mouseUpHandler);
     if (dragging) {
       document.addEventListener("mousemove", mouseMoveHandler);
       document.addEventListener("mouseup", mouseUpHandler);
-    } else {
-      document.removeEventListener("mousemove", mouseMoveHandler);
-      document.removeEventListener("mouseup", mouseUpHandler);
     }
     return () => {
-      if (dragging) {
-        document.addEventListener("mousemove", mouseMoveHandler);
-        document.addEventListener("mouseup", mouseUpHandler);
-      } else {
-        document.removeEventListener("mousemove", mouseMoveHandler);
-        document.removeEventListener("mouseup", mouseUpHandler);
-      }
+      document.body.style.cursor = dragging ? "grabbing" : "";
+      document.removeEventListener("mousemove", mouseMoveHandler);
+      document.removeEventListener("mouseup", mouseUpHandler);
     };
   }, [dragging, mouseMoveHandler, mouseUpHandler]);
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    const window = windowRef.current;
+    if (!header || !window) return;
+    if (!snap) {
+      window.style.transition = "";
+      const offset: OffsetState = {
+        x: width / 2,
+        y: header.clientHeight / 2
+      };
+      setOffset(offset);
+    } else {
+      window.style.transition = "top 0.2s ease, left 0.2s ease";
+    }
+  }, [snap, width]);
 
   return (
-    <Card
+    <section
+      className={styles.window}
       style={{
+        zIndex,
         top: position.y,
-        left: position.x
+        left: position.x,
+        minHeight,
+        minWidth,
+        height: snap ? "100%" : height,
+        width: snap === "top" ? "100%" : snap ? "50%" : width
       }}
-      ref={cardRef}
+      ref={windowRef}
       onDragStart={() => false}
       draggable="false"
+      onMouseDown={mainMouseDownHandler}
     >
-      <Header
+      <div
+        className={styles.header}
         onMouseDown={mouseDownHandler}
-        style={{ cursor: dragging ? "grabbing" : "grab" }}
-        onDrag={() => false}
+        style={{
+          cursor: dragging ? "grabbing" : "grab",
+          borderRadius: snap ? "0" : ""
+        }}
+        onDragStart={() => false}
         draggable="false"
         ref={headerRef}
       >
-        <RedButton onClick={(e) => redActionHandler(e)}></RedButton>
-        <OrangeButton onClick={(e) => orangeActionHandler(e)}></OrangeButton>
-        <GreenButton onClick={(e) => greenActionHandler(e)}></GreenButton>
-      </Header>
-      <Background>{children}</Background>
-    </Card>
+        <button
+          className={styles.red}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => redActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
+        ></button>
+        <button
+          className={styles.orange}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => orangeActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
+        ></button>
+        <button
+          className={styles.green}
+          style={{ pointerEvents: dragging ? "none" : "all" }}
+          onClick={(e) => greenActionHandler(e)}
+          onMouseDown={(e) => e.stopPropagation()}
+        ></button>
+      </div>
+      <div
+        className={styles.background}
+        style={{ borderRadius: snap ? "0" : "" }}
+        draggable="false"
+      >
+        {children}
+      </div>
+    </section>
   );
 };
 

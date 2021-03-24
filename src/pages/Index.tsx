@@ -1,11 +1,6 @@
-import style from "styled-components";
+import TaskBar from "../components/TaskBar";
 import Window from "../components/Window";
 import WindowFrame from "../components/WindowFrame";
-
-const Footer = style.footer`
-  background-color: var(--dark, #3333337F);
-  min-height: 40px;
-`;
 
 const Main = () => {
   return (
@@ -17,7 +12,7 @@ const Main = () => {
           <Window></Window>
         </WindowFrame>
       </main>
-      <Footer></Footer>
+      <TaskBar></TaskBar>
     </>
   );
 };
