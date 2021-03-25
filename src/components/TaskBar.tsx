@@ -46,19 +46,27 @@ const TaskBar = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setDate(Date.now());
-    }, 1000);
+    }, 60000);
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  const _time = new Date(date).toLocaleTimeString().slice(0, -3);
+
+  const _date = new Date(date)
+    .toLocaleDateString()
+    .split("/")
+    .map((x) => x.match(/\d{2}$/))
+    .join("/");
 
   return (
     <Style>
       <Apps></Apps>
       <Language className="language">Français</Language>
       <Time>
-        <p>{new Date(date).toLocaleTimeString()}</p>
-        <p>{new Date(date).toLocaleDateString()}</p>
+        <p>{_time}</p>
+        <p>{_date}</p>
       </Time>
     </Style>
   );
