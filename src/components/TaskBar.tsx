@@ -7,11 +7,15 @@ const Style = style.div`
   background-color: #3333337F;
   min-height: 40px;
   display: flex;
+  padding: 6px 12px;
   justify-content: space-between;
 `;
 
 const Apps = style.div`
   flex-grow:1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const Language = style.div`
@@ -19,7 +23,6 @@ const Language = style.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 6px 12px;
   font-size: 0.8rem;
   :hover {
     background-color: #ffffff30;
@@ -34,7 +37,6 @@ const Time = style.div`
   height: 100%;
   flex-direction: column;
   font-size: 0.8rem;
-  padding: 6px 12px;
    :hover {
     background-color: #ffffff30;
     cursor: default;
@@ -43,7 +45,7 @@ const Time = style.div`
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const [applications] = useApplications();
+  const { applications } = useApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -68,7 +70,7 @@ const TaskBar = () => {
         {applications
           .filter((application) => application.minimized)
           .map((application) => (
-            <div>{application.name}</div>
+            <div key={application.id}>{application.name}</div>
           ))}
       </Apps>
       <Language className="language">Français</Language>

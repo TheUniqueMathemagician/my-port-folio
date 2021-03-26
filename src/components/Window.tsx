@@ -102,6 +102,7 @@ const Window: FunctionComponent<Props> = ({
         if (!(snap === Snap.right)) setSnap(Snap.right);
       } else if (e.pageY - 1 <= boundaries.y1) {
         if (!(snap === Snap.top)) setSnap(Snap.top);
+        application.maximized = true;
       } else {
         if (snap) setSnap(Snap.none);
         setPosition({
@@ -110,9 +111,10 @@ const Window: FunctionComponent<Props> = ({
           right: null,
           bottom: null
         });
+        application.maximized = false;
       }
     },
-    [offset, boundaries, headerRef, snap]
+    [offset, boundaries, headerRef, snap, application]
   );
 
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
@@ -133,11 +135,7 @@ const Window: FunctionComponent<Props> = ({
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      if (application.maximized) {
-        application.maximize();
-      } else {
-        application.unmaximize();
-      }
+      application.maximized = !application.maximized;
     },
     [application]
   );
@@ -146,7 +144,7 @@ const Window: FunctionComponent<Props> = ({
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      application.minimize();
+      application.minimized = true;
     },
     [application]
   );
@@ -176,7 +174,7 @@ const Window: FunctionComponent<Props> = ({
         y: header.clientHeight / 2
       });
     }
-  }, [snap]);
+  }, [snap, application]);
 
   // Render
 
@@ -186,45 +184,42 @@ const Window: FunctionComponent<Props> = ({
   let right: PositionType | "" = "";
   let bottom: PositionType | "" = "";
 
-  switch (snap) {
-    case Snap.top:
-      sectionClasses.push(styles["snap-top"]);
-      break;
-    case Snap.left:
-      sectionClasses.push(styles["snap-left"]);
-      break;
-    case Snap.right:
-      sectionClasses.push(styles["snap-right"]);
-      break;
-    default:
-      if (position.top) top = position.top;
-      if (position.left) left = position.left;
-      if (position.right) right = position.right;
-      if (position.bottom) bottom = position.bottom;
+  if (application.maximized) {
+    sectionClasses.push(styles["snap-top"]);
+  } else if (snap) {
+    switch (snap) {
+      case Snap.left:
+        sectionClasses.push(styles["snap-left"]);
+        break;
+      case Snap.right:
+        sectionClasses.push(styles["snap-right"]);
+        break;
+    }
+  } else {
+    if (position.top) top = position.top;
+    if (position.left) left = position.left;
+    if (position.right) right = position.right;
+    if (position.bottom) bottom = position.bottom;
 
-      const header = headerRef.current;
-      if (header) {
-        if (position.left) {
-          if (
-            position.left <
-            boundaries.x1 - header.clientWidth + borderOffset
-          ) {
-            left = boundaries.x1 - header.clientWidth + borderOffset;
-          }
-          if (position.left > boundaries.x2 - borderOffset) {
-            left = boundaries.x2 - borderOffset;
-          }
+    const header = headerRef.current;
+    if (header) {
+      if (position.left) {
+        if (position.left < boundaries.x1 - header.clientWidth + borderOffset) {
+          left = boundaries.x1 - header.clientWidth + borderOffset;
         }
-        if (position.top) {
-          if (position.top < boundaries.y1) {
-            top = boundaries.y1;
-          }
-          if (position.top > boundaries.y2 - header.clientHeight) {
-            top = boundaries.y2 - header.clientHeight;
-          }
+        if (position.left > boundaries.x2 - borderOffset) {
+          left = boundaries.x2 - borderOffset;
         }
       }
-      break;
+      if (position.top) {
+        if (position.top < boundaries.y1) {
+          top = boundaries.y1;
+        }
+        if (position.top > boundaries.y2 - header.clientHeight) {
+          top = boundaries.y2 - header.clientHeight;
+        }
+      }
+    }
   }
 
   return (
@@ -255,24 +250,27 @@ const Window: FunctionComponent<Props> = ({
         draggable="false"
         ref={headerRef}
       >
-        <button
-          className={styles.red}
-          style={{ pointerEvents: dragging ? "none" : "all" }}
-          onClick={(e) => redActionHandler(e)}
-          onMouseDown={(e) => e.stopPropagation()}
-        ></button>
-        <button
-          className={styles.orange}
-          style={{ pointerEvents: dragging ? "none" : "all" }}
-          onClick={(e) => orangeActionHandler(e)}
-          onMouseDown={(e) => e.stopPropagation()}
-        ></button>
-        <button
-          className={styles.green}
-          style={{ pointerEvents: dragging ? "none" : "all" }}
-          onClick={(e) => greenActionHandler(e)}
-          onMouseDown={(e) => e.stopPropagation()}
-        ></button>
+        <div>
+          <button
+            className={styles.red}
+            style={{ pointerEvents: dragging ? "none" : "all" }}
+            onClick={(e) => redActionHandler(e)}
+            onMouseDown={(e) => e.stopPropagation()}
+          ></button>
+          <button
+            className={styles.orange}
+            style={{ pointerEvents: dragging ? "none" : "all" }}
+            onClick={(e) => orangeActionHandler(e)}
+            onMouseDown={(e) => e.stopPropagation()}
+          ></button>
+          <button
+            className={styles.green}
+            style={{ pointerEvents: dragging ? "none" : "all" }}
+            onClick={(e) => greenActionHandler(e)}
+            onMouseDown={(e) => e.stopPropagation()}
+          ></button>
+        </div>
+        <div className="application-name">{application.name}</div>
       </div>
       <div className={styles.background}>{children}</div>
     </section>

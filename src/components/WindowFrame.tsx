@@ -6,7 +6,7 @@ import {
   useEffect,
   FunctionComponent
 } from "react";
-import { useApplications, ActionType } from "../data/Applications";
+import { useApplications } from "../data/Applications";
 import Window from "./Window";
 
 import styles from "./WindowFrame.module.scss";
@@ -21,7 +21,7 @@ interface Boundaries {
 const WindowFrame: FunctionComponent = ({ children }) => {
   // States
 
-  const [applications, dispatch] = useApplications();
+  const { applications, open } = useApplications();
 
   const [boundaries, setBoundaries] = useState<Boundaries>({
     x1: 0,
@@ -30,7 +30,7 @@ const WindowFrame: FunctionComponent = ({ children }) => {
     y2: 0
   });
 
-  const [zIndexes, setZIndexes] = useState<number[]>([]);
+  const [_, setZIndexes] = useState<number[]>([]);
 
   // Refs
 
@@ -62,13 +62,8 @@ const WindowFrame: FunctionComponent = ({ children }) => {
   // Effects
 
   useEffect(() => {
-    dispatch({
-      type: ActionType.Open,
-      payload: {
-        name: "coucou"
-      }
-    });
-  }, [dispatch]);
+    open(new Date().toUTCString());
+  }, [open]);
 
   useEffect(() => {
     setZIndexes(applications.map((_, i) => i));
@@ -79,6 +74,7 @@ const WindowFrame: FunctionComponent = ({ children }) => {
       {applications.map((application, i) => {
         return (
           <Window
+            key={application.id}
             application={application}
             boundaries={boundaries}
             sendToFront={() => {}}

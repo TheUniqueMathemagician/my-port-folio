@@ -2,12 +2,9 @@
   position: absolute;
   display: grid;
   grid-template-rows: auto 1fr;
-  // transition: top 0.3s ease, bottom 0.3s ease, left 0.3s ease, right 0.3s ease;
   backdrop-filter: blur(6px);
   border-radius: 16px;
   box-shadow: 0 0 20px 4px #33333333;
-  // resize: both;
-  // overflow: auto;
   &.snap-left {
     bottom: 0;
     left: 0;
@@ -43,7 +40,7 @@
   }
   .header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     padding: 8px;
     background: #3333337f;
     border-radius: 16px 16px 0 0;

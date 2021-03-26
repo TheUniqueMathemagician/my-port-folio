@@ -1,25 +1,28 @@
 import {
   createContext,
+  Dispatch,
   FunctionComponent,
+  useCallback,
   useContext,
-  useReducer,
-  Reducer,
-  Dispatch
+  useState
 } from "react";
 
 class Application {
   private _id: number;
   private _name: string;
-  private _minimized: boolean;
   private _maximized: boolean;
-  private _close: () => void;
+  private _minimized: boolean;
+  private _setApplication: Dispatch<React.SetStateAction<State>>;
 
-  constructor(id: number, name: string, close: () => void) {
-    this._id = id;
+  constructor(
+    name: string,
+    setApplications: Dispatch<React.SetStateAction<State>>
+  ) {
+    this._id = new Date().valueOf();
     this._name = name;
-    this._minimized = false;
     this._maximized = false;
-    this._close = close;
+    this._minimized = false;
+    this._setApplication = setApplications;
   }
 
   public get id(): number {
@@ -29,79 +32,61 @@ class Application {
     return this._name;
   }
   public set name(v: string) {
-    this._name = v;
+    this._setApplication(([...state]) => {
+      state[state.findIndex((app) => app === this)]._name = v;
+      return state;
+    });
   }
   public get minimized(): boolean {
     return this._minimized;
   }
+  public set minimized(v: boolean) {
+    this._setApplication(([...state]) => {
+      state[state.findIndex((app) => app === this)]._minimized = v;
+      return state;
+    });
+  }
   public get maximized(): boolean {
     return this._maximized;
   }
+  public set maximized(v: boolean) {
+    this._setApplication(([...state]) => {
+      state[state.findIndex((app) => app === this)]._maximized = v;
+      return state;
+    });
+  }
 
-  public minimize(): void {
-    this._minimized = true;
-  }
-  public maximize(): void {
-    this._maximized = true;
-  }
-  public unmaximize(): void {
-    this._maximized = false;
-  }
   public close(): void {
-    this._close();
+    this._setApplication((state) => state.filter((app) => app !== this));
   }
 }
-
-export enum ActionType {
-  Close,
-  Open
-}
-
-type CloseAction = {
-  type: ActionType.Close;
-  payload: {
-    application: Application;
-  };
-};
-
-type OpenAction = {
-  type: ActionType.Open;
-  payload: {
-    name: string;
-  };
-};
-
-export type Action = CloseAction | OpenAction;
 
 type State = Application[];
 
-type ApplicationContextType = [State, Dispatch<Action>];
+interface ApplicationContextType {
+  applications: Application[];
+  open: (name: string) => void;
+}
 
-const ApplicationsContext = createContext<ApplicationContextType>([
-  [],
-  () => {}
-]);
+const ApplicationsContext = createContext<ApplicationContextType>({
+  applications: [],
+  open: () => {}
+});
 
 const useApplications = () => useContext(ApplicationsContext);
 
+// TODO: try with a class, and pass a render function to new Application()
 const Applications: FunctionComponent = ({ children }) => {
-  const reducer: Reducer<State, Action> = (state, action) => {
-    switch (action.type) {
-      case ActionType.Open:
-        const id = new Date().valueOf();
-        state = [
-          ...state,
-          new Application(id, action.payload.name, () => {
-            state = state.filter((application) => application.id !== id);
-          })
-        ];
-        break;
-    }
-    return state;
-  };
-  const [applications, dispatch] = useReducer(reducer, []);
+  const [applications, setApplications] = useState<State>([]);
+
+  const open = useCallback((name: string) => {
+    setApplications((state) => {
+      return [...state, new Application(name, setApplications)];
+    });
+  }, []);
+
   return (
-    <ApplicationsContext.Provider value={[applications, dispatch]}>
+    <ApplicationsContext.Provider value={{ applications, open }}>
       {children}
     </ApplicationsContext.Provider>
   );
