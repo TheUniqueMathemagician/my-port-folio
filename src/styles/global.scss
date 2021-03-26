@@ -11,12 +11,6 @@ body {
   font-weight: 100;
 }
 
-#root {
-  min-height: 100vh;
-  display: grid;
-  grid-template-rows: 1fr auto;
-}
-
 * {
   margin: 0;
   padding: 0;

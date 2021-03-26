@@ -1,49 +1,46 @@
 import {
-  ElementType,
+  FunctionComponent,
   MouseEvent,
   useCallback,
-  useContext,
   useLayoutEffect,
   useRef,
   useState
 } from "react";
+import type { Application } from "../data/Applications";
 
 import styles from "./Window.module.scss";
-import { BoundariesContext } from "./WindowFrame";
 
 interface Props {
-  onRed?: (e: MouseEvent) => void;
-  onOrange?: (e: MouseEvent) => void;
-  onGreen?: (e: MouseEvent) => void;
-  sendToFront?: () => void;
-  zIndex?: number;
+  application: Application;
+  boundaries: { x1: number; x2: number; y1: number; y2: number };
+  sendToFront: () => void;
+  zIndex: number;
 }
 
-enum SnapState {
+enum Snap {
   none,
   top,
   left,
   right
 }
 
-type Position = null | number | "50%" | "100%";
-interface PositionState {
-  bottom: Position;
-  left: Position;
-  right: Position;
-  top: Position;
+type PositionType = null | number | "50%" | "100%";
+interface Position {
+  bottom: PositionType;
+  left: PositionType;
+  right: PositionType;
+  top: PositionType;
 }
 
-interface OffsetState {
+interface Offset {
   x: number;
   y: number;
 }
 
-const Window: ElementType<Props> = ({
+const Window: FunctionComponent<Props> = ({
+  application,
+  boundaries,
   children,
-  onRed,
-  onOrange,
-  onGreen,
   sendToFront,
   zIndex
 }) => {
@@ -53,23 +50,19 @@ const Window: ElementType<Props> = ({
 
   // States
 
-  const [minHeight, setMinHeight] = useState<number>(500);
-  const [minWidth, setMinWidth] = useState<number>(300);
-  const [height, setHeight] = useState<number>(300);
-  const [width, setWidth] = useState<number>(500);
-  const [snap, setSnap] = useState<SnapState>(SnapState.none);
-  const [offset, setOffset] = useState<OffsetState>({ x: 0, y: 0 });
-  const [position, setPosition] = useState<PositionState>({
+  const [minHeight] = useState<number>(500);
+  const [minWidth] = useState<number>(300);
+  // const [height, setHeight] = useState<number>(300);
+  // const [width, setWidth] = useState<number>(500);
+  const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<Position>({
     bottom: null,
     left: null,
     right: null,
     top: null
   });
+  const [snap, setSnap] = useState<Snap>(Snap.none);
   const [dragging, setDragging] = useState<boolean>(false);
-
-  // Contexts
-
-  const boundariesContext = useContext(BoundariesContext);
 
   // Refs
 
@@ -78,8 +71,7 @@ const Window: ElementType<Props> = ({
 
   // Callbacks
 
-  const mainMouseDownHandler = useCallback(() => {
-    if (!sendToFront) return;
+  const windowMouseDownHandler = useCallback(() => {
     sendToFront();
   }, [sendToFront]);
 
@@ -104,43 +96,23 @@ const Window: ElementType<Props> = ({
 
       e.preventDefault();
 
-      if (e.pageX - 1 <= boundariesContext.x1) {
-        setSnap(SnapState.left);
-      } else if (e.pageX + 1 >= boundariesContext.x2) {
-        setSnap(SnapState.right);
-      } else if (e.pageY - 1 <= boundariesContext.y1) {
-        setSnap(SnapState.top);
+      if (e.pageX - 1 <= boundaries.x1) {
+        if (!(snap === Snap.left)) setSnap(Snap.left);
+      } else if (e.pageX + 1 >= boundaries.x2) {
+        if (!(snap === Snap.right)) setSnap(Snap.right);
+      } else if (e.pageY - 1 <= boundaries.y1) {
+        if (!(snap === Snap.top)) setSnap(Snap.top);
       } else {
-        const _position: PositionState = {
-          left: null,
-          top: null,
+        if (snap) setSnap(Snap.none);
+        setPosition({
+          left: e.pageX - offset.x,
+          top: e.pageY - offset.y,
           right: null,
           bottom: null
-        };
-        _position.left = e.pageX - offset.x;
-        _position.top = e.pageY - offset.y;
-
-        if (
-          _position.left <
-          boundariesContext.x1 - header.clientWidth + borderOffset
-        ) {
-          _position.left =
-            boundariesContext.x1 - header.clientWidth + borderOffset;
-        }
-        if (_position.top < boundariesContext.y1) {
-          _position.top = boundariesContext.y1;
-        }
-        if (_position.left > boundariesContext.x2 - borderOffset) {
-          _position.top = boundariesContext.x2 - borderOffset;
-        }
-        if (_position.top > boundariesContext.y2 - header.clientHeight) {
-          _position.top = boundariesContext.y2 - header.clientHeight;
-        }
-        setPosition(_position);
-        setSnap(SnapState.none);
+        });
       }
     },
-    [offset, boundariesContext, headerRef]
+    [offset, boundaries, headerRef, snap]
   );
 
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
@@ -152,42 +124,31 @@ const Window: ElementType<Props> = ({
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      if (onRed) {
-        onRed(e);
-      }
-      if (sendToFront) {
-        sendToFront();
-      }
+      application.close();
     },
-    [onRed, sendToFront]
+    [application]
   );
 
   const orangeActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      if (onOrange) {
-        onOrange(e);
-      }
-      if (sendToFront) {
-        sendToFront();
+      if (application.maximized) {
+        application.maximize();
+      } else {
+        application.unmaximize();
       }
     },
-    [onOrange, sendToFront]
+    [application]
   );
 
   const greenActionHandler = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      if (onGreen) {
-        onGreen(e);
-      }
-      if (sendToFront) {
-        sendToFront();
-      }
+      application.minimize();
     },
-    [onGreen, sendToFront]
+    [application]
   );
 
   // Layout Effects
@@ -220,20 +181,20 @@ const Window: ElementType<Props> = ({
   // Render
 
   let sectionClasses: string[] = [styles.window];
-  let top: Position | "" = "";
-  let left: Position | "" = "";
-  let right: Position | "" = "";
-  let bottom: Position | "" = "";
+  let top: PositionType | "" = "";
+  let left: PositionType | "" = "";
+  let right: PositionType | "" = "";
+  let bottom: PositionType | "" = "";
 
   switch (snap) {
-    case SnapState.left:
+    case Snap.top:
+      sectionClasses.push(styles["snap-top"]);
+      break;
+    case Snap.left:
       sectionClasses.push(styles["snap-left"]);
       break;
-    case SnapState.right:
+    case Snap.right:
       sectionClasses.push(styles["snap-right"]);
-      break;
-    case SnapState.top:
-      sectionClasses.push(styles["snap-top"]);
       break;
     default:
       if (position.top) top = position.top;
@@ -246,20 +207,20 @@ const Window: ElementType<Props> = ({
         if (position.left) {
           if (
             position.left <
-            boundariesContext.x1 - header.clientWidth + borderOffset
+            boundaries.x1 - header.clientWidth + borderOffset
           ) {
-            left = boundariesContext.x1 - header.clientWidth + borderOffset;
+            left = boundaries.x1 - header.clientWidth + borderOffset;
           }
-          if (position.left > boundariesContext.x2 - borderOffset) {
-            left = boundariesContext.x2 - borderOffset;
+          if (position.left > boundaries.x2 - borderOffset) {
+            left = boundaries.x2 - borderOffset;
           }
         }
         if (position.top) {
-          if (position.top < boundariesContext.y1) {
-            top = boundariesContext.y1;
+          if (position.top < boundaries.y1) {
+            top = boundaries.y1;
           }
-          if (position.top > boundariesContext.y2 - header.clientHeight) {
-            top = boundariesContext.y2 - header.clientHeight;
+          if (position.top > boundaries.y2 - header.clientHeight) {
+            top = boundaries.y2 - header.clientHeight;
           }
         }
       }
@@ -276,12 +237,13 @@ const Window: ElementType<Props> = ({
         right,
         bottom,
         minHeight,
-        minWidth
+        minWidth,
+        visibility: application.minimized ? "collapse" : "visible"
       }}
       ref={windowRef}
       onDragStart={() => false}
       draggable="false"
-      onMouseDown={mainMouseDownHandler}
+      onMouseDown={windowMouseDownHandler}
     >
       <div
         className={styles.header}

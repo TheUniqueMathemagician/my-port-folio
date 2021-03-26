@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useApplications } from "../data/Applications";
 
 import style from "styled-components";
 
@@ -42,11 +43,12 @@ const Time = style.div`
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
+  const [applications] = useApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDate(Date.now());
-    }, 60000);
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
@@ -62,7 +64,13 @@ const TaskBar = () => {
 
   return (
     <Style>
-      <Apps></Apps>
+      <Apps>
+        {applications
+          .filter((application) => application.minimized)
+          .map((application) => (
+            <div>{application.name}</div>
+          ))}
+      </Apps>
       <Language className="language">Français</Language>
       <Time>
         <p>{_time}</p>

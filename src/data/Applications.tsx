@@ -52,7 +52,7 @@ class Application {
   }
 }
 
-enum ActionType {
+export enum ActionType {
   Close,
   Open
 }
@@ -71,16 +71,14 @@ type OpenAction = {
   };
 };
 
-type Action = CloseAction | OpenAction;
+export type Action = CloseAction | OpenAction;
 
-type State = {
-  applications: Application[];
-};
+type State = Application[];
 
 type ApplicationContextType = [State, Dispatch<Action>];
 
 const ApplicationsContext = createContext<ApplicationContextType>([
-  { applications: [] },
+  [],
   () => {}
 ]);
 
@@ -91,19 +89,17 @@ const Applications: FunctionComponent = ({ children }) => {
     switch (action.type) {
       case ActionType.Open:
         const id = new Date().valueOf();
-        state.applications = [
-          ...state.applications,
+        state = [
+          ...state,
           new Application(id, action.payload.name, () => {
-            state.applications = state.applications.filter(
-              (application) => application.id !== id
-            );
+            state = state.filter((application) => application.id !== id);
           })
         ];
         break;
     }
     return state;
   };
-  const [applications, dispatch] = useReducer(reducer, { applications: [] });
+  const [applications, dispatch] = useReducer(reducer, []);
   return (
     <ApplicationsContext.Provider value={[applications, dispatch]}>
       {children}

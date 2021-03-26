@@ -6,6 +6,8 @@
   backdrop-filter: blur(6px);
   border-radius: 16px;
   box-shadow: 0 0 20px 4px #33333333;
+  // resize: both;
+  // overflow: auto;
   &.snap-left {
     bottom: 0;
     left: 0;
@@ -45,14 +47,12 @@
     padding: 8px;
     background: #3333337f;
     border-radius: 16px 16px 0 0;
-    transition: border-radius 0.3s ease;
   }
   .background {
     background: #ffffff7f;
     border-radius: 0 0 16px 16px;
     position: relative;
     color: #333333;
-    transition: border-radius 0.3s ease;
   }
   button {
     height: 14px;
