@@ -30,7 +30,7 @@ const WindowFrame: FunctionComponent = ({ children }) => {
     y2: 0
   });
 
-  const [_, setZIndexes] = useState<number[]>([]);
+  const [zIndexes, setZIndexes] = useState<number[]>([]);
 
   // Refs
 
@@ -65,20 +65,25 @@ const WindowFrame: FunctionComponent = ({ children }) => {
     open(new Date().toUTCString());
   }, [open]);
 
-  useEffect(() => {
-    setZIndexes(applications.map((_, i) => i));
-  }, [applications, setZIndexes]);
+  useLayoutEffect(() => {
+    setZIndexes(applications.map((app) => app.id));
+  }, [applications]);
 
   return (
     <div className={styles["window-frame"]} ref={wrapperRef}>
-      {applications.map((application, i) => {
+      {applications.map((application) => {
         return (
           <Window
-            key={application.id}
             application={application}
             boundaries={boundaries}
-            sendToFront={() => {}}
-            zIndex={1}
+            sendToFront={() => {
+              const indexes = [...zIndexes];
+              indexes.splice(indexes.indexOf(application.id), 1);
+              indexes.push(application.id);
+              setZIndexes(indexes);
+            }}
+            zIndex={zIndexes.indexOf(application.id)}
+            key={application.id}
           ></Window>
         );
       })}

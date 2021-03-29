@@ -32,6 +32,7 @@ class Application {
     return this._name;
   }
   public set name(v: string) {
+    if (this._name === v) return;
     this._setApplication(([...state]) => {
       state[state.findIndex((app) => app === this)]._name = v;
       return state;
@@ -41,6 +42,7 @@ class Application {
     return this._minimized;
   }
   public set minimized(v: boolean) {
+    if (this._minimized === v) return;
     this._setApplication(([...state]) => {
       state[state.findIndex((app) => app === this)]._minimized = v;
       return state;
@@ -50,6 +52,7 @@ class Application {
     return this._maximized;
   }
   public set maximized(v: boolean) {
+    if (this._maximized === v) return;
     this._setApplication(([...state]) => {
       state[state.findIndex((app) => app === this)]._maximized = v;
       return state;

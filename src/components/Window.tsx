@@ -19,7 +19,6 @@ interface Props {
 
 enum Snap {
   none,
-  top,
   left,
   right
 }
@@ -71,29 +70,39 @@ const Window: FunctionComponent<Props> = ({
 
   // Callbacks
 
-  const windowMouseDownHandler = useCallback(() => {
-    sendToFront();
-  }, [sendToFront]);
+  const windowMouseDownHandler = useCallback(
+    (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      sendToFront();
+    },
+    [sendToFront]
+  );
 
-  const mouseDownHandler = useCallback((e: MouseEvent) => {
-    if (e.button !== 0) return;
-    const window = windowRef.current;
-    if (!window) return;
-    e.preventDefault();
+  const mouseDownHandler = useCallback(
+    (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      const window = windowRef.current;
+      if (!window) return;
+      e.preventDefault();
 
-    setOffset({
-      x: e.pageX - (parseInt(window.style.left) || 0),
-      y: e.pageY - (parseInt(window.style.top) || 0)
-    });
+      setOffset({
+        x: e.pageX - (parseInt(window.style.left) || 0),
+        y: e.pageY - (parseInt(window.style.top) || 0)
+      });
 
-    setDragging(true);
-  }, []);
+      setDragging(true);
+    },
+    [windowRef]
+  );
 
   const mouseMoveHandler = useCallback(
     (e: globalThis.MouseEvent) => {
       const header = headerRef.current;
       if (!header) return;
 
+      e.stopPropagation();
       e.preventDefault();
 
       if (e.pageX - 1 <= boundaries.x1) {
@@ -101,23 +110,23 @@ const Window: FunctionComponent<Props> = ({
       } else if (e.pageX + 1 >= boundaries.x2) {
         if (!(snap === Snap.right)) setSnap(Snap.right);
       } else if (e.pageY - 1 <= boundaries.y1) {
-        if (!(snap === Snap.top)) setSnap(Snap.top);
         application.maximized = true;
       } else {
         if (snap) setSnap(Snap.none);
+        application.maximized = false;
         setPosition({
           left: e.pageX - offset.x,
           top: e.pageY - offset.y,
           right: null,
           bottom: null
         });
-        application.maximized = false;
       }
     },
     [offset, boundaries, headerRef, snap, application]
   );
 
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
+    e.stopPropagation();
     e.preventDefault();
     setDragging(false);
   }, []);
@@ -135,9 +144,10 @@ const Window: FunctionComponent<Props> = ({
     (e: MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
+      sendToFront();
       application.maximized = !application.maximized;
     },
-    [application]
+    [application, sendToFront]
   );
 
   const greenActionHandler = useCallback(
@@ -145,8 +155,9 @@ const Window: FunctionComponent<Props> = ({
       e.stopPropagation();
       e.preventDefault();
       application.minimized = true;
+      sendToFront();
     },
-    [application]
+    [application, sendToFront]
   );
 
   // Layout Effects
@@ -174,7 +185,7 @@ const Window: FunctionComponent<Props> = ({
         y: header.clientHeight / 2
       });
     }
-  }, [snap, application]);
+  }, [snap, application.maximized]);
 
   // Render
 
@@ -186,15 +197,10 @@ const Window: FunctionComponent<Props> = ({
 
   if (application.maximized) {
     sectionClasses.push(styles["snap-top"]);
-  } else if (snap) {
-    switch (snap) {
-      case Snap.left:
-        sectionClasses.push(styles["snap-left"]);
-        break;
-      case Snap.right:
-        sectionClasses.push(styles["snap-right"]);
-        break;
-    }
+  } else if (snap === Snap.left) {
+    sectionClasses.push(styles["snap-left"]);
+  } else if (snap === Snap.right) {
+    sectionClasses.push(styles["snap-right"]);
   } else {
     if (position.top) top = position.top;
     if (position.left) left = position.left;

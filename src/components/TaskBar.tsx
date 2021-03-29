@@ -45,7 +45,7 @@ const Time = style.div`
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const { applications } = useApplications();
+  const { applications, open } = useApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,6 +66,7 @@ const TaskBar = () => {
 
   return (
     <Style>
+      <button onClick={() => open("coucou")}>nouveau</button>
       <Apps>
         {applications
           .filter((application) => application.minimized)
