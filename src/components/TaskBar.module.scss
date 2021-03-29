@@ -1,0 +1,32 @@
+@import "../styles/theme.scss";
+
+.task-bar {
+  background-color: #3333337f;
+  min-height: 40px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  button {
+    outline: 0;
+    outline: none;
+    background: none;
+    border: 0;
+    padding: 6px 12px;
+    height: 100%;
+    color: $light;
+    border-radius: 0;
+    cursor: pointer;
+    &:disabled {
+      cursor: default;
+    }
+    &:hover:not(:disabled) {
+      background-color: #ffffff30;
+    }
+  }
+  .apps {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
