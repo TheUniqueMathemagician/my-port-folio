@@ -1,18 +1,18 @@
 import {
-  FunctionComponent,
-  MouseEvent,
+  createElement,
   useCallback,
   useLayoutEffect,
   useRef,
   useState
 } from "react";
-import type { Application } from "../data/Applications";
+import Application from "../shared/classes/Application";
+import Boundaries from "../shared/types/Boundaries";
 
 import styles from "./Window.module.scss";
 
 interface Props {
   application: Application;
-  boundaries: { x1: number; x2: number; y1: number; y2: number };
+  boundaries: Boundaries;
   sendToFront: () => void;
   zIndex: number;
 }
@@ -36,7 +36,7 @@ interface Offset {
   y: number;
 }
 
-const Window: FunctionComponent<Props> = ({
+const Window: React.FunctionComponent<Props> = ({
   application,
   boundaries,
   children,
@@ -71,7 +71,7 @@ const Window: FunctionComponent<Props> = ({
   // Callbacks
 
   const windowMouseDownHandler = useCallback(
-    (e: MouseEvent) => {
+    (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       e.preventDefault();
       e.stopPropagation();
@@ -81,7 +81,7 @@ const Window: FunctionComponent<Props> = ({
   );
 
   const mouseDownHandler = useCallback(
-    (e: MouseEvent) => {
+    (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       const window = windowRef.current;
       if (!window) return;
@@ -132,7 +132,7 @@ const Window: FunctionComponent<Props> = ({
   }, []);
 
   const redActionHandler = useCallback(
-    (e: MouseEvent) => {
+    (e: React.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
       application.close();
@@ -141,8 +141,7 @@ const Window: FunctionComponent<Props> = ({
   );
 
   const orangeActionHandler = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation();
+    (e: React.MouseEvent) => {
       e.preventDefault();
       sendToFront();
       application.maximized = !application.maximized;
@@ -151,8 +150,7 @@ const Window: FunctionComponent<Props> = ({
   );
 
   const greenActionHandler = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation();
+    (e: React.MouseEvent) => {
       e.preventDefault();
       application.minimized = true;
       sendToFront();
@@ -278,7 +276,9 @@ const Window: FunctionComponent<Props> = ({
         </div>
         <div className="application-name">{application.name}</div>
       </div>
-      <div className={styles.background}>{children}</div>
+      <div className={styles.background}>
+        {createElement(application.component, {})}
+      </div>
     </section>
   );
 };

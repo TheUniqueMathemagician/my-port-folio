@@ -1,27 +1,16 @@
-import {
-  useCallback,
-  useLayoutEffect,
-  useState,
-  useRef,
-  useEffect,
-  FunctionComponent
-} from "react";
-import { useApplications } from "../data/Applications";
+import { useCallback, useLayoutEffect, useState, useRef } from "react";
+import { useOpenedApplications } from "../data/OpenedApplications";
+import Boundaries from "../shared/types/Boundaries";
 import Window from "./Window";
 
 import styles from "./WindowFrame.module.scss";
 
-interface Boundaries {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-}
+const WindowFrame = () => {
+  // Contexts
 
-const WindowFrame: FunctionComponent = ({ children }) => {
+  const [applications] = useOpenedApplications();
+
   // States
-
-  const { applications, open } = useApplications();
 
   const [boundaries, setBoundaries] = useState<Boundaries>({
     x1: 0,
@@ -30,7 +19,7 @@ const WindowFrame: FunctionComponent = ({ children }) => {
     y2: 0
   });
 
-  const [zIndexes, setZIndexes] = useState<number[]>([]);
+  const [zIndexes, setZIndexes] = useState<string[]>([]);
 
   // Refs
 
@@ -58,12 +47,6 @@ const WindowFrame: FunctionComponent = ({ children }) => {
       window.removeEventListener("resize", resizeHandler);
     };
   }, [resizeHandler]);
-
-  // Effects
-
-  useEffect(() => {
-    open(new Date().toUTCString());
-  }, [open]);
 
   useLayoutEffect(() => {
     setZIndexes(applications.map((app) => app.id));

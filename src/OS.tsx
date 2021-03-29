@@ -1,4 +1,5 @@
-import ApplicationsProvider from "./data/Applications";
+import InstalledApplicationsProvider from "./data/InstalledApplications";
+import OpenedApplicationsProvider from "./data/OpenedApplications";
 import ThemeProvider from "./data/Theme";
 // import UserProvider from "./data/User";
 import Desktop from "./layouts/Desktop";
@@ -8,15 +9,17 @@ import { BrowserRouter } from "react-router-dom";
 
 const OS = () => {
   return (
-    <ApplicationsProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          {/* <UserProvider> */}
-          {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
-          {/* </UserProvider> */}
-        </BrowserRouter>
-      </ThemeProvider>
-    </ApplicationsProvider>
+    <InstalledApplicationsProvider>
+      <OpenedApplicationsProvider>
+        <ThemeProvider>
+          <BrowserRouter>
+            {/* <UserProvider> */}
+            {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
+            {/* </UserProvider> */}
+          </BrowserRouter>
+        </ThemeProvider>
+      </OpenedApplicationsProvider>
+    </InstalledApplicationsProvider>
   );
 };
 

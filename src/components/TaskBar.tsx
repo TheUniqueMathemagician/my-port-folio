@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
-import { useApplications } from "../data/Applications";
-
 import style from "styled-components";
+import { useEffect, useState } from "react";
+import { useOpenedApplications } from "../data/OpenedApplications";
+import Application from "../shared/classes/Application";
+import Test from "./applications/Test";
+import HelloWorld from "./HelloWorld";
 
 const Style = style.div`
   background-color: #3333337F;
@@ -45,7 +47,7 @@ const Time = style.div`
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const { applications, open } = useApplications();
+  const [applications] = useOpenedApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,9 +66,18 @@ const TaskBar = () => {
     .map((x) => x.match(/\d{2}$/))
     .join("/");
 
+  const [ia, sia] = useOpenedApplications();
+
   return (
     <Style>
-      <button onClick={() => open("coucou")}>nouveau</button>
+      <button onClick={() => sia([...ia, new Application("test", Test, sia)])}>
+        teste moi
+      </button>
+      <button
+        onClick={() => sia([...ia, new Application("coucou", HelloWorld, sia)])}
+      >
+        coucou toi
+      </button>
       <Apps>
         {applications
           .filter((application) => application.minimized)
