@@ -1,7 +1,7 @@
 @import "../styles/theme.scss";
 
 .task-bar {
-  background-color: #3333337f;
+  background-color: #333333b3;
   min-height: 40px;
   display: flex;
   justify-content: space-between;
@@ -28,5 +28,11 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    img {
+      width: 1rem;
+      height: 1rem;
+      object-fit: contain;
+      object-position: center;
+    }
   }
 }

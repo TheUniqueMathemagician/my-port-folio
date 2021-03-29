@@ -27,13 +27,10 @@ const TaskBar = () => {
     <div className={styles["task-bar"]}>
       <div className={styles.apps}>
         {openedApplications
-          .filter((application) => application.minimized)
-          .map((application) => (
-            <button
-              key={application.id}
-              onClick={() => (application.minimized = false)}
-            >
-              {application.name}
+          .filter((app) => app.minimized)
+          .map((app) => (
+            <button key={app.id} onClick={() => (app.minimized = false)}>
+              <img src={app.icon} alt={app.name} />
             </button>
           ))}
       </div>

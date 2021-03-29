@@ -68,10 +68,7 @@ const WindowFrame = () => {
             }}
             key={app.id}
           >
-            <img
-              src={require(`../assets/images/applications/${app.icon}`).default}
-              alt={app.name}
-            />
+            <img src={app.icon} alt={app.name} />
             <span>{app.name}</span>
           </button>
         ))}

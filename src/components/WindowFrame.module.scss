@@ -1,3 +1,5 @@
+@import "../styles/theme.scss";
+
 .window-frame {
   height: 100%;
   position: relative;
@@ -9,6 +11,9 @@
     bottom: 0;
     left: 0;
     right: 0;
+    padding: 1rem;
+    flex-wrap: wrap;
+    height: 100%;
     button {
       background: transparent;
       border: 0;
@@ -19,6 +24,18 @@
       align-items: center;
       padding: 12px 6px;
       cursor: pointer;
+      color: $light;
+      border-radius: 6px;
+      width: 5rem;
+      &:hover {
+        background-color: #ffffff30;
+      }
+      img {
+        object-fit: contain;
+        object-position: center;
+        width: 2rem;
+        height: 2rem;
+      }
       span {
         margin-top: 6px;
         text-align: center;

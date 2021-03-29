@@ -237,6 +237,7 @@ const Window: React.FunctionComponent<Props> = ({
         bottom,
         minHeight,
         minWidth,
+        opacity: dragging ? "0.7" : "",
         visibility: application.minimized ? "collapse" : "visible"
       }}
       ref={windowRef}
