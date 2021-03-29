@@ -3,21 +3,25 @@ import OpenedApplication from "../shared/classes/OpenedApplication";
 
 type OpenedApplicationsStateType = OpenedApplication[];
 
-type OpenedApplicationsContextType = [
-  OpenedApplication[],
-  React.Dispatch<React.SetStateAction<OpenedApplicationsStateType>>
-];
+type OpenedApplicationsContextType = {
+  openedApplications: OpenedApplication[];
+  setOpenedApplications: React.Dispatch<
+    React.SetStateAction<OpenedApplicationsStateType>
+  >;
+};
 
-const openedAppliationsContex = createContext<OpenedApplicationsContextType>([
-  [],
-  () => []
-]);
+const openedAppliationsContex = createContext<OpenedApplicationsContextType>({
+  openedApplications: [],
+  setOpenedApplications: () => {}
+});
 const useOpenedApplications = () => useContext(openedAppliationsContex);
 
 const OpenedAppliations: React.FunctionComponent = ({ children }) => {
   const [state, setState] = useState<OpenedApplicationsStateType>([]);
   return (
-    <openedAppliationsContex.Provider value={[state, setState]}>
+    <openedAppliationsContex.Provider
+      value={{ openedApplications: state, setOpenedApplications: setState }}
+    >
       {children}
     </openedAppliationsContex.Provider>
   );

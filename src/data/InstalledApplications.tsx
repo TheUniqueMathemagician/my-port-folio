@@ -3,20 +3,27 @@ import InstalledApplication from "../shared/classes/InstalledApplication";
 
 type InstalledApplicationsStateType = InstalledApplication[];
 
-type InstalledApplicationsContextType = [
-  InstalledApplication[],
-  React.Dispatch<React.SetStateAction<InstalledApplicationsStateType>>
-];
+type InstalledApplicationsContextType = {
+  installedApplications: InstalledApplication[];
+  setInstalledApplications: React.Dispatch<
+    React.SetStateAction<InstalledApplicationsStateType>
+  >;
+};
 
 const installedAppliationsContex = createContext<InstalledApplicationsContextType>(
-  [[], () => {}]
+  { installedApplications: [], setInstalledApplications: () => {} }
 );
 const useInstalledApplications = () => useContext(installedAppliationsContex);
 
 const InstalledApplications: React.FunctionComponent = ({ children }) => {
   const [state, setState] = useState<InstalledApplicationsStateType>([]);
   return (
-    <installedAppliationsContex.Provider value={[state, setState]}>
+    <installedAppliationsContex.Provider
+      value={{
+        installedApplications: state,
+        setInstalledApplications: setState
+      }}
+    >
       {children}
     </installedAppliationsContex.Provider>
   );

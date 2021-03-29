@@ -4,7 +4,7 @@ import { useOpenedApplications } from "../data/OpenedApplications";
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const [applications] = useOpenedApplications();
+  const { openedApplications } = useOpenedApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,7 +26,7 @@ const TaskBar = () => {
   return (
     <div className={styles["task-bar"]}>
       <div className={styles.apps}>
-        {applications
+        {openedApplications
           .filter((application) => application.minimized)
           .map((application) => (
             <button
