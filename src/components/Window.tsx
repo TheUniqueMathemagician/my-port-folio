@@ -90,12 +90,25 @@ const Window: React.FunctionComponent<Props> = ({
       e.stopPropagation();
       e.preventDefault();
 
-      if (e.pageX - 1 <= boundaries.x1) {
-        application.maximized = Snap.left;
-      } else if (e.pageX + 1 >= boundaries.x2) {
-        application.maximized = Snap.right;
-      } else if (e.pageY - 1 <= boundaries.y1) {
+      const shouldSnapToTop = e.pageY - 1 <= boundaries.y1;
+      const shouldSnapToBottom = e.pageY + 1 >= boundaries.y2;
+      const shouldSnapToLeft = e.pageX - 1 <= boundaries.x1;
+      const shouldSnapToRight = e.pageX + 1 >= boundaries.x2;
+
+      if (shouldSnapToTop && shouldSnapToLeft) {
+        application.maximized = Snap.topLeft;
+      } else if (shouldSnapToTop && shouldSnapToRight) {
+        application.maximized = Snap.topRight;
+      } else if (shouldSnapToBottom && shouldSnapToLeft) {
+        application.maximized = Snap.bottomLeft;
+      } else if (shouldSnapToBottom && shouldSnapToRight) {
+        application.maximized = Snap.bottomRight;
+      } else if (shouldSnapToTop) {
         application.maximized = Snap.top;
+      } else if (shouldSnapToLeft) {
+        application.maximized = Snap.left;
+      } else if (shouldSnapToRight) {
+        application.maximized = Snap.right;
       } else {
         application.maximized = Snap.none;
         setPosition({
@@ -174,6 +187,7 @@ const Window: React.FunctionComponent<Props> = ({
   }, [application.maximized]);
 
   useLayoutEffect(() => {
+    if (position.left || position.top) return;
     setPosition({
       bottom: null,
       left:
@@ -188,23 +202,22 @@ const Window: React.FunctionComponent<Props> = ({
           (windowRef.current?.clientHeight ?? 0)) /
         2
     });
-  }, [windowRef, boundaries]);
+  }, [windowRef, boundaries, position]);
 
   // Render
 
-  let sectionClasses: string[] = [styles.window];
+  let windowClasses: string[] = [styles["window"]];
+  let windowShadowClasses: string[] = [styles["window-shadow"]];
   let top: PositionType | "" = "";
   let left: PositionType | "" = "";
   let right: PositionType | "" = "";
   let bottom: PositionType | "" = "";
 
-  if (application.maximized === Snap.top) {
-    sectionClasses.push(styles["snap-top"]);
-  } else if (application.maximized === Snap.left) {
-    sectionClasses.push(styles["snap-left"]);
-  } else if (application.maximized === Snap.right) {
-    sectionClasses.push(styles["snap-right"]);
+  if (application.maximized && !dragging) {
+    windowClasses.push(styles[`snap-${application.maximized}`]);
   } else {
+    if (application.maximized)
+      windowShadowClasses.push(styles[`snap-${application.maximized}`]);
     if (position.top) top = position.top;
     if (position.left) left = position.left;
     if (position.right) right = position.right;
@@ -232,60 +245,65 @@ const Window: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <section
-      className={sectionClasses.join(" ")}
-      style={{
-        zIndex: application.zIndex,
-        top,
-        left,
-        right,
-        bottom,
-        minHeight: application.minHeight ?? "",
-        minWidth: application.minWidth ?? "",
-        opacity: dragging ? "0.7" : "",
-        visibility: application.minimized ? "collapse" : "visible"
-      }}
-      ref={windowRef}
-      onDragStart={() => false}
-      draggable="false"
-      onMouseDown={windowMouseDownHandler}
-    >
-      <div
-        className={styles.header}
-        onMouseDown={mouseDownHandler}
+    <>
+      <div className={windowShadowClasses.join(" ")}></div>
+      <section
+        className={windowClasses.join(" ")}
         style={{
-          cursor: dragging ? "grabbing" : "grab"
+          zIndex: application.zIndex,
+          top,
+          left,
+          right,
+          bottom,
+          minHeight: application.minHeight ?? "",
+          minWidth: application.minWidth ?? "",
+          opacity: dragging ? "0.7" : "",
+          visibility: application.minimized ? "collapse" : "visible"
         }}
+        ref={windowRef}
         onDragStart={() => false}
         draggable="false"
-        ref={headerRef}
+        onMouseDown={windowMouseDownHandler}
       >
-        <div className={styles["button-list"]}>
-          <button
-            className={styles.red}
-            style={{ pointerEvents: dragging ? "none" : "all" }}
-            onClick={(e) => redActionHandler(e)}
-            onMouseDown={(e) => e.stopPropagation()}
-          ></button>
-          <button
-            className={styles.orange}
-            style={{ pointerEvents: dragging ? "none" : "all" }}
-            onClick={(e) => orangeActionHandler(e)}
-            onMouseDown={(e) => e.stopPropagation()}
-          ></button>
-          <button
-            className={styles.green}
-            style={{ pointerEvents: dragging ? "none" : "all" }}
-            onClick={(e) => greenActionHandler(e)}
-            onMouseDown={(e) => e.stopPropagation()}
-          ></button>
+        <div
+          className={styles.header}
+          onMouseDown={mouseDownHandler}
+          style={{
+            cursor: dragging ? "grabbing" : "grab"
+          }}
+          onDragStart={() => false}
+          draggable="false"
+          ref={headerRef}
+        >
+          <div className={styles["button-list"]}>
+            <button
+              className={styles.red}
+              style={{ pointerEvents: dragging ? "none" : "all" }}
+              onClick={(e) => redActionHandler(e)}
+              onMouseDown={(e) => e.stopPropagation()}
+            ></button>
+            <button
+              className={styles.orange}
+              style={{ pointerEvents: dragging ? "none" : "all" }}
+              onClick={(e) => orangeActionHandler(e)}
+              onMouseDown={(e) => e.stopPropagation()}
+            ></button>
+            <button
+              className={styles.green}
+              style={{ pointerEvents: dragging ? "none" : "all" }}
+              onClick={(e) => greenActionHandler(e)}
+              onMouseDown={(e) => e.stopPropagation()}
+            ></button>
+          </div>
+          <h2>{application.displayName}</h2>
         </div>
-        <h2>{application.displayName}</h2>
-      </div>
-      <div className={styles.background}>
-        {application.component ? createElement(application.component, {}) : ""}
-      </div>
-    </section>
+        <div className={styles.background}>
+          {application.component
+            ? createElement(application.component, {})
+            : ""}
+        </div>
+      </section>
+    </>
   );
 };
 
