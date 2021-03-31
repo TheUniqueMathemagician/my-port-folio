@@ -1,13 +1,13 @@
 enum Snap {
   none,
-  top,
-  bottom,
-  left,
-  right,
   topLeft,
+  top,
   topRight,
+  right,
+  bottomRight,
+  bottom,
   bottomLeft,
-  bottomRight
+  left
 }
 
 export default Snap;

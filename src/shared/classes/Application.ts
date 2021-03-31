@@ -6,6 +6,11 @@ import WindowApplication from "./WindowApplication";
 
 type nullableFC = null | React.FunctionComponent;
 
+type Dimensions = {
+  width: number;
+  height: number;
+};
+
 /**
  * Represents an application
  */
@@ -15,24 +20,27 @@ export default class Application {
   private m_displayName: string;
   private m_shortcut: string;
   private m_icon: string;
+  private m_runOnStartup: boolean;
   // If no component provided => this is a daemon
   private m_component: nullableFC;
-  private m_runOnStartup: boolean;
+  private m_dimensions: Dimensions;
 
   constructor(
     updater: React.Dispatch<React.SetStateAction<RunningApplication[]>>,
     displayName: string,
     icon: string = "",
     shortcut: string = "",
+    runOnStartup: boolean = false,
     component: nullableFC = null,
-    runOnStartup: boolean = false
+    dimensions: Dimensions = { height: 0, width: 0 }
   ) {
     this.m_updater = updater;
     this.m_displayName = displayName;
     this.m_icon = icon;
     this.m_shortcut = shortcut;
-    this.m_component = component;
     this.m_runOnStartup = runOnStartup;
+    this.m_component = component;
+    this.m_dimensions = dimensions;
     if (runOnStartup) this.run();
   }
 
@@ -58,6 +66,18 @@ export default class Application {
 
   public get runOnStartup(): boolean {
     return this.m_runOnStartup;
+  }
+
+  public get width(): number {
+    return this.m_dimensions.width;
+  }
+
+  public get height(): number {
+    return this.m_dimensions.height;
+  }
+
+  public get dimensions(): Dimensions {
+    return this.m_dimensions;
   }
 
   run() {

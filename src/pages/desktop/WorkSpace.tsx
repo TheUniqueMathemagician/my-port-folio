@@ -23,36 +23,54 @@ const Main = () => {
         "A Propos",
         require(`../../assets/images/applications/about.svg`).default,
         "A Propos",
-        About
-      ),
-      new Application(
-        setRunningApplications,
-        "Contact",
-        require(`../../assets/images/applications/contact.svg`).default,
-        "Contact",
-        Contact
+        false,
+        About,
+        { width: 600, height: 400 }
       ),
       new Application(
         setRunningApplications,
         "Expérience",
         require(`../../assets/images/applications/experience.svg`).default,
         "Expérience",
-        Experience
+        false,
+        Experience,
+        { width: 600, height: 400 }
+      ),
+      new Application(
+        setRunningApplications,
+        "Diplômes & Formations",
+        require(`../../assets/images/applications/education.svg`).default,
+        "Diplômes & Formations",
+        false,
+        Experience,
+        { width: 600, height: 400 }
+      ),
+      new Application(
+        setRunningApplications,
+        "Contact",
+        require(`../../assets/images/applications/contact.svg`).default,
+        "Contact",
+        false,
+        Contact,
+        { width: 600, height: 400 }
       ),
       new Application(
         setRunningApplications,
         "Le Serpent",
         require(`../../assets/images/applications/snake.svg`).default,
         "Le Serpent",
-        Snake
+        false,
+        Snake,
+        { width: 600, height: 400 }
       ),
       new Application(
         setRunningApplications,
         "Bienvenue",
         require(`../../assets/images/applications/information.svg`).default,
         "",
+        true,
         Welcome,
-        true
+        { width: 600, height: 400 }
       )
     ]);
   }, [setApplications, setRunningApplications]);

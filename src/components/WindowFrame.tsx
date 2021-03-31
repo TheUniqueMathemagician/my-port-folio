@@ -55,6 +55,8 @@ const WindowFrame = () => {
           <Window
             application={app as WindowApplication}
             boundaries={boundaries}
+            borderOffset={16}
+            resizerWidth={4}
             key={app.id}
           ></Window>
         ))}

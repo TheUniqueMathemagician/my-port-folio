@@ -1,4 +1,4 @@
-import {
+import React, {
   createElement,
   useCallback,
   useLayoutEffect,
@@ -8,12 +8,15 @@ import {
 import WindowApplication from "../shared/classes/WindowApplication";
 import Boundaries from "../shared/Boundaries";
 import Snap from "../shared/Snap";
+import Resize from "../shared/Resize";
 
 import styles from "./Window.module.scss";
 
 interface Props {
   application: WindowApplication;
   boundaries: Boundaries;
+  borderOffset: number;
+  resizerWidth: number;
 }
 
 type PositionType = null | number | "50%" | "100%";
@@ -31,16 +34,15 @@ interface Offset {
 
 const Window: React.FunctionComponent<Props> = ({
   application,
-  boundaries
+  boundaries,
+  borderOffset,
+  resizerWidth
 }) => {
   // Refs
 
   const windowRef = useRef<HTMLDivElement>(null);
+  const resizerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-
-  // Locals
-
-  const borderOffset = 16;
 
   // States
 
@@ -52,10 +54,11 @@ const Window: React.FunctionComponent<Props> = ({
     top: null
   });
   const [dragging, setDragging] = useState<boolean>(false);
+  const [resizing, setResizing] = useState<boolean>(false);
 
   // Callbacks
 
-  const windowMouseDownHandler = useCallback(
+  const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       e.preventDefault();
@@ -65,7 +68,7 @@ const Window: React.FunctionComponent<Props> = ({
     [application]
   );
 
-  const mouseDownHandler = useCallback(
+  const handleDragMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       const window = windowRef.current;
@@ -77,12 +80,12 @@ const Window: React.FunctionComponent<Props> = ({
         y: e.pageY - (parseInt(window.style.top) || 0)
       });
 
-      setDragging(true);
+      if (!resizing) setDragging(true);
     },
-    [windowRef]
+    [windowRef, resizing]
   );
 
-  const mouseMoveHandler = useCallback(
+  const handleDragMouseMove = useCallback(
     (e: globalThis.MouseEvent) => {
       const header = headerRef.current;
       if (!header) return;
@@ -122,13 +125,13 @@ const Window: React.FunctionComponent<Props> = ({
     [offset, boundaries, headerRef, application]
   );
 
-  const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
+  const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setDragging(false);
   }, []);
 
-  const redActionHandler = useCallback(
+  const handleRedClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
@@ -137,7 +140,7 @@ const Window: React.FunctionComponent<Props> = ({
     [application]
   );
 
-  const orangeActionHandler = useCallback(
+  const handleOrangeClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       application.sendToFront();
@@ -150,7 +153,7 @@ const Window: React.FunctionComponent<Props> = ({
     [application]
   );
 
-  const greenActionHandler = useCallback(
+  const handleGreenClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       application.minimized = true;
@@ -159,32 +162,205 @@ const Window: React.FunctionComponent<Props> = ({
     [application]
   );
 
+  const handleResizerMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      const resizer = resizerRef.current;
+      const window = windowRef.current;
+
+      if (!resizer || !window || resizing) return;
+
+      const [x1, x2, y1, y2] = [
+        window.offsetLeft,
+        window.offsetLeft + window.clientWidth,
+        window.offsetTop,
+        window.offsetTop + window.clientHeight
+      ];
+
+      if (e.pageX >= x2 - 16 && e.pageY >= y2 - 16) {
+        application.resize = Resize.bottomRight;
+      } else if (e.pageY >= y2 - 16 && e.pageX <= x1 + 16) {
+        application.resize = Resize.bottomLeft;
+      } else if (e.pageX >= x2 - 16 && e.pageY <= y1 + 16) {
+        application.resize = Resize.topRight;
+      } else if (e.pageY <= y1 + 16 && e.pageX <= x1 + 16) {
+        application.resize = Resize.topLeft;
+      } else if (e.pageX >= x2 - resizerWidth) {
+        application.resize = Resize.right;
+      } else if (e.pageY >= y2 - resizerWidth) {
+        application.resize = Resize.bottom;
+      } else if (e.pageY <= y1 + resizerWidth) {
+        application.resize = Resize.top;
+      } else if (e.pageX <= x1 + resizerWidth) {
+        application.resize = Resize.left;
+      } else {
+        application.resize = Resize.none;
+      }
+    },
+    [resizerRef, resizing, application]
+  );
+
+  const handleResizerDragMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.button !== 0) return;
+      const window = windowRef.current;
+      if (!window) return;
+      e.preventDefault();
+
+      // setOffset({
+      //   x: e.pageX - (parseInt(window.style.left) || 0),
+      //   y: e.pageY - (parseInt(window.style.top) || 0)
+      // });
+
+      if (!dragging) setResizing(true);
+    },
+    [windowRef, dragging]
+  );
+  const handleResizerDragMouseMove = useCallback(
+    (e: globalThis.MouseEvent) => {
+      const window = windowRef.current;
+      if (!window) return;
+      const [x1, x2, y1, y2] = [
+        window.offsetLeft,
+        window.offsetLeft + window.clientWidth,
+        window.offsetTop,
+        window.offsetTop + window.clientHeight
+      ];
+      switch (application.resize) {
+        case Resize.top:
+          application.height = y2 - e.pageY;
+          if (y2 - e.pageY > application.minHeight) {
+            setPosition((state) => ({
+              bottom: state.bottom,
+              left: state.left,
+              right: state.right,
+              top: e.pageY
+            }));
+          }
+          break;
+        case Resize.bottom:
+          application.height = e.pageY - y1;
+          break;
+        case Resize.left:
+          application.width = x2 - e.pageX;
+          if (x2 - e.pageX > application.minWidth) {
+            setPosition((state) => ({
+              bottom: state.bottom,
+              left: e.pageX,
+              right: state.right,
+              top: state.top
+            }));
+          }
+          break;
+        case Resize.right:
+          application.width = e.pageX - x1;
+          break;
+        // Strange issue when using resizerwidth to set border
+        case Resize.topLeft:
+          // const y = y2 - e.pageY - resizerWidth;
+          // const x = x2 - e.pageX - resizerWidth;
+
+          application.dimensions = {
+            height: y2 - e.pageY,
+            width: x2 - e.pageX
+          };
+          setPosition((state) => ({
+            bottom: state.bottom,
+            left: x2 - e.pageX > application.minWidth ? e.pageX : state.left,
+            right: state.right,
+            top: y2 - e.pageY > application.minHeight ? e.pageY : state.top
+          }));
+          break;
+        case Resize.topRight:
+          application.dimensions = {
+            height: y2 - e.pageY,
+            width: e.pageX - x1
+          };
+          setPosition((state) => ({
+            bottom: state.bottom,
+            left: state.left,
+            right: e.pageX,
+            top: e.pageY
+          }));
+          break;
+        case Resize.bottomLeft:
+          application.dimensions = {
+            height: e.pageY - y1,
+            width: x2 - e.pageX
+          };
+          setPosition((state) => ({
+            bottom: state.bottom,
+            left: e.pageX,
+            right: state.right,
+            top: state.top
+          }));
+          break;
+        case Resize.bottomRight:
+          application.dimensions = {
+            height: e.pageY - y1,
+            width: e.pageX - x1
+          };
+          break;
+        default:
+          break;
+      }
+    },
+    [application, windowRef]
+  );
+  const handleResizerDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setResizing(false);
+  }, []);
+
   // Layout Effects
 
   useLayoutEffect(() => {
     if (dragging) {
       document.body.style.cursor = "grabbing";
-      document.addEventListener("mousemove", mouseMoveHandler);
-      document.addEventListener("mouseup", mouseUpHandler);
+      document.addEventListener("mousemove", handleDragMouseMove);
+      document.addEventListener("mouseup", handleDragMouseUp);
     }
     return () => {
       if (dragging) {
         document.body.style.cursor = "";
-        document.removeEventListener("mousemove", mouseMoveHandler);
-        document.removeEventListener("mouseup", mouseUpHandler);
+        document.removeEventListener("mousemove", handleDragMouseMove);
+        document.removeEventListener("mouseup", handleDragMouseUp);
       }
     };
-  }, [dragging, mouseMoveHandler, mouseUpHandler]);
+  }, [dragging, handleDragMouseMove, handleDragMouseUp]);
+
+  useLayoutEffect(() => {
+    if (resizing) {
+      document.addEventListener("mousemove", handleResizerDragMouseMove);
+      document.addEventListener("mouseup", handleResizerDragMouseUp);
+    }
+    return () => {
+      if (resizing) {
+        document.removeEventListener("mousemove", handleResizerDragMouseMove);
+        document.removeEventListener("mouseup", handleResizerDragMouseUp);
+      }
+    };
+  }, [resizing, handleResizerDragMouseMove, handleResizerDragMouseUp]);
 
   useLayoutEffect(() => {
     const header = headerRef.current;
-    if (header) {
+    if (header && application.maximized) {
       setOffset({
         x: header.clientWidth / 2,
         y: header.clientHeight / 2
       });
     }
   }, [application.maximized]);
+
+  // useLayoutEffect(() => {
+  //   const header = headerRef.current;
+  //   if (header && resizing) {
+  //     setOffset({
+  //       x: header.clientWidth / 2,
+  //       y: header.clientHeight / 2
+  //     });
+  //   }
+  // }, [resizing]);
 
   useLayoutEffect(() => {
     if (position.left || position.top) return;
@@ -208,6 +384,8 @@ const Window: React.FunctionComponent<Props> = ({
 
   let windowClasses: string[] = [styles["window"]];
   let windowShadowClasses: string[] = [styles["window-shadow"]];
+  let width: null | number = null;
+  let height: null | number = null;
   let top: PositionType | "" = "";
   let left: PositionType | "" = "";
   let right: PositionType | "" = "";
@@ -216,6 +394,8 @@ const Window: React.FunctionComponent<Props> = ({
   if (application.maximized && !dragging) {
     windowClasses.push(styles[`snap-${application.maximized}`]);
   } else {
+    width = application.width;
+    height = application.height;
     if (application.maximized)
       windowShadowClasses.push(styles[`snap-${application.maximized}`]);
     if (position.top) top = position.top;
@@ -246,7 +426,9 @@ const Window: React.FunctionComponent<Props> = ({
 
   return (
     <>
+      {/* TODO: move this to parent  */}
       <div className={windowShadowClasses.join(" ")}></div>
+
       <section
         className={windowClasses.join(" ")}
         style={{
@@ -255,21 +437,27 @@ const Window: React.FunctionComponent<Props> = ({
           left,
           right,
           bottom,
-          minHeight: application.minHeight ?? "",
-          minWidth: application.minWidth ?? "",
+          height: height ?? "",
+          width: width ?? "",
           opacity: dragging ? "0.7" : "",
           visibility: application.minimized ? "collapse" : "visible"
         }}
         ref={windowRef}
         onDragStart={() => false}
         draggable="false"
-        onMouseDown={windowMouseDownHandler}
+        onMouseDown={handleWindowMouseDown}
       >
         <div
+          ref={resizerRef}
+          className={[styles["resizer"], styles[application.resize]].join(" ")}
+          onMouseDown={handleResizerDragMouseDown}
+          onMouseMove={handleResizerMouseMove}
+        ></div>
+        <div
           className={styles.header}
-          onMouseDown={mouseDownHandler}
+          onMouseDown={handleDragMouseDown}
           style={{
-            cursor: dragging ? "grabbing" : "grab"
+            cursor: resizing ? "default" : dragging ? "grabbing" : "grab"
           }}
           onDragStart={() => false}
           draggable="false"
@@ -279,25 +467,25 @@ const Window: React.FunctionComponent<Props> = ({
             <button
               className={styles.red}
               style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => redActionHandler(e)}
+              onClick={(e) => handleRedClick(e)}
               onMouseDown={(e) => e.stopPropagation()}
             ></button>
             <button
               className={styles.orange}
               style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => orangeActionHandler(e)}
+              onClick={(e) => handleOrangeClick(e)}
               onMouseDown={(e) => e.stopPropagation()}
             ></button>
             <button
               className={styles.green}
               style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => greenActionHandler(e)}
+              onClick={(e) => handleGreenClick(e)}
               onMouseDown={(e) => e.stopPropagation()}
             ></button>
           </div>
           <h2>{application.displayName}</h2>
         </div>
-        <div className={styles.background}>
+        <div className={styles["background"]}>
           {application.component
             ? createElement(application.component, {})
             : ""}
