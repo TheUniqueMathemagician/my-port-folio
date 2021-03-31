@@ -32,7 +32,10 @@ const TaskBar = () => {
           .map((app) => (
             <button
               key={app.id}
-              onClick={() => ((app as WindowApplication).minimized = false)}
+              onClick={() => {
+                (app as WindowApplication).minimized = false;
+                (app as WindowApplication).sendToFront();
+              }}
             >
               <img
                 src={(app as WindowApplication).icon}

@@ -6,6 +6,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
+  backdrop-filter: blur(6px);
   button {
     outline: 0;
     outline: none;

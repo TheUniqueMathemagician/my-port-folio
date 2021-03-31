@@ -33,6 +33,11 @@ const Window: React.FunctionComponent<Props> = ({
   application,
   boundaries
 }) => {
+  // Refs
+
+  const windowRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+
   // Locals
 
   const borderOffset = 16;
@@ -47,11 +52,6 @@ const Window: React.FunctionComponent<Props> = ({
     top: null
   });
   const [dragging, setDragging] = useState<boolean>(false);
-
-  // Refs
-
-  const windowRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
 
   // Callbacks
 
@@ -172,6 +172,23 @@ const Window: React.FunctionComponent<Props> = ({
       });
     }
   }, [application.maximized]);
+
+  useLayoutEffect(() => {
+    setPosition({
+      bottom: null,
+      left:
+        (boundaries.x2 -
+          boundaries.x1 -
+          (windowRef.current?.clientWidth ?? 0)) /
+        2,
+      right: null,
+      top:
+        (boundaries.y2 -
+          boundaries.y1 -
+          (windowRef.current?.clientHeight ?? 0)) /
+        2
+    });
+  }, [windowRef]);
 
   // Render
 

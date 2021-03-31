@@ -20,8 +20,6 @@ const WindowFrame = () => {
     y2: 0
   });
 
-  const [zIndexes, setZIndexes] = useState<string[]>([]);
-
   // Refs
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -49,10 +47,6 @@ const WindowFrame = () => {
     };
   }, [resizeHandler]);
 
-  useLayoutEffect(() => {
-    setZIndexes(runningApplications.map((app) => app.id));
-  }, [runningApplications]);
-
   return (
     <div className={styles["window-frame"]} ref={wrapperRef}>
       {runningApplications
@@ -61,13 +55,6 @@ const WindowFrame = () => {
           <Window
             application={app as WindowApplication}
             boundaries={boundaries}
-            // sendToFront={() => {
-            //   const indexes = [...zIndexes];
-            //   indexes.splice(indexes.indexOf(app.id), 1);
-            //   indexes.push(app.id);
-            //   setZIndexes(indexes);
-            // }}
-            // zIndex={zIndexes.indexOf(app.id)}
             key={app.id}
           ></Window>
         ))}
