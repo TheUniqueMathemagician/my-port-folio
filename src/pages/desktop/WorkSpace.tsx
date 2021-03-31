@@ -3,6 +3,7 @@ import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
 import Experience from "../../components/apps/Experience";
 import Snake from "../../components/apps/Snake";
+import Welcome from "../../components/apps/Welome";
 import ScreenFrame from "../../components/ScreenFrame";
 import ShortcutFrame from "../../components/ShortcutFrame";
 import TaskBar from "../../components/TaskBar";
@@ -44,6 +45,14 @@ const Main = () => {
         require(`../../assets/images/applications/snake.svg`).default,
         "Le Serpent",
         Snake
+      ),
+      new Application(
+        setRunningApplications,
+        "Bienvenue",
+        require(`../../assets/images/applications/information.svg`).default,
+        "",
+        Welcome,
+        true
       )
     ]);
   }, [setApplications, setRunningApplications]);

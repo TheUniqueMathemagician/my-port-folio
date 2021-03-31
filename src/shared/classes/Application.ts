@@ -17,19 +17,23 @@ export default class Application {
   private m_icon: string;
   // If no component provided => this is a daemon
   private m_component: nullableFC;
+  private m_runOnStartup: boolean;
 
   constructor(
     updater: React.Dispatch<React.SetStateAction<RunningApplication[]>>,
     displayName: string,
     icon: string = "",
     shortcut: string = "",
-    component: nullableFC = null
+    component: nullableFC = null,
+    runOnStartup: boolean = false
   ) {
     this.m_updater = updater;
     this.m_displayName = displayName;
     this.m_icon = icon;
     this.m_shortcut = shortcut;
     this.m_component = component;
+    this.m_runOnStartup = runOnStartup;
+    if (runOnStartup) this.run();
   }
 
   public get displayName(): string {
@@ -50,6 +54,10 @@ export default class Application {
 
   public get shortcut(): string {
     return this.m_shortcut;
+  }
+
+  public get runOnStartup(): boolean {
+    return this.m_runOnStartup;
   }
 
   run() {

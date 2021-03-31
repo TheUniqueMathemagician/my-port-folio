@@ -188,7 +188,7 @@ const Window: React.FunctionComponent<Props> = ({
           (windowRef.current?.clientHeight ?? 0)) /
         2
     });
-  }, [windowRef]);
+  }, [windowRef, boundaries]);
 
   // Render
 
@@ -260,7 +260,7 @@ const Window: React.FunctionComponent<Props> = ({
         draggable="false"
         ref={headerRef}
       >
-        <div>
+        <div className={styles["button-list"]}>
           <button
             className={styles.red}
             style={{ pointerEvents: dragging ? "none" : "all" }}
@@ -280,7 +280,7 @@ const Window: React.FunctionComponent<Props> = ({
             onMouseDown={(e) => e.stopPropagation()}
           ></button>
         </div>
-        <div className="application-name">{application.displayName}</div>
+        <h2>{application.displayName}</h2>
       </div>
       <div className={styles.background}>
         {application.component ? createElement(application.component, {}) : ""}

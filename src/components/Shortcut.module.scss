@@ -13,9 +13,10 @@ button.shortcut {
   cursor: pointer;
   color: $light;
   border-radius: 6px;
-  text-shadow: 1px 1px 4px #0000007f;
+  text-shadow: 1px 1px 4px #333333;
   font-size: 1rem;
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: #ffffff30;
   }
   img {
