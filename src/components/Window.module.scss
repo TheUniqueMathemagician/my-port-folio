@@ -5,6 +5,7 @@
   backdrop-filter: blur(6px);
   border-radius: 16px;
   box-shadow: 0 0 20px 4px #33333333;
+  pointer-events: all;
   &.snap-left {
     bottom: 0;
     left: 0;

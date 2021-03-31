@@ -5,22 +5,15 @@ import {
   useRef,
   useState
 } from "react";
-import Application from "../shared/classes/Application";
-import Boundaries from "../shared/types/Boundaries";
+import WindowApplication from "../shared/classes/WindowApplication";
+import Boundaries from "../shared/Boundaries";
+import Snap from "../shared/Snap";
 
 import styles from "./Window.module.scss";
 
 interface Props {
-  application: Application;
+  application: WindowApplication;
   boundaries: Boundaries;
-  sendToFront: () => void;
-  zIndex: number;
-}
-
-enum Snap {
-  none,
-  left,
-  right
 }
 
 type PositionType = null | number | "50%" | "100%";
@@ -38,10 +31,7 @@ interface Offset {
 
 const Window: React.FunctionComponent<Props> = ({
   application,
-  boundaries,
-  children,
-  sendToFront,
-  zIndex
+  boundaries
 }) => {
   // Locals
 
@@ -49,10 +39,6 @@ const Window: React.FunctionComponent<Props> = ({
 
   // States
 
-  const [minHeight] = useState<number>(500);
-  const [minWidth] = useState<number>(300);
-  // const [height, setHeight] = useState<number>(300);
-  // const [width, setWidth] = useState<number>(500);
   const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
   const [position, setPosition] = useState<Position>({
     bottom: null,
@@ -60,7 +46,6 @@ const Window: React.FunctionComponent<Props> = ({
     right: null,
     top: null
   });
-  const [snap, setSnap] = useState<Snap>(Snap.none);
   const [dragging, setDragging] = useState<boolean>(false);
 
   // Refs
@@ -75,9 +60,9 @@ const Window: React.FunctionComponent<Props> = ({
       if (e.button !== 0) return;
       e.preventDefault();
       e.stopPropagation();
-      sendToFront();
+      application.sendToFront();
     },
-    [sendToFront]
+    [application]
   );
 
   const mouseDownHandler = useCallback(
@@ -106,14 +91,13 @@ const Window: React.FunctionComponent<Props> = ({
       e.preventDefault();
 
       if (e.pageX - 1 <= boundaries.x1) {
-        if (!(snap === Snap.left)) setSnap(Snap.left);
+        application.maximized = Snap.left;
       } else if (e.pageX + 1 >= boundaries.x2) {
-        if (!(snap === Snap.right)) setSnap(Snap.right);
+        application.maximized = Snap.right;
       } else if (e.pageY - 1 <= boundaries.y1) {
-        application.maximized = true;
+        application.maximized = Snap.top;
       } else {
-        if (snap) setSnap(Snap.none);
-        application.maximized = false;
+        application.maximized = Snap.none;
         setPosition({
           left: e.pageX - offset.x,
           top: e.pageY - offset.y,
@@ -122,7 +106,7 @@ const Window: React.FunctionComponent<Props> = ({
         });
       }
     },
-    [offset, boundaries, headerRef, snap, application]
+    [offset, boundaries, headerRef, application]
   );
 
   const mouseUpHandler = useCallback((e: globalThis.MouseEvent) => {
@@ -143,19 +127,23 @@ const Window: React.FunctionComponent<Props> = ({
   const orangeActionHandler = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      sendToFront();
-      application.maximized = !application.maximized;
+      application.sendToFront();
+      if (application.maximized) {
+        application.maximized = Snap.none;
+      } else {
+        application.maximized = Snap.top;
+      }
     },
-    [application, sendToFront]
+    [application]
   );
 
   const greenActionHandler = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       application.minimized = true;
-      sendToFront();
+      application.sendToFront();
     },
-    [application, sendToFront]
+    [application]
   );
 
   // Layout Effects
@@ -177,13 +165,13 @@ const Window: React.FunctionComponent<Props> = ({
 
   useLayoutEffect(() => {
     const header = headerRef.current;
-    if (header && !snap) {
+    if (header) {
       setOffset({
         x: header.clientWidth / 2,
         y: header.clientHeight / 2
       });
     }
-  }, [snap, application.maximized]);
+  }, [application.maximized]);
 
   // Render
 
@@ -193,11 +181,11 @@ const Window: React.FunctionComponent<Props> = ({
   let right: PositionType | "" = "";
   let bottom: PositionType | "" = "";
 
-  if (application.maximized) {
+  if (application.maximized === Snap.top) {
     sectionClasses.push(styles["snap-top"]);
-  } else if (snap === Snap.left) {
+  } else if (application.maximized === Snap.left) {
     sectionClasses.push(styles["snap-left"]);
-  } else if (snap === Snap.right) {
+  } else if (application.maximized === Snap.right) {
     sectionClasses.push(styles["snap-right"]);
   } else {
     if (position.top) top = position.top;
@@ -230,13 +218,13 @@ const Window: React.FunctionComponent<Props> = ({
     <section
       className={sectionClasses.join(" ")}
       style={{
-        zIndex,
+        zIndex: application.zIndex,
         top,
         left,
         right,
         bottom,
-        minHeight,
-        minWidth,
+        minHeight: application.minHeight ?? "",
+        minWidth: application.minWidth ?? "",
         opacity: dragging ? "0.7" : "",
         visibility: application.minimized ? "collapse" : "visible"
       }}
@@ -275,10 +263,10 @@ const Window: React.FunctionComponent<Props> = ({
             onMouseDown={(e) => e.stopPropagation()}
           ></button>
         </div>
-        <div className="application-name">{application.name}</div>
+        <div className="application-name">{application.displayName}</div>
       </div>
       <div className={styles.background}>
-        {createElement(application.component, {})}
+        {application.component ? createElement(application.component, {}) : ""}
       </div>
     </section>
   );

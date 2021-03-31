@@ -1,10 +1,11 @@
 import styles from "./TaskBar.module.scss";
 import { useEffect, useState } from "react";
-import { useOpenedApplications } from "../data/OpenedApplications";
+import { useRunningApplications } from "../data/RunningApplications";
+import WindowApplication from "../shared/classes/WindowApplication";
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const { openedApplications } = useOpenedApplications();
+  const { runningApplications } = useRunningApplications();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,11 +27,17 @@ const TaskBar = () => {
   return (
     <div className={styles["task-bar"]}>
       <div className={styles.apps}>
-        {openedApplications
-          .filter((app) => app.minimized)
+        {runningApplications
+          .filter((app) => app instanceof WindowApplication)
           .map((app) => (
-            <button key={app.id} onClick={() => (app.minimized = false)}>
-              <img src={app.icon} alt={app.name} />
+            <button
+              key={app.id}
+              onClick={() => ((app as WindowApplication).minimized = false)}
+            >
+              <img
+                src={(app as WindowApplication).icon}
+                alt={(app as WindowApplication).displayName}
+              />
             </button>
           ))}
       </div>

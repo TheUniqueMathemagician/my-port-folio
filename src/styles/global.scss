@@ -5,7 +5,10 @@
 :root,
 html,
 body {
-  background: $linear;
+  background: $image;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: $light;
   font-family: "Karla", sans-serif;
   font-weight: 100;

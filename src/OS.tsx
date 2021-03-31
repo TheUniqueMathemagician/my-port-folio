@@ -1,5 +1,5 @@
-import InstalledApplicationsProvider from "./data/InstalledApplications";
-import OpenedApplicationsProvider from "./data/OpenedApplications";
+import ApplicationsProvider from "./data/Applications";
+import RunningApplicationsProvider from "./data/RunningApplications";
 import ThemeProvider from "./data/Theme";
 // import UserProvider from "./data/User";
 import Desktop from "./layouts/Desktop";
@@ -9,8 +9,8 @@ import { BrowserRouter } from "react-router-dom";
 
 const OS = () => {
   return (
-    <InstalledApplicationsProvider>
-      <OpenedApplicationsProvider>
+    <ApplicationsProvider>
+      <RunningApplicationsProvider>
         <ThemeProvider>
           <BrowserRouter>
             {/* <UserProvider> */}
@@ -18,8 +18,8 @@ const OS = () => {
             {/* </UserProvider> */}
           </BrowserRouter>
         </ThemeProvider>
-      </OpenedApplicationsProvider>
-    </InstalledApplicationsProvider>
+      </RunningApplicationsProvider>
+    </ApplicationsProvider>
   );
 };
 

@@ -4,4 +4,24 @@ $light: white;
 $primary: #bec0ff;
 $secondary: #ff82ce;
 
+$image: url(https://images.unsplash.com/photo-1605521814569-bcdacdf440bf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80);
 $linear: linear-gradient(90deg, $secondary 0%, $primary 100%);
+
+// $linear: linear-gradient(
+//   to right top,
+//   #38438b,
+//   #944b94,
+//   #d75a88,
+//   #ff7e71,
+//   #ffb25f,
+//   #ffeb68
+// );
+
+// $linear: linear-gradient(
+//   to right top,
+//   #6d327c,
+//   #485da6,
+//   #00a1ba,
+//   #00bf98,
+//   #36c486
+// );

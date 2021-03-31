@@ -1,17 +1,15 @@
 import { useCallback, useLayoutEffect, useState, useRef } from "react";
-import { useInstalledApplications } from "../data/InstalledApplications";
-import { useOpenedApplications } from "../data/OpenedApplications";
-import Application from "../shared/classes/Application";
-import Boundaries from "../shared/types/Boundaries";
+import Boundaries from "../shared/Boundaries";
 import Window from "./Window";
 
 import styles from "./WindowFrame.module.scss";
+import { useRunningApplications } from "../data/RunningApplications";
+import WindowApplication from "../shared/classes/WindowApplication";
 
 const WindowFrame = () => {
   // Contexts
 
-  const { openedApplications, setOpenedApplications } = useOpenedApplications();
-  const { installedApplications } = useInstalledApplications();
+  const { runningApplications } = useRunningApplications();
 
   // States
 
@@ -52,41 +50,27 @@ const WindowFrame = () => {
   }, [resizeHandler]);
 
   useLayoutEffect(() => {
-    setZIndexes(openedApplications.map((app) => app.id));
-  }, [openedApplications]);
+    setZIndexes(runningApplications.map((app) => app.id));
+  }, [runningApplications]);
 
   return (
     <div className={styles["window-frame"]} ref={wrapperRef}>
-      <div className={styles["shortcuts"]}>
-        {installedApplications.map((app) => (
-          <button
-            onDoubleClick={() => {
-              setOpenedApplications([
-                ...openedApplications,
-                new Application(app.icon, app.name, app.component, app.renderer)
-              ]);
-            }}
+      {runningApplications
+        .filter((app) => app instanceof WindowApplication)
+        .map((app) => (
+          <Window
+            application={app as WindowApplication}
+            boundaries={boundaries}
+            // sendToFront={() => {
+            //   const indexes = [...zIndexes];
+            //   indexes.splice(indexes.indexOf(app.id), 1);
+            //   indexes.push(app.id);
+            //   setZIndexes(indexes);
+            // }}
+            // zIndex={zIndexes.indexOf(app.id)}
             key={app.id}
-          >
-            <img src={app.icon} alt={app.name} />
-            <span>{app.name}</span>
-          </button>
+          ></Window>
         ))}
-      </div>
-      {openedApplications.map((application) => (
-        <Window
-          application={application}
-          boundaries={boundaries}
-          sendToFront={() => {
-            const indexes = [...zIndexes];
-            indexes.splice(indexes.indexOf(application.id), 1);
-            indexes.push(application.id);
-            setZIndexes(indexes);
-          }}
-          zIndex={zIndexes.indexOf(application.id) + 1}
-          key={application.id}
-        ></Window>
-      ))}
     </div>
   );
 };
