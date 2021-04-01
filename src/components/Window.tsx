@@ -1,498 +1,577 @@
-import React, {
-  createElement,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState
-} from "react";
+import { Component, createElement, createRef } from "react";
 import WindowApplication from "../shared/classes/WindowApplication";
+
 import Boundaries from "../shared/Boundaries";
 import Snap from "../shared/Snap";
 import Resize from "../shared/Resize";
+import IOffset from "../shared/IOffset";
+import IPosition from "../shared/IPosition";
 
 import styles from "./Window.module.scss";
-
-interface Props {
+interface IState {
+  snap: Snap;
+  offset: IOffset;
+  position: IPosition;
+  dragging: boolean;
+  resizing: boolean;
+}
+interface IProps {
   application: WindowApplication;
   boundaries: Boundaries;
   borderOffset: number;
   resizerWidth: number;
 }
 
-type PositionType = null | number | "50%" | "100%";
-interface Position {
-  bottom: PositionType;
-  left: PositionType;
-  right: PositionType;
-  top: PositionType;
-}
+export default class Window extends Component<IProps, IState> {
+  private m_windowRef: React.RefObject<HTMLDivElement>;
+  private m_resizerRef: React.RefObject<HTMLDivElement>;
+  private m_headerRef: React.RefObject<HTMLDivElement>;
 
-interface Offset {
-  x: number;
-  y: number;
-}
+  private m_resizerWidth: number = 4;
+  private m_borderOffset: number = 16;
 
-const Window: React.FunctionComponent<Props> = ({
-  application,
-  boundaries,
-  borderOffset,
-  resizerWidth
-}) => {
-  // Refs
+  constructor(props: IProps) {
+    super(props);
 
-  const windowRef = useRef<HTMLDivElement>(null);
-  const resizerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
+    this.m_windowRef = createRef<HTMLDivElement>();
+    this.m_resizerRef = createRef<HTMLDivElement>();
+    this.m_headerRef = createRef<HTMLDivElement>();
 
-  // States
-
-  const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
-  const [position, setPosition] = useState<Position>({
-    bottom: null,
-    left: null,
-    right: null,
-    top: null
-  });
-  const [dragging, setDragging] = useState<boolean>(false);
-  const [resizing, setResizing] = useState<boolean>(false);
-
-  // Callbacks
-
-  const handleWindowMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      e.preventDefault();
-      e.stopPropagation();
-      application.sendToFront();
-    },
-    [application]
-  );
-
-  const handleDragMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      const window = windowRef.current;
-      if (!window) return;
-      e.preventDefault();
-
-      setOffset({
-        x: e.pageX - (parseInt(window.style.left) || 0),
-        y: e.pageY - (parseInt(window.style.top) || 0)
-      });
-
-      if (!resizing) setDragging(true);
-    },
-    [windowRef, resizing]
-  );
-
-  const handleDragMouseMove = useCallback(
-    (e: globalThis.MouseEvent) => {
-      const header = headerRef.current;
-      if (!header) return;
-
-      e.stopPropagation();
-      e.preventDefault();
-
-      const shouldSnapToTop = e.pageY - 1 <= boundaries.y1;
-      const shouldSnapToBottom = e.pageY + 1 >= boundaries.y2;
-      const shouldSnapToLeft = e.pageX - 1 <= boundaries.x1;
-      const shouldSnapToRight = e.pageX + 1 >= boundaries.x2;
-
-      if (shouldSnapToTop && shouldSnapToLeft) {
-        application.maximized = Snap.topLeft;
-      } else if (shouldSnapToTop && shouldSnapToRight) {
-        application.maximized = Snap.topRight;
-      } else if (shouldSnapToBottom && shouldSnapToLeft) {
-        application.maximized = Snap.bottomLeft;
-      } else if (shouldSnapToBottom && shouldSnapToRight) {
-        application.maximized = Snap.bottomRight;
-      } else if (shouldSnapToTop) {
-        application.maximized = Snap.top;
-      } else if (shouldSnapToLeft) {
-        application.maximized = Snap.left;
-      } else if (shouldSnapToRight) {
-        application.maximized = Snap.right;
-      } else {
-        application.maximized = Snap.none;
-        setPosition({
-          left: e.pageX - offset.x,
-          top: e.pageY - offset.y,
-          right: null,
-          bottom: null
-        });
-      }
-    },
-    [offset, boundaries, headerRef, application]
-  );
-
-  const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setDragging(false);
-  }, []);
-
-  const handleRedClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
-      application.close();
-    },
-    [application]
-  );
-
-  const handleOrangeClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      application.sendToFront();
-      if (application.maximized) {
-        application.maximized = Snap.none;
-      } else {
-        application.maximized = Snap.top;
-      }
-    },
-    [application]
-  );
-
-  const handleGreenClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      application.minimized = true;
-      application.sendToFront();
-    },
-    [application]
-  );
-
-  const handleResizerMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      const resizer = resizerRef.current;
-      const window = windowRef.current;
-
-      if (!resizer || !window || resizing) return;
-
-      const [x1, x2, y1, y2] = [
-        window.offsetLeft,
-        window.offsetLeft + window.clientWidth,
-        window.offsetTop,
-        window.offsetTop + window.clientHeight
-      ];
-
-      if (e.pageX >= x2 - 16 && e.pageY >= y2 - 16) {
-        application.resize = Resize.bottomRight;
-      } else if (e.pageY >= y2 - 16 && e.pageX <= x1 + 16) {
-        application.resize = Resize.bottomLeft;
-      } else if (e.pageX >= x2 - 16 && e.pageY <= y1 + 16) {
-        application.resize = Resize.topRight;
-      } else if (e.pageY <= y1 + 16 && e.pageX <= x1 + 16) {
-        application.resize = Resize.topLeft;
-      } else if (e.pageX >= x2 - resizerWidth) {
-        application.resize = Resize.right;
-      } else if (e.pageY >= y2 - resizerWidth) {
-        application.resize = Resize.bottom;
-      } else if (e.pageY <= y1 + resizerWidth) {
-        application.resize = Resize.top;
-      } else if (e.pageX <= x1 + resizerWidth) {
-        application.resize = Resize.left;
-      } else {
-        application.resize = Resize.none;
-      }
-    },
-    [resizerRef, resizing, application]
-  );
-
-  const handleResizerDragMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      const window = windowRef.current;
-      if (!window) return;
-      e.preventDefault();
-
-      // setOffset({
-      //   x: e.pageX - (parseInt(window.style.left) || 0),
-      //   y: e.pageY - (parseInt(window.style.top) || 0)
-      // });
-
-      if (!dragging) setResizing(true);
-    },
-    [windowRef, dragging]
-  );
-  const handleResizerDragMouseMove = useCallback(
-    (e: globalThis.MouseEvent) => {
-      const window = windowRef.current;
-      if (!window) return;
-      const [x1, x2, y1, y2] = [
-        window.offsetLeft,
-        window.offsetLeft + window.clientWidth,
-        window.offsetTop,
-        window.offsetTop + window.clientHeight
-      ];
-      switch (application.resize) {
-        case Resize.top:
-          application.height = y2 - e.pageY;
-          if (y2 - e.pageY > application.minHeight) {
-            setPosition((state) => ({
-              bottom: state.bottom,
-              left: state.left,
-              right: state.right,
-              top: e.pageY
-            }));
-          }
-          break;
-        case Resize.bottom:
-          application.height = e.pageY - y1;
-          break;
-        case Resize.left:
-          application.width = x2 - e.pageX;
-          if (x2 - e.pageX > application.minWidth) {
-            setPosition((state) => ({
-              bottom: state.bottom,
-              left: e.pageX,
-              right: state.right,
-              top: state.top
-            }));
-          }
-          break;
-        case Resize.right:
-          application.width = e.pageX - x1;
-          break;
-        // Strange issue when using resizerwidth to set border
-        case Resize.topLeft:
-          // const y = y2 - e.pageY - resizerWidth;
-          // const x = x2 - e.pageX - resizerWidth;
-
-          application.dimensions = {
-            height: y2 - e.pageY,
-            width: x2 - e.pageX
-          };
-          setPosition((state) => ({
-            bottom: state.bottom,
-            left: x2 - e.pageX > application.minWidth ? e.pageX : state.left,
-            right: state.right,
-            top: y2 - e.pageY > application.minHeight ? e.pageY : state.top
-          }));
-          break;
-        case Resize.topRight:
-          application.dimensions = {
-            height: y2 - e.pageY,
-            width: e.pageX - x1
-          };
-          setPosition((state) => ({
-            bottom: state.bottom,
-            left: state.left,
-            right: e.pageX,
-            top: e.pageY
-          }));
-          break;
-        case Resize.bottomLeft:
-          application.dimensions = {
-            height: e.pageY - y1,
-            width: x2 - e.pageX
-          };
-          setPosition((state) => ({
-            bottom: state.bottom,
-            left: e.pageX,
-            right: state.right,
-            top: state.top
-          }));
-          break;
-        case Resize.bottomRight:
-          application.dimensions = {
-            height: e.pageY - y1,
-            width: e.pageX - x1
-          };
-          break;
-        default:
-          break;
-      }
-    },
-    [application, windowRef]
-  );
-  const handleResizerDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setResizing(false);
-  }, []);
-
-  // Layout Effects
-
-  useLayoutEffect(() => {
-    if (dragging) {
-      document.body.style.cursor = "grabbing";
-      document.addEventListener("mousemove", handleDragMouseMove);
-      document.addEventListener("mouseup", handleDragMouseUp);
-    }
-    return () => {
-      if (dragging) {
-        document.body.style.cursor = "";
-        document.removeEventListener("mousemove", handleDragMouseMove);
-        document.removeEventListener("mouseup", handleDragMouseUp);
-      }
+    const snap: Snap = Snap.none;
+    const offset: IOffset = { x: 0, y: 0 };
+    const position: IPosition = {
+      bottom: "",
+      left: "",
+      right: "",
+      top: ""
     };
-  }, [dragging, handleDragMouseMove, handleDragMouseUp]);
-
-  useLayoutEffect(() => {
-    if (resizing) {
-      document.addEventListener("mousemove", handleResizerDragMouseMove);
-      document.addEventListener("mouseup", handleResizerDragMouseUp);
-    }
-    return () => {
-      if (resizing) {
-        document.removeEventListener("mousemove", handleResizerDragMouseMove);
-        document.removeEventListener("mouseup", handleResizerDragMouseUp);
-      }
+    const dragging: boolean = false;
+    const resizing: boolean = false;
+    this.state = {
+      snap,
+      offset,
+      position,
+      dragging,
+      resizing
     };
-  }, [resizing, handleResizerDragMouseMove, handleResizerDragMouseUp]);
 
-  useLayoutEffect(() => {
-    const header = headerRef.current;
-    if (header && application.maximized) {
-      setOffset({
-        x: header.clientWidth / 2,
-        y: header.clientHeight / 2
-      });
-    }
-  }, [application.maximized]);
+    this.handleWindowMouseDown = this.handleWindowMouseDown.bind(this);
+    this.handleDragMouseDown = this.handleDragMouseDown.bind(this);
+    this.handleDragMouseMove = this.handleDragMouseMove.bind(this);
+    this.handleDragMouseUp = this.handleDragMouseUp.bind(this);
+    this.handleRedClick = this.handleRedClick.bind(this);
+    this.handleOrangeClick = this.handleOrangeClick.bind(this);
+    this.handleGreenClick = this.handleGreenClick.bind(this);
+    this.handleResizerMouseMove = this.handleResizerMouseMove.bind(this);
+    this.handleResizerDragMouseDown = this.handleResizerDragMouseDown.bind(
+      this
+    );
+    this.handleResizerDragMouseMove = this.handleResizerDragMouseMove.bind(
+      this
+    );
+    this.handleResizerDragMouseUp = this.handleResizerDragMouseUp.bind(this);
+  }
 
-  // useLayoutEffect(() => {
-  //   const header = headerRef.current;
-  //   if (header && resizing) {
-  //     setOffset({
-  //       x: header.clientWidth / 2,
-  //       y: header.clientHeight / 2
-  //     });
-  //   }
-  // }, [resizing]);
+  private handleWindowMouseDown(e: React.MouseEvent) {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.application.sendToFront();
+  }
 
-  useLayoutEffect(() => {
-    if (position.left || position.top) return;
-    setPosition({
-      bottom: null,
-      left:
-        (boundaries.x2 -
-          boundaries.x1 -
-          (windowRef.current?.clientWidth ?? 0)) /
-        2,
-      right: null,
-      top:
-        (boundaries.y2 -
-          boundaries.y1 -
-          (windowRef.current?.clientHeight ?? 0)) /
-        2
-    });
-  }, [windowRef, boundaries, position]);
+  private handleDragMouseDown(e: React.MouseEvent) {
+    if (e.button !== 0) return;
+    e.preventDefault();
 
-  // Render
+    const window = this.m_windowRef.current;
+    const header = this.m_headerRef.current;
+    if (!window || !header) return;
 
-  let windowClasses: string[] = [styles["window"]];
-  let windowShadowClasses: string[] = [styles["window-shadow"]];
-  let width: null | number = null;
-  let height: null | number = null;
-  let top: PositionType | "" = "";
-  let left: PositionType | "" = "";
-  let right: PositionType | "" = "";
-  let bottom: PositionType | "" = "";
+    document.body.style.cursor = "grabbing";
+    document.addEventListener("mousemove", this.handleDragMouseMove);
+    document.addEventListener("mouseup", this.handleDragMouseUp);
 
-  if (application.maximized && !dragging) {
-    windowClasses.push(styles[`snap-${application.maximized}`]);
-  } else {
-    width = application.width;
-    height = application.height;
-    if (application.maximized)
-      windowShadowClasses.push(styles[`snap-${application.maximized}`]);
-    if (position.top) top = position.top;
-    if (position.left) left = position.left;
-    if (position.right) right = position.right;
-    if (position.bottom) bottom = position.bottom;
-
-    const header = headerRef.current;
-    if (header) {
-      if (position.left) {
-        if (position.left < boundaries.x1 - header.clientWidth + borderOffset) {
-          left = boundaries.x1 - header.clientWidth + borderOffset;
+    if (this.props.application.maximized) {
+      this.setState((state) => ({
+        ...state,
+        dragging: true,
+        offset: {
+          x: this.props.application.width / 2,
+          y: header.clientHeight / 2
         }
-        if (position.left > boundaries.x2 - borderOffset) {
-          left = boundaries.x2 - borderOffset;
+      }));
+    } else {
+      this.setState((state) => ({
+        ...state,
+        dragging: true,
+        offset: {
+          x: e.pageX - (parseInt(window.style.left) || 0),
+          y: e.pageY - (parseInt(window.style.top) || 0)
         }
-      }
-      if (position.top) {
-        if (position.top < boundaries.y1) {
-          top = boundaries.y1;
-        }
-        if (position.top > boundaries.y2 - header.clientHeight) {
-          top = boundaries.y2 - header.clientHeight;
-        }
-      }
+      }));
     }
   }
 
-  return (
-    <>
-      {/* TODO: move this to parent  */}
-      <div className={windowShadowClasses.join(" ")}></div>
+  private handleDragMouseMove(e: globalThis.MouseEvent) {
+    const header = this.m_headerRef.current;
+    if (!header) return;
 
-      <section
-        className={windowClasses.join(" ")}
-        style={{
-          zIndex: application.zIndex,
-          top,
-          left,
-          right,
-          bottom,
-          height: height ?? "",
-          width: width ?? "",
-          opacity: dragging ? "0.7" : "",
-          visibility: application.minimized ? "collapse" : "visible"
-        }}
-        ref={windowRef}
-        onDragStart={() => false}
-        draggable="false"
-        onMouseDown={handleWindowMouseDown}
-      >
-        <div
-          ref={resizerRef}
-          className={[styles["resizer"], styles[application.resize]].join(" ")}
-          onMouseDown={handleResizerDragMouseDown}
-          onMouseMove={handleResizerMouseMove}
-        ></div>
-        <div
-          className={styles.header}
-          onMouseDown={handleDragMouseDown}
+    e.stopPropagation();
+    e.preventDefault();
+
+    const shouldSnapToTop = e.pageY - 1 <= this.props.boundaries.y1;
+    const shouldSnapToBottom = e.pageY + 1 >= this.props.boundaries.y2;
+    const shouldSnapToLeft = e.pageX - 1 <= this.props.boundaries.x1;
+    const shouldSnapToRight = e.pageX + 1 >= this.props.boundaries.x2;
+
+    if (shouldSnapToTop && shouldSnapToLeft) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.topLeft,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToTop && shouldSnapToRight) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.topRight,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToBottom && shouldSnapToLeft) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.bottomLeft,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToBottom && shouldSnapToRight) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.bottomRight,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToTop) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.top,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToLeft) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.left,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else if (shouldSnapToRight) {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.right,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+    } else {
+      this.setState((state) => ({
+        ...state,
+        snap: Snap.none,
+        // offset: this.props.application.maximized
+        //   ? {
+        //       x: this.props.application.width,
+        //       y: this.props.application.height
+        //     }
+        //   : state.offset,
+        position: {
+          left: e.pageX - state.offset.x,
+          top: e.pageY - state.offset.y,
+          right: "",
+          bottom: ""
+        }
+      }));
+      this.props.application.maximized = Snap.none;
+    }
+  }
+
+  private handleDragMouseUp(e: globalThis.MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+    document.body.style.cursor = "";
+    document.removeEventListener("mousemove", this.handleDragMouseMove);
+    document.removeEventListener("mouseup", this.handleDragMouseUp);
+    this.setState((state) => ({ ...state, dragging: false }));
+    this.props.application.maximized = this.state.snap;
+  }
+
+  private handleRedClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.props.application.close();
+  }
+
+  private handleOrangeClick(e: React.MouseEvent) {
+    e.preventDefault();
+    this.props.application.sendToFront();
+    if (this.props.application.maximized) {
+      this.props.application.maximized = Snap.none;
+    } else {
+      this.props.application.maximized = Snap.top;
+    }
+  }
+
+  private handleGreenClick(e: React.MouseEvent) {
+    e.preventDefault();
+    this.props.application.minimized = true;
+    this.props.application.sendToFront();
+  }
+
+  private handleResizerMouseMove(e: React.MouseEvent) {
+    const resizer = this.m_resizerRef.current;
+    const window = this.m_windowRef.current;
+
+    if (!resizer || !window || this.state.resizing) return;
+
+    const [x1, x2, y1, y2] = [
+      window.offsetLeft,
+      window.offsetLeft + window.clientWidth,
+      window.offsetTop,
+      window.offsetTop + window.clientHeight
+    ];
+
+    if (e.pageX >= x2 - 16 && e.pageY >= y2 - 16) {
+      this.props.application.resize = Resize.bottomRight;
+    } else if (e.pageY >= y2 - 16 && e.pageX <= x1 + 16) {
+      this.props.application.resize = Resize.bottomLeft;
+    } else if (e.pageX >= x2 - 16 && e.pageY <= y1 + 16) {
+      this.props.application.resize = Resize.topRight;
+    } else if (e.pageY <= y1 + 16 && e.pageX <= x1 + 16) {
+      this.props.application.resize = Resize.topLeft;
+    } else if (e.pageX >= x2 - this.m_resizerWidth) {
+      this.props.application.resize = Resize.right;
+    } else if (e.pageY >= y2 - this.m_resizerWidth) {
+      this.props.application.resize = Resize.bottom;
+    } else if (e.pageY <= y1 + this.m_resizerWidth) {
+      this.props.application.resize = Resize.top;
+    } else if (e.pageX <= x1 + this.m_resizerWidth) {
+      this.props.application.resize = Resize.left;
+    } else {
+      this.props.application.resize = Resize.none;
+    }
+  }
+
+  private handleResizerDragMouseDown(e: React.MouseEvent) {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    e.preventDefault();
+
+    const cursor = new Map<Resize, string>([
+      [Resize.top, "ns-resize"],
+      [Resize.bottom, "ns-resize"],
+      [Resize.left, "ew-resize"],
+      [Resize.right, "ew-resize"],
+      [Resize.topLeft, "nesw-resize"],
+      [Resize.topRight, "nesw-resize"],
+      [Resize.bottomLeft, "nwse-resize"],
+      [Resize.bottomRight, "nwse-resize"]
+    ]);
+
+    document.body.style.cursor =
+      cursor.get(this.props.application.resize) || "";
+    document.addEventListener("mousemove", this.handleResizerDragMouseMove);
+    document.addEventListener("mouseup", this.handleResizerDragMouseUp);
+
+    this.setState((state) => ({ ...state, resizing: true }));
+  }
+
+  private handleResizerDragMouseMove(e: globalThis.MouseEvent) {
+    const window = this.m_windowRef.current;
+    if (!window) return;
+    const [x1, x2, y1, y2] = [
+      window.offsetLeft,
+      window.offsetLeft + window.clientWidth,
+      window.offsetTop,
+      window.offsetTop + window.clientHeight
+    ];
+    switch (this.props.application.resize) {
+      case Resize.top:
+        this.props.application.height = y2 - e.pageY;
+        if (y2 - e.pageY > this.props.application.minHeight) {
+          this.setState((state) => ({
+            ...state,
+            position: {
+              bottom: state.position.bottom,
+              left: state.position.left,
+              right: state.position.right,
+              top: e.pageY
+            }
+          }));
+        }
+        break;
+      case Resize.bottom:
+        this.props.application.height = e.pageY - y1;
+        break;
+      case Resize.left:
+        this.props.application.width = x2 - e.pageX;
+        if (x2 - e.pageX > this.props.application.minWidth) {
+          this.setState((state) => ({
+            ...state,
+            position: {
+              bottom: state.position.bottom,
+              left: e.pageX,
+              right: state.position.right,
+              top: state.position.top
+            }
+          }));
+        }
+        break;
+      case Resize.right:
+        this.props.application.width = e.pageX - x1;
+        break;
+      // Strange issue when using resizerwidth to set border
+      case Resize.topLeft:
+        // const y = y2 - e.pageY - resizerWidth;
+        // const x = x2 - e.pageX - resizerWidth;
+
+        this.props.application.dimensions = {
+          height: y2 - e.pageY,
+          width: x2 - e.pageX
+        };
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left:
+              x2 - e.pageX > this.props.application.minWidth
+                ? e.pageX
+                : state.position.left,
+            right: state.position.right,
+            top:
+              y2 - e.pageY > this.props.application.minHeight
+                ? e.pageY
+                : state.position.top
+          }
+        }));
+        break;
+      case Resize.topRight:
+        this.props.application.dimensions = {
+          height: y2 - e.pageY,
+          width: e.pageX - x1
+        };
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left: state.position.left,
+            right: e.pageX,
+            top: e.pageY
+          }
+        }));
+        break;
+      case Resize.bottomLeft:
+        this.props.application.dimensions = {
+          height: e.pageY - y1,
+          width: x2 - e.pageX
+        };
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left: e.pageX,
+            right: state.position.right,
+            top: state.position.top
+          }
+        }));
+        break;
+      case Resize.bottomRight:
+        this.props.application.dimensions = {
+          height: e.pageY - y1,
+          width: e.pageX - x1
+        };
+        break;
+      default:
+        break;
+    }
+  }
+
+  private handleResizerDragMouseUp(e: globalThis.MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    document.body.style.cursor = "";
+    document.removeEventListener("mousemove", this.handleResizerDragMouseMove);
+    document.removeEventListener("mouseup", this.handleResizerDragMouseUp);
+
+    this.setState((state) => ({ ...state, resizing: false }));
+  }
+
+  public render() {
+    let windowClasses: string[] = [styles["window"]];
+    let windowShadowClasses: string[] = [styles["window-shadow"]];
+    let width: number | "" = "";
+    let height: number | "" = "";
+    let position: IPosition = { bottom: "", left: "", right: "", top: "" };
+
+    if (this.state.resizing) {
+      width = this.props.application.width;
+      height = this.props.application.height;
+      position.top = this.state.position.top;
+      position.left = this.state.position.left;
+    } else {
+      if (this.props.application.maximized) {
+        windowClasses.push(styles[`snap-${this.props.application.maximized}`]);
+      } else {
+        if (this.state.snap) {
+          windowShadowClasses.push(styles[`snap-${this.state.snap}`]);
+        }
+        width = this.props.application.width;
+        height = this.props.application.height;
+        position.top = this.state.position.top;
+        position.left = this.state.position.left;
+        const header = this.m_headerRef.current;
+        if (header) {
+          if (this.state.position.left) {
+            if (
+              this.state.position.left <
+              this.props.boundaries.x1 -
+                header.clientWidth +
+                this.m_borderOffset
+            ) {
+              position.left =
+                this.props.boundaries.x1 -
+                header.clientWidth +
+                this.m_borderOffset;
+            }
+            if (
+              this.state.position.left >
+              this.props.boundaries.x2 - this.m_borderOffset
+            ) {
+              position.left = this.props.boundaries.x2 - this.m_borderOffset;
+            }
+          }
+          if (this.state.position.top) {
+            if (this.state.position.top < this.props.boundaries.y1) {
+              position.top = this.props.boundaries.y1;
+            }
+            if (
+              this.state.position.top >
+              this.props.boundaries.y2 - header.clientHeight
+            ) {
+              position.top = this.props.boundaries.y2 - header.clientHeight;
+            }
+          }
+        }
+      }
+    }
+
+    return (
+      <>
+        <div className={windowShadowClasses.join(" ")}></div>
+
+        <section
+          className={windowClasses.join(" ")}
           style={{
-            cursor: resizing ? "default" : dragging ? "grabbing" : "grab"
+            zIndex: this.props.application.zIndex,
+            top: position.top,
+            left: position.left,
+            height: height,
+            width: width,
+            opacity: this.state.dragging ? "0.7" : "",
+            visibility: this.props.application.minimized
+              ? "collapse"
+              : "visible"
           }}
+          ref={this.m_windowRef}
           onDragStart={() => false}
           draggable="false"
-          ref={headerRef}
+          onMouseDown={this.handleWindowMouseDown}
         >
-          <div className={styles["button-list"]}>
-            <button
-              className={styles.red}
-              style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => handleRedClick(e)}
-              onMouseDown={(e) => e.stopPropagation()}
-            ></button>
-            <button
-              className={styles.orange}
-              style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => handleOrangeClick(e)}
-              onMouseDown={(e) => e.stopPropagation()}
-            ></button>
-            <button
-              className={styles.green}
-              style={{ pointerEvents: dragging ? "none" : "all" }}
-              onClick={(e) => handleGreenClick(e)}
-              onMouseDown={(e) => e.stopPropagation()}
-            ></button>
+          <div
+            ref={this.m_resizerRef}
+            className={[
+              styles["resizer"],
+              styles[this.props.application.resize]
+            ].join(" ")}
+            onMouseDown={this.handleResizerDragMouseDown}
+            onMouseMove={this.handleResizerMouseMove}
+          ></div>
+          <div
+            className={styles.header}
+            style={{
+              cursor: this.state.dragging ? "grabbing" : "",
+              pointerEvents: this.state.resizing ? "none" : "all"
+            }}
+            onMouseDown={this.handleDragMouseDown}
+            onDragStart={() => false}
+            draggable="false"
+            ref={this.m_headerRef}
+          >
+            <div className={styles["button-list"]}>
+              <button
+                className={styles.red}
+                style={{
+                  pointerEvents:
+                    this.state.dragging || this.state.resizing ? "none" : "all"
+                }}
+                onClick={(e) => this.handleRedClick(e)}
+                onMouseDown={(e) => e.stopPropagation()}
+              ></button>
+              <button
+                className={styles.orange}
+                style={{
+                  pointerEvents:
+                    this.state.dragging || this.state.resizing ? "none" : "all"
+                }}
+                onClick={(e) => this.handleOrangeClick(e)}
+                onMouseDown={(e) => e.stopPropagation()}
+              ></button>
+              <button
+                className={styles.green}
+                style={{
+                  pointerEvents:
+                    this.state.dragging || this.state.resizing ? "none" : "all"
+                }}
+                onClick={(e) => this.handleGreenClick(e)}
+                onMouseDown={(e) => e.stopPropagation()}
+              ></button>
+            </div>
+            <h2>{this.props.application.displayName}</h2>
           </div>
-          <h2>{application.displayName}</h2>
-        </div>
-        <div className={styles["background"]}>
-          {application.component
-            ? createElement(application.component, {})
-            : ""}
-        </div>
-      </section>
-    </>
-  );
-};
-
-export default Window;
+          <div className={styles["background"]}>
+            {this.props.application.component
+              ? createElement(this.props.application.component, {})
+              : ""}
+          </div>
+        </section>
+      </>
+    );
+  }
+}

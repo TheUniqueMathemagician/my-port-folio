@@ -45,6 +45,7 @@ $border-radius: 16px;
     background: #3333337f;
     border-radius: 16px 16px 0 0;
     position: relative;
+    cursor: grab;
     .button-list {
       display: grid;
       grid-auto-flow: column;
