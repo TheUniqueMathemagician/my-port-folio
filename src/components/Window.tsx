@@ -294,14 +294,19 @@ export default class Window extends Component<IProps, IState> {
     e.stopPropagation();
     e.preventDefault();
 
+    const window = this.m_windowRef.current;
+    if (!window) return;
+    const windowFrame = window.offsetParent;
+    if (!windowFrame) return;
+
     const cursor = new Map<Resize, string>([
       [Resize.top, "ns-resize"],
       [Resize.bottom, "ns-resize"],
       [Resize.left, "ew-resize"],
       [Resize.right, "ew-resize"],
-      [Resize.topLeft, "nesw-resize"],
+      [Resize.topLeft, "nwse-resize"],
       [Resize.topRight, "nesw-resize"],
-      [Resize.bottomLeft, "nwse-resize"],
+      [Resize.bottomLeft, "nesw-resize"],
       [Resize.bottomRight, "nwse-resize"]
     ]);
 
@@ -310,121 +315,180 @@ export default class Window extends Component<IProps, IState> {
     document.addEventListener("mousemove", this.handleResizerDragMouseMove);
     document.addEventListener("mouseup", this.handleResizerDragMouseUp);
 
-    this.setState((state) => ({ ...state, resizing: true }));
+    const windowBC = window.getBoundingClientRect();
+    const windowFrameBC = windowFrame.getBoundingClientRect();
+
+    this.props.application.maximized = Snap.none;
+
+    this.setState((state) => ({
+      ...state,
+      resizing: true,
+      snap: Snap.none,
+      position: {
+        bottom: windowFrameBC.height - windowBC.bottom - windowFrameBC.top,
+        left: windowBC.left - windowFrameBC.left,
+        right: windowFrameBC.width - windowBC.right - windowFrameBC.left,
+        top: windowBC.top - windowFrameBC.top
+      }
+    }));
   }
 
   private handleResizerDragMouseMove(e: globalThis.MouseEvent) {
     const window = this.m_windowRef.current;
     if (!window) return;
-    const [x1, x2, y1, y2] = [
-      window.offsetLeft,
-      window.offsetLeft + window.clientWidth,
-      window.offsetTop,
-      window.offsetTop + window.clientHeight
-    ];
+    const windowFrame = window.offsetParent;
+    if (!windowFrame) return;
+
+    const windowBC = window.getBoundingClientRect();
+    const windowFrameBC = windowFrame.getBoundingClientRect();
+
+    const position = {
+      bottom: windowFrameBC.height - e.pageY - windowFrameBC.top,
+      left: e.pageX - windowFrameBC.left,
+      right: windowFrameBC.width - e.pageX - windowFrameBC.left,
+      top: e.pageY - windowFrameBC.top
+    };
+
+    const willOverflow = {
+      bottom:
+        position.bottom >
+        windowFrameBC.height -
+          windowFrameBC.top -
+          windowBC.top -
+          this.props.application.minHeight,
+      left:
+        position.left >
+        windowBC.right - windowFrameBC.left - this.props.application.minWidth,
+      right:
+        position.right >
+        windowFrameBC.width -
+          windowFrameBC.left -
+          windowBC.left -
+          this.props.application.minWidth,
+      top:
+        position.top >
+        windowBC.bottom - windowFrameBC.top - this.props.application.minHeight
+    };
+
     switch (this.props.application.resize) {
       case Resize.top:
-        this.props.application.height = y2 - e.pageY;
-        if (y2 - e.pageY > this.props.application.minHeight) {
-          this.setState((state) => ({
-            ...state,
-            position: {
-              bottom: state.position.bottom,
-              left: state.position.left,
-              right: state.position.right,
-              top: e.pageY
-            }
-          }));
-        }
-        break;
-      case Resize.bottom:
-        this.props.application.height = e.pageY - y1;
-        break;
-      case Resize.left:
-        this.props.application.width = x2 - e.pageX;
-        if (x2 - e.pageX > this.props.application.minWidth) {
-          this.setState((state) => ({
-            ...state,
-            position: {
-              bottom: state.position.bottom,
-              left: e.pageX,
-              right: state.position.right,
-              top: state.position.top
-            }
-          }));
-        }
-        break;
-      case Resize.right:
-        this.props.application.width = e.pageX - x1;
-        break;
-      // Strange issue when using resizerwidth to set border
-      case Resize.topLeft:
-        // const y = y2 - e.pageY - resizerWidth;
-        // const x = x2 - e.pageX - resizerWidth;
-
-        this.props.application.dimensions = {
-          height: y2 - e.pageY,
-          width: x2 - e.pageX
-        };
-        this.setState((state) => ({
-          ...state,
-          position: {
-            bottom: state.position.bottom,
-            left:
-              x2 - e.pageX > this.props.application.minWidth
-                ? e.pageX
-                : state.position.left,
-            right: state.position.right,
-            top:
-              y2 - e.pageY > this.props.application.minHeight
-                ? e.pageY
-                : state.position.top
-          }
-        }));
-        break;
-      case Resize.topRight:
-        this.props.application.dimensions = {
-          height: y2 - e.pageY,
-          width: e.pageX - x1
-        };
+        if (position.top < 0) return;
+        if (willOverflow.top) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
             left: state.position.left,
-            right: e.pageX,
-            top: e.pageY
+            right: state.position.right,
+            top: position.top
           }
         }));
         break;
-      case Resize.bottomLeft:
-        this.props.application.dimensions = {
-          height: e.pageY - y1,
-          width: x2 - e.pageX
-        };
+      case Resize.bottom:
+        console.log(willOverflow.bottom);
+
+        if (willOverflow.bottom) return;
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: position.bottom,
+            left: state.position.left,
+            right: state.position.right,
+            top: state.position.top
+          }
+        }));
+        break;
+      case Resize.left:
+        if (willOverflow.left) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
-            left: e.pageX,
+            left: position.left,
+            right: state.position.right,
+            top: state.position.top
+          }
+        }));
+        break;
+      case Resize.right:
+        if (willOverflow.right) return;
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left: state.position.left,
+            right: position.right,
+            top: state.position.top
+          }
+        }));
+        break;
+      case Resize.topLeft:
+        if (willOverflow.top && willOverflow.left) return;
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left: willOverflow.left
+              ? state.position.left
+              : e.pageX - windowFrameBC.left,
+            right: state.position.right,
+            top: willOverflow.top
+              ? state.position.top
+              : e.pageY - windowFrameBC.top
+          }
+        }));
+        break;
+      case Resize.topRight:
+        if (willOverflow.top && willOverflow.right) return;
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: state.position.bottom,
+            left: state.position.left,
+            right: willOverflow.right
+              ? state.position.right
+              : windowFrameBC.width - e.pageX - windowFrameBC.left,
+            top: willOverflow.top
+              ? state.position.top
+              : e.pageY - windowFrameBC.top
+          }
+        }));
+        break;
+      case Resize.bottomLeft:
+        if (willOverflow.bottom && willOverflow.left) return;
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: willOverflow.bottom
+              ? state.position.bottom
+              : windowFrameBC.height - e.pageY - windowFrameBC.top,
+            left: willOverflow.left
+              ? state.position.left
+              : e.pageX - windowFrameBC.left,
             right: state.position.right,
             top: state.position.top
           }
         }));
         break;
       case Resize.bottomRight:
-        this.props.application.dimensions = {
-          height: e.pageY - y1,
-          width: e.pageX - x1
-        };
+        if (willOverflow.bottom && willOverflow.right)
+          this.setState((state) => ({
+            ...state,
+            position: {
+              bottom: willOverflow.bottom
+                ? state.position.bottom
+                : windowFrameBC.height - e.pageY - windowFrameBC.top,
+              left: state.position.left,
+              right: willOverflow.right
+                ? state.position.right
+                : windowFrameBC.width - e.pageX - windowFrameBC.left,
+              top: state.position.top
+            }
+          }));
         break;
       default:
         break;
     }
-  }
-
-  private handleDragDoubleClick(e: React.MouseEvent) {
-    this.props.application.maximized = Snap.top;
   }
 
   private handleResizerDragMouseUp(e: globalThis.MouseEvent) {
@@ -435,7 +499,30 @@ export default class Window extends Component<IProps, IState> {
     document.removeEventListener("mousemove", this.handleResizerDragMouseMove);
     document.removeEventListener("mouseup", this.handleResizerDragMouseUp);
 
-    this.setState((state) => ({ ...state, resizing: false }));
+    const window = this.m_windowRef.current;
+    if (!window) return;
+
+    const windowBC = window.getBoundingClientRect();
+
+    this.props.application.dimensions = {
+      height: windowBC.height,
+      width: windowBC.width
+    };
+
+    this.setState((state) => ({
+      ...state,
+      resizing: false,
+      position: {
+        bottom: "",
+        left: state.position.left,
+        right: "",
+        top: state.position.top
+      }
+    }));
+  }
+
+  private handleDragDoubleClick() {
+    this.props.application.maximized = Snap.top;
   }
 
   public render() {
@@ -446,10 +533,10 @@ export default class Window extends Component<IProps, IState> {
     let position: IPosition = { bottom: "", left: "", right: "", top: "" };
 
     if (this.state.resizing) {
-      width = this.props.application.width;
-      height = this.props.application.height;
       position.top = this.state.position.top;
       position.left = this.state.position.left;
+      position.right = this.state.position.right;
+      position.bottom = this.state.position.bottom;
     } else {
       if (this.props.application.maximized) {
         windowClasses.push(styles[`snap-${this.props.application.maximized}`]);
@@ -507,6 +594,8 @@ export default class Window extends Component<IProps, IState> {
             zIndex: this.props.application.zIndex,
             top: position.top,
             left: position.left,
+            bottom: position.bottom,
+            right: position.right,
             height: height,
             width: width,
             opacity: this.state.dragging ? "0.7" : "",
