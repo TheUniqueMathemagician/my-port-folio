@@ -1,4 +1,4 @@
-import { Component, createElement, createRef } from "react";
+import React, { Component, createElement, createRef } from "react";
 import WindowApplication from "../shared/classes/WindowApplication";
 
 import Boundaries from "../shared/Boundaries";
@@ -70,6 +70,7 @@ export default class Window extends Component<IProps, IState> {
       this
     );
     this.handleResizerDragMouseUp = this.handleResizerDragMouseUp.bind(this);
+    this.handleDragDoubleClick = this.handleDragDoubleClick.bind(this);
   }
 
   private handleWindowMouseDown(e: React.MouseEvent) {
@@ -422,6 +423,10 @@ export default class Window extends Component<IProps, IState> {
     }
   }
 
+  private handleDragDoubleClick(e: React.MouseEvent) {
+    this.props.application.maximized = Snap.top;
+  }
+
   private handleResizerDragMouseUp(e: globalThis.MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
@@ -530,6 +535,7 @@ export default class Window extends Component<IProps, IState> {
               pointerEvents: this.state.resizing ? "none" : "all"
             }}
             onMouseDown={this.handleDragMouseDown}
+            onDoubleClick={this.handleDragDoubleClick}
             onDragStart={() => false}
             draggable="false"
             ref={this.m_headerRef}
