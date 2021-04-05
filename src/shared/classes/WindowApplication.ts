@@ -43,7 +43,7 @@ export default class WindowApplication extends RunningApplication {
     displayName: string,
     icon: string,
     dimensions: Dimensions = { height: 800, width: 600 },
-    minDimensions: Dimensions = { height: 200, width: 300 },
+    minDimensions: Dimensions = { height: 200, width: 320 },
     maxDimensions: Dimensions = { height: 200, width: 300 },
     resizable: boolean = true
   ) {

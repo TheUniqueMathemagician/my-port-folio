@@ -52,11 +52,12 @@ $border-radius: 16px;
       column-gap: 8px;
     }
     h2 {
+      pointer-events: none;
       position: absolute;
-      left: 50%;
+      left: 0;
+      right: 0;
       bottom: 0;
       top: 0;
-      transform: translateX(-50%);
       font-size: 1rem;
       font-weight: normal;
       display: flex;
@@ -71,8 +72,8 @@ $border-radius: 16px;
     color: #333333;
   }
   button {
-    height: 14px;
-    width: 14px;
+    height: 12px;
+    width: 12px;
     border-radius: 50%;
     border: 0;
     outline: none;

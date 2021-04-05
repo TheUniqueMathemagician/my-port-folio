@@ -41,9 +41,19 @@ export default class Window extends Component<IProps, IState> {
     const offset: IOffset = { x: 0, y: 0 };
     const position: IPosition = {
       bottom: "",
-      left: "",
+      left:
+        (this.props.boundaries.x2 -
+          this.props.boundaries.x1 -
+          this.props.application.width) /
+          2 +
+        this.props.boundaries.x1,
       right: "",
-      top: ""
+      top:
+        (this.props.boundaries.y2 -
+          this.props.boundaries.y1 -
+          this.props.application.height) /
+          2 +
+        this.props.boundaries.y1
     };
     const dragging: boolean = false;
     const resizing: boolean = false;
