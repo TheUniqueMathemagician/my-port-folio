@@ -349,49 +349,52 @@ export default class Window extends Component<IProps, IState> {
       top: e.pageY - windowFrameBC.top
     };
 
-    const willOverflow = {
+    const limits = {
       bottom:
-        position.bottom >
         windowFrameBC.height -
-          windowFrameBC.top -
-          windowBC.top -
-          this.props.application.minHeight,
+        windowFrameBC.top -
+        windowBC.top -
+        this.props.application.minHeight,
       left:
-        position.left >
         windowBC.right - windowFrameBC.left - this.props.application.minWidth,
       right:
-        position.right >
         windowFrameBC.width -
-          windowFrameBC.left -
-          windowBC.left -
-          this.props.application.minWidth,
+        windowFrameBC.left -
+        windowBC.left -
+        this.props.application.minWidth,
       top:
-        position.top >
         windowBC.bottom - windowFrameBC.top - this.props.application.minHeight
+    };
+
+    const willOverflow = {
+      bottom: position.bottom > limits.bottom,
+      left: position.left > limits.left,
+      right: position.right > limits.right,
+      top: position.top > limits.top
     };
 
     switch (this.props.application.resize) {
       case Resize.top:
-        if (position.top < 0) return;
-        if (willOverflow.top) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
             left: state.position.left,
             right: state.position.right,
-            top: position.top
+            top:
+              position.top < 0
+                ? 0
+                : willOverflow.top
+                ? limits.top
+                : position.top
           }
         }));
         break;
       case Resize.bottom:
-        console.log(willOverflow.bottom);
-
-        if (willOverflow.bottom) return;
         this.setState((state) => ({
           ...state,
           position: {
-            bottom: position.bottom,
+            bottom: willOverflow.bottom ? limits.bottom : position.bottom,
             left: state.position.left,
             right: state.position.right,
             top: state.position.top
@@ -399,92 +402,70 @@ export default class Window extends Component<IProps, IState> {
         }));
         break;
       case Resize.left:
-        if (willOverflow.left) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
-            left: position.left,
+            left: willOverflow.left ? limits.left : position.left,
             right: state.position.right,
             top: state.position.top
           }
         }));
         break;
       case Resize.right:
-        if (willOverflow.right) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
             left: state.position.left,
-            right: position.right,
+            right: willOverflow.right ? limits.right : position.right,
             top: state.position.top
           }
         }));
         break;
       case Resize.topLeft:
-        if (willOverflow.top && willOverflow.left) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
-            left: willOverflow.left
-              ? state.position.left
-              : e.pageX - windowFrameBC.left,
+            left: willOverflow.left ? limits.left : position.left,
             right: state.position.right,
-            top: willOverflow.top
-              ? state.position.top
-              : e.pageY - windowFrameBC.top
+            top: willOverflow.top ? limits.top : position.top
           }
         }));
         break;
       case Resize.topRight:
-        if (willOverflow.top && willOverflow.right) return;
         this.setState((state) => ({
           ...state,
           position: {
             bottom: state.position.bottom,
             left: state.position.left,
-            right: willOverflow.right
-              ? state.position.right
-              : windowFrameBC.width - e.pageX - windowFrameBC.left,
-            top: willOverflow.top
-              ? state.position.top
-              : e.pageY - windowFrameBC.top
+            right: willOverflow.right ? limits.right : position.right,
+            top: willOverflow.top ? limits.top : position.top
           }
         }));
         break;
       case Resize.bottomLeft:
-        if (willOverflow.bottom && willOverflow.left) return;
         this.setState((state) => ({
           ...state,
           position: {
-            bottom: willOverflow.bottom
-              ? state.position.bottom
-              : windowFrameBC.height - e.pageY - windowFrameBC.top,
-            left: willOverflow.left
-              ? state.position.left
-              : e.pageX - windowFrameBC.left,
+            bottom: willOverflow.bottom ? limits.bottom : position.bottom,
+            left: willOverflow.left ? limits.left : position.left,
             right: state.position.right,
             top: state.position.top
           }
         }));
         break;
       case Resize.bottomRight:
-        if (willOverflow.bottom && willOverflow.right)
-          this.setState((state) => ({
-            ...state,
-            position: {
-              bottom: willOverflow.bottom
-                ? state.position.bottom
-                : windowFrameBC.height - e.pageY - windowFrameBC.top,
-              left: state.position.left,
-              right: willOverflow.right
-                ? state.position.right
-                : windowFrameBC.width - e.pageX - windowFrameBC.left,
-              top: state.position.top
-            }
-          }));
+        this.setState((state) => ({
+          ...state,
+          position: {
+            bottom: willOverflow.bottom ? limits.bottom : position.bottom,
+            left: state.position.left,
+            right: willOverflow.right ? limits.right : position.right,
+            top: state.position.top
+          }
+        }));
         break;
       default:
         break;
