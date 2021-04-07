@@ -6,8 +6,6 @@ import ApplicationInstance from "./ApplicationInstance";
 import WindowApplication from "./WindowApplication";
 
 export default class WindowInstance extends ApplicationInstance {
-  private m_icon: string;
-  private m_displayName: string;
   private m_width: number;
   private m_height: number;
   private m_minWidth: number;
@@ -26,9 +24,7 @@ export default class WindowInstance extends ApplicationInstance {
    *
    */
   constructor(window: WindowApplication) {
-    super();
-    this.m_icon = window.icon;
-    this.m_displayName = window.displayName;
+    super(window.icon, window.displayName);
     this.m_height = window.dimensions.height;
     this.m_width = window.dimensions.width;
     this.m_minHeight = window.minDimensions.height;
@@ -39,14 +35,6 @@ export default class WindowInstance extends ApplicationInstance {
     this.m_resizable = window.resizable;
     this.m_component = window.component;
     WindowInstance.zIndexes.push(this.id);
-  }
-
-  public get icon(): string {
-    return this.m_icon;
-  }
-
-  public get displayName(): string {
-    return this.m_displayName;
   }
 
   public get height(): number {

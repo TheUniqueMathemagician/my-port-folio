@@ -15,6 +15,14 @@ export default abstract class ApplicationInstance {
   private static m_applicationsUpdater: ApplicationUpdater = () => {};
   private static m_instancesUpdater: InstanceUpdater = () => {};
 
+  /**
+   *
+   */
+  constructor(
+    public readonly icon: string,
+    public readonly displayName: string
+  ) {}
+
   close() {
     this.instancesUpdater((state) => state.filter((app) => app !== this));
   }
