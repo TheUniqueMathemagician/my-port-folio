@@ -1,12 +1,20 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useHistory } from "react-router";
+import { useUsers } from "../../data/Users";
 
 const Index = () => {
-  return (
-    <main>
-      <h1>Voici la page d'accueil</h1>
-      <Link to="/workspace">Se connecter</Link>
-    </main>
-  );
+  const { user } = useUsers();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (user) {
+      history.push("/workspace");
+    } else {
+      history.push("/lock");
+    }
+  }, [user, history]);
+
+  return <main></main>;
 };
 
 export default Index;

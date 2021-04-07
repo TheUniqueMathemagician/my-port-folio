@@ -1,34 +1,33 @@
 import { useEffect } from "react";
 import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
+import Education from "../../components/apps/Education";
 import Experience from "../../components/apps/Experience";
 import Snake from "../../components/apps/Snake";
-import Welcome from "../../components/apps/Welome";
+import Welcome from "../../components/apps/Welcome";
 import ScreenFrame from "../../components/ScreenFrame";
 import ShortcutFrame from "../../components/ShortcutFrame";
 import TaskBar from "../../components/TaskBar";
 import WindowFrame from "../../components/WindowFrame";
 import WorkspaceFrame from "../../components/WorkspaceFrame";
 import { useApplications } from "../../data/Applications";
-import { useRunningApplications } from "../../data/RunningApplications";
-import Application from "../../shared/classes/Application";
+import WindowApplication from "../../data/classes/WindowApplication";
 
 const Main = () => {
   const { setApplications } = useApplications();
-  const { setRunningApplications } = useRunningApplications();
+
+  // TODO: Should we move the effect to /boot ?
+
   useEffect(() => {
     setApplications(() => [
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "A Propos",
         require(`../../assets/images/applications/about.svg`).default,
         "A Propos",
         false,
-        About,
-        { width: 600, height: 400 }
+        About
       ),
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "Expérience",
         require(`../../assets/images/applications/experience.svg`).default,
         "Expérience",
@@ -36,17 +35,15 @@ const Main = () => {
         Experience,
         { width: 600, height: 400 }
       ),
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "Diplômes & Formations",
         require(`../../assets/images/applications/education.svg`).default,
         "Diplômes & Formations",
         false,
-        Experience,
+        Education,
         { width: 600, height: 400 }
       ),
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "Contact",
         require(`../../assets/images/applications/contact.svg`).default,
         "Contact",
@@ -54,8 +51,7 @@ const Main = () => {
         Contact,
         { width: 600, height: 400 }
       ),
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "Le Serpent",
         require(`../../assets/images/applications/snake.svg`).default,
         "Le Serpent",
@@ -63,8 +59,7 @@ const Main = () => {
         Snake,
         { width: 600, height: 400 }
       ),
-      new Application(
-        setRunningApplications,
+      new WindowApplication(
         "Bienvenue",
         require(`../../assets/images/applications/information.svg`).default,
         "",
@@ -73,7 +68,8 @@ const Main = () => {
         { width: 600, height: 400 }
       )
     ]);
-  }, [setApplications, setRunningApplications]);
+  }, [setApplications]);
+
   return (
     <ScreenFrame>
       <WorkspaceFrame>

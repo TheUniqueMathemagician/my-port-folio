@@ -1,25 +1,25 @@
 import ApplicationsProvider from "./data/Applications";
-import RunningApplicationsProvider from "./data/RunningApplications";
+import InstancesProvider from "./data/Instances";
 import ThemeProvider from "./data/Theme";
-// import UserProvider from "./data/User";
 import Desktop from "./layouts/Desktop";
 import Mobile from "./layouts/Mobile";
 import isMobile from "./functions/isMobile";
 import { BrowserRouter } from "react-router-dom";
+import UsersProvider from "./data/Users";
 
 const OS = () => {
   return (
-    <ApplicationsProvider>
-      <RunningApplicationsProvider>
-        <ThemeProvider>
-          <BrowserRouter>
-            {/* <UserProvider> */}
-            {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
-            {/* </UserProvider> */}
-          </BrowserRouter>
-        </ThemeProvider>
-      </RunningApplicationsProvider>
-    </ApplicationsProvider>
+    <UsersProvider>
+      <ApplicationsProvider>
+        <InstancesProvider>
+          <ThemeProvider>
+            <BrowserRouter>
+              {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
+            </BrowserRouter>
+          </ThemeProvider>
+        </InstancesProvider>
+      </ApplicationsProvider>
+    </UsersProvider>
   );
 };
 

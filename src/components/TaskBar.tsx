@@ -1,11 +1,11 @@
 import styles from "./TaskBar.module.scss";
 import { useEffect, useState } from "react";
-import { useRunningApplications } from "../data/RunningApplications";
-import WindowApplication from "../shared/classes/WindowApplication";
+import { useInstances } from "../data/Instances";
+import WindowInstance from "../data/classes/WindowInstance";
 
 const TaskBar = () => {
   const [date, setDate] = useState(Date.now());
-  const { runningApplications } = useRunningApplications();
+  const { instances } = useInstances();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,19 +27,19 @@ const TaskBar = () => {
   return (
     <div className={styles["task-bar"]}>
       <div className={styles.apps}>
-        {runningApplications
-          .filter((app) => app instanceof WindowApplication)
+        {instances
+          .filter((app) => app instanceof WindowInstance)
           .map((app) => (
             <button
               key={app.id}
               onClick={() => {
-                (app as WindowApplication).minimized = false;
-                (app as WindowApplication).sendToFront();
+                (app as WindowInstance).minimized = false;
+                (app as WindowInstance).sendToFront();
               }}
             >
               <img
-                src={(app as WindowApplication).icon}
-                alt={(app as WindowApplication).displayName}
+                src={(app as WindowInstance).icon}
+                alt={(app as WindowInstance).displayName}
               />
             </button>
           ))}

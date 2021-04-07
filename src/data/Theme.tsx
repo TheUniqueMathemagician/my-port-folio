@@ -1,23 +1,26 @@
 import { createContext, FunctionComponent, useState, useContext } from "react";
-import Theme from "../shared/Theme";
+import EThemeColor from "../types/EThemeColor";
 
-type ThemeContextType = [Theme, (Theme: Theme) => void];
+type ThemeContextType = {
+  theme: EThemeColor;
+  setTheme: (theme: EThemeColor) => void;
+};
 
-const ThemeContext = createContext<ThemeContextType>([
-  Theme.dark,
-  (theme: Theme) => {}
-]);
+const ThemeContext = createContext<ThemeContextType>({
+  theme: EThemeColor.dark,
+  setTheme: (theme: EThemeColor) => {}
+});
 
 const useTheme = () => useContext(ThemeContext);
 
 const ThemeProvider: FunctionComponent = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(Theme.dark);
+  const [theme, setTheme] = useState<EThemeColor>(EThemeColor.dark);
   return (
-    <ThemeContext.Provider value={[theme, setTheme]}>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-export { useTheme, Theme };
+export { useTheme };
 export default ThemeProvider;

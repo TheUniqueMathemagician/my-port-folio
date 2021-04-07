@@ -1,4 +1,4 @@
-enum Snap {
+enum ESnap {
   none,
   topLeft,
   top,
@@ -10,4 +10,4 @@ enum Snap {
   left
 }
 
-export default Snap;
+export default ESnap;

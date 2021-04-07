@@ -1,19 +1,19 @@
 import { useCallback, useLayoutEffect, useState, useRef } from "react";
-import Boundaries from "../shared/Boundaries";
+import WindowInstance from "../data/classes/WindowInstance";
+import { useInstances } from "../data/Instances";
+import IBoundaries from "../types/IBoundaries";
 import Window from "./Window";
 
 import styles from "./WindowFrame.module.scss";
-import { useRunningApplications } from "../data/RunningApplications";
-import WindowApplication from "../shared/classes/WindowApplication";
 
 const WindowFrame = () => {
   // Contexts
 
-  const { runningApplications } = useRunningApplications();
+  const { instances } = useInstances();
 
   // States
 
-  const [boundaries, setBoundaries] = useState<Boundaries>({
+  const [boundaries, setBoundaries] = useState<IBoundaries>({
     x1: 0,
     y1: 0,
     x2: 0,
@@ -49,11 +49,11 @@ const WindowFrame = () => {
 
   return (
     <div className={styles["window-frame"]} ref={wrapperRef}>
-      {runningApplications
-        .filter((app) => app instanceof WindowApplication)
+      {instances
+        .filter((app) => app instanceof WindowInstance)
         .map((app) => (
           <Window
-            application={app as WindowApplication}
+            application={app as WindowInstance}
             boundaries={boundaries}
             borderOffset={16}
             resizerWidth={4}

@@ -1,8 +1,9 @@
-import Application from "../shared/classes/Application";
+import DaemonApplication from "../data/classes/DaemonApplication";
+import WindowApplication from "../data/classes/WindowApplication";
 import styles from "./Shortcut.module.scss";
 
 interface IProps {
-  application: Application;
+  application: DaemonApplication | WindowApplication;
 }
 
 const Shortcut: React.FunctionComponent<IProps> = ({ application }) => {

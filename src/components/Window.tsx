@@ -1,27 +1,28 @@
 import React, { Component, createElement, createRef } from "react";
-import WindowApplication from "../shared/classes/WindowApplication";
-
-import Boundaries from "../shared/Boundaries";
-import Snap from "../shared/Snap";
-import Resize from "../shared/Resize";
-import IOffset from "../shared/IOffset";
-import IPosition from "../shared/IPosition";
 
 import styles from "./Window.module.scss";
+import IPosition from "../types/IPosition";
+import ESnap from "../types/ESnap";
+import IOffset from "../types/IOffset";
+import WindowInstance from "../data/classes/WindowInstance";
+import IBoundaries from "../types/IBoundaries";
+import EResize from "../types/EResize";
 interface IState {
-  snap: Snap;
-  offset: IOffset;
+  snap: ESnap;
   position: IPosition;
+  offset: IOffset;
   dragging: boolean;
   resizing: boolean;
 }
 interface IProps {
-  application: WindowApplication;
-  boundaries: Boundaries;
+  application: WindowInstance;
+  boundaries: IBoundaries;
   borderOffset: number;
   resizerWidth: number;
 }
 
+// TODO: Refactor => component must have single concern
+// Separate resizer and dragger
 export default class Window extends Component<IProps, IState> {
   private m_windowRef: React.RefObject<HTMLDivElement>;
   private m_resizerRef: React.RefObject<HTMLDivElement>;
@@ -37,30 +38,28 @@ export default class Window extends Component<IProps, IState> {
     this.m_resizerRef = createRef<HTMLDivElement>();
     this.m_headerRef = createRef<HTMLDivElement>();
 
-    const snap: Snap = Snap.none;
-    const offset: IOffset = { x: 0, y: 0 };
+    const snap: ESnap = ESnap.none;
     const position: IPosition = {
-      bottom: "",
+      bottom: null,
       left:
         (this.props.boundaries.x2 -
           this.props.boundaries.x1 -
           this.props.application.width) /
-          2 +
-        this.props.boundaries.x1,
-      right: "",
+        2,
+      right: null,
       top:
         (this.props.boundaries.y2 -
           this.props.boundaries.y1 -
           this.props.application.height) /
-          2 +
-        this.props.boundaries.y1
+        2
     };
+    const offset: IOffset = { x: 0, y: 0 };
     const dragging: boolean = false;
     const resizing: boolean = false;
     this.state = {
       snap,
-      offset,
       position,
+      offset,
       dragging,
       resizing
     };
@@ -138,98 +137,92 @@ export default class Window extends Component<IProps, IState> {
     if (shouldSnapToTop && shouldSnapToLeft) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.topLeft,
+        snap: ESnap.topLeft,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToTop && shouldSnapToRight) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.topRight,
+        snap: ESnap.topRight,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToBottom && shouldSnapToLeft) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.bottomLeft,
+        snap: ESnap.bottomLeft,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToBottom && shouldSnapToRight) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.bottomRight,
+        snap: ESnap.bottomRight,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToTop) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.top,
+        snap: ESnap.top,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToLeft) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.left,
+        snap: ESnap.left,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else if (shouldSnapToRight) {
       this.setState((state) => ({
         ...state,
-        snap: Snap.right,
+        snap: ESnap.right,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
     } else {
       this.setState((state) => ({
         ...state,
-        snap: Snap.none,
-        // offset: this.props.application.maximized
-        //   ? {
-        //       x: this.props.application.width,
-        //       y: this.props.application.height
-        //     }
-        //   : state.offset,
+        snap: ESnap.none,
         position: {
           left: e.pageX - state.offset.x,
           top: e.pageY - state.offset.y,
-          right: "",
-          bottom: ""
+          right: null,
+          bottom: null
         }
       }));
-      this.props.application.maximized = Snap.none;
+      this.props.application.maximized = ESnap.none;
     }
   }
 
@@ -253,16 +246,16 @@ export default class Window extends Component<IProps, IState> {
     e.preventDefault();
     this.props.application.sendToFront();
     if (this.props.application.maximized) {
-      this.props.application.maximized = Snap.none;
+      this.props.application.maximized = ESnap.none;
     } else {
-      this.props.application.maximized = Snap.top;
+      this.props.application.maximized = ESnap.top;
     }
   }
 
   private handleGreenClick(e: React.MouseEvent) {
     e.preventDefault();
-    this.props.application.minimized = true;
     this.props.application.sendToFront();
+    this.props.application.minimized = true;
   }
 
   private handleResizerMouseMove(e: React.MouseEvent) {
@@ -279,23 +272,23 @@ export default class Window extends Component<IProps, IState> {
     ];
 
     if (e.pageX >= x2 - 16 && e.pageY >= y2 - 16) {
-      this.props.application.resize = Resize.bottomRight;
+      this.props.application.resize = EResize.bottomRight;
     } else if (e.pageY >= y2 - 16 && e.pageX <= x1 + 16) {
-      this.props.application.resize = Resize.bottomLeft;
+      this.props.application.resize = EResize.bottomLeft;
     } else if (e.pageX >= x2 - 16 && e.pageY <= y1 + 16) {
-      this.props.application.resize = Resize.topRight;
+      this.props.application.resize = EResize.topRight;
     } else if (e.pageY <= y1 + 16 && e.pageX <= x1 + 16) {
-      this.props.application.resize = Resize.topLeft;
+      this.props.application.resize = EResize.topLeft;
     } else if (e.pageX >= x2 - this.m_resizerWidth) {
-      this.props.application.resize = Resize.right;
+      this.props.application.resize = EResize.right;
     } else if (e.pageY >= y2 - this.m_resizerWidth) {
-      this.props.application.resize = Resize.bottom;
+      this.props.application.resize = EResize.bottom;
     } else if (e.pageY <= y1 + this.m_resizerWidth) {
-      this.props.application.resize = Resize.top;
+      this.props.application.resize = EResize.top;
     } else if (e.pageX <= x1 + this.m_resizerWidth) {
-      this.props.application.resize = Resize.left;
+      this.props.application.resize = EResize.left;
     } else {
-      this.props.application.resize = Resize.none;
+      this.props.application.resize = EResize.none;
     }
   }
 
@@ -309,15 +302,15 @@ export default class Window extends Component<IProps, IState> {
     const windowFrame = window.offsetParent;
     if (!windowFrame) return;
 
-    const cursor = new Map<Resize, string>([
-      [Resize.top, "ns-resize"],
-      [Resize.bottom, "ns-resize"],
-      [Resize.left, "ew-resize"],
-      [Resize.right, "ew-resize"],
-      [Resize.topLeft, "nwse-resize"],
-      [Resize.topRight, "nesw-resize"],
-      [Resize.bottomLeft, "nesw-resize"],
-      [Resize.bottomRight, "nwse-resize"]
+    const cursor = new Map<EResize, string>([
+      [EResize.top, "ns-resize"],
+      [EResize.bottom, "ns-resize"],
+      [EResize.left, "ew-resize"],
+      [EResize.right, "ew-resize"],
+      [EResize.topLeft, "nwse-resize"],
+      [EResize.topRight, "nesw-resize"],
+      [EResize.bottomLeft, "nesw-resize"],
+      [EResize.bottomRight, "nwse-resize"]
     ]);
 
     document.body.style.cursor =
@@ -328,12 +321,12 @@ export default class Window extends Component<IProps, IState> {
     const windowBC = window.getBoundingClientRect();
     const windowFrameBC = windowFrame.getBoundingClientRect();
 
-    this.props.application.maximized = Snap.none;
+    this.props.application.maximized = ESnap.none;
 
     this.setState((state) => ({
       ...state,
       resizing: true,
-      snap: Snap.none,
+      snap: ESnap.none,
       position: {
         bottom: windowFrameBC.height - windowBC.bottom - windowFrameBC.top,
         left: windowBC.left - windowFrameBC.left,
@@ -384,7 +377,7 @@ export default class Window extends Component<IProps, IState> {
     };
 
     switch (this.props.application.resize) {
-      case Resize.top:
+      case EResize.top:
         this.setState((state) => ({
           ...state,
           position: {
@@ -400,7 +393,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.bottom:
+      case EResize.bottom:
         this.setState((state) => ({
           ...state,
           position: {
@@ -411,7 +404,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.left:
+      case EResize.left:
         this.setState((state) => ({
           ...state,
           position: {
@@ -422,7 +415,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.right:
+      case EResize.right:
         this.setState((state) => ({
           ...state,
           position: {
@@ -433,7 +426,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.topLeft:
+      case EResize.topLeft:
         this.setState((state) => ({
           ...state,
           position: {
@@ -444,7 +437,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.topRight:
+      case EResize.topRight:
         this.setState((state) => ({
           ...state,
           position: {
@@ -455,7 +448,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.bottomLeft:
+      case EResize.bottomLeft:
         this.setState((state) => ({
           ...state,
           position: {
@@ -466,7 +459,7 @@ export default class Window extends Component<IProps, IState> {
           }
         }));
         break;
-      case Resize.bottomRight:
+      case EResize.bottomRight:
         this.setState((state) => ({
           ...state,
           position: {
@@ -504,24 +497,30 @@ export default class Window extends Component<IProps, IState> {
       ...state,
       resizing: false,
       position: {
-        bottom: "",
+        bottom: null,
         left: state.position.left,
-        right: "",
+        right: null,
         top: state.position.top
       }
     }));
   }
 
   private handleDragDoubleClick() {
-    this.props.application.maximized = Snap.top;
+    this.props.application.maximized = ESnap.top;
   }
 
   public render() {
-    let windowClasses: string[] = [styles["window"]];
-    let windowShadowClasses: string[] = [styles["window-shadow"]];
+    const resizerClasses: string[] = [styles["resizer"]];
+    const windowClasses: string[] = [styles["window"]];
+    const windowShadowClasses: string[] = [styles["window-shadow"]];
     let width: number | "" = "";
     let height: number | "" = "";
-    let position: IPosition = { bottom: "", left: "", right: "", top: "" };
+    let position: IPosition = {
+      bottom: null,
+      left: null,
+      right: null,
+      top: null
+    };
 
     if (this.state.resizing) {
       position.top = this.state.position.top;
@@ -529,6 +528,19 @@ export default class Window extends Component<IProps, IState> {
       position.right = this.state.position.right;
       position.bottom = this.state.position.bottom;
     } else {
+      const cursor = new Map<EResize, string>([
+        [EResize.top, "resize-top"],
+        [EResize.bottom, "resize-bottom"],
+        [EResize.left, "resize-left"],
+        [EResize.right, "resize-right"],
+        [EResize.topLeft, "resize-top-left"],
+        [EResize.topRight, "resize-top-right"],
+        [EResize.bottomLeft, "resize-bottom-left"],
+        [EResize.bottomRight, "resize-bottom-right"]
+      ]);
+      resizerClasses.push(
+        styles[cursor.get(this.props.application.resize) ?? ""]
+      );
       if (this.props.application.maximized) {
         windowClasses.push(styles[`snap-${this.props.application.maximized}`]);
       } else {
@@ -583,10 +595,10 @@ export default class Window extends Component<IProps, IState> {
           className={windowClasses.join(" ")}
           style={{
             zIndex: this.props.application.zIndex,
-            top: position.top,
-            left: position.left,
-            bottom: position.bottom,
-            right: position.right,
+            top: position.top ?? "",
+            left: position.left ?? "",
+            bottom: position.bottom ?? "",
+            right: position.right ?? "",
             height: height,
             width: width,
             opacity: this.state.dragging ? "0.7" : "",
@@ -601,10 +613,7 @@ export default class Window extends Component<IProps, IState> {
         >
           <div
             ref={this.m_resizerRef}
-            className={[
-              styles["resizer"],
-              styles[this.props.application.resize]
-            ].join(" ")}
+            className={resizerClasses.join(" ")}
             onMouseDown={this.handleResizerDragMouseDown}
             onMouseMove={this.handleResizerMouseMove}
           ></div>

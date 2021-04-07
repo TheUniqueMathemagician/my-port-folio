@@ -1,7 +1,10 @@
-import { createContext, useContext, useState } from "react";
-import Application from "../shared/classes/Application";
+import { createContext, useContext, useEffect, useState } from "react";
+import Application from "./classes/Application";
+import ApplicationInstance from "./classes/ApplicationInstance";
+import DaemonApplication from "./classes/DaemonApplication";
+import WindowApplication from "./classes/WindowApplication";
 
-type Applications = Application[];
+type Applications = Array<DaemonApplication | WindowApplication>;
 
 type ApplicationsContextType = {
   applications: Applications;
@@ -20,11 +23,15 @@ const useApplications = () => useContext(ApplicationsContext);
  * @returns Returns a provider for all applications
  */
 const ApplicationsProvider: React.FunctionComponent = ({ children }) => {
-  const [state, setState] = useState<Applications>([]);
+  const [applications, setApplications] = useState<Applications>([]);
+
+  useEffect(() => {
+    Application.applicationsUpdater = setApplications;
+    ApplicationInstance.applicationsUpdater = setApplications;
+  }, []);
+
   return (
-    <ApplicationsContext.Provider
-      value={{ applications: state, setApplications: setState }}
-    >
+    <ApplicationsContext.Provider value={{ applications, setApplications }}>
       {children}
     </ApplicationsContext.Provider>
   );

@@ -7,6 +7,9 @@ const Mobile = () => {
       <Route exact path="/">
         <div>Mobile Home</div>
       </Route>
+      <Route path="boot">
+        <div>Mobile Boot</div>
+      </Route>
       <Route path="workspace">
         <div>Mobile Workspace</div>
       </Route>
