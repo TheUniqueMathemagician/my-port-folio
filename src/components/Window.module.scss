@@ -1,12 +1,11 @@
+@import "../styles/theme.scss";
+
 $resizer-overflow: 4px;
-$border-radius: 16px;
 .window {
   position: absolute;
   display: grid;
   grid-template-rows: auto 1fr;
-  backdrop-filter: blur(6px);
-  border-radius: $border-radius;
-  box-shadow: 0 0 20px 4px #33333333;
+  box-shadow: $shadow;
   pointer-events: all;
   @for $i from 1 to 9 {
     &.snap-#{$i} {
@@ -42,8 +41,8 @@ $border-radius: 16px;
     justify-content: space-between;
     align-items: center;
     padding: 8px;
-    background: #3333337f;
-    border-radius: 16px 16px 0 0;
+    background: $dark;
+    color: $light;
     position: relative;
     cursor: grab;
     .button-list {
@@ -66,10 +65,9 @@ $border-radius: 16px;
     }
   }
   .background {
-    background: #ffffff7f;
-    border-radius: 0 0 16px 16px;
+    background: $light;
     position: relative;
-    color: #333333;
+    color: $dark;
   }
   button {
     height: 14px;
@@ -81,7 +79,7 @@ $border-radius: 16px;
     box-shadow: 0 0 6px 0 #00000033;
     pointer-events: all;
     &:active {
-      box-shadow: inset 0 0 8px 0 #0000004d;
+      box-shadow: inset 0 0 6px 0 #0000004d;
     }
     &.red {
       background: #ff5853;
@@ -97,7 +95,6 @@ $border-radius: 16px;
 
 .resizer {
   position: absolute;
-  border-radius: $border-radius + $resizer-overflow;
   top: -$resizer-overflow;
   bottom: -$resizer-overflow;
   left: -$resizer-overflow;
@@ -161,13 +158,15 @@ $border-radius: 16px;
   }
 }
 
-@supports not (backdrop-filter: blur(0)) {
+@supports (backdrop-filter: blur(0)) {
   .window {
     .header {
-      background: #333333b3;
+      background: change-color($dark, $alpha: 0.5);
+      backdrop-filter: blur(6px);
     }
     .background {
-      background: #ffffffb3;
+      background: change-color($light, $alpha: 0.5);
+      backdrop-filter: blur(6px);
     }
   }
 }
