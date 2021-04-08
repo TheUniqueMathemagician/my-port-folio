@@ -1,15 +1,19 @@
-import styles from "./TaskBar.module.scss";
-import { useCallback, useEffect, useState } from "react";
-import { useInstances } from "../data/Instances";
 import WindowInstance from "../data/classes/WindowInstance";
+import { useEffect, useRef, useState } from "react";
+import { useInstances } from "../data/Instances";
+
+import styles from "./TaskBar.module.scss";
+import TaskBarMenu from "./TaskBarMenu";
 import { useApplications } from "../data/Applications";
 import { useHistory } from "react-router";
 
 const TaskBar = () => {
   const [date, setDate] = useState<number>(Date.now());
-  const [menuShown, setMenuShown] = useState<boolean>(false);
+  const [mainShown, setMainShown] = useState<boolean>(false);
   const [langShown, setLangShown] = useState<boolean>(false);
   const { instances } = useInstances();
+  const taskBarRef = useRef<HTMLDivElement>(null);
+  const langButtonRef = useRef<HTMLButtonElement>(null);
   const { applications } = useApplications();
   const history = useHistory();
 
@@ -22,25 +26,6 @@ const TaskBar = () => {
     };
   }, []);
 
-  const handleMenuClick = useCallback(() => {
-    setMenuShown(!menuShown);
-  }, [menuShown]);
-
-  const handleLangClick = useCallback(() => {
-    setLangShown(!langShown);
-  }, [langShown]);
-
-  const handleDocumentClick = useCallback(() => {
-    // setMenuShown(false);
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("click", handleDocumentClick);
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, [handleDocumentClick, menuShown]);
-
   const _time = new Date(date).toLocaleTimeString().slice(0, -3);
 
   const _date = new Date(date)
@@ -50,102 +35,147 @@ const TaskBar = () => {
     .join("/");
 
   return (
-    <div className={styles["task-bar"]}>
-      <div className={styles["menu"]}>
-        <nav className={menuShown ? styles["shown"] : ""}>
-          <ul>
-            {applications
-              .filter((app) => !!app.shortcut)
-              .map((app) => (
-                <li>
-                  <button
-                    onClick={() => {
-                      app.run();
-                      setMenuShown(false);
-                    }}
-                  >
-                    <img src={app.icon} alt={app.displayName} />
-                    <span>{app.displayName}</span>
-                  </button>
-                </li>
-              ))}
-          </ul>
-          <hr />
-          <ul>
-            {/* TODO: Add map of actions / icons  */}
-            <li>
-              <button
-                onClick={() => {
-                  history.push("/lock");
-                }}
-              >
-                Se déconnecter
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  history.push("/lock");
-                }}
-              >
-                Verouiller
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  history.push("/boot");
-                }}
-              >
-                Éteindre
-              </button>
-            </li>
-          </ul>
-        </nav>
-        <button onClick={handleMenuClick}>
+    <>
+      <div className={styles["task-bar"]} ref={taskBarRef}>
+        <button onClick={() => setMainShown(!mainShown)}>
           <img src={require("../assets/images/menu.svg").default} alt="Menu" />
         </button>
-      </div>
-      <hr></hr>
-      <div className={styles["apps"]}>
-        {instances
-          .filter((app) => app instanceof WindowInstance)
-          .map((app) => (
-            <button
-              key={app.id}
-              onClick={() => {
-                (app as WindowInstance).minimized = false;
-                (app as WindowInstance).sendToFront();
-              }}
-            >
-              <img
-                src={(app as WindowInstance).icon}
-                alt={(app as WindowInstance).displayName}
-              />
-            </button>
-          ))}
-      </div>
-      <hr></hr>
-      <div className={styles["menu"]}>
-        <nav className={langShown ? styles["shown"] : ""}>
-          <ul>
-            <li>
-              <button onClick={() => setLangShown(false)}>Français</button>
-            </li>
-          </ul>
-        </nav>
-        <button className="language" onClick={handleLangClick}>
+        <hr></hr>
+        <div className={styles["apps"]}>
+          {instances
+            .filter((app) => app instanceof WindowInstance)
+            .map((app) => (
+              <button
+                key={app.id}
+                onClick={() => {
+                  (app as WindowInstance).minimized = false;
+                  (app as WindowInstance).sendToFront();
+                }}
+              >
+                <img
+                  src={(app as WindowInstance).icon}
+                  alt={(app as WindowInstance).displayName}
+                />
+              </button>
+            ))}
+        </div>
+        <hr></hr>
+        <button ref={langButtonRef} onClick={() => setLangShown(!langShown)}>
           Français
         </button>
+        <hr />
+        <button disabled>
+          <div>
+            <p>{_time}</p>
+            <p>{_date}</p>
+          </div>
+        </button>
       </div>
-      <hr />
-      <button disabled>
-        <div>
-          <p>{_time}</p>
-          <p>{_date}</p>
-        </div>
-      </button>
-    </div>
+      <TaskBarMenu
+        shown={mainShown}
+        position={{
+          bottom: taskBarRef.current?.clientHeight ?? 0,
+          left: 0,
+          right: null,
+          top: null
+        }}
+      >
+        <ul>
+          {applications
+            .filter((app) => !!app.shortcut)
+            .map((app) => (
+              <li>
+                <button
+                  tabIndex={mainShown ? 0 : -1}
+                  onClick={() => {
+                    app.run();
+                    setMainShown(false);
+                  }}
+                >
+                  <img src={app.icon} alt={app.displayName} />
+                  <span>{app.displayName}</span>
+                </button>
+              </li>
+            ))}
+        </ul>
+        <hr />
+        <ul>
+          <li>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                setMainShown(false);
+              }}
+            >
+              Profil
+            </button>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                applications[0].run();
+                setMainShown(false);
+              }}
+            >
+              Applications
+            </button>
+          </li>
+        </ul>
+        <hr />
+        <ul>
+          <li>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                history.push("/lock");
+              }}
+            >
+              Se déconnecter
+            </button>
+          </li>
+          <li>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                history.push("/lock");
+              }}
+            >
+              Verouiller
+            </button>
+          </li>
+          <li>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                history.push("/boot");
+              }}
+            >
+              Éteindre
+            </button>
+          </li>
+        </ul>
+      </TaskBarMenu>
+      <TaskBarMenu
+        shown={langShown}
+        position={{
+          bottom: taskBarRef.current?.clientHeight ?? 0,
+          left: langButtonRef.current?.offsetLeft ?? 0,
+          right: 0,
+          top: null
+        }}
+      >
+        <ul>
+          <li>
+            <button
+              onClick={() => {
+                setLangShown(false);
+              }}
+            >
+              Français
+            </button>
+          </li>
+        </ul>
+      </TaskBarMenu>
+    </>
   );
 };
 

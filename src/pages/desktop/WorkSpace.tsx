@@ -3,6 +3,7 @@ import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
 import Education from "../../components/apps/Education";
 import Experience from "../../components/apps/Experience";
+import Manager from "../../components/apps/Manager";
 import Snake from "../../components/apps/Snake";
 import Welcome from "../../components/apps/Welcome";
 import ScreenFrame from "../../components/ScreenFrame";
@@ -20,6 +21,13 @@ const Main = () => {
 
   useEffect(() => {
     setApplications(() => [
+      new WindowApplication(
+        "Gestionnaire d'applications",
+        require(`../../assets/images/applications/about.svg`).default,
+        "",
+        false,
+        Manager
+      ),
       new WindowApplication(
         "A Propos",
         require(`../../assets/images/applications/about.svg`).default,

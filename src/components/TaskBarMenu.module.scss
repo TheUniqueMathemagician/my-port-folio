@@ -1,0 +1,77 @@
+@import "../styles/theme.scss";
+
+nav.task-bar-menu {
+  z-index: 1;
+  background-color: change-color($dark, $alpha: 0.5);
+  position: absolute;
+  max-height: 350px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    background: $dark;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $linear;
+  }
+  ul {
+    li {
+      button {
+        align-items: center;
+        background: none;
+        border: 0;
+        border-radius: 0;
+        color: $light;
+        column-gap: $padding;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        outline: 0;
+        outline: none;
+        height: 100%;
+        padding: $padding;
+        width: 100%;
+        white-space: nowrap;
+        word-break: keep-all;
+        &:disabled {
+          cursor: default;
+        }
+        &:hover:not(:disabled),
+        &:focus:not(:disabled) {
+          background-color: #ffffff30;
+        }
+        img {
+          width: 2rem;
+          height: 2rem;
+        }
+        span {
+          justify-self: flex-end;
+          word-break: keep-all;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+  hr {
+    width: auto;
+    margin: 8px;
+    height: 1px;
+    background: change-color($light, $alpha: 0.3);
+  }
+  &.shown {
+    pointer-events: all;
+    transition: opacity ease 0.3s, bottom ease 0.3s;
+    opacity: 1;
+    bottom: 100%;
+  }
+}
+
+@supports (backdrop-filter: blur(0)) {
+  nav.task-bar-menu {
+    background-color: change-color($dark, $alpha: 0.3);
+    backdrop-filter: blur(6px);
+  }
+}

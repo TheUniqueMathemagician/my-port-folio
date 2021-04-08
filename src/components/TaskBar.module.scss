@@ -1,66 +1,20 @@
 @import "../styles/theme.scss";
 
 .task-bar {
-  z-index: 999;
-  background-color: change-color($dark, $alpha: 0.3);
+  position: relative;
+  background-color: $dark;
   min-height: 40px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto auto auto;
   font-size: 0.8rem;
-  backdrop-filter: blur(6px);
-  .menu {
-    position: relative;
-    button {
-      width: 100%;
-      padding: $padding / 2;
-      cursor: pointer;
-    }
-    hr {
-      width: auto;
-      margin: 8px;
-      height: 1px;
-      background: change-color($light, $alpha: 0.3);
-    }
-    nav {
-      ul {
-        list-style-type: none;
-        margin: 0;
-        li {
-          button {
-            column-gap: $padding;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            span {
-              justify-self: flex-end;
-              margin-left: $margin;
-              word-break: keep-all;
-              white-space: nowrap;
-            }
-          }
-        }
-      }
-      position: absolute;
-      opacity: 0;
-      background: change-color($dark, $alpha: 0.7);
-      box-shadow: $shadow;
-      backdrop-filter: blur(6px);
-      z-index: -1;
-      left: 0;
-      bottom: 66%;
-      transition: opacity ease 0.3s, bottom ease 0.3s 0.3s;
-      &.shown {
-        transition: opacity ease 0.3s, bottom ease 0.1s;
-        opacity: 1;
-        bottom: 100%;
-      }
-    }
-  }
+  background-color: change-color($dark, $alpha: 0.5);
+  z-index: 1;
   button {
     outline: 0;
     outline: none;
     background: none;
     border: 0;
-    padding: 6px 12px;
+    padding: $padding/2 $padding;
     height: 100%;
     color: $light;
     border-radius: 0;
@@ -73,7 +27,7 @@
     }
     &:hover:not(:disabled),
     &:focus:not(:disabled) {
-      background-color: #ffffff30;
+      background-color: change-color($light, $alpha: 0.1);
     }
     img {
       width: 1.5rem;
@@ -87,7 +41,7 @@
     background: change-color($light, $alpha: 0.3);
   }
   .apps {
-    flex-grow: 1;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -97,5 +51,12 @@
       object-fit: contain;
       object-position: center;
     }
+  }
+}
+
+@supports (backdrop-filter: blur(6px)) {
+  .task-bar {
+    background-color: change-color($dark, $alpha: 0.3);
+    backdrop-filter: blur(6px);
   }
 }
