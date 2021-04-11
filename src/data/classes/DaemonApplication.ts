@@ -15,8 +15,11 @@ export default class DaemonApplication extends Application {
     if (runOnStartup) this.run();
   }
 
-  run() {
-    this.instancesUpdater((state) => [...state, new DaemonInstance(this)]);
+  run(args: any = {}) {
+    this.instancesUpdater((state) => [
+      ...state,
+      new DaemonInstance(this, args)
+    ]);
   }
 
   uninstall() {

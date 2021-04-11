@@ -84,7 +84,7 @@ const TaskBar = () => {
           {applications
             .filter((app) => !!app.shortcut)
             .map((app) => (
-              <li>
+              <li key={app.id}>
                 <button
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {

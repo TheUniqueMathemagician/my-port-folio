@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import WindowInstance from "../data/classes/WindowInstance";
 import { useInstances } from "../data/Instances";
 import IBoundaries from "../types/IBoundaries";
@@ -7,11 +7,7 @@ import Window from "./Window";
 import styles from "./WindowFrame.module.scss";
 
 const WindowFrame = () => {
-  // Contexts
-
   const { instances } = useInstances();
-
-  // States
 
   const [boundaries, setBoundaries] = useState<IBoundaries>({
     x1: 0,
@@ -20,26 +16,20 @@ const WindowFrame = () => {
     y2: 0
   });
 
-  // Refs
-
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // Callbacks
+  const frameRef = useRef<HTMLDivElement>(null);
 
   const resizeHandler = useCallback(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
+    const frame = frameRef.current;
+    if (!frame) return;
     setBoundaries({
-      x1: wrapper.offsetLeft,
-      x2: wrapper.offsetLeft + wrapper.clientWidth,
-      y1: wrapper.offsetTop,
-      y2: wrapper.offsetTop + wrapper.clientHeight
+      x1: frame.offsetLeft,
+      x2: frame.offsetLeft + frame.clientWidth,
+      y1: frame.offsetTop,
+      y2: frame.offsetTop + frame.clientHeight
     });
   }, []);
 
-  // Layout Effects
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     resizeHandler();
     window.addEventListener("resize", resizeHandler);
     return () => {
@@ -48,16 +38,16 @@ const WindowFrame = () => {
   }, [resizeHandler]);
 
   return (
-    <div className={styles["window-frame"]} ref={wrapperRef}>
+    <div className={styles["window-frame"]} ref={frameRef}>
       {instances
-        .filter((app) => app instanceof WindowInstance)
-        .map((app) => (
+        .filter((instance) => instance instanceof WindowInstance)
+        .map((instance) => (
           <Window
-            application={app as WindowInstance}
+            application={instance as WindowInstance}
             boundaries={boundaries}
             borderOffset={16}
             resizerWidth={4}
-            key={app.id}
+            key={instance.id}
           ></Window>
         ))}
     </div>

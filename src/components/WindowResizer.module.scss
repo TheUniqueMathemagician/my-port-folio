@@ -1,0 +1,27 @@
+@import "../styles/theme.scss";
+
+$resizer-overflow: 4px;
+
+.window-resizer {
+  position: absolute;
+  top: -$resizer-overflow;
+  bottom: -$resizer-overflow;
+  left: -$resizer-overflow;
+  right: -$resizer-overflow;
+  &.resize-top,
+  &.resize-bottom {
+    cursor: ns-resize;
+  }
+  &.resize-left,
+  &.resize-right {
+    cursor: ew-resize;
+  }
+  &.resize-top-left,
+  &.resize-bottom-right {
+    cursor: nwse-resize;
+  }
+  &.resize-top-right,
+  &.resize-bottom-left {
+    cursor: nesw-resize;
+  }
+}

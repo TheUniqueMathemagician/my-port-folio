@@ -41,6 +41,7 @@ const Main = () => {
         "Expérience",
         false,
         Experience,
+        { bottom: null, right: null, left: null, top: null },
         { width: 600, height: 400 }
       ),
       new WindowApplication(
@@ -49,6 +50,7 @@ const Main = () => {
         "Diplômes & Formations",
         false,
         Education,
+        { bottom: null, right: null, left: null, top: null },
         { width: 600, height: 400 }
       ),
       new WindowApplication(
@@ -57,6 +59,7 @@ const Main = () => {
         "Contact",
         false,
         Contact,
+        { bottom: null, right: null, left: null, top: null },
         { width: 600, height: 400 }
       ),
       new WindowApplication(
@@ -65,6 +68,7 @@ const Main = () => {
         "Le Serpent",
         false,
         Snake,
+        { bottom: null, right: null, left: null, top: null },
         { width: 600, height: 400 }
       ),
       new WindowApplication(
@@ -73,6 +77,7 @@ const Main = () => {
         "",
         true,
         Welcome,
+        { bottom: null, right: null, left: null, top: null },
         { width: 600, height: 400 }
       )
     ]);
