@@ -1,5 +1,10 @@
+@import "../styles/theme.scss";
+
 .screen-frame {
   display: grid;
   grid-template-rows: 1fr auto;
   height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

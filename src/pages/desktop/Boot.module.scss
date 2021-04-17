@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300&display=swap");
 
 $color: #00e271;
 $text-shadow: 0 0 8px $color;
@@ -6,10 +6,9 @@ $text-shadow: 0 0 8px $color;
 .boot {
   h2 {
     font-size: 1em;
-    margin-bottom: 1ch;
   }
   box-shadow: inset 0 0 24px 0
-    change-color($color, $alpha: 0.3, $saturation: 0.3, $lightness: 50);
+    change-color($color, $alpha: 0.3, $saturation: 3%, $lightness: 50%);
   font-size: 1.2rem;
   overflow: hidden;
   padding: 1em 1ch;
@@ -17,7 +16,7 @@ $text-shadow: 0 0 8px $color;
   min-height: 100vh;
   background-color: black;
   color: $color;
-  font-family: "Cutive Mono", monospace;
+  font-family: "IBM Plex Mono", monospace;
   background: $color;
   text-shadow: 0 0 2px 8px $color;
   background: radial-gradient(
@@ -33,11 +32,11 @@ $text-shadow: 0 0 8px $color;
     text-shadow: $text-shadow;
     max-width: 500px;
     animation-name: fade;
-    animation-timing-function: ease;
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    animation-direction: normal;
+    span {
+      width: 1ch;
+      height: 1.2rem;
+      display: inline-block;
+    }
     @keyframes fade {
       from {
         opacity: 0;
@@ -46,25 +45,24 @@ $text-shadow: 0 0 8px $color;
         opacity: 1;
       }
     }
-
-    .custom-input {
-      font-size: 1em;
-      text-decoration: none;
-      padding: 0;
-      margin: 0;
-      overflow-y: hidden;
-      resize: none;
-      text-shadow: $text-shadow;
-      font-family: "Cutive Mono", monospace;
-      background-color: transparent;
-      border: 0;
-      outline: 0;
-      outline: none;
-      color: $color;
-      min-width: 0;
-      width: 100%;
-      overflow: hidden;
-    }
+  }
+  .custom-input {
+    font-size: 1em;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
+    resize: none;
+    text-shadow: $text-shadow;
+    font-family: "Cutive Mono", monospace;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    outline: none;
+    color: $color;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
   }
 }
 

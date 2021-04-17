@@ -1,11 +1,9 @@
-import { useApplications } from "../../data/Applications";
-import { useInstances } from "../../data/Instances";
-
+import { useSelector } from "../../hooks/Store";
 import styles from "./Manager.module.scss";
 
 export default function Manager() {
-  const { applications } = useApplications();
-  const { instances } = useInstances();
+  const applications = useSelector((store) => store.applications);
+  const instances = useSelector((store) => store.instances.elements);
   return (
     <section className={styles["manager"]}>
       <h2>Applications</h2>
@@ -28,7 +26,9 @@ export default function Manager() {
           })
           .map((instance) => (
             <li>
-              <button onClick={() => instance.close()}>
+              <button
+              // TODO: onClick={() => instance.close()}
+              >
                 {instance.displayName}
               </button>
             </li>

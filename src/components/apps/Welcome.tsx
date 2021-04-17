@@ -1,10 +1,9 @@
-const Welcome = () => {
-  return (
-    <div>
-      Bienvenue sur mon OS ! Amusez-vous à déplacer les fenêtres, à les
-      redimentionner, et à exécuter les applications de votre choix !
-    </div>
-  );
+import { FunctionComponent } from "react";
+
+interface IProps {}
+
+const Welcome: FunctionComponent<IProps> = () => {
+  return <div>Bienvenue invité! Fais comme chez toi</div>;
 };
 
 export default Welcome;

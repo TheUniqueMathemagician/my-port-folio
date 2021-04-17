@@ -1,21 +1,22 @@
-import WindowInstance from "../data/classes/WindowInstance";
-import { useEffect, useRef, useState } from "react";
-import { useInstances } from "../data/Instances";
+import { useEffect, useRef, useState, memo } from "react";
 
 import styles from "./TaskBar.module.scss";
 import TaskBarMenu from "./TaskBarMenu";
-import { useApplications } from "../data/Applications";
 import { useHistory } from "react-router";
+import { useDispatch, useSelector } from "../hooks/Store";
+import { runApplication, sendToFront } from "../store/reducers/Instances";
+import { setMinimized } from "../store/reducers/Instances";
 
 const TaskBar = () => {
   const [date, setDate] = useState<number>(Date.now());
   const [mainShown, setMainShown] = useState<boolean>(false);
   const [langShown, setLangShown] = useState<boolean>(false);
-  const { instances } = useInstances();
+  const instances = useSelector((store) => store.instances.elements);
+  const applications = useSelector((store) => store.applications);
   const taskBarRef = useRef<HTMLDivElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);
-  const { applications } = useApplications();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,19 +44,18 @@ const TaskBar = () => {
         <hr></hr>
         <div className={styles["apps"]}>
           {instances
-            .filter((app) => app instanceof WindowInstance)
-            .map((app) => (
+            .filter((app) => app.type === "window")
+            .map((application) => (
               <button
-                key={app.id}
+                key={application.id}
                 onClick={() => {
-                  (app as WindowInstance).minimized = false;
-                  (app as WindowInstance).sendToFront();
+                  if (application.type === "window") {
+                    dispatch(setMinimized({ application, minimized: false }));
+                    dispatch(sendToFront(application));
+                  }
                 }}
               >
-                <img
-                  src={(app as WindowInstance).icon}
-                  alt={(app as WindowInstance).displayName}
-                />
+                <img src={application.icon} alt={application.displayName} />
               </button>
             ))}
         </div>
@@ -88,7 +88,7 @@ const TaskBar = () => {
                 <button
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {
-                    app.run();
+                    runApplication(app);
                     setMainShown(false);
                   }}
                 >
@@ -109,10 +109,23 @@ const TaskBar = () => {
             >
               Profil
             </button>
+          </li>
+          <li>
             <button
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
-                applications[0].run();
+                runApplication(applications[0]);
+                setMainShown(false);
+              }}
+            >
+              Préférences
+            </button>
+          </li>
+          <li>
+            <button
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                runApplication(applications[1]);
                 setMainShown(false);
               }}
             >
@@ -179,4 +192,6 @@ const TaskBar = () => {
   );
 };
 
-export default TaskBar;
+const arePropsEquals = () => false;
+
+export default memo(TaskBar, arePropsEquals);

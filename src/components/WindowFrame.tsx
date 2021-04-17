@@ -1,13 +1,19 @@
 import { useCallback, useState, useRef, useEffect } from "react";
-import WindowInstance from "../data/classes/WindowInstance";
-import { useInstances } from "../data/Instances";
+import { useSelector } from "../hooks/Store";
+import { WindowInstance } from "../store/reducers/Instances";
 import IBoundaries from "../types/IBoundaries";
 import Window from "./Window";
 
 import styles from "./WindowFrame.module.scss";
 
 const WindowFrame = () => {
-  const { instances } = useInstances();
+  const instances = useSelector((store) => store.instances.elements);
+  const ShadowPosition = useSelector(
+    (store) => store.instances.snapShadow.position
+  );
+  const shadowShown = useSelector(
+    (store) => store.instances.snapShadow.visible
+  );
 
   const [boundaries, setBoundaries] = useState<IBoundaries>({
     x1: 0,
@@ -39,8 +45,21 @@ const WindowFrame = () => {
 
   return (
     <div className={styles["window-frame"]} ref={frameRef}>
+      <div
+        style={{
+          transitionDuration: shadowShown ? ".3s" : "",
+          transitionTimingFunction: "ease",
+          transitionProperty: "all",
+          bottom: ShadowPosition.bottom ?? "",
+          left: ShadowPosition.left ?? "",
+          right: ShadowPosition.right ?? "",
+          top: ShadowPosition.top ?? "",
+          visibility: shadowShown ? "visible" : "collapse"
+        }}
+        className={styles["window-shadow"]}
+      ></div>
       {instances
-        .filter((instance) => instance instanceof WindowInstance)
+        .filter((instance) => instance.type === "window")
         .map((instance) => (
           <Window
             application={instance as WindowInstance}

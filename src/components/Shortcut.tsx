@@ -1,22 +1,30 @@
-import { KeyboardEvent } from "react";
-import DaemonApplication from "../data/classes/DaemonApplication";
-import WindowApplication from "../data/classes/WindowApplication";
+import { FunctionComponent, KeyboardEvent, useCallback } from "react";
+import { useDispatch } from "../hooks/Store";
+import {
+  DaemonApplication,
+  WindowApplication
+} from "../store/reducers/Applications";
+import { runApplication } from "../store/reducers/Instances";
 import styles from "./Shortcut.module.scss";
-
 interface IProps {
   application: DaemonApplication | WindowApplication;
 }
 
-const Shortcut: React.FunctionComponent<IProps> = ({ application }) => {
+const Shortcut: FunctionComponent<IProps> = ({ application }) => {
+  const dispatch = useDispatch();
+  const handleDoubleClick = useCallback(() => {
+    dispatch(runApplication(application));
+  }, [application, dispatch]);
+
   return (
     <button
       className={styles["shortcut"]}
-      onDoubleClick={() => application.run()}
+      onDoubleClick={handleDoubleClick}
       onKeyPress={(e: KeyboardEvent) => {
         switch (e.code) {
           case "Enter":
           case "Space":
-            application.run();
+            runApplication(application);
             break;
           default:
             break;

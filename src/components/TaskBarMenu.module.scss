@@ -71,7 +71,7 @@ nav.task-bar-menu {
 
 @supports (backdrop-filter: blur(0)) {
   nav.task-bar-menu {
-    background-color: change-color($dark, $alpha: 0.3);
+    background-color: change-color($dark, $alpha: 0.5);
     backdrop-filter: blur(6px);
   }
 }

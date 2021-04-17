@@ -1,4 +1,5 @@
 import IPosition from "../types/IPosition";
+import React from "react";
 
 import styles from "./TaskBarMenu.module.scss";
 

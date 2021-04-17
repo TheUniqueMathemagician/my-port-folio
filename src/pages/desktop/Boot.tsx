@@ -1,15 +1,25 @@
-import React, {
-  FormEvent,
+import {
   ChangeEvent,
+  FormEvent,
+  FunctionComponent,
   ReactEventHandler,
   SyntheticEvent,
   useRef,
   useState,
-  useEffect
+  useEffect,
+  useCallback
 } from "react";
 import { useHistory } from "react-router";
 
 import styles from "./Boot.module.scss";
+
+const header = ` ██████╗██╗   ██╗ ██████╗ ███████╗
+██╔════╝██║   ██║██╔═══██╗██╔════╝
+██║     ██║   ██║██║   ██║███████╗
+██║     ╚██╗ ██╔╝██║   ██║╚════██║
+╚██████╗ ╚████╔╝ ╚██████╔╝███████║
+ ╚═════╝  ╚═══╝   ╚═════╝ ╚══════╝
+`;
 
 interface IProps {}
 
@@ -17,7 +27,7 @@ interface IState {
   step: number;
 }
 
-const Boot: React.FunctionComponent<IProps> = () => {
+const Boot: FunctionComponent<IProps> = () => {
   const [state, setState] = useState<IState>({ step: 0 });
 
   const customInputRef = useRef<HTMLTextAreaElement>(null);
@@ -88,53 +98,65 @@ const Boot: React.FunctionComponent<IProps> = () => {
     }
   }, [state.step, history]);
 
+  const split = useCallback((str: string) => {
+    return str.split("").map((letter, i) =>
+      letter === "\n" ? (
+        <br />
+      ) : (
+        <span
+          style={{
+            animation: `fade 1s ${i / 4}s ease`
+          }}
+          key={`letter_${i}`}
+        >
+          {letter}
+        </span>
+      )
+    );
+  }, []);
+
   return (
     <main
       className={styles["boot"]}
       onMouseUp={() => customInputRef.current?.focus()}
     >
-      <article>
-        {state.step === 0 && (
-          <>
-            <h2>
-              {`██╗░░░██╗████████╗░█████╗░░██████╗ ╚██╗░██╔╝╚══██╔══╝██╔══██╗██╔════╝
-                  ░╚████╔╝░░░░██║░░░██║░░██║╚█████╗░ ░░╚██╔╝░░░░░██║░░░██║░░██║░╚═══██╗
-                  ░░░██║░░░░░░██║░░░╚█████╔╝██████╔╝ ░░░╚═╝░░░░░░╚═╝░░░░╚════╝░╚═════╝░`
-                .split("")
-                .map((letter, id) => (
-                  <span
-                    style={{ animation: `show ${id / 2}s ease` }}
-                    key={`letter_${id}`}
-                  >
-                    {letter}
-                  </span>
-                ))}
-            </h2>
-            <p>
-              Cette application vous offrira une meilleure expérience en plein
-              écran.
-            </p>
-            <p>Souhaitez-vous activer cette fonctionnalité (Y/n)?</p>
-          </>
-        )}
-        {state.step === 1 && <p>Le plein écran a rencontré un problème...</p>}
-        {state.step === 2 && <p>Chargement...</p>}
-        <form action="#" method="post" onSubmit={handleSubmit}>
-          <label>
-            <textarea
-              className={styles["custom-input"]}
-              spellCheck="false"
-              name="input"
-              autoFocus
-              rows={1}
-              onChange={handleChange}
-              ref={customInputRef}
-              defaultValue={">"}
-              onSelect={handleSelect}
-            ></textarea>
-          </label>
-        </form>
-      </article>
+      {state.step === 0 && (
+        <article>
+          <h2>{split(header)}</h2>
+          <br />
+          <p>
+            Cette application vous offrira une meilleure expérience en plein
+            écran.
+          </p>
+          <br />
+          <p>Souhaitez-vous activer cette fonctionnalité (Y/n)?</p>
+        </article>
+      )}
+      {state.step === 1 && (
+        <article>
+          <p>Le plein écran a rencontré un problème...</p>
+        </article>
+      )}
+      {state.step === 2 && (
+        <article>
+          <p>Chargement...</p>
+        </article>
+      )}
+      <form action="#" method="post" onSubmit={handleSubmit}>
+        <label>
+          <textarea
+            className={styles["custom-input"]}
+            spellCheck="false"
+            name="input"
+            autoFocus
+            rows={1}
+            onChange={handleChange}
+            ref={customInputRef}
+            defaultValue={">"}
+            onSelect={handleSelect}
+          ></textarea>
+        </label>
+      </form>
     </main>
   );
 };

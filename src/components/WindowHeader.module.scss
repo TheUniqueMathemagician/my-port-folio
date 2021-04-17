@@ -1,5 +1,9 @@
 @import "../styles/theme.scss";
 
+$red: #ff5853;
+$orange: #ffbc40;
+$green: #45d97e;
+
 .window-header {
   display: flex;
   justify-content: space-between;
@@ -26,13 +30,22 @@
       box-shadow: inset 0 0 6px 0 #0000004d;
     }
     &.red {
-      background: #ff5853;
+      background: $red;
+      &:focus {
+        background: lighten($red, 10);
+      }
     }
     &.orange {
-      background: #ffbc40;
+      background: $orange;
+      &:focus {
+        background: lighten($orange, 10);
+      }
     }
     &.green {
-      background: #45d97e;
+      background: $green;
+      &:focus {
+        background: lighten($green, 10);
+      }
     }
   }
   h2 {

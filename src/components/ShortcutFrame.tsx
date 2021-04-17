@@ -1,11 +1,9 @@
-import { useApplications } from "../data/Applications";
+import { useSelector } from "../hooks/Store";
 import Shortcut from "./Shortcut";
 import styles from "./ShortcutFrame.module.scss";
 
-interface IProps {}
-
-const ShortcutFrame: React.FunctionComponent<IProps> = ({ children }) => {
-  const { applications } = useApplications();
+const ShortcutFrame = () => {
+  const applications = useSelector((state) => state.applications);
   return (
     <div className={styles["shortcut-frame"]}>
       {applications

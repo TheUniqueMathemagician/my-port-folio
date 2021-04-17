@@ -1,15 +1,19 @@
-import React, { Component, createElement, createRef } from "react";
-
+import React, {
+  createElement,
+  FunctionComponent,
+  useCallback,
+  useRef
+} from "react";
 import styles from "./Window.module.scss";
 import IPosition from "../types/IPosition";
-import ESnap from "../types/ESnap";
-import WindowInstance from "../data/classes/WindowInstance";
+import { WindowInstance } from "../store/reducers/Instances";
 import IBoundaries from "../types/IBoundaries";
+import { applicationsMap } from "../store/reducers/Applications";
+import { sendToFront } from "../store/reducers/Instances";
+import { useDispatch, useSelector } from "../hooks/Store";
 import WindowHeader from "./WindowHeader";
 import WindowResizer from "./WindowResizer";
-interface IState {
-  snap: ESnap;
-}
+
 interface IProps {
   application: WindowInstance;
   boundaries: IBoundaries;
@@ -17,160 +21,138 @@ interface IProps {
   resizerWidth: number;
 }
 
-// TODO: Refactor => component must have single concern
-// Separate resizer and dragger
-export default class Window extends Component<IProps, IState> {
-  private m_windowRef: React.RefObject<HTMLDivElement>;
-  private m_headerRef: React.RefObject<HTMLDivElement>;
+const Window: FunctionComponent<IProps> = ({
+  application,
+  boundaries,
+  borderOffset,
+  resizerWidth
+}) => {
+  const windowRef = useRef<HTMLDivElement>(null);
 
-  private m_borderOffset: number = 16;
+  const zIndexes = useSelector((store) => store.instances.zIndexes);
 
-  constructor(props: IProps) {
-    super(props);
+  const dispatch = useDispatch();
 
-    this.m_windowRef = createRef<HTMLDivElement>();
-    this.m_headerRef = createRef<HTMLDivElement>();
-
-    const snap: ESnap = ESnap.none;
-    this.state = {
-      snap
-    };
-
-    this.handleWindowMouseDown = this.handleWindowMouseDown.bind(this);
-    this.setShadow = this.setShadow.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.application.position = {
-      bottom: null,
-      left:
-        (this.props.boundaries.x2 -
-          this.props.boundaries.x1 -
-          this.props.application.width) /
-        2,
-      right: null,
-      top:
-        (this.props.boundaries.y2 -
-          this.props.boundaries.y1 -
-          this.props.application.height) /
-        2
-    };
-  }
-
-  private handleWindowMouseDown(e: React.MouseEvent) {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.application.sendToFront();
-  }
-
-  private setShadow(shadow: ESnap) {
-    this.setState((state) => ({ ...state, snap: shadow }));
-  }
-
-  public render() {
-    const windowClasses: string[] = [styles["window"]];
-    const windowShadowClasses: string[] = [styles["window-shadow"]];
-    let width: number | "" = "";
-    let height: number | "" = "";
-    let position: IPosition = {
-      bottom: null,
-      left: null,
-      right: null,
-      top: null
-    };
-
-    const checkBoundaries = () => {
-      if (this.props.application.position.left) {
-        if (
-          this.props.application.position.left <
-          this.props.boundaries.x1 -
-            this.props.application.width +
-            this.m_borderOffset
-        ) {
-          position.left =
-            this.props.boundaries.x1 -
-            this.props.application.width +
-            this.m_borderOffset;
-        }
-        if (
-          this.props.application.position.left >
-          this.props.boundaries.x2 - this.m_borderOffset
-        ) {
-          position.left = this.props.boundaries.x2 - this.m_borderOffset;
-        }
+  const handleWindowMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (
+        zIndexes.findIndex((id) => id === application.id) !==
+        zIndexes.length - 1
+      ) {
+        dispatch(sendToFront(application));
       }
-      if (this.props.application.position.top) {
-        if (this.props.application.position.top < this.props.boundaries.y1) {
-          position.top = this.props.boundaries.y1;
-        }
-        if (
-          this.props.application.position.top >
-          this.props.boundaries.y2 - this.m_borderOffset
-        ) {
-          position.top = this.props.boundaries.y2 - this.m_borderOffset;
-        }
-      }
-    };
+    },
+    [dispatch, application, zIndexes]
+  );
 
-    if (this.props.application.maximized) {
-      windowClasses.push(styles[`snap-${this.props.application.maximized}`]);
-    } else if (this.props.application.resizing) {
-      position.top = this.props.application.position.top;
-      position.left = this.props.application.position.left;
-      position.right = this.props.application.position.right;
-      position.bottom = this.props.application.position.bottom;
-      checkBoundaries();
-    } else {
-      position.top = this.props.application.position.top;
-      position.left = this.props.application.position.left;
-      width = this.props.application.width;
-      height = this.props.application.height;
-      if (this.state.snap) {
-        windowShadowClasses.push(styles[`snap-${this.state.snap}`]);
+  //#region window rendering checks
+
+  const windowClasses: string[] = [styles["window"]];
+  let width: number | "" = "";
+  let height: number | "" = "";
+  let position: IPosition = {
+    bottom: null,
+    left: null,
+    right: null,
+    top: null
+  };
+
+  const checkBoundaries = () => {
+    if (application.position.left) {
+      if (
+        application.position.left <
+        boundaries.x1 - (application.dimensions.width ?? 0) + borderOffset
+      ) {
+        position.left =
+          boundaries.x1 - (application.dimensions.width ?? 0) + borderOffset;
       }
-      checkBoundaries();
+      if (application.position.left > boundaries.x2 - borderOffset) {
+        position.left = boundaries.x2 - borderOffset;
+      }
     }
+    if (application.position.top) {
+      if (application.position.top < boundaries.y1) {
+        position.top = boundaries.y1;
+      }
+      if (application.position.top > boundaries.y2 - borderOffset) {
+        position.top = boundaries.y2 - borderOffset;
+      }
+    }
+  };
 
-    return (
-      <>
-        <div className={windowShadowClasses.join(" ")}></div>
-        <section
-          className={windowClasses.join(" ")}
-          style={{
-            zIndex: this.props.application.zIndex,
-            top: position.top ?? "",
-            left: position.left ?? "",
-            bottom: position.bottom ?? "",
-            right: position.right ?? "",
-            height: height,
-            width: width,
-            opacity: this.props.application.dragging ? "0.7" : "",
-            visibility: this.props.application.minimized
-              ? "collapse"
-              : "visible"
-          }}
-          ref={this.m_windowRef}
-          onDragStart={() => false}
-          draggable="false"
-          onMouseDown={this.handleWindowMouseDown}
-        >
-          <WindowResizer
-            application={this.props.application}
-            windowRef={this.m_windowRef}
-          ></WindowResizer>
-          <WindowHeader
-            application={this.props.application}
-            boundaries={this.props.boundaries}
-            setShadow={this.setShadow}
-          ></WindowHeader>
-          <div className={styles["background"]}>
-            {this.props.application.component
-              ? createElement(this.props.application.component, {})
-              : ""}
-          </div>
-        </section>
-      </>
-    );
+  if (application.maximized) {
+    windowClasses.push(styles[`snap-${application.maximized}`]);
+  } else if (application.resizing) {
+    position.top = application.position.top;
+    position.left = application.position.left;
+    position.right = application.position.right;
+    position.bottom = application.position.bottom;
+    checkBoundaries();
+  } else if (
+    application.position.bottom === null &&
+    application.position.left === null &&
+    application.position.right === null &&
+    application.position.top === null
+  ) {
+    position.left =
+      (boundaries.x2 - boundaries.x1 - (application.dimensions.width ?? 0)) / 2;
+    position.top =
+      (boundaries.y2 - boundaries.y1 - (application.dimensions.height ?? 0)) /
+      2;
+    width = application.dimensions.width ?? 0;
+    height = application.dimensions.height ?? 0;
+    checkBoundaries();
+  } else {
+    position.top = application.position.top;
+    position.left = application.position.left;
+    width = application.dimensions.width ?? 0;
+    height = application.dimensions.height ?? 0;
+    checkBoundaries();
   }
-}
+
+  //#endregion
+
+  const component = applicationsMap.get(application.component) || null;
+
+  const zIndex = zIndexes.indexOf(application.id);
+
+  return (
+    <section
+      className={windowClasses.join(" ")}
+      style={{
+        zIndex,
+        top: position.top ?? "",
+        left: position.left ?? "",
+        bottom: position.bottom ?? "",
+        right: position.right ?? "",
+        height: height,
+        width: width,
+        opacity: application.dragging ? "0.7" : "",
+        visibility: application.minimized ? "collapse" : "visible"
+      }}
+      ref={windowRef}
+      onDragStart={() => false}
+      draggable="false"
+      onMouseDown={handleWindowMouseDown}
+    >
+      <WindowResizer
+        application={application}
+        windowRef={windowRef}
+        width={resizerWidth}
+      ></WindowResizer>
+      <WindowHeader
+        application={application}
+        boundaries={boundaries}
+        windowRef={windowRef}
+      ></WindowHeader>
+      <div className={styles["background"]}>
+        {component ? createElement(component, {}) : ""}
+      </div>
+    </section>
+  );
+};
+
+export default Window;
