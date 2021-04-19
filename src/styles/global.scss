@@ -30,8 +30,8 @@ body {
 @for $i from 1 to 7 {
   h#{$i} {
     font-size: #{(3-$i * 0.25)}rem;
-    margin-top: #{(3-$i * 0.25) / 2}rem;
-    margin-bottom: #{(3-$i * 0.25)}rem;
+    margin-top: #{(1-$i * 0.15) / 2}rem;
+    margin-bottom: #{(2-$i * 0.25)}rem;
     cursor: default;
   }
 }

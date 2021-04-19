@@ -1,4 +1,4 @@
-import { FunctionComponent, memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { closeApplication, sendToFront } from "../../store/reducers/Instances";
 import { DaemonInstance, WindowInstance } from "../../store/reducers/Instances";
@@ -19,41 +19,64 @@ import {
   Box,
   Theme,
   makeStyles,
-  useTheme,
-  Tabs,
-  AppBar
+  Tabs
 } from "@material-ui/core";
+
 import { setRunOnStartup } from "../../store/reducers/Applications";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    minHeight: "100%"
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`
+  },
+  box: {
+    display: "grid",
+    rowGap: "1rem",
+    gridTemplateColumns: "1fr"
+  }
+}));
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: number;
-  value: number;
+  className?: string;
+  index: any;
+  value: any;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const classes = useStyles();
+  const { className, children, value, index, ...other } = props;
 
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
+      className={className}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p={3} className={classes.box}>
+          {children}
         </Box>
       )}
     </div>
   );
 }
 
-interface IProps {}
+function a11yProps(index: any) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`
+  };
+}
 
-const Manager: FunctionComponent<IProps> = () => {
+const Manager = () => {
   const applications = useSelector((store) => store.applications);
   const instances = useSelector(
     (store) => store.instances.elements,
@@ -70,6 +93,7 @@ const Manager: FunctionComponent<IProps> = () => {
       return true;
     }
   );
+  const classes = useStyles();
 
   const [panelIndex, setPanelIndex] = useState(0);
 
@@ -83,33 +107,28 @@ const Manager: FunctionComponent<IProps> = () => {
   );
 
   return (
-    <section>
+    <div className={classes.root}>
       <Tabs
+        orientation="vertical"
+        variant="scrollable"
         value={panelIndex}
-        onChange={() => false}
-        aria-label="simple tabs example"
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-        variant="fullWidth"
-        style={{ backgroundColor: "#ffffffaa" }}
+        onChange={(_, v) => setPanelIndex(v)}
+        aria-label="Vertical tabs example"
+        className={classes.tabs}
       >
-        <Tab label="Applications" onClick={() => setPanelIndex(0)} />
-        <Tab label="Instances" onClick={() => setPanelIndex(1)} />
+        <Tab label="Applications" {...a11yProps(0)} />
+        <Tab label="Instances" {...a11yProps(1)} />
       </Tabs>
       <TabPanel index={0} value={panelIndex}>
-        <h2>Applications</h2>
-        <TableContainer
-          component={Paper}
-          square
-          style={{ backgroundColor: "#ffffffaa" }}
-        >
+        <Typography variant="h4">Applications</Typography>
+        <Typography variant="body1">Applications installées</Typography>
+        <TableContainer component={Paper} square variant="outlined">
           <Table aria-label="simple table" size="small">
             <TableHead style={{ background: "#333" }}>
               <TableRow>
                 <TableCell style={{ color: "white" }}>Nom</TableCell>
                 <TableCell style={{ color: "white" }} align="center">
-                  PID
+                  AID
                 </TableCell>
                 <TableCell style={{ color: "white" }} align="center">
                   Startup
@@ -117,38 +136,84 @@ const Manager: FunctionComponent<IProps> = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(applications).map((key) => (
-                <TableRow key={key}>
-                  <TableCell>{applications[key].displayName}</TableCell>
-                  <TableCell align="center">{applications[key].id}</TableCell>
-                  <TableCell align="center">
-                    <form action="#" onSubmit={(e) => e.preventDefault()}>
-                      <Checkbox
-                        checked={applications[key].runOnStartup}
-                        onChange={(_, value) => {
-                          dispatch(
-                            setRunOnStartup({
-                              application: applications[key],
-                              runOnStartup: value
-                            })
-                          );
-                        }}
-                        inputProps={{ "aria-label": "primary checkbox" }}
-                        color="primary"
-                      ></Checkbox>
-                    </form>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {Object.keys(applications)
+                .filter((key) => applications[key].type === "window")
+                .map((key) => (
+                  <TableRow key={key}>
+                    <TableCell>{applications[key].displayName}</TableCell>
+                    <TableCell align="center">{applications[key].id}</TableCell>
+                    <TableCell align="center">
+                      <form action="#" onSubmit={(e) => e.preventDefault()}>
+                        <Checkbox
+                          checked={applications[key].runOnStartup}
+                          onChange={(_, value) => {
+                            dispatch(
+                              setRunOnStartup({
+                                application: applications[key],
+                                runOnStartup: value
+                              })
+                            );
+                          }}
+                          inputProps={{ "aria-label": "primary checkbox" }}
+                        ></Checkbox>
+                      </form>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Typography variant="body1">Services installés</Typography>
+        <TableContainer component={Paper} square variant="outlined">
+          <Table aria-label="simple table" size="small">
+            <TableHead style={{ background: "#333" }}>
+              <TableRow>
+                <TableCell style={{ color: "white" }}>Nom</TableCell>
+                <TableCell style={{ color: "white" }} align="center">
+                  AID
+                </TableCell>
+                <TableCell style={{ color: "white" }} align="center">
+                  Startup
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.keys(applications)
+                .filter((key) => applications[key].type === "daemon")
+                .map((key) => (
+                  <TableRow key={key}>
+                    <TableCell>{applications[key].displayName}</TableCell>
+                    <TableCell align="center">{applications[key].id}</TableCell>
+                    <TableCell align="center">
+                      <form action="#" onSubmit={(e) => e.preventDefault()}>
+                        <Checkbox
+                          checked={applications[key].runOnStartup}
+                          onChange={(_, value) => {
+                            dispatch(
+                              setRunOnStartup({
+                                application: applications[key],
+                                runOnStartup: value
+                              })
+                            );
+                          }}
+                          inputProps={{ "aria-label": "primary checkbox" }}
+                          color="primary"
+                        ></Checkbox>
+                      </form>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
       </TabPanel>
       <TabPanel index={1} value={panelIndex}>
-        <h2>Instances</h2>
+        <Typography variant="h4">Instances</Typography>
+        <Typography variant="body1">Instances actives</Typography>
         <TableContainer
           component={Paper}
           square
+          variant="outlined"
           style={{ backgroundColor: "#ffffffaa" }}
         >
           <Table size="small">
@@ -198,7 +263,7 @@ const Manager: FunctionComponent<IProps> = () => {
           </Table>
         </TableContainer>
       </TabPanel>
-    </section>
+    </div>
   );
 };
 

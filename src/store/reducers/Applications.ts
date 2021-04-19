@@ -55,7 +55,7 @@ initialState[aid] = {
   component: EApplications.Settings,
   dimensions: { height: 600, width: 600 },
   displayName: "Préférences du système",
-  icon: "",
+  icon: require("../../assets/images/applications/settings.svg").default,
   id: aid,
   maxDimensions: { height: null, width: null },
   minDimensions: { height: null, width: null },

@@ -50,25 +50,43 @@ const WindowResizer: FunctionComponent<IProps> = ({
       ];
 
       if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
-        dispatch(
-          setResizeMode({ application, resizeMode: EResize.bottomRight })
-        );
+        if (application.resizeMode !== EResize.bottomRight) {
+          dispatch(
+            setResizeMode({ application, resizeMode: EResize.bottomRight })
+          );
+        }
       } else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
-        dispatch(
-          setResizeMode({ application, resizeMode: EResize.bottomLeft })
-        );
+        if (application.resizeMode !== EResize.bottomLeft) {
+          dispatch(
+            setResizeMode({ application, resizeMode: EResize.bottomLeft })
+          );
+        }
       } else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.topRight }));
+        if (application.resizeMode !== EResize.topRight) {
+          dispatch(
+            setResizeMode({ application, resizeMode: EResize.topRight })
+          );
+        }
       } else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.topLeft }));
+        if (application.resizeMode !== EResize.topLeft) {
+          dispatch(setResizeMode({ application, resizeMode: EResize.topLeft }));
+        }
       } else if (e.pageX >= x2 - width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.right }));
+        if (application.resizeMode !== EResize.right) {
+          dispatch(setResizeMode({ application, resizeMode: EResize.right }));
+        }
       } else if (e.pageY >= y2 - width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.bottom }));
+        if (application.resizeMode !== EResize.bottom) {
+          dispatch(setResizeMode({ application, resizeMode: EResize.bottom }));
+        }
       } else if (e.pageY <= y1 + width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.top }));
+        if (application.resizeMode !== EResize.top) {
+          dispatch(setResizeMode({ application, resizeMode: EResize.top }));
+        }
       } else if (e.pageX <= x1 + width) {
-        dispatch(setResizeMode({ application, resizeMode: EResize.left }));
+        if (application.resizeMode !== EResize.left) {
+          dispatch(setResizeMode({ application, resizeMode: EResize.left }));
+        }
       } else {
         dispatch(setResizeMode({ application, resizeMode: EResize.none }));
       }
