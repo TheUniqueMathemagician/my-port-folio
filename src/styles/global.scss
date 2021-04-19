@@ -11,6 +11,31 @@ body {
   overflow: hidden;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+::-webkit-scrollbar-track {
+  background: $dark;
+}
+::-webkit-scrollbar-thumb {
+  background: $linear;
+  &:horizontal {
+    background: $linearH;
+  }
+}
+
+@for $i from 1 to 7 {
+  h#{$i} {
+    font-size: #{(3-$i * 0.25)}rem;
+    margin-top: #{(3-$i * 0.25) / 2}rem;
+    margin-bottom: #{(3-$i * 0.25)}rem;
+    cursor: default;
+  }
+}
+
 * {
   font-family: "Karla", sans-serif;
   margin: 0;
