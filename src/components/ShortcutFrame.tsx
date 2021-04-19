@@ -6,10 +6,10 @@ const ShortcutFrame = () => {
   const applications = useSelector((state) => state.applications);
   return (
     <div className={styles["shortcut-frame"]}>
-      {applications
-        .filter((app) => app.shortcut)
-        .map((app) => (
-          <Shortcut application={app} key={app.id}></Shortcut>
+      {Object.keys(applications)
+        .filter((key) => applications[key].shortcut)
+        .map((key) => (
+          <Shortcut application={applications[key]} key={key}></Shortcut>
         ))}
     </div>
   );

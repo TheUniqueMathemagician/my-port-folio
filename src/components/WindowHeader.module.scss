@@ -18,8 +18,8 @@ $green: #45d97e;
     column-gap: 8px;
   }
   button {
-    height: 14px;
-    width: 14px;
+    height: 12px;
+    width: 12px;
     border-radius: 50%;
     border: 0;
     outline: none;
@@ -51,6 +51,7 @@ $green: #45d97e;
   h2 {
     pointer-events: none;
     position: absolute;
+    margin: 0;
     left: 0;
     right: 0;
     bottom: 0;

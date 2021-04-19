@@ -58,15 +58,15 @@ const WindowFrame = () => {
         }}
         className={styles["window-shadow"]}
       ></div>
-      {instances
-        .filter((instance) => instance.type === "window")
-        .map((instance) => (
+      {Object.keys(instances)
+        .filter((key) => instances[key].type === "window")
+        .map((key) => (
           <Window
-            application={instance as WindowInstance}
+            application={instances[key] as WindowInstance}
             boundaries={boundaries}
             borderOffset={16}
             resizerWidth={4}
-            key={instance.id}
+            key={instances[key].id}
           ></Window>
         ))}
     </div>

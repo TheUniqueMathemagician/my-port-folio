@@ -37,13 +37,15 @@ export interface WindowInstance extends Instance {
 }
 
 interface IState {
-  elements: Array<DaemonInstance | WindowInstance>;
+  elements: {
+    [pid: string]: DaemonInstance | WindowInstance;
+  };
   snapShadow: { position: IdomPosition; visible: boolean };
   zIndexes: Array<string>;
 }
 
 const initialState: IState = {
-  elements: [],
+  elements: {},
   snapShadow: {
     position: { bottom: 0, left: 0, right: 0, top: 0 },
     visible: false
@@ -51,7 +53,9 @@ const initialState: IState = {
   zIndexes: []
 };
 
-initialState.zIndexes = initialState.elements.map((instance) => instance.id);
+for (const element in initialState.elements) {
+  initialState.zIndexes.push(element);
+}
 
 export const instancesSlice = createSlice({
   name: "instances",
@@ -61,45 +65,44 @@ export const instancesSlice = createSlice({
       state,
       action: PayloadAction<DaemonInstance | WindowInstance>
     ) {
-      state.elements = state.elements.filter(
-        (app) => app.id !== action.payload.id
+      delete state.elements[action.payload.id];
+      state.zIndexes = state.zIndexes.filter(
+        (zIndex) => zIndex !== action.payload.id
       );
     },
     runApplication(
       state,
       action: PayloadAction<DaemonApplication | WindowApplication>
     ) {
-      switch (action.payload?.type) {
+      const id = generateID();
+      switch (action.payload.type) {
         case "daemon":
-          state.elements.push({
-            id: generateID(),
+          state.elements[id] = {
+            id,
             icon: action.payload.icon,
             displayName: action.payload.displayName,
             type: "daemon"
-          } as DaemonInstance);
+          };
           break;
         case "window":
-          {
-            const id = generateID();
-            state.elements.push({
-              id,
-              icon: action.payload.icon,
-              displayName: action.payload.displayName,
-              position: action.payload.position,
-              dimensions: action.payload.dimensions,
-              maxDimensions: action.payload.maxDimensions,
-              minDimensions: action.payload.minDimensions,
-              resizable: action.payload.resizable,
-              resizeMode: EResize.none,
-              resizing: false,
-              dragging: false,
-              minimized: false,
-              maximized: ESnap.none,
-              component: action.payload.component,
-              type: "window"
-            } as WindowInstance);
-            state.zIndexes.push(id);
-          }
+          state.elements[id] = {
+            id,
+            icon: action.payload.icon,
+            displayName: action.payload.displayName,
+            position: action.payload.position,
+            dimensions: action.payload.dimensions,
+            maxDimensions: action.payload.maxDimensions,
+            minDimensions: action.payload.minDimensions,
+            resizable: action.payload.resizable,
+            resizeMode: EResize.none,
+            resizing: false,
+            dragging: false,
+            minimized: false,
+            maximized: ESnap.none,
+            component: action.payload.component,
+            type: "window"
+          };
+          state.zIndexes.push(id);
           break;
         default:
           break;
@@ -119,10 +122,8 @@ export const instancesSlice = createSlice({
         dimensions: IDimensions;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.dimensions = action.payload.dimensions;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).dimensions = action.payload.dimensions;
     },
     setDragging(
       state,
@@ -131,10 +132,8 @@ export const instancesSlice = createSlice({
         dragging: boolean;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.dragging = action.payload.dragging;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).dragging = action.payload.dragging;
     },
     setPosition(
       state,
@@ -143,10 +142,8 @@ export const instancesSlice = createSlice({
         position: IPosition;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.position = action.payload.position;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).position = action.payload.position;
     },
     setMaximized(
       state,
@@ -155,10 +152,8 @@ export const instancesSlice = createSlice({
         maximized: ESnap;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.maximized = action.payload.maximized;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).maximized = action.payload.maximized;
     },
     setMinimized(
       state,
@@ -167,10 +162,8 @@ export const instancesSlice = createSlice({
         minimized: boolean;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.minimized = action.payload.minimized;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).minimized = action.payload.minimized;
     },
     setResizeMode(
       state,
@@ -179,10 +172,8 @@ export const instancesSlice = createSlice({
         resizeMode: EResize;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.resizeMode = action.payload.resizeMode;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).resizeMode = action.payload.resizeMode;
     },
     setResizing(
       state,
@@ -191,10 +182,8 @@ export const instancesSlice = createSlice({
         resizing: boolean;
       }>
     ) {
-      const instance = state.elements.find(
-        (instance) => instance.id === action.payload.application.id
-      ) as WindowInstance;
-      instance.resizing = action.payload.resizing;
+      const instance = state.elements[action.payload.application.id];
+      (instance as WindowInstance).resizing = action.payload.resizing;
     },
     setSnapShadowVisibility(state, action: PayloadAction<boolean>) {
       state.snapShadow.visible = action.payload;

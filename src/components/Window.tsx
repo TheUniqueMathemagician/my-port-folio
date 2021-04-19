@@ -1,6 +1,7 @@
 import React, {
   createElement,
   FunctionComponent,
+  memo,
   useCallback,
   useRef
 } from "react";
@@ -155,4 +156,4 @@ const Window: FunctionComponent<IProps> = ({
   );
 };
 
-export default Window;
+export default memo(Window);

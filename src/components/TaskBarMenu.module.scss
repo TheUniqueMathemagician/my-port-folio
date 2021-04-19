@@ -6,17 +6,6 @@ nav.task-bar-menu {
   position: absolute;
   max-height: 350px;
   overflow: auto;
-  &::-webkit-scrollbar {
-    width: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  &::-webkit-scrollbar-track {
-    background: $dark;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $linear;
-  }
   ul {
     li {
       button {

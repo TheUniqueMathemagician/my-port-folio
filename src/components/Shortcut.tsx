@@ -24,7 +24,7 @@ const Shortcut: FunctionComponent<IProps> = ({ application }) => {
         switch (e.code) {
           case "Enter":
           case "Space":
-            runApplication(application);
+            dispatch(runApplication(application));
             break;
           default:
             break;

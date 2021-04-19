@@ -43,7 +43,8 @@ const TaskBar = () => {
         </button>
         <hr></hr>
         <div className={styles["apps"]}>
-          {instances
+          {Object.keys(instances)
+            .map((x) => instances[x])
             .filter((app) => app.type === "window")
             .map((application) => (
               <button
@@ -81,19 +82,22 @@ const TaskBar = () => {
         }}
       >
         <ul>
-          {applications
-            .filter((app) => !!app.shortcut)
-            .map((app) => (
-              <li key={app.id}>
+          {Object.keys(applications)
+            .filter((key) => !!applications[key].shortcut)
+            .map((key) => (
+              <li key={key}>
                 <button
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {
-                    runApplication(app);
+                    dispatch(runApplication(applications[key]));
                     setMainShown(false);
                   }}
                 >
-                  <img src={app.icon} alt={app.displayName} />
-                  <span>{app.displayName}</span>
+                  <img
+                    src={applications[key].icon}
+                    alt={applications[key].displayName}
+                  />
+                  <span>{applications[key].displayName}</span>
                 </button>
               </li>
             ))}
@@ -114,7 +118,8 @@ const TaskBar = () => {
             <button
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
-                runApplication(applications[0]);
+                const keys = Object.keys(applications);
+                dispatch(runApplication(applications[keys[0]]));
                 setMainShown(false);
               }}
             >
@@ -125,7 +130,8 @@ const TaskBar = () => {
             <button
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
-                runApplication(applications[1]);
+                const keys = Object.keys(applications);
+                dispatch(runApplication(applications[keys[1]]));
                 setMainShown(false);
               }}
             >

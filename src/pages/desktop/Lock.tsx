@@ -1,5 +1,4 @@
 import styles from "./Lock.module.scss";
-import React from "react";
 
 export default function Lock() {
   return (

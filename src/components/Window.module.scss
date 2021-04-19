@@ -41,26 +41,11 @@
     position: relative;
     color: $dark;
     overflow: auto;
-    &::-webkit-scrollbar {
-      width: 10px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    &::-webkit-scrollbar-track {
-      background: $dark;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: $linear;
-    }
   }
 }
 
 @supports (backdrop-filter: blur(0)) {
   .window {
-    .header {
-      background: change-color($dark, $alpha: 0.5);
-      backdrop-filter: blur(6px);
-    }
     .background {
       background: change-color($light, $alpha: 0.5);
       backdrop-filter: blur(6px);
