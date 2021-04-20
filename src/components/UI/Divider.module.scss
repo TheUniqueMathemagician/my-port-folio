@@ -1,0 +1,27 @@
+@import "../../styles/theme.scss";
+
+.divider {
+  hr {
+    height: 1px;
+    background-color: change-color($light, $alpha: 0.5);
+    border: 0;
+  }
+  &.dark {
+    hr {
+      background-color: change-color($dark, $alpha: 0.5);
+    }
+  }
+  &.inset {
+    padding: 0 $padding/2;
+  }
+  &.vertical {
+    height: 100%;
+    hr {
+      height: 100%;
+      width: 1px;
+    }
+    &.inset {
+      padding: $padding/2 0;
+    }
+  }
+}

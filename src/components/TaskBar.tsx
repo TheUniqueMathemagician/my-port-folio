@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "../hooks/Store";
 import { runApplication, sendToFront } from "../store/reducers/Instances";
 import { setMinimized } from "../store/reducers/Instances";
+import Divider from "./UI/Divider";
 
 const TaskBar = () => {
   const [date, setDate] = useState<number>(Date.now());
@@ -41,7 +42,7 @@ const TaskBar = () => {
         <button onClick={() => setMainShown(!mainShown)}>
           <img src={require("../assets/images/menu.svg").default} alt="Menu" />
         </button>
-        <hr></hr>
+        <Divider inset vertical></Divider>
         <div className={styles["apps"]}>
           {Object.keys(instances)
             .map((x) => instances[x])
@@ -60,11 +61,11 @@ const TaskBar = () => {
               </button>
             ))}
         </div>
-        <hr></hr>
+        <Divider inset vertical></Divider>
         <button ref={langButtonRef} onClick={() => setLangShown(!langShown)}>
           Français
         </button>
-        <hr />
+        <Divider inset vertical></Divider>
         <button disabled>
           <div>
             <p>{_time}</p>
@@ -102,7 +103,7 @@ const TaskBar = () => {
               </li>
             ))}
         </ul>
-        <hr />
+        <Divider inset></Divider>
         <ul>
           <li>
             <button
@@ -139,7 +140,7 @@ const TaskBar = () => {
             </button>
           </li>
         </ul>
-        <hr />
+        <Divider inset></Divider>
         <ul>
           <li>
             <button

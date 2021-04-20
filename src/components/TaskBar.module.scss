@@ -33,12 +33,6 @@
       height: 1.5rem;
     }
   }
-  hr {
-    margin: 8px;
-    width: 1px;
-    border: 0;
-    background: change-color($light, $alpha: 0.3);
-  }
   .apps {
     overflow: hidden;
     display: flex;

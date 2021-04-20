@@ -44,12 +44,6 @@ nav.task-bar-menu {
       }
     }
   }
-  hr {
-    width: auto;
-    margin: 8px;
-    height: 1px;
-    background: change-color($light, $alpha: 0.3);
-  }
   &.shown {
     pointer-events: all;
     transition: opacity ease 0.3s, bottom ease 0.3s;
