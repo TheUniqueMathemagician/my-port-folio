@@ -124,7 +124,7 @@ const TaskBar = () => {
                 setMainShown(false);
               }}
             >
-              Préférences
+              Paramètres
             </button>
           </li>
           <li>

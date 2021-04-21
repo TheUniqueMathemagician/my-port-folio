@@ -1,25 +1,21 @@
 @import "../../styles/theme.scss";
 
 .lock {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: url("https://images.unsplash.com/photo-1607053075722-dff3fb966413?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   > section {
     padding: $padding;
-
-    form {
-      input[type="submit"] {
-        padding: $padding;
-        backdrop-filter: blur(6px);
-        border: 0;
-        background: #ffffff1a;
-        border-radius: $border-radius;
-        box-shadow: 0 0 20px 4px #33333333;
-        color: $light;
-        font-size: 2rem;
-        cursor: pointer;
-      }
-    }
+    min-height: 100vh;
+    display: grid;
+    row-gap: $padding;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    // backdrop-filter: blur(10px);
+    border: 0;
+    // background: change-color($dark, $alpha: 0.5);
   }
 }

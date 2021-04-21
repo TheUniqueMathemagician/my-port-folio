@@ -35,6 +35,7 @@ const Boot: FunctionComponent<IProps> = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    history.push("/lock");
   };
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

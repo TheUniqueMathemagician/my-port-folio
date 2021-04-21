@@ -91,6 +91,7 @@ const Settings = () => {
       >
         <Tab label="Theme" {...a11yProps(0)} />
         <Tab label="Langue" {...a11yProps(1)} />
+        <Tab label="Utilisateurs" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={panelIndex} index={0}>
         <Typography variant="h4" noWrap>
@@ -181,10 +182,14 @@ const Settings = () => {
         </FormControl>
       </TabPanel>
       <TabPanel value={panelIndex} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={panelIndex} index={3}>
-        Item Four
+        <Typography variant="h4" noWrap>
+          Utilisateurs
+        </Typography>
+        <Typography variant="subtitle1">Utilisateur actuel</Typography>
+        <Typography variant="body2" paragraph>
+          Utilisateur actuel
+        </Typography>
+        <Typography variant="subtitle1">Utilisateurs</Typography>
       </TabPanel>
     </div>
   );

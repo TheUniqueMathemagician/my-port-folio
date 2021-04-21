@@ -81,6 +81,7 @@ initialState[aid] = {
   shortcut: "",
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.About,
@@ -96,6 +97,7 @@ initialState[aid] = {
   shortcut: require("../../assets/images/applications/about.svg").default,
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Contact,
@@ -111,6 +113,7 @@ initialState[aid] = {
   shortcut: require("../../assets/images/applications/contact.svg").default,
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Education,
@@ -126,6 +129,7 @@ initialState[aid] = {
   shortcut: require("../../assets/images/applications/education.svg").default,
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Experience,
@@ -141,6 +145,7 @@ initialState[aid] = {
   shortcut: require("../../assets/images/applications/experience.svg").default,
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Snake,
@@ -156,6 +161,7 @@ initialState[aid] = {
   shortcut: require("../../assets/images/applications/snake.svg").default,
   type: "window"
 };
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Welcome,
@@ -200,7 +206,6 @@ export const applicationsSlice = createSlice({
   }
 });
 
-const { setRunOnStartup } = applicationsSlice.actions;
+export const { setRunOnStartup } = applicationsSlice.actions;
 
-export { setRunOnStartup };
 export default applicationsSlice.reducer;
