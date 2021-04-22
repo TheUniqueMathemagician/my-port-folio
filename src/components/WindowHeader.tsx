@@ -1,5 +1,6 @@
 import React, {
   FunctionComponent,
+  memo,
   RefObject,
   useCallback,
   useEffect,
@@ -327,4 +328,46 @@ const WindowHeader: FunctionComponent<IProps> = ({
   );
 };
 
-export default WindowHeader;
+const isEqual = (prevProps: IProps, nextProps: IProps) => {
+  if (
+    prevProps.application.resizable !== nextProps.application.resizable ||
+    prevProps.application.position.bottom !==
+      nextProps.application.position.bottom ||
+    prevProps.application.position.left !==
+      nextProps.application.position.left ||
+    prevProps.application.position.right !==
+      nextProps.application.position.right ||
+    prevProps.application.position.top !== nextProps.application.position.top
+  ) {
+    return false;
+  }
+  if (prevProps.application.resizable !== nextProps.application.resizable) {
+    return false;
+  }
+  if (prevProps.application.resizeMode !== nextProps.application.resizeMode) {
+    return false;
+  }
+  if (prevProps.application.resizing !== nextProps.application.resizing) {
+    return false;
+  }
+  if (prevProps.application.dragging !== nextProps.application.dragging) {
+    return false;
+  }
+  if (prevProps.application.displayName !== nextProps.application.displayName) {
+    return false;
+  }
+  if (prevProps.windowRef !== nextProps.windowRef) {
+    return false;
+  }
+  if (
+    prevProps.boundaries.x1 !== nextProps.boundaries.x1 ||
+    prevProps.boundaries.x2 !== nextProps.boundaries.x2 ||
+    prevProps.boundaries.y1 !== nextProps.boundaries.y1 ||
+    prevProps.boundaries.y1 !== nextProps.boundaries.y2
+  ) {
+    return false;
+  }
+  return true;
+};
+
+export default memo(WindowHeader, isEqual);

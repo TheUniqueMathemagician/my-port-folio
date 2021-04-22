@@ -1,5 +1,6 @@
 import React, {
   FunctionComponent,
+  memo,
   RefObject,
   useCallback,
   useEffect,
@@ -367,4 +368,51 @@ const WindowResizer: FunctionComponent<IProps> = ({
   );
 };
 
-export default WindowResizer;
+const isEqual = (prevProps: IProps, nextProps: IProps) => {
+  if (prevProps.application.resizable !== nextProps.application.resizable) {
+    return false;
+  }
+  if (
+    prevProps.application.position.bottom !==
+    nextProps.application.position.bottom
+  ) {
+    return false;
+  }
+  if (
+    prevProps.application.position.left !== nextProps.application.position.left
+  ) {
+    return false;
+  }
+  if (
+    prevProps.application.position.right !==
+    nextProps.application.position.right
+  ) {
+    return false;
+  }
+  if (
+    prevProps.application.position.top !== nextProps.application.position.top
+  ) {
+    return false;
+  }
+  if (prevProps.application.resizable !== nextProps.application.resizable) {
+    return false;
+  }
+  if (prevProps.application.resizeMode !== nextProps.application.resizeMode) {
+    return false;
+  }
+  if (prevProps.application.resizing !== nextProps.application.resizing) {
+    return false;
+  }
+  if (prevProps.application.dragging !== nextProps.application.dragging) {
+    return false;
+  }
+  if (prevProps.windowRef !== nextProps.windowRef) {
+    return false;
+  }
+  if (prevProps.width !== nextProps.width) {
+    return false;
+  }
+  return true;
+};
+
+export default memo(WindowResizer, isEqual);
