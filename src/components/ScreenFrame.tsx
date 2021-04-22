@@ -7,7 +7,12 @@ const ScreenFrame: FunctionComponent = ({ children }) => {
 
   return (
     <div
-      style={{ background: `url(${bg})` }}
+      style={{
+        background: `url(${bg})`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover"
+      }}
       className={styles["screen-frame"]}
     >
       {children}
