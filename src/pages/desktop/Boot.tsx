@@ -102,13 +102,13 @@ const Boot: FunctionComponent<IProps> = () => {
   const split = useCallback((str: string) => {
     return str.split("").map((letter, i) =>
       letter === "\n" ? (
-        <br />
+        <br key={i} />
       ) : (
         <span
           style={{
             animation: `fade 1s ${i / 4}s ease`
           }}
-          key={`letter_${i}`}
+          key={i}
         >
           {letter}
         </span>
