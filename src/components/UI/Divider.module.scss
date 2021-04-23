@@ -14,6 +14,9 @@
   &.inset {
     padding: 0 $padding/2;
   }
+  &.margin {
+    margin: $margin/2 0;
+  }
   &.vertical {
     height: 100%;
     hr {
@@ -22,6 +25,9 @@
     }
     &.inset {
       padding: $padding/2 0;
+    }
+    &.margin {
+      margin: 0 $margin/2;
     }
   }
 }

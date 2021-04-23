@@ -1,10 +1,29 @@
 @import "../../styles/theme.scss";
 
-.lock {
+.root {
   background: url("https://images.unsplash.com/photo-1607053075722-dff3fb966413?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  .avatar {
+    border: 1px solid change-color($dark, $alpha: 0.5);
+    width: 16rem;
+    height: 16rem;
+  }
+  .button {
+    border-radius: 0;
+    border-color: change-color($dark, $alpha: 0.5);
+    color: $light;
+    background: change-color($dark, $alpha: 0.5);
+    &:hover,
+    &:focus {
+      background: mix(
+        change-color($dark, $alpha: 0.5),
+        change-color($light, $alpha: 0.2),
+        70%
+      );
+    }
+  }
   > section {
     padding: $padding;
     min-height: 100vh;
@@ -14,8 +33,13 @@
     justify-items: center;
     align-content: center;
     justify-content: center;
-    // backdrop-filter: blur(10px);
     border: 0;
     // background: change-color($dark, $alpha: 0.5);
+  }
+}
+
+@supports (backdrop-filter: blur(6px)) {
+  .button {
+    backdrop-filter: blur(6px);
   }
 }

@@ -1,58 +1,51 @@
-import {
-  Avatar,
-  Button,
-  makeStyles,
-  Theme,
-  Typography
-} from "@material-ui/core";
+import { Avatar, Button, Typography } from "@material-ui/core";
 import { useHistory } from "react-router";
-import { useSelector } from "../../hooks/Store";
+import { useDispatch, useSelector } from "../../hooks/Store";
+import { setCurrentUserID } from "../../store/reducers/Users";
 import styles from "./Lock.module.scss";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  avatar: {
-    width: "16rem",
-    height: "16rem"
-  },
-  button: {
-    borderColor: "white",
-    color: "white",
-    background: "#00000020",
-    "&:hover,&:focus": {
-      background: "#00000030"
-    }
-  }
-}));
-
 export default function Lock() {
-  const users = useSelector((store) => store.users);
-  const classes = useStyles();
+  const users = useSelector((store) => store.users.elements);
+  const currentUserID = useSelector((store) => store.users.currentUserID);
   const history = useHistory();
+  const dispatch = useDispatch();
   return (
-    <main className={styles["lock"]}>
+    <main className={styles["root"]}>
       <section>
         <Avatar
-          className={classes.avatar}
+          className={styles.avatar}
           alt="Image de profil"
-          src={users[Object.keys(users)[0]].profileImage}
+          src={users[currentUserID].profileImage}
         ></Avatar>
         <Button
-          className={classes.button}
+          className={styles.button}
           variant="outlined"
+          size="large"
           onClick={() => history.push("/workspace")}
         >
           Se connecter
         </Button>
         <div style={{ position: "fixed", bottom: 0, left: 0, padding: "2rem" }}>
-          <Button variant="outlined" className={classes.button}>
-            <Avatar
-              alt="Image de profil"
-              src={users[Object.keys(users)[0]].profileImage}
-            ></Avatar>
-            <Typography style={{ marginLeft: "1rem" }}>
-              {users[Object.keys(users)[0]].displayName}
-            </Typography>
-          </Button>
+          {Object.keys(users).map((key) => {
+            return (
+              <Button
+                key={key}
+                variant="outlined"
+                className={styles.button}
+                onClick={() => {
+                  dispatch(setCurrentUserID(key));
+                }}
+              >
+                <Avatar
+                  alt="Image de profil"
+                  src={users[key].profileImage}
+                ></Avatar>
+                <Typography style={{ marginLeft: "1rem" }}>
+                  {users[key].displayName}
+                </Typography>
+              </Button>
+            );
+          })}
         </div>
       </section>
     </main>
