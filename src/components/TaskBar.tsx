@@ -1,54 +1,165 @@
-import { useEffect, useRef, useState, memo } from "react";
+import { useRef, useState, memo, FunctionComponent, RefObject } from "react";
 
 import styles from "./TaskBar.module.scss";
 import TaskBarMenu from "./TaskBarMenu";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "../hooks/Store";
-import { runApplication, sendToFront } from "../store/reducers/Instances";
+import {
+  closeApplication,
+  runApplication,
+  sendToFront
+} from "../store/reducers/Instances";
 import { setMinimized } from "../store/reducers/Instances";
 import Divider from "./UI/Divider";
+import { setHasRanStartupApplications } from "../store/reducers/OS";
+import { Button, makeStyles, Theme } from "@material-ui/core";
+import TaskBarTimeDate from "./TaskBarTimeDate";
+import MenuIcon from "./icons/Menu";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  taskBarButton: {
+    alignItems: "center",
+    background: "none",
+    border: 0,
+    borderRadius: 0,
+    color: `white`,
+    outline: 0,
+    height: "100%",
+    padding: `${theme.spacing(0)}px ${theme.spacing(2)}px`,
+    "&:hover": {
+      backgroundColor: "#ffffff20"
+    },
+    "& img": {
+      width: "2rem",
+      height: "2rem"
+    }
+  },
+  taskBarMenuButton: {
+    alignItems: "center",
+    background: "none",
+    border: 0,
+    borderRadius: 0,
+    color: `white`,
+    outline: 0,
+    height: "100%",
+    padding: theme.spacing(2),
+    width: "100%",
+    "&:hover": {
+      backgroundColor: "#ffffff20"
+    },
+    "& > span": {
+      display: "grid",
+      columnGap: theme.spacing(2),
+      gridTemplateColumns: "auto 1fr",
+      textAlign: "left",
+      "& img": {
+        width: "2rem",
+        height: "2rem"
+      },
+      "& span": {
+        wordBreak: "keep-all",
+        whiteSpace: "nowrap",
+        color: "white"
+      }
+    }
+  }
+}));
+
+interface ITaskBarButtonProps {
+  onClick?: () => void;
+  cref?: RefObject<HTMLButtonElement>;
+  disabled?: boolean;
+  tabIndex?: number;
+}
+
+const TaskBarButton: FunctionComponent<ITaskBarButtonProps> = (props) => {
+  const classes = useStyles();
+  const { children, cref, ...others } = props;
+  return (
+    <Button
+      size="small"
+      {...others}
+      className={classes.taskBarButton}
+      ref={cref}
+    >
+      {children}
+    </Button>
+  );
+};
+
+interface ITaskBarMenuButtonProps {
+  alt?: string;
+  onClick?: () => void;
+  ref?: RefObject<HTMLButtonElement>;
+  disabled?: boolean;
+  tabIndex?: number;
+  startIcon?: string;
+}
+
+const TaskBarMenuButton: FunctionComponent<ITaskBarMenuButtonProps> = (
+  props
+) => {
+  const classes = useStyles();
+  const { alt, children, startIcon, ...others } = props;
+  return (
+    <Button
+      startIcon={startIcon && <img alt={alt} src={startIcon}></img>}
+      size="small"
+      {...others}
+      className={classes.taskBarMenuButton}
+    >
+      {children}
+    </Button>
+  );
+};
 
 const TaskBar = () => {
-  const [date, setDate] = useState<number>(Date.now());
   const [mainShown, setMainShown] = useState<boolean>(false);
   const [langShown, setLangShown] = useState<boolean>(false);
-  const instances = useSelector((store) => store.instances.elements);
-  const applications = useSelector((store) => store.applications);
+  const instances = useSelector(
+    (store) => store.instances.elements,
+    (left, right) => {
+      for (const key in left) {
+        const leftItem = left[key];
+        const rightItem = right[key];
+        if (leftItem?.displayName !== rightItem?.displayName) return false;
+      }
+      if (Object.keys(left)?.length !== Object.keys(right)?.length)
+        return false;
+      return true;
+    }
+  );
+  const applications = useSelector(
+    (store) => store.applications,
+    (left, right) => {
+      for (const key in left) {
+        const leftItem = left[key];
+        const rightItem = right[key];
+        if (leftItem?.displayName !== rightItem?.displayName) return false;
+      }
+      if (Object.keys(left)?.length !== Object.keys(right)?.length)
+        return false;
+      return true;
+    }
+  );
   const taskBarRef = useRef<HTMLDivElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);
   const history = useHistory();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDate(Date.now());
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  const _time = new Date(date).toLocaleTimeString().slice(0, -3);
-
-  const _date = new Date(date)
-    .toLocaleDateString()
-    .split("/")
-    .map((x) => x.match(/\d{2}$/))
-    .join("/");
-
   return (
     <>
       <div className={styles["task-bar"]} ref={taskBarRef}>
-        <button onClick={() => setMainShown(!mainShown)}>
-          <img src={require("../assets/images/menu.svg").default} alt="Menu" />
-        </button>
-        <Divider inset vertical></Divider>
+        <TaskBarButton onClick={() => setMainShown(!mainShown)}>
+          <MenuIcon style={{ width: "2rem", height: "2rem" }}></MenuIcon>
+        </TaskBarButton>
+        <Divider inset margin vertical></Divider>
         <div className={styles["apps"]}>
           {Object.keys(instances)
             .map((x) => instances[x])
             .filter((app) => app.type === "window")
             .map((application) => (
-              <button
+              <TaskBarButton
                 key={application.id}
                 onClick={() => {
                   if (application.type === "window") {
@@ -58,20 +169,20 @@ const TaskBar = () => {
                 }}
               >
                 <img src={application.icon} alt={application.displayName} />
-              </button>
+              </TaskBarButton>
             ))}
         </div>
-        <Divider inset vertical></Divider>
-        <button ref={langButtonRef} onClick={() => setLangShown(!langShown)}>
+        <Divider inset margin vertical></Divider>
+        <TaskBarButton
+          cref={langButtonRef}
+          onClick={() => setLangShown(!langShown)}
+        >
           Français
-        </button>
-        <Divider inset vertical></Divider>
-        <button disabled>
-          <div>
-            <p>{_time}</p>
-            <p>{_date}</p>
-          </div>
-        </button>
+        </TaskBarButton>
+        <Divider inset margin vertical></Divider>
+        <TaskBarButton disabled>
+          <TaskBarTimeDate></TaskBarTimeDate>
+        </TaskBarButton>
       </div>
       <TaskBarMenu
         shown={mainShown}
@@ -87,36 +198,33 @@ const TaskBar = () => {
             .filter((key) => !!applications[key].shortcut)
             .map((key) => (
               <li key={key}>
-                <button
+                <TaskBarMenuButton
+                  startIcon={applications[key].icon}
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {
                     dispatch(runApplication(applications[key]));
                     setMainShown(false);
                   }}
                 >
-                  <img
-                    src={applications[key].icon}
-                    alt={applications[key].displayName}
-                  />
-                  <span>{applications[key].displayName}</span>
-                </button>
+                  {applications[key].displayName}
+                </TaskBarMenuButton>
               </li>
             ))}
         </ul>
-        <Divider inset></Divider>
+        <Divider inset margin></Divider>
         <ul>
           <li>
-            <button
+            <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 setMainShown(false);
               }}
             >
               Profil
-            </button>
+            </TaskBarMenuButton>
           </li>
           <li>
-            <button
+            <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -125,10 +233,10 @@ const TaskBar = () => {
               }}
             >
               Paramètres
-            </button>
+            </TaskBarMenuButton>
           </li>
           <li>
-            <button
+            <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -137,40 +245,48 @@ const TaskBar = () => {
               }}
             >
               Applications
-            </button>
+            </TaskBarMenuButton>
           </li>
         </ul>
-        <Divider inset></Divider>
+        <Divider inset margin></Divider>
         <ul>
           <li>
-            <button
-              tabIndex={mainShown ? 0 : -1}
-              onClick={() => {
-                history.push("/lock");
-              }}
-            >
-              Se déconnecter
-            </button>
-          </li>
-          <li>
-            <button
+            <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 history.push("/lock");
               }}
             >
               Verouiller
-            </button>
+            </TaskBarMenuButton>
           </li>
           <li>
-            <button
+            <TaskBarMenuButton
+              tabIndex={mainShown ? 0 : -1}
+              onClick={() => {
+                history.push("/lock");
+                Object.keys(instances).forEach((key) => {
+                  dispatch(closeApplication(instances[key]));
+                });
+                dispatch(setHasRanStartupApplications(false));
+              }}
+            >
+              Se déconnecter
+            </TaskBarMenuButton>
+          </li>
+          <li>
+            <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 history.push("/boot");
+                Object.keys(instances).forEach((key) => {
+                  dispatch(closeApplication(instances[key]));
+                });
+                dispatch(setHasRanStartupApplications(false));
               }}
             >
               Éteindre
-            </button>
+            </TaskBarMenuButton>
           </li>
         </ul>
       </TaskBarMenu>
@@ -185,13 +301,13 @@ const TaskBar = () => {
       >
         <ul>
           <li>
-            <button
+            <TaskBarMenuButton
               onClick={() => {
                 setLangShown(false);
               }}
             >
               Français
-            </button>
+            </TaskBarMenuButton>
           </li>
         </ul>
       </TaskBarMenu>
@@ -199,6 +315,6 @@ const TaskBar = () => {
   );
 };
 
-const arePropsEquals = () => false;
+export default memo(TaskBar);
 
-export default memo(TaskBar, arePropsEquals);
+// TODO: Add colors for the lasts 3 TaskBarButtons

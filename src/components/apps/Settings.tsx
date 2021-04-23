@@ -1,15 +1,18 @@
 import { memo, useState } from "react";
-import { useDispatch, useSelector } from "../../hooks/Store";
+import {
+  // useDispatch,
+  useSelector
+} from "../../hooks/Store";
 
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import {
+  Avatar,
+  Button,
   FormControl,
   FormControlLabel,
-  FormGroup,
-  FormLabel,
-  InputLabel,
+  Grid,
   makeStyles,
   Radio,
   RadioGroup,
@@ -72,8 +75,10 @@ function a11yProps(index: any) {
 const Settings = () => {
   const classes = useStyles();
   const [panelIndex, setPanelIndex] = useState(0);
-  const dispatch = useDispatch();
-  const bg = useSelector((store) => store.theme.workspaceBackgroundURL);
+  const users = useSelector((store) => store.users.elements);
+  const currentUserID = useSelector((store) => store.users.currentUserID);
+  // const dispatch = useDispatch();
+  // const bg = useSelector((store) => store.theme.workspaceBackgroundURL);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setPanelIndex(newValue);
@@ -82,6 +87,7 @@ const Settings = () => {
   return (
     <div className={classes.root}>
       <Tabs
+        indicatorColor="primary"
         orientation="vertical"
         variant="scrollable"
         value={panelIndex}
@@ -108,11 +114,15 @@ const Settings = () => {
             value={0}
             onChange={() => {}}
           >
-            <FormControlLabel value={0} control={<Radio />} label="Clair" />
+            <FormControlLabel
+              value={0}
+              control={<Radio color="primary" />}
+              label="Clair"
+            />
             <Tooltip title="Indisponible" arrow placement="left">
               <FormControlLabel
                 value={1}
-                control={<Radio />}
+                control={<Radio color="primary" />}
                 label="Foncé"
                 disabled
               />
@@ -120,7 +130,8 @@ const Settings = () => {
             <Tooltip title="Indisponible" arrow placement="left">
               <FormControlLabel
                 value={2}
-                control={<Radio />}
+                control={<Radio color="primary" />}
+                color="primary"
                 label="Contrasté"
                 disabled
               />
@@ -136,11 +147,15 @@ const Settings = () => {
             value={1}
             onChange={() => {}}
           >
-            <FormControlLabel value={1} control={<Radio />} label="Forêt" />
+            <FormControlLabel
+              value={1}
+              control={<Radio color="primary" />}
+              label="Forêt"
+            />
             <Tooltip title="Indisponible" arrow placement="left">
               <FormControlLabel
                 value={2}
-                control={<Radio />}
+                control={<Radio color="primary" />}
                 label="Fleurs"
                 disabled
               />
@@ -161,11 +176,15 @@ const Settings = () => {
             value={0}
             onChange={() => {}}
           >
-            <FormControlLabel value={0} control={<Radio />} label="Français" />
+            <FormControlLabel
+              value={0}
+              control={<Radio color="primary" />}
+              label="Français"
+            />
             <Tooltip title="Unavailable" arrow placement="left">
               <FormControlLabel
                 value={1}
-                control={<Radio />}
+                control={<Radio color="primary" />}
                 label="English"
                 disabled
               />
@@ -173,7 +192,7 @@ const Settings = () => {
             <Tooltip title="Nicht verfügbar" arrow placement="left">
               <FormControlLabel
                 value={2}
-                control={<Radio />}
+                control={<Radio color="primary" />}
                 label="Deutsch"
                 disabled
               />
@@ -186,10 +205,48 @@ const Settings = () => {
           Utilisateurs
         </Typography>
         <Typography variant="subtitle1">Utilisateur actuel</Typography>
-        <Typography variant="body2" paragraph>
-          Utilisateur actuel
-        </Typography>
+        <Grid container spacing={2} direction="row" alignItems="center">
+          <Grid item>
+            <Avatar
+              alt="Image de profil"
+              src={users[currentUserID].profileImage}
+            ></Avatar>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {users[currentUserID].displayName}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button disabled variant="outlined" color="primary">
+              Changer le mot de passe
+            </Button>
+          </Grid>
+        </Grid>
         <Typography variant="subtitle1">Utilisateurs</Typography>
+        {Object.keys(users).map((key) => {
+          return (
+            <Grid
+              key={key}
+              container
+              spacing={2}
+              direction="row"
+              alignItems="center"
+            >
+              <Grid item>
+                <Avatar
+                  alt="Image de profil"
+                  src={users[key].profileImage}
+                ></Avatar>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2">
+                  {users[key].displayName}
+                </Typography>
+              </Grid>
+            </Grid>
+          );
+        })}
       </TabPanel>
     </div>
   );

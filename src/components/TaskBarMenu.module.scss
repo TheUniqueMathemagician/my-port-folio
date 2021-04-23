@@ -6,44 +6,6 @@ nav.task-bar-menu {
   position: absolute;
   max-height: 350px;
   overflow: auto;
-  ul {
-    li {
-      button {
-        align-items: center;
-        background: none;
-        border: 0;
-        border-radius: 0;
-        color: $light;
-        column-gap: $padding;
-        cursor: pointer;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        outline: 0;
-        outline: none;
-        height: 100%;
-        padding: $padding;
-        width: 100%;
-        white-space: nowrap;
-        word-break: keep-all;
-        &:disabled {
-          cursor: default;
-        }
-        &:hover:not(:disabled),
-        &:focus:not(:disabled) {
-          background-color: #ffffff30;
-        }
-        img {
-          width: 2rem;
-          height: 2rem;
-        }
-        span {
-          justify-self: flex-end;
-          word-break: keep-all;
-          white-space: nowrap;
-        }
-      }
-    }
-  }
   &.shown {
     pointer-events: all;
     transition: opacity ease 0.3s, bottom ease 0.3s;

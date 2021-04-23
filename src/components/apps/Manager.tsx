@@ -87,9 +87,8 @@ const Manager = () => {
         if (!leftItem) return false;
         if (!rightItem) return false;
         if (leftItem.displayName !== rightItem.displayName) return false;
-        if (Object.keys(left).length !== Object.keys(right).length)
-          return false;
       }
+      if (Object.keys(left).length !== Object.keys(right).length) return false;
       return true;
     }
   );
@@ -109,6 +108,7 @@ const Manager = () => {
   return (
     <div className={classes.root}>
       <Tabs
+        indicatorColor="primary"
         orientation="vertical"
         variant="scrollable"
         value={panelIndex}
@@ -145,6 +145,7 @@ const Manager = () => {
                     <TableCell align="center">
                       <form action="#" onSubmit={(e) => e.preventDefault()}>
                         <Checkbox
+                          color="primary"
                           checked={applications[key].runOnStartup}
                           onChange={(_, value) => {
                             dispatch(

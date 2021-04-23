@@ -37,18 +37,9 @@
   }
 
   .background {
-    background: $light;
+    background: #eeeeee;
     position: relative;
     color: $dark;
     overflow: auto;
-  }
-}
-
-@supports (backdrop-filter: blur(0)) {
-  .window {
-    .background {
-      background: change-color($light, $alpha: 0.5);
-      backdrop-filter: blur(6px);
-    }
   }
 }
