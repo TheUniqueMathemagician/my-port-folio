@@ -202,7 +202,12 @@ const TaskBar = () => {
                   startIcon={applications[key].icon}
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {
-                    dispatch(runApplication(applications[key]));
+                    dispatch(
+                      runApplication({
+                        application: applications[key],
+                        args: new Map([])
+                      })
+                    );
                     setMainShown(false);
                   }}
                 >
@@ -217,6 +222,13 @@ const TaskBar = () => {
             <TaskBarMenuButton
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
+                const keys = Object.keys(applications);
+                dispatch(
+                  runApplication({
+                    application: applications[keys[0]],
+                    args: new Map([["tab", "profile"]])
+                  })
+                );
                 setMainShown(false);
               }}
             >
@@ -228,7 +240,12 @@ const TaskBar = () => {
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
-                dispatch(runApplication(applications[keys[0]]));
+                dispatch(
+                  runApplication({
+                    application: applications[keys[0]],
+                    args: new Map([])
+                  })
+                );
                 setMainShown(false);
               }}
             >
@@ -240,7 +257,12 @@ const TaskBar = () => {
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
-                dispatch(runApplication(applications[keys[1]]));
+                dispatch(
+                  runApplication({
+                    application: applications[keys[1]],
+                    args: new Map([])
+                  })
+                );
                 setMainShown(false);
               }}
             >

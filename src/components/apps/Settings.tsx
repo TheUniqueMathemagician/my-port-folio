@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { FunctionComponent, memo, useState } from "react";
 import {
   // useDispatch,
   useSelector
@@ -72,9 +72,16 @@ function a11yProps(index: any) {
   };
 }
 
-const Settings = () => {
+interface IProps {
+  args: Map<string, string>;
+}
+
+const Settings: FunctionComponent<IProps> = (props) => {
+  const { args } = props;
   const classes = useStyles();
-  const [panelIndex, setPanelIndex] = useState(0);
+  const [panelIndex, setPanelIndex] = useState(
+    args.get("tab") === "profile" ? 2 : 0
+  );
   const users = useSelector((store) => store.users.elements);
   const currentUserID = useSelector((store) => store.users.currentUserID);
   // const dispatch = useDispatch();

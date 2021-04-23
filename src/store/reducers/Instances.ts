@@ -15,6 +15,7 @@ export interface Instance {
   readonly id: string;
   readonly icon: string;
   readonly displayName: string;
+  readonly args: Map<string, string>;
 }
 
 export interface DaemonInstance extends Instance {
@@ -72,34 +73,39 @@ export const instancesSlice = createSlice({
     },
     runApplication(
       state,
-      action: PayloadAction<DaemonApplication | WindowApplication>
+      action: PayloadAction<{
+        application: DaemonApplication | WindowApplication;
+        args: Map<string, string>;
+      }>
     ) {
       const id = generateID();
-      switch (action.payload.type) {
+      switch (action.payload.application.type) {
         case "daemon":
           state.elements[id] = {
             id,
-            icon: action.payload.icon,
-            displayName: action.payload.displayName,
+            args: action.payload.args,
+            icon: action.payload.application.icon,
+            displayName: action.payload.application.displayName,
             type: "daemon"
           };
           break;
         case "window":
           state.elements[id] = {
+            args: action.payload.args,
             id,
-            icon: action.payload.icon,
-            displayName: action.payload.displayName,
-            position: action.payload.position,
-            dimensions: action.payload.dimensions,
-            maxDimensions: action.payload.maxDimensions,
-            minDimensions: action.payload.minDimensions,
-            resizable: action.payload.resizable,
+            icon: action.payload.application.icon,
+            displayName: action.payload.application.displayName,
+            position: action.payload.application.position,
+            dimensions: action.payload.application.dimensions,
+            maxDimensions: action.payload.application.maxDimensions,
+            minDimensions: action.payload.application.minDimensions,
+            resizable: action.payload.application.resizable,
             resizeMode: EResize.none,
             resizing: false,
             dragging: false,
             minimized: false,
             maximized: ESnap.none,
-            component: action.payload.component,
+            component: action.payload.application.component,
             type: "window"
           };
           state.zIndexes.push(id);

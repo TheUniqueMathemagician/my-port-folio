@@ -16,7 +16,12 @@ const Main = () => {
     if (!os.hasRanStartupApplications) {
       Object.keys(applications).forEach((key) => {
         if (applications[key].runOnStartup) {
-          dispatch(runApplication(applications[key]));
+          dispatch(
+            runApplication({
+              application: applications[key],
+              args: new Map([])
+            })
+          );
         }
       });
       dispatch(setHasRanStartupApplications(true));

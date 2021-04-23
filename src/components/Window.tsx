@@ -150,7 +150,9 @@ const Window: FunctionComponent<IProps> = ({
         windowRef={windowRef}
       ></WindowHeader>
       <div className={styles["background"]}>
-        {component ? createElement(component, {}) : ""}
+        {component
+          ? createElement(component, { args: application.args })
+          : null}
       </div>
     </section>
   );

@@ -178,7 +178,10 @@ initialState[aid] = {
   type: "window"
 };
 
-export const applicationsMap = new Map<EApplications, FunctionComponent>([
+export const applicationsMap = new Map<
+  EApplications,
+  FunctionComponent<{ args: Map<string, string> }>
+>([
   [EApplications.About, About],
   [EApplications.Contact, Contact],
   [EApplications.Education, Education],
