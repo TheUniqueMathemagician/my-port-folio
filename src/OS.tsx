@@ -1,40 +1,36 @@
 import Desktop from "./layouts/Desktop";
 import Mobile from "./layouts/Mobile";
 import isMobile from "./functions/isMobile";
-import { Provider } from "react-redux";
+import { Provider as StoreProvider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "./store";
-// import { ThemeProvider } from "@material-ui/styles";
-// import { createMuiTheme } from "@material-ui/core";
-// import { Palette } from "@material-ui/core/styles/createPalette";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core";
 
-// const theme = createMuiTheme({
-//   palette: {
-//     error: {
-//       main: "#ff604f",
-//     },
-//   } as Palette
-// });
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: "'Karla', sans-serif"
+  },
+  palette: {
+    primary: {
+      main: "#6196ff"
+    },
+    secondary: {
+      main: "#ff7dda"
+    }
+  }
+});
 
 const OS = () => {
   return (
-    <Provider store={store}>
-      {/* <ThemeProvider theme={theme}> */}
-      <BrowserRouter>
-        {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
-      </BrowserRouter>
-      {/* </ThemeProvider> */}
-    </Provider>
+    <StoreProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
+        </BrowserRouter>
+      </ThemeProvider>
+    </StoreProvider>
   );
 };
-
-// declare module "@material-ui/core/styles/createPalette" {
-//   interface Palette {
-//     error: Palette["primary"];
-//   }
-//   interface PaletteOptions {
-//     error: PaletteOptions["primary"];
-//   }
-// }
 
 export default OS;
