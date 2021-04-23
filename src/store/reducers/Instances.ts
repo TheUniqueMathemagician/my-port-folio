@@ -15,7 +15,7 @@ export interface Instance {
   readonly id: string;
   readonly icon: string;
   readonly displayName: string;
-  readonly args: Map<string, string>;
+  readonly args: { [key: string]: string };
 }
 
 export interface DaemonInstance extends Instance {
@@ -75,7 +75,7 @@ export const instancesSlice = createSlice({
       state,
       action: PayloadAction<{
         application: DaemonApplication | WindowApplication;
-        args: Map<string, string>;
+        args: { [key: string]: string };
       }>
     ) {
       const id = generateID();

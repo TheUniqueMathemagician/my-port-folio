@@ -73,14 +73,14 @@ function a11yProps(index: any) {
 }
 
 interface IProps {
-  args: Map<string, string>;
+  args: { [key: string]: string };
 }
 
 const Settings: FunctionComponent<IProps> = (props) => {
   const { args } = props;
   const classes = useStyles();
   const [panelIndex, setPanelIndex] = useState(
-    args.get("tab") === "profile" ? 2 : 0
+    args["tab"] === "profile" ? 2 : 0
   );
   const users = useSelector((store) => store.users.elements);
   const currentUserID = useSelector((store) => store.users.currentUserID);

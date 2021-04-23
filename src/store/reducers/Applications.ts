@@ -58,7 +58,7 @@ initialState[aid] = {
   icon: require("../../assets/images/applications/settings.svg").default,
   id: aid,
   maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  minDimensions: { height: 300, width: 400 },
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -180,7 +180,7 @@ initialState[aid] = {
 
 export const applicationsMap = new Map<
   EApplications,
-  FunctionComponent<{ args: Map<string, string> }>
+  FunctionComponent<{ args: { [key: string]: string } }>
 >([
   [EApplications.About, About],
   [EApplications.Contact, Contact],

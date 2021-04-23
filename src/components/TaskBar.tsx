@@ -205,7 +205,7 @@ const TaskBar = () => {
                     dispatch(
                       runApplication({
                         application: applications[key],
-                        args: new Map([])
+                        args: {}
                       })
                     );
                     setMainShown(false);
@@ -226,7 +226,7 @@ const TaskBar = () => {
                 dispatch(
                   runApplication({
                     application: applications[keys[0]],
-                    args: new Map([["tab", "profile"]])
+                    args: { tab: "profile" }
                   })
                 );
                 setMainShown(false);
@@ -243,7 +243,7 @@ const TaskBar = () => {
                 dispatch(
                   runApplication({
                     application: applications[keys[0]],
-                    args: new Map([])
+                    args: {}
                   })
                 );
                 setMainShown(false);
@@ -260,7 +260,7 @@ const TaskBar = () => {
                 dispatch(
                   runApplication({
                     application: applications[keys[1]],
-                    args: new Map([])
+                    args: {}
                   })
                 );
                 setMainShown(false);

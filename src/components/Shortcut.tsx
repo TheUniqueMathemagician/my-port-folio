@@ -13,7 +13,7 @@ interface IProps {
 const Shortcut: FunctionComponent<IProps> = ({ application }) => {
   const dispatch = useDispatch();
   const handleDoubleClick = useCallback(() => {
-    dispatch(runApplication({ application, args: new Map([]) }));
+    dispatch(runApplication({ application, args: {} }));
   }, [application, dispatch]);
 
   return (
@@ -24,7 +24,7 @@ const Shortcut: FunctionComponent<IProps> = ({ application }) => {
         switch (e.code) {
           case "Enter":
           case "Space":
-            dispatch(runApplication({ application, args: new Map([]) }));
+            dispatch(runApplication({ application, args: {} }));
             break;
           default:
             break;

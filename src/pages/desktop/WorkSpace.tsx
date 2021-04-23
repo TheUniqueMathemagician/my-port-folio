@@ -19,7 +19,7 @@ const Main = () => {
           dispatch(
             runApplication({
               application: applications[key],
-              args: new Map([])
+              args: {}
             })
           );
         }
