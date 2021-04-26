@@ -137,150 +137,163 @@ const WindowResizer: FunctionComponent<IProps> = ({
       const windowFrameBC = windowFrame.getBoundingClientRect();
 
       const position = {
-        bottom: windowFrameBC.height - e.pageY - windowFrameBC.top,
-        left: e.pageX - windowFrameBC.left,
-        right: windowFrameBC.width - e.pageX - windowFrameBC.left,
-        top: e.pageY - windowFrameBC.top
+        bottom: () => windowFrameBC.height - e.pageY - windowFrameBC.top,
+        left: () => e.pageX - windowFrameBC.left,
+        right: () => windowFrameBC.width - e.pageX - windowFrameBC.left,
+        top: () => e.pageY - windowFrameBC.top
       };
 
-      const limits = {
-        bottom:
-          windowFrameBC.height -
-          windowFrameBC.top -
-          windowBC.top -
-          (application.minDimensions.height ?? 0),
-        left:
-          windowBC.right -
-          windowFrameBC.left -
-          (application.minDimensions.width ?? 0),
-        right:
-          windowFrameBC.width -
-          windowFrameBC.left -
-          windowBC.left -
-          (application.minDimensions.width ?? 0),
-        top:
-          windowBC.bottom -
-          windowFrameBC.top -
-          (application.minDimensions.height ?? 0)
+      const limit = {
+        min: {
+          bottom: () =>
+            windowFrameBC.height -
+            windowFrameBC.top -
+            windowBC.top -
+            (application.maxDimensions.height ?? 0),
+          left: () =>
+            windowBC.right -
+            windowFrameBC.left -
+            (application.maxDimensions.width ?? 0),
+          right: () =>
+            windowFrameBC.width -
+            windowFrameBC.left -
+            windowBC.left -
+            (application.maxDimensions.width ?? 0),
+          top: () =>
+            windowBC.bottom -
+            windowFrameBC.top -
+            (application.maxDimensions.height ?? 0)
+        },
+        max: {
+          bottom: () =>
+            windowFrameBC.height -
+            windowFrameBC.top -
+            windowBC.top -
+            (application.minDimensions.height ?? 0),
+          left: () =>
+            windowBC.right -
+            windowFrameBC.left -
+            (application.minDimensions.width ?? 0),
+          right: () =>
+            windowFrameBC.width -
+            windowFrameBC.left -
+            windowBC.left -
+            (application.minDimensions.width ?? 0),
+          top: () =>
+            windowBC.bottom -
+            windowFrameBC.top -
+            (application.minDimensions.height ?? 0)
+        }
       };
 
-      const willOverflow = {
-        bottom: position.bottom > limits.bottom,
-        left: position.left > limits.left,
-        right: position.right > limits.right,
-        top: position.top > limits.top
+      const dispatchPosition = ({
+        bottom,
+        left,
+        right,
+        top
+      }: {
+        bottom?: number;
+        left?: number;
+        right?: number;
+        top?: number;
+      }) => {
+        dispatch(
+          setPosition({
+            application,
+            position: {
+              bottom:
+                bottom !== undefined ? bottom : application.position.bottom,
+              left: left !== undefined ? left : application.position.left,
+              right: right !== undefined ? right : application.position.right,
+              top: top !== undefined ? top : application.position.top
+            }
+          })
+        );
+      };
+
+      const restrictedPosition = {
+        top: () => {
+          const top = position.top();
+          if (application.maxDimensions.height && top < limit.min.top()) {
+            return limit.min.top();
+          }
+          if (application.minDimensions.height && top > limit.max.top()) {
+            return limit.max.top();
+          }
+          if (top < 0) {
+            return 0;
+          }
+          return top;
+        },
+        left: () => {
+          const left = position.left();
+          if (application.maxDimensions.width && left < limit.min.left()) {
+            return limit.min.left();
+          }
+          if (application.minDimensions.width && left > limit.max.left()) {
+            return limit.max.left();
+          }
+          return left;
+        },
+        bottom: () => {
+          let bottom = position.bottom();
+          if (application.maxDimensions.height && bottom < limit.min.bottom()) {
+            return limit.min.bottom();
+          }
+          if (application.minDimensions.height && bottom > limit.max.bottom()) {
+            return limit.max.bottom();
+          }
+          return bottom;
+        },
+        right: () => {
+          let right = position.right();
+          if (application.maxDimensions.width && right < limit.min.right()) {
+            return limit.min.right();
+          }
+          if (application.minDimensions.width && right > limit.max.right()) {
+            return limit.max.right();
+          }
+          return right;
+        }
       };
 
       switch (application.resizeMode) {
-        case EResize.top:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: application.position.bottom,
-                left: application.position.left,
-                right: application.position.right,
-                top:
-                  position.top < 0
-                    ? 0
-                    : willOverflow.top
-                    ? limits.top
-                    : position.top
-              }
-            })
-          );
-          break;
-        case EResize.bottom:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: willOverflow.bottom ? limits.bottom : position.bottom,
-                left: application.position.left,
-                right: application.position.right,
-                top: application.position.top
-              }
-            })
-          );
-          break;
-        case EResize.left:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: application.position.bottom,
-                left: willOverflow.left ? limits.left : position.left,
-                right: application.position.right,
-                top: application.position.top
-              }
-            })
-          );
-          break;
-        case EResize.right:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: application.position.bottom,
-                left: application.position.left,
-                right: willOverflow.right ? limits.right : position.right,
-                top: application.position.top
-              }
-            })
-          );
-          break;
-        case EResize.topLeft:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: application.position.bottom,
-                left: willOverflow.left ? limits.left : position.left,
-                right: application.position.right,
-                top: willOverflow.top ? limits.top : position.top
-              }
-            })
-          );
-          break;
-        case EResize.topRight:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: application.position.bottom,
-                left: application.position.left,
-                right: willOverflow.right ? limits.right : position.right,
-                top: willOverflow.top ? limits.top : position.top
-              }
-            })
-          );
-          break;
-        case EResize.bottomLeft:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: willOverflow.bottom ? limits.bottom : position.bottom,
-                left: willOverflow.left ? limits.left : position.left,
-                right: application.position.right,
-                top: application.position.top
-              }
-            })
-          );
-          break;
-        case EResize.bottomRight:
-          dispatch(
-            setPosition({
-              application,
-              position: {
-                bottom: willOverflow.bottom ? limits.bottom : position.bottom,
-                left: application.position.left,
-                right: willOverflow.right ? limits.right : position.right,
-                top: application.position.top
-              }
-            })
-          );
-          break;
+        case EResize.top: {
+          return dispatchPosition({ top: restrictedPosition.top() });
+        }
+        case EResize.left: {
+          return dispatchPosition({ left: restrictedPosition.left() });
+        }
+        case EResize.bottom: {
+          return dispatchPosition({ bottom: restrictedPosition.bottom() });
+        }
+        case EResize.right: {
+          return dispatchPosition({ right: restrictedPosition.right() });
+        }
+        case EResize.topLeft: {
+          return dispatchPosition({
+            top: restrictedPosition.top(),
+            left: restrictedPosition.left()
+          });
+        }
+        case EResize.topRight: {
+          return dispatchPosition({
+            top: restrictedPosition.top(),
+            right: restrictedPosition.right()
+          });
+        }
+        case EResize.bottomLeft: {
+          return dispatchPosition({
+            bottom: restrictedPosition.bottom(),
+            left: restrictedPosition.left()
+          });
+        }
+        case EResize.bottomRight: {
+          return dispatchPosition({
+            bottom: restrictedPosition.bottom(),
+            right: restrictedPosition.right()
+          });
+        }
         default:
           break;
       }

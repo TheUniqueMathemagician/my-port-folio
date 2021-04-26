@@ -50,15 +50,28 @@ const initialState: {
 } = {};
 let aid = "";
 
+const defaultDimensions = {
+  height: 600,
+  width: 800
+};
+const defaultMaxDimensions = {
+  height: 1200,
+  width: 1600
+};
+const defaultMinDimensions = {
+  height: 300,
+  width: 400
+};
+
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Settings,
-  dimensions: { height: 600, width: 600 },
+  dimensions: defaultDimensions,
   displayName: "Préférences du système",
   icon: require("../../assets/images/applications/settings.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: 300, width: 400 },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -69,12 +82,12 @@ initialState[aid] = {
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Manager,
-  dimensions: { height: 600, width: 600 },
+  dimensions: defaultDimensions,
   displayName: "Gestionnaire d'applications",
   icon: require("../../assets/images/applications/about.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -85,12 +98,12 @@ initialState[aid] = {
 aid = generateID();
 initialState[aid] = {
   component: EApplications.About,
-  dimensions: { height: 600, width: 600 },
+  dimensions: defaultDimensions,
   displayName: "A Propos",
   icon: require("../../assets/images/applications/about.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -105,8 +118,8 @@ initialState[aid] = {
   displayName: "Contact",
   icon: require("../../assets/images/applications/contact.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -121,8 +134,8 @@ initialState[aid] = {
   displayName: "Diplômes et formations",
   icon: require("../../assets/images/applications/education.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -137,8 +150,8 @@ initialState[aid] = {
   displayName: "Expériences",
   icon: require("../../assets/images/applications/experience.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -153,8 +166,8 @@ initialState[aid] = {
   displayName: "le Serpent",
   icon: require("../../assets/images/applications/snake.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
@@ -169,8 +182,8 @@ initialState[aid] = {
   displayName: "Bienvenue",
   icon: require("../../assets/images/applications/welcome.svg").default,
   id: aid,
-  maxDimensions: { height: null, width: null },
-  minDimensions: { height: null, width: null },
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: true,
