@@ -63,3 +63,10 @@ $green: #45d97e;
     justify-content: center;
   }
 }
+
+@supports (backdrop-filter: blur(6px)) {
+  .window-header {
+    background: change-color($dark, $alpha: 0.5);
+    backdrop-filter: blur(6px);
+  }
+}
