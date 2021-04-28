@@ -193,7 +193,7 @@ initialState[aid] = {
 
 export const applicationsMap = new Map<
   EApplications,
-  FunctionComponent<{ args: { [key: string]: string } }>
+  FunctionComponent<{ args: { [key: string]: string }; pid: string }>
 >([
   [EApplications.About, About],
   [EApplications.Contact, Contact],

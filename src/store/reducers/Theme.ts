@@ -24,6 +24,7 @@ interface ThemeState {
     error: ColorPalette;
     hint: ColorPalette;
     info: ColorPalette;
+    paper: ColorPalette;
     primary: ColorPalette;
     secondary: ColorPalette;
     success: ColorPalette;
@@ -48,8 +49,8 @@ const initialState: ThemeState = {
   palette: {
     background: {
       [EColorScheme.contrast]: "#000000",
-      [EColorScheme.dark]: "#222222",
-      [EColorScheme.default]: "#dddddd",
+      [EColorScheme.dark]: "#161616",
+      [EColorScheme.default]: "#eeeeee",
       [EColorScheme.light]: "#fafafa"
     },
     disabled: {
@@ -61,8 +62,8 @@ const initialState: ThemeState = {
     divider: {
       [EColorScheme.contrast]: "#ffffff",
       [EColorScheme.dark]: "#424242",
-      [EColorScheme.default]: "#222222",
-      [EColorScheme.light]: "#333333"
+      [EColorScheme.default]: "#161616",
+      [EColorScheme.light]: "#666666"
     },
     error: {
       [EColorScheme.contrast]: "#ff0000",
@@ -81,6 +82,12 @@ const initialState: ThemeState = {
       [EColorScheme.dark]: "#43accc",
       [EColorScheme.default]: "#43accc",
       [EColorScheme.light]: "#43accc"
+    },
+    paper: {
+      [EColorScheme.contrast]: "#00000",
+      [EColorScheme.dark]: "#222222",
+      [EColorScheme.default]: "#ffffff",
+      [EColorScheme.light]: "#ffffff"
     },
     primary: {
       [EColorScheme.contrast]: "#00ff80",
@@ -102,7 +109,7 @@ const initialState: ThemeState = {
     },
     // text: {
     //   [EColorScheme.contrast]: contrastColor("#000000"),
-    //   [EColorScheme.dark]: contrastColor("#222222"),
+    //   [EColorScheme.dark]: contrastColor("#161616"),
     //   [EColorScheme.default]: contrastColor("#fafafa"),
     //   [EColorScheme.light]: contrastColor("#fafafa")
     // },
