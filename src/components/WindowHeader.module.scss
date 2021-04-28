@@ -1,17 +1,15 @@
 @import "../styles/theme.scss";
 
-$red: #ff5853;
-$orange: #ffbc40;
-$green: #45d97e;
-
-.window-header {
+.root {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px;
-  background: $dark;
-  color: $light;
   position: relative;
+  background: var(--cvos-background);
+  border-bottom: 1px solid var(--cvos-divider);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: grab;
   .button-list {
     display: grid;
     grid-auto-flow: column;
@@ -30,43 +28,47 @@ $green: #45d97e;
       box-shadow: inset 0 0 6px 0 #0000004d;
     }
     &.red {
-      background: $red;
-      &:focus {
-        background: lighten($red, 10);
-      }
+      background: var(--cvos-error);
     }
     &.orange {
-      background: $orange;
-      &:focus {
-        background: lighten($orange, 10);
-      }
+      background: var(--cvos-warning);
     }
     &.green {
-      background: $green;
-      &:focus {
-        background: lighten($green, 10);
-      }
+      background: var(--cvos-success);
     }
   }
   h2 {
     pointer-events: none;
     position: absolute;
-    margin: 0;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
-    font-size: 1rem;
-    font-weight: normal;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 }
 
+.title {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  color: var(--cvos-text);
+  transition: color 0.3s ease;
+  font-size: 1rem;
+  text-rendering: geometricPrecision;
+}
+
 @supports (backdrop-filter: blur(6px)) {
-  .window-header {
-    background: change-color($dark, $alpha: 0.5);
+  .root:not(.contrast) {
+    background: var(--cvos-background-50);
     backdrop-filter: blur(6px);
   }
 }

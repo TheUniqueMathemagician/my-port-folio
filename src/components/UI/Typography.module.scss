@@ -2,6 +2,7 @@
 
 .root {
   color: var(--cvos-text);
+  transition: color 0.3s ease;
   font-family: "Karla", sans-serif;
 }
 
@@ -17,7 +18,7 @@
 
 @for $i from 1 to 7 {
   .h#{$i} {
-    font-size: #{3-0.25 * $i}rem;
+    font-size: #{3-0.33 * $i}rem;
     font-weight: #{600 - 75 * $i};
     margin: 0.5em 0;
   }

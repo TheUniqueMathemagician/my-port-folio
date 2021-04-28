@@ -1,6 +1,6 @@
 import { useRef, useState, memo, FunctionComponent, RefObject } from "react";
 
-import styles from "./TaskBar.module.scss";
+import classes from "./TaskBar.module.scss";
 import TaskBarMenu from "./TaskBarMenu";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "../hooks/Store";
@@ -12,110 +12,76 @@ import {
 import { setMinimized } from "../store/reducers/Instances";
 import Divider from "./UI/Divider";
 import { setHasRanStartupApplications } from "../store/reducers/OS";
-import { Button, makeStyles, Theme } from "@material-ui/core";
 import TaskBarTimeDate from "./TaskBarTimeDate";
 import MenuIcon from "./icons/Menu";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  taskBarButton: {
-    alignItems: "center",
-    background: "none",
-    border: 0,
-    borderRadius: 0,
-    color: `white`,
-    outline: 0,
-    height: "100%",
-    padding: `${theme.spacing(0)}px ${theme.spacing(2)}px`,
-    "&:hover": {
-      backgroundColor: "#ffffff20"
-    },
-    "& img": {
-      width: "2rem",
-      height: "2rem"
-    }
-  },
-  taskBarMenuButton: {
-    alignItems: "center",
-    background: "none",
-    border: 0,
-    borderRadius: 0,
-    color: `white`,
-    outline: 0,
-    height: "100%",
-    padding: theme.spacing(2),
-    width: "100%",
-    "&:hover": {
-      backgroundColor: "#ffffff20"
-    },
-    "& > span": {
-      display: "grid",
-      columnGap: theme.spacing(2),
-      gridTemplateColumns: "auto 1fr",
-      textAlign: "left",
-      "& img": {
-        width: "2rem",
-        height: "2rem"
-      },
-      "& span": {
-        wordBreak: "keep-all",
-        whiteSpace: "nowrap",
-        color: "white"
-      }
-    }
-  }
-}));
+import { EColorScheme } from "../types/EColorScheme";
 
 interface ITaskBarButtonProps {
-  onClick?: () => void;
   cref?: RefObject<HTMLButtonElement>;
   disabled?: boolean;
+  onClick?: () => void;
+  small?: boolean;
+  startIcon?: boolean;
+  endIcon?: boolean;
   tabIndex?: number;
+  fullWidth?: boolean;
+  align?: "start" | "center" | "end";
 }
 
 const TaskBarButton: FunctionComponent<ITaskBarButtonProps> = (props) => {
-  const classes = useStyles();
-  const { children, cref, ...others } = props;
+  const {
+    align,
+    small,
+    children,
+    cref,
+    startIcon,
+    endIcon,
+    fullWidth,
+    ...others
+  } = props;
+  const classNames = [classes["menu-button"]];
+  if (startIcon) {
+    classNames.push(classes["has-start-img"]);
+  }
+  if (endIcon) {
+    classNames.push(classes["has-end-img"]);
+  }
+  if (small) {
+    classNames.push(classes["small"]);
+  }
+  switch (align) {
+    case "center":
+      classNames.push(classes["align--center"]);
+      break;
+    case "end":
+      classNames.push(classes["align--end"]);
+      break;
+    case "start":
+      classNames.push(classes["align--start"]);
+      break;
+    default:
+      break;
+  }
+  if (fullWidth) {
+    classNames.push(classes["full-width"]);
+  }
   return (
-    <Button
-      size="small"
-      {...others}
-      className={classes.taskBarButton}
-      ref={cref}
-    >
+    <button {...others} className={classNames.join(" ")} ref={cref}>
       {children}
-    </Button>
-  );
-};
-
-interface ITaskBarMenuButtonProps {
-  alt?: string;
-  onClick?: () => void;
-  ref?: RefObject<HTMLButtonElement>;
-  disabled?: boolean;
-  tabIndex?: number;
-  startIcon?: string;
-}
-
-const TaskBarMenuButton: FunctionComponent<ITaskBarMenuButtonProps> = (
-  props
-) => {
-  const classes = useStyles();
-  const { alt, children, startIcon, ...others } = props;
-  return (
-    <Button
-      startIcon={startIcon && <img alt={alt} src={startIcon}></img>}
-      size="small"
-      {...others}
-      className={classes.taskBarMenuButton}
-    >
-      {children}
-    </Button>
+    </button>
   );
 };
 
 const TaskBar = () => {
   const [mainShown, setMainShown] = useState<boolean>(false);
   const [langShown, setLangShown] = useState<boolean>(false);
+  const backgroundColor = useSelector(
+    (store) => store.theme.palette.background[store.theme.colorScheme]
+  );
+  const color = useSelector(
+    (store) => store.theme.palette.text[store.theme.colorScheme]
+  );
+  const colorScheme = useSelector((store) => store.theme.colorScheme);
   const instances = useSelector(
     (store) => store.instances.elements,
     (left, right) => {
@@ -149,17 +115,27 @@ const TaskBar = () => {
 
   return (
     <>
-      <div className={styles["task-bar"]} ref={taskBarRef}>
-        <TaskBarButton onClick={() => setMainShown(!mainShown)}>
-          <MenuIcon style={{ width: "2rem", height: "2rem" }}></MenuIcon>
+      <div
+        className={classes["root"]}
+        ref={taskBarRef}
+        style={{
+          backgroundColor: `${backgroundColor}${
+            colorScheme === EColorScheme.contrast ? "" : "80"
+          }`,
+          color
+        }}
+      >
+        <TaskBarButton small onClick={() => setMainShown(!mainShown)}>
+          <MenuIcon></MenuIcon>
         </TaskBarButton>
         <Divider inset margin vertical></Divider>
-        <div className={styles["apps"]}>
+        <div className={classes["apps"]}>
           {Object.keys(instances)
             .map((x) => instances[x])
             .filter((app) => app.type === "window")
             .map((application) => (
               <TaskBarButton
+                small
                 key={application.id}
                 onClick={() => {
                   if (application.type === "window") {
@@ -174,20 +150,21 @@ const TaskBar = () => {
         </div>
         <Divider inset margin vertical></Divider>
         <TaskBarButton
+          small
           cref={langButtonRef}
           onClick={() => setLangShown(!langShown)}
         >
           Français
         </TaskBarButton>
         <Divider inset margin vertical></Divider>
-        <TaskBarButton disabled>
+        <TaskBarButton small disabled>
           <TaskBarTimeDate></TaskBarTimeDate>
         </TaskBarButton>
       </div>
       <TaskBarMenu
         shown={mainShown}
         position={{
-          bottom: taskBarRef.current?.clientHeight ?? 0,
+          bottom: (taskBarRef.current?.clientHeight ?? 0) + 1,
           left: 0,
           right: null,
           top: null
@@ -198,8 +175,7 @@ const TaskBar = () => {
             .filter((key) => !!applications[key].shortcut)
             .map((key) => (
               <li key={key}>
-                <TaskBarMenuButton
-                  startIcon={applications[key].icon}
+                <TaskBarButton
                   tabIndex={mainShown ? 0 : -1}
                   onClick={() => {
                     dispatch(
@@ -210,16 +186,25 @@ const TaskBar = () => {
                     );
                     setMainShown(false);
                   }}
+                  startIcon
+                  align="start"
+                  fullWidth
                 >
-                  {applications[key].displayName}
-                </TaskBarMenuButton>
+                  <img
+                    alt={applications[key].displayName}
+                    src={applications[key].icon}
+                  ></img>
+                  <span>{applications[key].displayName} </span>
+                </TaskBarButton>
               </li>
             ))}
         </ul>
         <Divider inset margin></Divider>
         <ul>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -233,10 +218,12 @@ const TaskBar = () => {
               }}
             >
               Profil
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -250,10 +237,12 @@ const TaskBar = () => {
               }}
             >
               Paramètres
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -267,23 +256,27 @@ const TaskBar = () => {
               }}
             >
               Applications
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
         </ul>
         <Divider inset margin></Divider>
         <ul>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 history.push("/lock");
               }}
             >
               Verouiller
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 history.push("/lock");
@@ -294,10 +287,12 @@ const TaskBar = () => {
               }}
             >
               Se déconnecter
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              align="start"
+              fullWidth
               tabIndex={mainShown ? 0 : -1}
               onClick={() => {
                 history.push("/boot");
@@ -308,14 +303,14 @@ const TaskBar = () => {
               }}
             >
               Éteindre
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
         </ul>
       </TaskBarMenu>
       <TaskBarMenu
         shown={langShown}
         position={{
-          bottom: taskBarRef.current?.clientHeight ?? 0,
+          bottom: (taskBarRef.current?.clientHeight ?? 0) + 1,
           left: langButtonRef.current?.offsetLeft ?? 0,
           right: 0,
           top: null
@@ -323,13 +318,14 @@ const TaskBar = () => {
       >
         <ul>
           <li>
-            <TaskBarMenuButton
+            <TaskBarButton
+              fullWidth
               onClick={() => {
                 setLangShown(false);
               }}
             >
               Français
-            </TaskBarMenuButton>
+            </TaskBarButton>
           </li>
         </ul>
       </TaskBarMenu>

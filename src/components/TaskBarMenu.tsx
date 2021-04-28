@@ -1,7 +1,9 @@
-import IPosition from "../types/IPosition";
+import { IPosition } from "../types/IPosition";
 import React from "react";
 
-import styles from "./TaskBarMenu.module.scss";
+import classes from "./TaskBarMenu.module.scss";
+import { useSelector } from "../hooks/Store";
+import { EColorScheme } from "../types/EColorScheme";
 
 interface IProps {
   position: IPosition;
@@ -13,17 +15,22 @@ const TaskBarMenu: React.FunctionComponent<IProps> = ({
   position,
   children
 }) => {
-  const classes = [styles["task-bar-menu"], shown ? styles["shown"] : ""].join(
-    " "
+  const rootClasses = [classes["root"]];
+
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
   );
 
   if (!shown && typeof position.bottom === "number") {
     position.bottom = position.bottom - 6;
   }
 
+  if (contrast) rootClasses.push(classes["contrast"]);
+  if (shown) rootClasses.push(classes["shown"]);
+
   return (
     <nav
-      className={classes}
+      className={rootClasses.join(" ")}
       style={{
         top: position.top ?? "",
         left: position.left ?? "",

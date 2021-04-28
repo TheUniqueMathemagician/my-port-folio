@@ -15,8 +15,8 @@ import {
   WindowInstance,
   setResizing
 } from "../store/reducers/Instances";
-import EResize from "../types/EResize";
-import ESnap from "../types/ESnap";
+import { EResize } from "../types/EResize";
+import { ESnap } from "../types/ESnap";
 
 import styles from "./WindowResizer.module.scss";
 

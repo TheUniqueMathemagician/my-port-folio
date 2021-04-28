@@ -5,6 +5,7 @@ $indicator-width: 3px;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   grid-auto-rows: 3rem;
   position: relative;
+  transition: border-color 0.3s ease;
   & .indicator {
     background-color: var(--cvos-primary);
     position: absolute;

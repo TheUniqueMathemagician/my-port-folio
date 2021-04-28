@@ -11,9 +11,12 @@ button.shortcut {
   padding: $padding/2;
   margin: 0;
   cursor: pointer;
-  color: $light;
+  color: white;
+  transition: color 0.3s ease;
   border-radius: 0;
-  text-shadow: 1px 1px 4px #333333;
+  text-shadow: 1px 1px 2px black;
+  text-rendering: optimizeLegibility;
+  -webkit-text-stroke: 1px solid black;
   font-size: 1rem;
   &:hover,
   &:focus {
@@ -27,8 +30,8 @@ button.shortcut {
     img {
       object-fit: contain;
       object-position: center;
-      width: 2rem;
-      height: 2rem;
+      width: 1.5rem;
+      height: 1.5rem;
     }
     figcaption {
       margin-top: $margin/2;

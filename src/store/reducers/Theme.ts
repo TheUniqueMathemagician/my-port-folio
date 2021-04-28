@@ -51,7 +51,7 @@ const initialState: ThemeState = {
       [EColorScheme.contrast]: "#000000",
       [EColorScheme.dark]: "#161616",
       [EColorScheme.default]: "#eeeeee",
-      [EColorScheme.light]: "#fafafa"
+      [EColorScheme.light]: "#ffffff"
     },
     disabled: {
       [EColorScheme.contrast]: "#808000",
@@ -87,7 +87,7 @@ const initialState: ThemeState = {
       [EColorScheme.contrast]: "#00000",
       [EColorScheme.dark]: "#222222",
       [EColorScheme.default]: "#ffffff",
-      [EColorScheme.light]: "#ffffff"
+      [EColorScheme.light]: "#fafafa"
     },
     primary: {
       [EColorScheme.contrast]: "#00ff80",

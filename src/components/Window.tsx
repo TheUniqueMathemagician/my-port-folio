@@ -5,15 +5,16 @@ import React, {
   useCallback,
   useRef
 } from "react";
-import styles from "./Window.module.scss";
-import IPosition from "../types/IPosition";
+import classes from "./Window.module.scss";
 import { WindowInstance } from "../store/reducers/Instances";
-import IBoundaries from "../types/IBoundaries";
+import { IPosition } from "../types/IPosition";
+import { IBoundaries } from "../types/IBoundaries";
 import { applicationsMap } from "../store/reducers/Applications";
 import { sendToFront } from "../store/reducers/Instances";
 import { useDispatch, useSelector } from "../hooks/Store";
 import WindowHeader from "./WindowHeader";
 import WindowResizer from "./WindowResizer";
+import { EColorScheme } from "../types/EColorScheme";
 
 interface IProps {
   application: WindowInstance;
@@ -31,14 +32,15 @@ const Window: FunctionComponent<IProps> = ({
   const windowRef = useRef<HTMLDivElement>(null);
 
   const zIndexes = useSelector((store) => store.instances.zIndexes);
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
+  );
 
   const dispatch = useDispatch();
 
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
-      e.preventDefault();
-      e.stopPropagation();
       if (
         zIndexes.findIndex((id) => id === application.id) !==
         zIndexes.length - 1
@@ -51,7 +53,8 @@ const Window: FunctionComponent<IProps> = ({
 
   //#region window rendering checks
 
-  const windowClasses: string[] = [styles["window"]];
+  const rootClasses = [classes["root"]];
+
   let width: number | "" = "";
   let height: number | "" = "";
   let position: IPosition = {
@@ -85,7 +88,7 @@ const Window: FunctionComponent<IProps> = ({
   };
 
   if (application.maximized) {
-    windowClasses.push(styles[`snap-${application.maximized}`]);
+    rootClasses.push(classes[`snap-${application.maximized}`]);
   } else if (application.resizing) {
     position.top = application.position.top;
     position.left = application.position.left;
@@ -120,9 +123,11 @@ const Window: FunctionComponent<IProps> = ({
 
   const zIndex = zIndexes.indexOf(application.id);
 
+  if (contrast) rootClasses.push(classes["contrast"]);
+
   return (
     <section
-      className={windowClasses.join(" ")}
+      className={rootClasses.join(" ")}
       style={{
         zIndex,
         top: position.top ?? "",
@@ -149,9 +154,12 @@ const Window: FunctionComponent<IProps> = ({
         boundaries={boundaries}
         windowRef={windowRef}
       ></WindowHeader>
-      <div className={styles["background"]}>
+      <div className={classes["background"]}>
         {component
-          ? createElement(component, { args: application.args })
+          ? createElement(component, {
+              args: application.args,
+              pid: application.id
+            })
           : null}
       </div>
     </section>

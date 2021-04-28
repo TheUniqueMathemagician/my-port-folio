@@ -3,6 +3,7 @@
 .root {
   align-items: center;
   display: flex;
+  margin: $margin/3;
   input {
     height: 0;
     opacity: 0;
@@ -43,6 +44,7 @@
   }
   .label {
     color: var(--cvos-text);
+    cursor: pointer;
   }
   input:checked ~ .radio::before {
     background-color: var(--cvos-primary);
@@ -53,9 +55,11 @@
   }
   input:disabled ~ .radio {
     border-color: var(--cvos-disabled);
+    cursor: default;
   }
   input:disabled ~ .radio ~ .label {
     color: var(--cvos-disabled);
+    cursor: default;
   }
   input:focus ~ .radio > .effect {
     transform: scale(1);

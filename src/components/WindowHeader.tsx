@@ -1,3 +1,4 @@
+import classes from "./WindowHeader.module.scss";
 import React, {
   FunctionComponent,
   memo,
@@ -19,11 +20,10 @@ import {
   setSnapShadowPosition,
   setSnapShadowVisibility
 } from "../store/reducers/Instances";
-import ESnap from "../types/ESnap";
-import IBoundaries from "../types/IBoundaries";
-import IOffset from "../types/IOffset";
-
-import styles from "./WindowHeader.module.scss";
+import { ESnap } from "../types/ESnap";
+import { IBoundaries } from "../types/IBoundaries";
+import { IOffset } from "../types/IOffset";
+import { EColorScheme } from "../types/EColorScheme";
 
 interface IProps {
   application: WindowInstance;
@@ -39,6 +39,10 @@ const WindowHeader: FunctionComponent<IProps> = ({
   const headerRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
+  );
 
   const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 });
 
@@ -281,25 +285,24 @@ const WindowHeader: FunctionComponent<IProps> = ({
     }
   }, [application.dragging, handleDragMouseMove, handleDragMouseUp]);
 
+  const rootClasses = [classes["root"]];
+
+  if (contrast) rootClasses.push(classes["contrast"]);
+
   return (
     <div
-      className={styles["window-header"]}
+      className={rootClasses.join(" ")}
       style={{
-        pointerEvents: application.dragging ? "none" : "all",
-        cursor: application.resizing
-          ? ""
-          : application.dragging
-          ? "grabbing"
-          : "grab"
+        pointerEvents: application.dragging ? "none" : "all"
       }}
       ref={headerRef}
       onMouseDown={handleDragMouseDown}
       onDoubleClick={handleDragDoubleClick}
       draggable={false}
     >
-      <div className={styles["button-list"]}>
+      <div className={classes["button-list"]}>
         <button
-          className={styles.red}
+          className={classes["red"]}
           style={{
             pointerEvents: application.dragging ? "none" : "all"
           }}
@@ -307,7 +310,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
           onMouseDown={handleButtonMouseDown}
         ></button>
         <button
-          className={styles.orange}
+          className={classes["orange"]}
           style={{
             pointerEvents: application.dragging ? "none" : "all"
           }}
@@ -315,7 +318,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
           onMouseDown={handleButtonMouseDown}
         ></button>
         <button
-          className={styles.green}
+          className={classes["green"]}
           style={{
             pointerEvents: application.dragging ? "none" : "all"
           }}
@@ -323,7 +326,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
           onMouseDown={handleButtonMouseDown}
         ></button>
       </div>
-      <h2>{application.displayName}</h2>
+      <div className={classes["title"]}>{application.displayName}</div>
     </div>
   );
 };

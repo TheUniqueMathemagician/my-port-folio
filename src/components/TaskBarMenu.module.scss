@@ -1,11 +1,18 @@
 @import "../styles/theme.scss";
 
-nav.task-bar-menu {
+.root {
   z-index: 1;
-  background-color: change-color($dark, $alpha: 0.5);
+  background-color: var(--cvos-background);
   position: absolute;
   max-height: 350px;
   overflow: auto;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border: 1px solid var(--cvos-divider);
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
   &.shown {
     pointer-events: all;
     transition: opacity ease 0.3s, bottom ease 0.3s;
@@ -15,8 +22,8 @@ nav.task-bar-menu {
 }
 
 @supports (backdrop-filter: blur(0)) {
-  nav.task-bar-menu {
-    background-color: change-color($dark, $alpha: 0.5);
+  .root:not(.contrast) {
+    background-color: var(--cvos-background-50);
     backdrop-filter: blur(6px);
   }
 }

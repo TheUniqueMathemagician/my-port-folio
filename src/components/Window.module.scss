@@ -1,11 +1,15 @@
 @import "../styles/theme.scss";
 
-.window {
+.root {
+  border: 1px solid var(--cvos-divider);
+  transition: border-color 0.3s ease;
   position: absolute;
   display: grid;
   grid-template-rows: auto 1fr;
-  box-shadow: $shadow;
   pointer-events: all;
+  &:not(.contrast) {
+    box-shadow: $shadow;
+  }
   @for $i from 1 to 9 {
     &.snap-#{$i} {
       @if $i == 1 or $i == 3 {
@@ -30,11 +34,11 @@
       }
     }
   }
+}
 
-  .background {
-    background: #eeeeee;
-    position: relative;
-    color: $dark;
-    overflow: auto;
-  }
+.background {
+  background-color: var(--cvos-background);
+  position: relative;
+  overflow: auto;
+  transition: background-color 0.3s ease;
 }
