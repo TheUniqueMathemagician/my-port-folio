@@ -2,14 +2,10 @@
 
 .divider {
   hr {
-    height: 1px;
-    background-color: change-color($light, $alpha: 0.5);
+    background-color: var(--cvos-divider);
     border: 0;
-  }
-  &.dark {
-    hr {
-      background-color: change-color($dark, $alpha: 0.5);
-    }
+    height: 1px;
+    transition: background-color 0.3s ease;
   }
   &.inset {
     padding: 0 $padding/2;

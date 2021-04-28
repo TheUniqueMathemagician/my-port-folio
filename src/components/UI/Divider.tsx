@@ -2,18 +2,14 @@ import { FunctionComponent } from "react";
 import styles from "./Divider.module.scss";
 
 interface IProps {
-  dark?: boolean;
   inset?: boolean;
   margin?: boolean;
   vertical?: boolean;
 }
 
 const Divider: FunctionComponent<IProps> = (props) => {
-  const { dark, inset, margin, vertical } = props;
+  const { inset, margin, vertical } = props;
   const classes: string[] = [styles.divider];
-  if (dark) {
-    classes.push(styles.dark);
-  }
   if (inset) {
     classes.push(styles.inset);
   }
