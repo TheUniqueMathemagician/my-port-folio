@@ -1,262 +1,205 @@
-import { FunctionComponent, memo, useState } from "react";
-import {
-  // useDispatch,
-  useSelector
-} from "../../hooks/Store";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "../../hooks/Store";
+import { EColorScheme } from "../../types/EColorScheme";
+import { setColorScheme, setPrimaryColor } from "../../store/reducers/Theme";
 
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Box from "@material-ui/core/Box";
-import {
-  Avatar,
-  Button,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  makeStyles,
-  Radio,
-  RadioGroup,
-  Theme,
-  Tooltip,
-  Typography
-} from "@material-ui/core";
+import Radio from "../UI/Radio";
+import Typography from "../UI/Typography";
+import Tab from "../UI/Tab";
+import TabPanel from "../UI/TabPanel";
+import Tabs from "../UI/Tabs";
+import RadioGroup from "../UI/RadioGroup";
+import Avatar from "../UI/Avatar";
+import Container from "../UI/Container";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    display: "flex",
-    minHeight: "100%"
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  },
-  box: {
-    display: "grid",
-    rowGap: "1rem"
-  }
-}));
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  className?: string;
-  index: any;
-  value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const classes = useStyles();
-  const { className, children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      className={className}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3} className={classes.box}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: any) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`
-  };
-}
+import classes from "./Settings.module.scss";
+import Paper from "../UI/Paper";
 
 interface IProps {
+  pid: string;
   args: { [key: string]: string };
 }
 
 const Settings: FunctionComponent<IProps> = (props) => {
-  const { args } = props;
-  const classes = useStyles();
+  const { args, pid } = props;
+
   const [panelIndex, setPanelIndex] = useState(
     args["tab"] === "profile" ? 2 : 0
   );
-  const users = useSelector((store) => store.users.elements);
-  const currentUserID = useSelector((store) => store.users.currentUserID);
-  // const dispatch = useDispatch();
-  // const bg = useSelector((store) => store.theme.workspaceBackgroundURL);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setPanelIndex(newValue);
-  };
+  const dispatch = useDispatch();
+
+  //#region Selectors
+
+  const users = useSelector((store) => store.users.elements);
+  const primary = useSelector(
+    (store) => store.theme.palette.primary[store.theme.colorScheme]
+    // (left, right) => {
+    //   return false;
+    // }
+  );
+  const palette = useSelector((store) => store.theme.palette);
+  const colorScheme = useSelector((store) => store.theme.colorScheme);
+  const currentUserID = useSelector((store) => store.users.currentUserID);
+
+  //#endregion
+
+  const handleTabChange = useCallback((value: number) => {
+    setPanelIndex(value);
+  }, []);
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    Object.keys(palette).forEach((key) => {
+      const value = ((palette as any)[key] as any)[colorScheme];
+      root?.style.setProperty(`--cvos-${key}-33`, `${value}55`);
+      root?.style.setProperty(`--cvos-${key}-50`, `${value}80`);
+      root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`);
+      root?.style.setProperty(`--cvos-${key}`, value);
+    });
+  }, [palette, colorScheme]);
+
+  const otherUsersKeys = Object.keys(users).filter(
+    (key) => key !== users[currentUserID].id
+  );
 
   return (
-    <div className={classes.root}>
+    <div className={classes["root"]}>
       <Tabs
-        indicatorColor="primary"
-        orientation="vertical"
-        variant="scrollable"
-        value={panelIndex}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        className={classes.tabs}
+        defaultValue={panelIndex}
+        onChange={handleTabChange}
+        direction="right"
+        separator
       >
-        <Tab label="Theme" {...a11yProps(0)} />
-        <Tab label="Langue" {...a11yProps(1)} />
-        <Tab label="Utilisateurs" {...a11yProps(2)} />
+        <Tab label="Theme" value={0} active={panelIndex === 0} />
+        <Tab label="Langue" value={1} active={panelIndex === 1} />
+        <Tab label="Utilisateurs" value={2} active={panelIndex === 2} />
       </Tabs>
-      <TabPanel value={panelIndex} index={0}>
-        <Typography variant="h4" noWrap>
+      <TabPanel value={panelIndex} index={0} spaced>
+        <Typography variant="h3" noWrap>
           Préférences du thème
         </Typography>
-        <Typography variant="body1">Thème de l'interface</Typography>
-        <FormControl component="fieldset">
-          {/* <FormLabel component="legend" contentEditable>
+        <Paper outlined spaced fullWidth>
+          <Typography variant="h4" noWrap>
             Thème de l'interface
-          </FormLabel> */}
+          </Typography>
           <RadioGroup
-            aria-label="thème"
-            name="theme"
-            value={0}
-            onChange={() => {}}
+            onChange={(value) => {
+              dispatch(setColorScheme(value));
+            }}
           >
-            <FormControlLabel
-              value={0}
-              control={<Radio color="primary" />}
+            <Radio
+              name={pid + "_theme"}
+              label="Défaut"
+              value={EColorScheme.default}
+              checked={colorScheme === EColorScheme.default}
+            ></Radio>
+            <Radio
+              name={pid + "_theme"}
               label="Clair"
-            />
-            <Tooltip title="Indisponible" arrow placement="left">
-              <FormControlLabel
-                value={1}
-                control={<Radio color="primary" />}
-                label="Foncé"
-                disabled
-              />
-            </Tooltip>
-            <Tooltip title="Indisponible" arrow placement="left">
-              <FormControlLabel
-                value={2}
-                control={<Radio color="primary" />}
-                color="primary"
-                label="Contrasté"
-                disabled
-              />
-            </Tooltip>
+              value={EColorScheme.light}
+              checked={colorScheme === EColorScheme.light}
+            ></Radio>
+            <Radio
+              name={pid + "_theme"}
+              label="Sombre"
+              value={EColorScheme.dark}
+              checked={colorScheme === EColorScheme.dark}
+            ></Radio>
+            <Radio
+              name={pid + "_theme"}
+              label="Contrasté"
+              value={EColorScheme.contrast}
+              checked={colorScheme === EColorScheme.contrast}
+            ></Radio>
           </RadioGroup>
-        </FormControl>
-        <Typography variant="body1">Fond d'écran principal</Typography>
-        <FormControl component="fieldset">
-          {/* <FormLabel component="legend">Fond d'écran principal</FormLabel> */}
-          <RadioGroup
-            aria-label="fond d'écran"
-            name="background-image"
-            value={1}
-            onChange={() => {}}
-          >
-            <FormControlLabel
-              value={1}
-              control={<Radio color="primary" />}
-              label="Forêt"
-            />
-            <Tooltip title="Indisponible" arrow placement="left">
-              <FormControlLabel
-                value={2}
-                control={<Radio color="primary" />}
-                label="Fleurs"
-                disabled
-              />
-            </Tooltip>
-          </RadioGroup>
-        </FormControl>
+        </Paper>
+        <Typography variant="h4">Couleur de l'interface</Typography>
+        <form action="" method="post" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="color"
+            name="head"
+            value={primary}
+            onChange={(e) => {
+              dispatch(
+                setPrimaryColor({
+                  [EColorScheme.contrast]: e.target.value,
+                  [EColorScheme.dark]: e.target.value,
+                  [EColorScheme.default]: e.target.value,
+                  [EColorScheme.light]: e.target.value
+                })
+              );
+            }}
+          ></input>
+        </form>
       </TabPanel>
-      <TabPanel value={panelIndex} index={1}>
-        <Typography variant="h4" noWrap>
-          Préférences de la langue
+      <TabPanel value={panelIndex} index={1} spaced>
+        <Typography variant="h3" noWrap>
+          Préférences linguistiques
         </Typography>
-        <Typography variant="body1">Langue du système</Typography>
-        <FormControl component="fieldset">
-          {/* <FormLabel component="legend">Langue</FormLabel> */}
+        <Paper spaced outlined>
+          <Typography variant="h4">Langue du système</Typography>
           <RadioGroup
-            aria-label="fond d'écran"
-            name="background-image"
-            value={0}
-            onChange={() => {}}
+            onChange={(value) => {
+              dispatch(setColorScheme(value));
+            }}
           >
-            <FormControlLabel
-              value={0}
-              control={<Radio color="primary" />}
+            <Radio
+              checked={true}
               label="Français"
-            />
-            <Tooltip title="Unavailable" arrow placement="left">
-              <FormControlLabel
-                value={1}
-                control={<Radio color="primary" />}
-                label="English"
-                disabled
-              />
-            </Tooltip>
-            <Tooltip title="Nicht verfügbar" arrow placement="left">
-              <FormControlLabel
-                value={2}
-                control={<Radio color="primary" />}
-                label="Deutsch"
-                disabled
-              />
-            </Tooltip>
+              name={pid + "_language"}
+              value={2}
+            ></Radio>
+            <Radio
+              checked={false}
+              disabeld
+              label="English"
+              name={pid + "_language"}
+              value={1}
+            ></Radio>
+            <Radio
+              checked={false}
+              disabeld
+              label="Deutsch"
+              name={pid + "_language"}
+              value={2}
+            ></Radio>
           </RadioGroup>
-        </FormControl>
+        </Paper>
       </TabPanel>
-      <TabPanel value={panelIndex} index={2}>
-        <Typography variant="h4" noWrap>
+      <TabPanel value={panelIndex} index={2} spaced>
+        <Typography variant="h3" noWrap>
           Utilisateurs
         </Typography>
-        <Typography variant="subtitle1">Utilisateur actuel</Typography>
-        <Grid container spacing={2} direction="row" alignItems="center">
-          <Grid item>
+        <Paper spaced outlined>
+          <Typography variant="h4">Utilisateur actuel</Typography>
+          <Container type="grid" orientation="row" space>
             <Avatar
               alt="Image de profil"
               src={users[currentUserID].profileImage}
             ></Avatar>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
+            <Typography variant="body">
               {users[currentUserID].displayName}
             </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Button disabled variant="outlined" color="primary">
-              Changer le mot de passe
-            </Button>
-          </Grid>
-        </Grid>
-        <Typography variant="subtitle1">Utilisateurs</Typography>
-        {Object.keys(users).map((key) => {
-          return (
-            <Grid
-              key={key}
-              container
-              spacing={2}
-              direction="row"
-              alignItems="center"
-            >
-              <Grid item>
+          </Container>
+          <Typography variant="h4">Autres utilisateurs</Typography>
+          {otherUsersKeys.length > 0 ? (
+            otherUsersKeys.map((key) => (
+              <div key={key}>
                 <Avatar
                   alt="Image de profil"
                   src={users[key].profileImage}
                 ></Avatar>
-              </Grid>
-              <Grid item>
-                <Typography variant="body2">
-                  {users[key].displayName}
-                </Typography>
-              </Grid>
-            </Grid>
-          );
-        })}
+                <Typography variant="body">{users[key].displayName}</Typography>
+              </div>
+            ))
+          ) : (
+            <Typography variant="body">Aucun autre utilisateur</Typography>
+          )}
+        </Paper>
       </TabPanel>
     </div>
   );
 };
 
-export default memo(Settings);
+export default Settings;
