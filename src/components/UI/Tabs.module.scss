@@ -1,0 +1,52 @@
+$indicator-width: 3px;
+
+.root {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-auto-rows: 3rem;
+  position: relative;
+  & .indicator {
+    background-color: var(--cvos-primary);
+    position: absolute;
+  }
+  &.left {
+    &.separator {
+      border-left: 1px solid var(--cvos-divider);
+    }
+    & .indicator {
+      left: -1px;
+      height: 3rem;
+      width: $indicator-width;
+    }
+  }
+  &.right {
+    &.separator {
+      border-right: 1px solid var(--cvos-divider);
+    }
+    & .indicator {
+      right: -1px;
+      height: 3rem;
+      width: $indicator-width;
+    }
+  }
+  &.top {
+    &.separator {
+      border-top: 1px solid var(--cvos-divider);
+    }
+    & .indicator {
+      top: -1px;
+      height: $indicator-width;
+      width: 150px;
+    }
+  }
+  &.bottom {
+    &.separator {
+      border-bottom: 1px solid var(--cvos-divider);
+    }
+    & .indicator {
+      bottom: 0;
+      height: $indicator-width;
+      width: 150px;
+    }
+  }
+}

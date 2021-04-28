@@ -1,0 +1,23 @@
+@import "../../styles/theme.scss";
+
+.root {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $padding $padding/2;
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: var(--cvos-text);
+  transition: color 0.3s ease, background-color 0.3s ease;
+  font-size: 1rem;
+  font-family: "Karla", sans-serif;
+  word-break: keep-all;
+  white-space: nowrap;
+  &:disabled {
+    color: var(--cvos-disabled);
+  }
+  &.active {
+    background-color: var(--cvos-primary-33);
+  }
+}
