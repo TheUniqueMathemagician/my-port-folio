@@ -1,0 +1,26 @@
+@import "../../styles/theme.scss";
+
+.root {
+  &.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.column {
+      flex-direction: column;
+    }
+  }
+  &.grid {
+    display: grid;
+    grid-auto-columns: min-content;
+    grid-auto-rows: min-content;
+    align-items: center;
+    justify-items: center;
+    &.space {
+      row-gap: $padding/2;
+      column-gap: $padding/2;
+    }
+    &.row {
+      grid-auto-flow: column;
+    }
+  }
+}
