@@ -19,6 +19,7 @@
   .h#{$i} {
     font-size: #{3-0.25 * $i}rem;
     font-weight: #{600 - 75 * $i};
+    margin: 0.5em 0;
   }
 }
 

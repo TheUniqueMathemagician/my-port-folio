@@ -23,7 +23,7 @@ interface IProps {
 
 const Typography: FunctionComponent<IProps> = (props) => {
   const { children, color, noWrap, tag, variant } = props;
-  const classesList = [];
+  const classesList = [classes["root"]];
   // const childRef = useRef<HTMLElement>(null);
   // const parentRef = useRef<HTMLDivElement>(null);
 
