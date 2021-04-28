@@ -9,8 +9,8 @@ import Settings from "../../components/apps/Settings";
 import Snake from "../../components/apps/Snake";
 import Welcome from "../../components/apps/Welcome";
 import generateID from "../../functions/generateID";
-import IDimensions from "../../types/IDimensions";
-import IPosition from "../../types/IPosition";
+import { IDimensions } from "../../types/IDimensions";
+import { IPosition } from "../../types/IPosition";
 
 export enum EApplications {
   About,

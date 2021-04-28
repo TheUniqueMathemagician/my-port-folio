@@ -1,4 +1,4 @@
-enum ESnap {
+export enum ESnap {
   none,
   topLeft,
   top,
@@ -9,5 +9,3 @@ enum ESnap {
   bottomLeft,
   left
 }
-
-export default ESnap;

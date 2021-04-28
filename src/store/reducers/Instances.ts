@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import generateID from "../../functions/generateID";
-import EResize from "../../types/EResize";
-import ESnap from "../../types/ESnap";
-import IDimensions from "../../types/IDimensions";
-import IdomPosition from "../../types/IdomPosition";
-import IPosition from "../../types/IPosition";
+import { EResize } from "../../types/EResize";
+import { ESnap } from "../../types/ESnap";
+import { IDimensions } from "../../types/IDimensions";
+import { IdomPosition } from "../../types/IdomPosition";
+import { IPosition } from "../../types/IPosition";
 import {
   DaemonApplication,
   EApplications,

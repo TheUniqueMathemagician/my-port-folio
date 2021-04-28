@@ -1,4 +1,4 @@
-export enum EThemeColor {
+export enum EColorScheme {
   default,
   dark,
   light,

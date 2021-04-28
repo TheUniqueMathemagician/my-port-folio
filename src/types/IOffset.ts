@@ -1,4 +1,4 @@
-export default interface IOffset {
+export interface IOffset {
   x: number;
   y: number;
 }

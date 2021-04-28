@@ -1,4 +1,4 @@
-enum EResize {
+export enum EResize {
   none,
   top,
   bottom,
@@ -9,5 +9,3 @@ enum EResize {
   bottomLeft,
   bottomRight
 }
-
-export default EResize;

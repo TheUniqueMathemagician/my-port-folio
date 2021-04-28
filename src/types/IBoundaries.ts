@@ -1,4 +1,4 @@
-export default interface IBoundaries {
+export interface IBoundaries {
   x1: number;
   y1: number;
   x2: number;
