@@ -2,14 +2,15 @@ import classes from "./Radio.module.scss";
 import { FunctionComponent, memo, useCallback } from "react";
 
 interface IProps {
-  name: string;
-  label?: string;
-  value: number;
   checked: boolean;
+  disabeld?: boolean;
+  label?: string;
+  name: string;
+  value: number;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const { name, value, checked, label } = props;
+  const { checked, disabeld, label, name, value } = props;
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,16 +27,17 @@ const Radio: FunctionComponent<IProps> = (props) => {
   return (
     <label className={classes["root"]}>
       <input
-        type="radio"
-        name={name}
-        value={value}
         checked={checked}
+        disabled={!!disabeld}
+        name={name}
         onChange={handleChange}
+        type="radio"
+        value={value}
       ></input>
       <div className={classes["radio"]}>
         <div className={classes["effect"]}></div>
       </div>
-      {label && <span>{label}</span>}
+      {label && <span className={classes["label"]}>{label}</span>}
     </label>
   );
 };

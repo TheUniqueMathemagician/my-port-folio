@@ -29,16 +29,6 @@
       transition: transform 0.3s ease;
     }
   }
-  input:checked ~ .radio::before {
-    background-color: var(--cvos-primary);
-    transform: scale(1);
-  }
-  input:disabled ~ .radio::before {
-    background-color: var(--cvos-disabled);
-  }
-  input:disabled ~ .radio {
-    border-color: var(--cvos-disabled);
-  }
   .effect {
     border-radius: 50%;
     position: absolute;
@@ -50,6 +40,22 @@
     opacity: 0.3;
     transform: scale(0);
     transition: transform 0.3s ease;
+  }
+  .label {
+    color: var(--cvos-text);
+  }
+  input:checked ~ .radio::before {
+    background-color: var(--cvos-primary);
+    transform: scale(1);
+  }
+  input:disabled ~ .radio::before {
+    background-color: var(--cvos-disabled);
+  }
+  input:disabled ~ .radio {
+    border-color: var(--cvos-disabled);
+  }
+  input:disabled ~ .radio ~ .label {
+    color: var(--cvos-disabled);
   }
   input:focus ~ .radio > .effect {
     transform: scale(1);
