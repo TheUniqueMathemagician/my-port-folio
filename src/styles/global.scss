@@ -1,45 +1,27 @@
 @import "./theme";
 
-// @import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@300&display=swap");
 
 :root,
 html,
 body {
-  color: $light;
+  color: var(--cvos-text);
+  font-family: "Karla", sans-serif;
   overflow: hidden;
 }
 
-$linearGradientScrollBarV: linear-gradient(
-  to bottom,
-  lighten($primary, 5%),
-  lighten($primary, 0%) 50%,
-  lighten($primary, 5%)
-);
-$linearGradientScrollBarH: linear-gradient(
-  to right,
-  lighten($primary, 10%),
-  lighten($primary, 0%) 50%,
-  lighten($primary, 10%)
-);
 ::-webkit-scrollbar {
-  width: 10px;
   height: 10px;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: $dark;
+  background: var(--cvos-background);
 }
 ::-webkit-scrollbar-thumb {
-  background: $primary;
-  &:horizontal {
-    background: $primary;
-  }
+  background: var(--cvos-primary);
 }
 
 * {
-  font-family: "Karla", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
