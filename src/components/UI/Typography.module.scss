@@ -1,0 +1,54 @@
+@import "../../styles/theme.scss";
+
+.root {
+  color: var(--cvos-text);
+  font-family: "Karla", sans-serif;
+}
+
+.no-wrap {
+  width: 100%;
+  > * {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  // word-break: keep-all;
+}
+
+@for $i from 1 to 7 {
+  .h#{$i} {
+    font-size: #{3-0.25 * $i}rem;
+    font-weight: #{600 - 75 * $i};
+  }
+}
+
+.body {
+  font-size: 1rem;
+}
+
+.p {
+  font-size: 1rem;
+  margin-bottom: $margin/2;
+}
+
+.error {
+  color: var(--cvos-error);
+}
+.hint {
+  color: var(--cvos-hint);
+}
+.info {
+  color: var(--cvos-info);
+}
+.primary {
+  color: var(--cvos-primary);
+}
+.secondary {
+  color: var(--cvos-secondary);
+}
+.success {
+  color: var(--cvos-success);
+}
+.warning {
+  color: var(--cvos-warning);
+}
