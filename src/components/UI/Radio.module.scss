@@ -11,7 +11,7 @@
   }
   .radio {
     cursor: pointer;
-    border: 1px solid var(--bs-primary);
+    border: 1px solid var(--cvos-primary);
     border-radius: 50%;
     height: 1rem;
     margin-right: $margin/2;
@@ -25,16 +25,19 @@
       position: absolute;
       right: 3px;
       top: 3px;
+      transform: scale(0);
+      transition: transform 0.3s ease;
     }
   }
   input:checked ~ .radio::before {
-    background-color: var(--bs-primary);
+    background-color: var(--cvos-primary);
+    transform: scale(1);
   }
   input:disabled ~ .radio::before {
-    background-color: var(--bs-disabled);
+    background-color: var(--cvos-disabled);
   }
   input:disabled ~ .radio {
-    border-color: var(--bs-disabled);
+    border-color: var(--cvos-disabled);
   }
   .effect {
     border-radius: 50%;
@@ -43,7 +46,7 @@
     bottom: -6px;
     left: -6px;
     right: -6px;
-    border: 6px solid var(--bs-primary);
+    border: 6px solid var(--cvos-primary);
     opacity: 0.3;
     transform: scale(0);
     transition: transform 0.3s ease;

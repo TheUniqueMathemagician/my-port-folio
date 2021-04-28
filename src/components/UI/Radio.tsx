@@ -1,15 +1,28 @@
 import classes from "./Radio.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, useCallback } from "react";
 
 interface IProps {
   name: string;
-  value?: string | number;
+  label?: string;
+  value: number;
   checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const { onChange, name, value, checked, children } = props;
+  const { name, value, checked, label } = props;
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.target.dispatchEvent(
+        new CustomEvent<number>("input", {
+          detail: value,
+          bubbles: true
+        })
+      );
+    },
+    [value]
+  );
+
   return (
     <label className={classes["root"]}>
       <input
@@ -17,14 +30,27 @@ const Radio: FunctionComponent<IProps> = (props) => {
         name={name}
         value={value}
         checked={checked}
-        onChange={onChange}
+        onChange={handleChange}
       ></input>
       <div className={classes["radio"]}>
         <div className={classes["effect"]}></div>
       </div>
-      <span>{children}</span>
+      {label && <span>{label}</span>}
     </label>
   );
 };
 
-export default Radio;
+const isEqual = (prevProps: IProps, nextProps: IProps): boolean => {
+  if (prevProps.checked !== nextProps.checked) {
+    return false;
+  }
+  if (prevProps.value !== nextProps.value) {
+    return false;
+  }
+  if (prevProps.name !== nextProps.name) {
+    return false;
+  }
+  return true;
+};
+
+export default memo(Radio, isEqual);
