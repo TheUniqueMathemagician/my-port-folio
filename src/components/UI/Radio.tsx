@@ -6,11 +6,14 @@ interface IProps {
   disabeld?: boolean;
   label?: string;
   name: string;
+  noSelect?: boolean;
   value: number;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const { checked, disabeld, label, name, value } = props;
+  const { checked, disabeld, label, name, noSelect, value } = props;
+
+  const rootClasses = [classes["root"]];
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,8 +27,10 @@ const Radio: FunctionComponent<IProps> = (props) => {
     [value]
   );
 
+  if (noSelect) rootClasses.push(classes["no-select"]);
+
   return (
-    <label className={classes["root"]}>
+    <label className={rootClasses.join(" ")}>
       <input
         checked={checked}
         disabled={!!disabeld}
@@ -50,6 +55,9 @@ const isEqual = (prevProps: IProps, nextProps: IProps): boolean => {
     return false;
   }
   if (prevProps.name !== nextProps.name) {
+    return false;
+  }
+  if (prevProps.noSelect !== nextProps.noSelect) {
     return false;
   }
   return true;
