@@ -1,5 +1,6 @@
 import classes from "./Button.module.scss";
 import { FunctionComponent, useCallback } from "react";
+import { TSize } from "../../types/TSize";
 
 interface IProps {
   align?: "center" | "end" | "start";
@@ -7,10 +8,10 @@ interface IProps {
   disabled?: boolean;
   endIcon?: boolean;
   fullWidth?: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   outlined?: boolean;
   ripple?: boolean;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: TSize;
   startIcon?: boolean;
   variant?: "flat" | "filled" | "blur";
 }
@@ -61,7 +62,7 @@ const Button: FunctionComponent<IProps> = (props) => {
           }, 666);
         }
       }
-      onClick(e);
+      onClick?.(e);
     },
     [onClick, ripple]
   );

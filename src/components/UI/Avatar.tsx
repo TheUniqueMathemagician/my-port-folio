@@ -1,10 +1,11 @@
 import classes from "./Avatar.module.scss";
 import { FunctionComponent } from "react";
+import { TSize } from "../../types/TSize";
 
 interface IProps {
   alt: string;
   src: string;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: TSize;
   outlined?: boolean;
 }
 
