@@ -90,16 +90,16 @@ const initialState: ThemeState = {
       [EColorScheme.light]: "#fafafa"
     },
     primary: {
-      [EColorScheme.contrast]: "#00ff80",
-      [EColorScheme.dark]: "#00ff80",
-      [EColorScheme.default]: "#00ff80",
-      [EColorScheme.light]: "#00ff80"
+      [EColorScheme.contrast]: "#3496fe",
+      [EColorScheme.dark]: "#3496fe",
+      [EColorScheme.default]: "#3496fe",
+      [EColorScheme.light]: "#3496fe"
     },
     secondary: {
-      [EColorScheme.contrast]: "#43accc",
-      [EColorScheme.dark]: "#43accc",
-      [EColorScheme.default]: "#43accc",
-      [EColorScheme.light]: "#43accc"
+      [EColorScheme.contrast]: "#d772f3",
+      [EColorScheme.dark]: "#d772f3",
+      [EColorScheme.default]: "#d772f3",
+      [EColorScheme.light]: "#d772f3"
     },
     success: {
       [EColorScheme.contrast]: "#00ff00",
