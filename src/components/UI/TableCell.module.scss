@@ -1,0 +1,28 @@
+.root {
+  // display: block;
+  color: var(--cvos-text);
+}
+
+td.root {
+  font-size: 1rem;
+}
+
+th.root {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.start {
+  justify-content: flex-start;
+}
+.center {
+  justify-content: center;
+}
+.end {
+  justify-content: flex-end;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}

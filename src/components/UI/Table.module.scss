@@ -1,0 +1,9 @@
+.root {
+  &.full-width {
+    width: 100%;
+  }
+}
+
+.outlined {
+  border: 1px solid var(--cvos-divider);
+}
