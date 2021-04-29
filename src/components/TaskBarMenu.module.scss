@@ -7,7 +7,6 @@
   max-height: 350px;
   overflow: auto;
   transition: background-color 0.3s ease, border-color 0.3s ease;
-  border: 1px solid var(--cvos-divider);
   border-bottom: 0;
   ul {
     list-style-type: none;
@@ -20,6 +19,10 @@
     opacity: 1;
     bottom: 100%;
   }
+}
+
+.root.contrast {
+  border: 1px solid var(--cvos-divider);
 }
 
 @supports (backdrop-filter: blur(0)) {

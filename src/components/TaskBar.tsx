@@ -158,7 +158,7 @@ const TaskBar = () => {
       <TaskBarMenu
         shown={mainShown}
         position={{
-          bottom: (taskBarRef.current?.clientHeight ?? 0) + 1,
+          bottom: taskBarRef.current?.clientHeight ?? 0,
           left: 0,
           right: null,
           top: null
@@ -304,7 +304,7 @@ const TaskBar = () => {
       <TaskBarMenu
         shown={langShown}
         position={{
-          bottom: (taskBarRef.current?.clientHeight ?? 0) + 1,
+          bottom: taskBarRef.current?.clientHeight ?? 0,
           left: langButtonRef.current?.offsetLeft ?? 0,
           right: 0,
           top: null
