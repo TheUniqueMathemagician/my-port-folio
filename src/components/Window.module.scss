@@ -1,7 +1,6 @@
 @import "../styles/theme.scss";
 
 .root {
-  border: 1px solid var(--cvos-divider);
   transition: border-color 0.3s ease;
   position: absolute;
   display: grid;
@@ -41,6 +40,10 @@
   overflow: auto;
   transition: background-color 0.3s ease;
   background-color: var(--cvos-background);
+}
+
+.root.contrast {
+  border: 1px solid var(--cvos-divider);
 }
 
 .root:not(.contrast) .background {

@@ -51,7 +51,6 @@
 }
 
 .title {
-  // font-family: 'roboto';
   user-select: none;
   font-weight: 500;
   pointer-events: none;
@@ -72,6 +71,6 @@
   .root:not(.contrast) {
     background: var(--cvos-background-67);
     backdrop-filter: $blur;
-    border-bottom-color: transparent;
+    border-bottom: 0;
   }
 }
