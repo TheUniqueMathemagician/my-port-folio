@@ -76,11 +76,11 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Tab label="Utilisateurs" value={2} active={panelIndex === 2} />
       </Tabs>
       <TabPanel value={panelIndex} index={0} spaced>
-        <Typography variant="h3" noWrap>
+        <Typography variant="h3" noWrap noSelect>
           Préférences du thème
         </Typography>
         <Paper outlined spaced fullWidth>
-          <Typography variant="h4" noWrap>
+          <Typography variant="h4" noWrap noSelect>
             Thème de l'interface
           </Typography>
           <RadioGroup
@@ -92,29 +92,35 @@ const Settings: FunctionComponent<IProps> = (props) => {
               name={pid + "_theme"}
               label="Défaut"
               value={EColorScheme.default}
+              noSelect
               checked={colorScheme === EColorScheme.default}
             ></Radio>
             <Radio
               name={pid + "_theme"}
               label="Clair"
               value={EColorScheme.light}
+              noSelect
               checked={colorScheme === EColorScheme.light}
             ></Radio>
             <Radio
               name={pid + "_theme"}
               label="Sombre"
               value={EColorScheme.dark}
+              noSelect
               checked={colorScheme === EColorScheme.dark}
             ></Radio>
             <Radio
               name={pid + "_theme"}
               label="Contrasté"
               value={EColorScheme.contrast}
+              noSelect
               checked={colorScheme === EColorScheme.contrast}
             ></Radio>
           </RadioGroup>
         </Paper>
-        <Typography variant="h4">Couleur de l'interface</Typography>
+        <Typography variant="h4" noWrap noSelect>
+          Couleur de l'interface
+        </Typography>
         <form action="" method="post" onSubmit={(e) => e.preventDefault()}>
           <input
             type="color"
@@ -134,11 +140,13 @@ const Settings: FunctionComponent<IProps> = (props) => {
         </form>
       </TabPanel>
       <TabPanel value={panelIndex} index={1} spaced>
-        <Typography variant="h3" noWrap>
+        <Typography variant="h3" noWrap noSelect>
           Préférences linguistiques
         </Typography>
         <Paper spaced outlined>
-          <Typography variant="h4">Langue du système</Typography>
+          <Typography variant="h4" noWrap noSelect>
+            Langue du système
+          </Typography>
           <RadioGroup
             onChange={(value) => {
               dispatch(setColorScheme(value));
@@ -148,6 +156,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               checked={true}
               label="Français"
               name={pid + "_language"}
+              noSelect
               value={2}
             ></Radio>
             <Radio
@@ -155,6 +164,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               disabeld
               label="English"
               name={pid + "_language"}
+              noSelect
               value={1}
             ></Radio>
             <Radio
@@ -162,27 +172,32 @@ const Settings: FunctionComponent<IProps> = (props) => {
               disabeld
               label="Deutsch"
               name={pid + "_language"}
+              noSelect
               value={2}
             ></Radio>
           </RadioGroup>
         </Paper>
       </TabPanel>
       <TabPanel value={panelIndex} index={2} spaced>
-        <Typography variant="h3" noWrap>
+        <Typography variant="h3" noWrap noSelect>
           Utilisateurs
         </Typography>
         <Paper spaced outlined>
-          <Typography variant="h4">Utilisateur actuel</Typography>
+          <Typography variant="h4" noWrap noSelect>
+            Utilisateur actuel
+          </Typography>
           <Container type="grid" orientation="row" space>
             <Avatar
               alt="Image de profil"
               src={users[currentUserID].profileImage}
             ></Avatar>
-            <Typography variant="body">
+            <Typography variant="body" noWrap noSelect>
               {users[currentUserID].displayName}
             </Typography>
           </Container>
-          <Typography variant="h4">Autres utilisateurs</Typography>
+          <Typography variant="h4" noWrap noSelect>
+            Autres utilisateurs
+          </Typography>
           {otherUsersKeys.length > 0 ? (
             otherUsersKeys.map((key) => (
               <div key={key}>
@@ -190,11 +205,15 @@ const Settings: FunctionComponent<IProps> = (props) => {
                   alt="Image de profil"
                   src={users[key].profileImage}
                 ></Avatar>
-                <Typography variant="body">{users[key].displayName}</Typography>
+                <Typography variant="body" noWrap noSelect>
+                  {users[key].displayName}
+                </Typography>
               </div>
             ))
           ) : (
-            <Typography variant="body">Aucun autre utilisateur</Typography>
+            <Typography variant="body" noSelect>
+              Aucun autre utilisateur
+            </Typography>
           )}
         </Paper>
       </TabPanel>
