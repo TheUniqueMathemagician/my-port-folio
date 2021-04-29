@@ -5,26 +5,8 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  .avatar {
-    border: 1px solid change-color($dark, $alpha: 0.5);
-    width: 16rem;
-    height: 16rem;
-  }
-  .button {
-    border-radius: 0;
-    border-color: change-color($dark, $alpha: 0.5);
-    color: $light;
-    background: change-color($dark, $alpha: 0.5);
-    &:hover,
-    &:focus {
-      background: mix(
-        change-color($dark, $alpha: 0.5),
-        change-color($light, $alpha: 0.2),
-        70%
-      );
-    }
-  }
   > section {
+    position: relative;
     padding: $padding;
     min-height: 100vh;
     display: grid;
@@ -34,12 +16,18 @@
     align-content: center;
     justify-content: center;
     border: 0;
-    // background: change-color($dark, $alpha: 0.5);
+  }
+  > .bg {
+    backdrop-filter: blur(6px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
   }
 }
 
-@supports (backdrop-filter: blur(6px)) {
-  .button {
-    backdrop-filter: blur(6px);
-  }
+.avatar {
+  height: 5rem;
+  width: 5rem;
 }
