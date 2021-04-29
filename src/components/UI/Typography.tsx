@@ -8,6 +8,7 @@ import {
 import classes from "./Typography.module.scss";
 
 interface IProps {
+  noSelect?: boolean;
   noWrap?: boolean;
   variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "body" | "p";
   tag?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "div" | "p" | "span";
@@ -22,13 +23,14 @@ interface IProps {
 }
 
 const Typography: FunctionComponent<IProps> = (props) => {
-  const { children, color, noWrap, tag, variant } = props;
-  const classesList = [classes["root"]];
+  const { children, color, noSelect, noWrap, tag, variant } = props;
+  const rootClasses = [classes["root"]];
   // const childRef = useRef<HTMLElement>(null);
   // const parentRef = useRef<HTMLDivElement>(null);
 
-  if (variant) classesList.push(classes[variant]);
-  if (color) classesList.push(classes[color]);
+  if (variant) rootClasses.push(classes[variant]);
+  if (color) rootClasses.push(classes[color]);
+  if (noSelect) rootClasses.push(classes["no-select"]);
 
   // const resizeObserver = useMemo(
   //   () =>
@@ -57,7 +59,7 @@ const Typography: FunctionComponent<IProps> = (props) => {
   //     <div className={classes["no-wrap"]} ref={parentRef}>
   //       {createElement(tag || "div", {
   //         children,
-  //         className: classesList.join(" "),
+  //         className: rootClasses.join(" "),
   //         ref: childRef
   //       })}
   //     </div>
@@ -69,7 +71,7 @@ const Typography: FunctionComponent<IProps> = (props) => {
       <div className={classes["no-wrap"]}>
         {createElement(tag ?? variant === "body" ? "div" : variant, {
           children,
-          className: classesList.join(" ")
+          className: rootClasses.join(" ")
         })}
       </div>
     );
@@ -77,7 +79,7 @@ const Typography: FunctionComponent<IProps> = (props) => {
 
   return createElement(tag ?? variant === "body" ? "div" : variant, {
     children,
-    className: classesList.join(" ")
+    className: rootClasses.join(" ")
   });
 };
 

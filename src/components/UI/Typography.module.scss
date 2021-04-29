@@ -6,6 +6,11 @@
   font-family: "Karla", sans-serif;
 }
 
+.no-select {
+  user-select: none;
+  cursor: default;
+}
+
 .no-wrap {
   width: 100%;
   > * {
