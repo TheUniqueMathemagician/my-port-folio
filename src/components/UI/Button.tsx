@@ -1,16 +1,18 @@
 import classes from "./Button.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
 
 interface IProps {
   align?: "center" | "end" | "start";
   color?: "primary" | "secondary" | "info" | "success" | "warning" | "error";
-  startIcon?: boolean;
   disabled?: boolean;
   endIcon?: boolean;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "outlined" | "flat" | "filled" | "blur";
   fullWidth?: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  outlined?: boolean;
+  ripple?: boolean;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  startIcon?: boolean;
+  variant?: "flat" | "filled" | "blur";
 }
 
 const Button: FunctionComponent<IProps> = (props) => {
@@ -19,13 +21,50 @@ const Button: FunctionComponent<IProps> = (props) => {
     children,
     color,
     disabled,
-    onClick,
+    endIcon,
     fullWidth,
+    onClick,
+    outlined,
+    ripple,
     size,
-    variant,
     startIcon,
-    endIcon
+    variant
   } = props;
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      if (ripple) {
+        let button: HTMLButtonElement | null = null;
+        const findButton = (element: HTMLElement) => {
+          if (
+            element &&
+            element.parentElement &&
+            element.tagName !== "BUTTON"
+          ) {
+            findButton(element.parentElement);
+          } else {
+            button = element as HTMLButtonElement;
+          }
+        };
+        findButton(e.target as HTMLElement);
+        if (button) {
+          const x =
+            e.clientX - (button as HTMLButtonElement).getBoundingClientRect().x;
+          const y =
+            e.clientY - (button as HTMLButtonElement).getBoundingClientRect().y;
+          const ripples = document.createElement("span");
+          ripples.style.left = `${x}px`;
+          ripples.style.top = `${y}px`;
+          (button as HTMLButtonElement).appendChild(ripples);
+          setTimeout(() => {
+            ripples.remove();
+          }, 666);
+        }
+      }
+      onClick(e);
+    },
+    [onClick, ripple]
+  );
 
   const rootClasses = [classes["root"]];
 
@@ -36,11 +75,12 @@ const Button: FunctionComponent<IProps> = (props) => {
   if (endIcon) rootClasses.push(classes["has-end-img"]);
   if (align) rootClasses.push(classes[`align--${align}`]);
   if (color) rootClasses.push(classes[color]);
+  if (outlined) rootClasses.push(classes["outlined"]);
 
   return (
     <button
       className={rootClasses.join(" ")}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
     >
       {children}

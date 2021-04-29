@@ -20,6 +20,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s ease;
+  letter-spacing: 0.5px;
   &.full-width {
     display: block;
     width: 100%;
@@ -29,18 +30,18 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     padding: 0;
   }
   &.sm {
-    padding: $padding/3 3 * $padding/4;
+    padding: $padding/3 $padding * 3/4;
   }
   &.md {
     padding: $padding/2 $padding;
   }
   &.lg {
     font-size: 1.2rem;
-    padding: $padding;
+    padding: $padding $padding * 2;
   }
   &.xl {
     font-size: 1.5rem;
-    padding: $padding * 1.5;
+    padding: $padding * 1.5 $padding * 3;
   }
 
   @each $color in $colors {
@@ -88,6 +89,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   }
 
   &::after {
+    pointer-events: none;
     content: "";
     z-index: -2;
     position: absolute;
@@ -100,14 +102,18 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     transition: opacity 0.3s ease;
     background-color: var(--cvos-hint-33);
   }
-  &:hover:not(:focus)::after {
-    opacity: 1;
+  &:hover::after {
+    opacity: 0.5;
   }
+  // &:hover:not(:focus)::after {
+  //   opacity: 1;
+  // }
   &:hover:focus::after {
     transition: opacity 0 0;
   }
 
   &::before {
+    pointer-events: none;
     content: "";
     z-index: -1;
     position: absolute;
@@ -117,7 +123,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     padding-top: 100%;
     border-radius: 50%;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    background-color: var(--cvos-hint-33);
+    background-color: var(--cvos-hint-50);
     opacity: 0;
     transform: translateX(-50%) translateY(-50%) scale(0);
   }
@@ -146,5 +152,31 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     &--end {
       justify-items: flex-end;
     }
+  }
+
+  > span {
+    z-index: -1;
+    position: absolute;
+    background: var(--cvos-text-50);
+    width: 250%;
+    padding-top: 250%;
+    pointer-events: none;
+    border-radius: 50%;
+    animation: ripple 0.666s ease-out infinite alternate;
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.666;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  50% {
+    opacity: 0.666;
+    transform: translate(-50%, -50%) scale(0.666);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
