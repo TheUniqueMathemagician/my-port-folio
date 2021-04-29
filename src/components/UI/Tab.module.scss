@@ -14,6 +14,7 @@
   font-family: "Karla", sans-serif;
   word-break: keep-all;
   white-space: nowrap;
+  user-select: none;
   &:disabled {
     color: var(--cvos-disabled);
   }

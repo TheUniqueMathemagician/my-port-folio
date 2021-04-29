@@ -2,7 +2,7 @@ $indicator-width: 3px;
 
 .root {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  // grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-auto-rows: 3rem;
   position: relative;
   transition: border-color 0.3s ease;
@@ -10,44 +10,60 @@ $indicator-width: 3px;
     background-color: var(--cvos-primary);
     position: absolute;
   }
+  &.top,
+  &.bottom {
+    grid-auto-flow: column;
+  }
+  &.left,
+  &.right {
+    min-height: 100%;
+  }
   &.left {
+    & .indicator {
+      width: $indicator-width;
+      left: 0;
+    }
     &.separator {
       border-left: 1px solid var(--cvos-divider);
-    }
-    & .indicator {
-      left: -1px;
-      height: 3rem;
-      width: $indicator-width;
+      & .indicator {
+        left: -1px;
+      }
     }
   }
   &.right {
+    & .indicator {
+      width: $indicator-width;
+      right: 0;
+    }
     &.separator {
       border-right: 1px solid var(--cvos-divider);
-    }
-    & .indicator {
-      right: -1px;
-      height: 3rem;
-      width: $indicator-width;
+      & .indicator {
+        right: -1px;
+      }
     }
   }
   &.top {
+    & .indicator {
+      height: $indicator-width;
+      top: 0;
+    }
     &.separator {
       border-top: 1px solid var(--cvos-divider);
-    }
-    & .indicator {
-      top: -1px;
-      height: $indicator-width;
-      width: 150px;
+      & .indicator {
+        top: -1px;
+      }
     }
   }
   &.bottom {
+    & .indicator {
+      height: $indicator-width;
+      bottom: 0;
+    }
     &.separator {
       border-bottom: 1px solid var(--cvos-divider);
-    }
-    & .indicator {
-      bottom: 0;
-      height: $indicator-width;
-      width: 150px;
+      & .indicator {
+        bottom: -1px;
+      }
     }
   }
 }

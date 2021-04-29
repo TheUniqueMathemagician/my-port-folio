@@ -1,8 +1,10 @@
 import classes from "./Tabs.module.scss";
 import {
+  Children,
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from "react";
@@ -16,15 +18,55 @@ interface IProps {
   separator?: boolean;
 }
 
+interface IVerticalPosition {
+  height: number;
+  top: number;
+}
+interface IHorizontalPosition {
+  left: number;
+  width: number;
+}
+
 const Tabs: FunctionComponent<IProps> = (props) => {
   const { onChange, children, defaultValue, direction, separator } = props;
-  const ref = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<number>(defaultValue ?? 0);
 
-  const handleInput = useCallback((e: Event) => {
-    e.stopPropagation();
-    setState((e as CustomEvent).detail);
-  }, []);
+  const ref = useRef<HTMLDivElement>(null);
+  const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);
+  const [indicatorPosition, setIndicatorPosition] = useState<
+    IHorizontalPosition | IVerticalPosition
+  >({
+    height: 0,
+    left: 0,
+    top: 0,
+    width: 0
+  });
+
+  const vertical = useMemo(
+    () => direction === "left" || direction === "right",
+    [direction]
+  );
+
+  const handleInput = useCallback(
+    (e: Event) => {
+      e.stopPropagation();
+      const event = e as CustomEvent;
+      const target = e.target as HTMLDivElement;
+      setTabValue(event.detail);
+
+      if (vertical) {
+        setIndicatorPosition({
+          top: target.offsetTop,
+          height: target.offsetHeight
+        });
+      } else {
+        setIndicatorPosition({
+          left: target.offsetLeft,
+          width: target.offsetWidth
+        });
+      }
+    },
+    [vertical]
+  );
 
   useEffect(() => {
     const el = ref.current;
@@ -39,8 +81,8 @@ const Tabs: FunctionComponent<IProps> = (props) => {
   }, [handleInput]);
 
   useEffect(() => {
-    onChange(state);
-  }, [state, onChange]);
+    onChange(tabValue);
+  }, [tabValue, onChange]);
 
   const classesList = [classes["root"]];
 
@@ -65,8 +107,6 @@ const Tabs: FunctionComponent<IProps> = (props) => {
     classesList.push(classes["separator"]);
   }
 
-  const vertical = direction === "left" || direction === "right";
-
   if (vertical) {
     return (
       <div
@@ -77,31 +117,33 @@ const Tabs: FunctionComponent<IProps> = (props) => {
         <div
           className={classes["indicator"]}
           style={{
-            transform: `translateY(${state * 100}%)`,
-            transition: "transform 0.3s ease"
+            top: (indicatorPosition as IVerticalPosition).top,
+            height: (indicatorPosition as IVerticalPosition).height,
+            transition: "all 0.3s ease"
+          }}
+        ></div>
+        {children}
+      </div>
+    );
+  } else {
+    return (
+      <div
+        aria-label={"Onglets horizontaux"}
+        className={classesList.join(" ")}
+        ref={ref}
+      >
+        <div
+          className={classes["indicator"]}
+          style={{
+            left: (indicatorPosition as IHorizontalPosition).left,
+            width: (indicatorPosition as IHorizontalPosition).width,
+            transition: "all 0.3s ease"
           }}
         ></div>
         {children}
       </div>
     );
   }
-
-  return (
-    <div
-      aria-label={"Onglets horizontaux"}
-      className={classesList.join(" ")}
-      ref={ref}
-    >
-      <div
-        className={classes["indicator"]}
-        style={{
-          transform: `translateX(${state * 100}%)`,
-          transition: "transform 0.3s ease"
-        }}
-      ></div>
-      {children}
-    </div>
-  );
 };
 
 export default Tabs;

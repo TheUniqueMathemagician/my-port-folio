@@ -51,6 +51,9 @@
 }
 
 .title {
+  // font-family: 'roboto';
+  user-select: none;
+  font-weight: 500;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -63,12 +66,11 @@
   color: var(--cvos-text);
   transition: color 0.3s ease;
   font-size: 1rem;
-  text-rendering: geometricPrecision;
 }
 
 @supports (backdrop-filter: blur(6px)) {
   .root:not(.contrast) {
-    background: var(--cvos-background-50);
+    background: var(--cvos-background-67);
     backdrop-filter: blur(6px);
   }
 }

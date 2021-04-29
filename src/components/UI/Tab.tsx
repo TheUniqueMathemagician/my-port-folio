@@ -1,5 +1,5 @@
 import classes from "./Tab.module.scss";
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 
 interface IProps {
   label: string;
@@ -9,6 +9,8 @@ interface IProps {
 
 const Tab: FunctionComponent<IProps> = (props) => {
   const { active, label, value } = props;
+
+  const ref = useRef<HTMLButtonElement>(null);
 
   const handleclick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -22,12 +24,23 @@ const Tab: FunctionComponent<IProps> = (props) => {
     [value]
   );
 
+  useEffect(() => {
+    if (ref.current && active) {
+      ref.current.dispatchEvent(
+        new CustomEvent<number>("input", {
+          detail: value,
+          bubbles: true
+        })
+      );
+    }
+  }, [ref, active, value]);
+
   const rootClasses = [classes["root"]];
 
   if (active) rootClasses.push(classes["active"]);
 
   return (
-    <button className={rootClasses.join(" ")} onClick={handleclick}>
+    <button className={rootClasses.join(" ")} onClick={handleclick} ref={ref}>
       {label}
     </button>
   );
