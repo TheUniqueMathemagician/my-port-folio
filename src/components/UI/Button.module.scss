@@ -3,6 +3,8 @@
 $colors: ("primary", "secondary", "info", "success", "warning", "error");
 
 .root {
+  overflow: hidden;
+  position: relative;
   align-items: center;
   background: none;
   border: 0;
@@ -27,10 +29,10 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     padding: 0;
   }
   &.sm {
-    padding: $padding/3;
+    padding: $padding/3 3 * $padding/4;
   }
   &.md {
-    padding: $padding/2;
+    padding: $padding/2 $padding;
   }
   &.lg {
     font-size: 1.2rem;
@@ -85,8 +87,48 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     grid-template-columns: auto 1fr auto;
   }
 
-  &:hover {
+  &::after {
+    content: "";
+    z-index: -2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    // transition: background-color 0.3s ease;
+    transition: opacity 0.3s ease;
     background-color: var(--cvos-hint-33);
+  }
+  &:hover:not(:focus)::after {
+    opacity: 1;
+  }
+  &:hover:focus::after {
+    transition: opacity 0 0;
+  }
+
+  &::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    padding-top: 100%;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    background-color: var(--cvos-hint-33);
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50%) scale(0);
+  }
+  &:focus::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+
+  &:active::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%) scale(1.5);
   }
 
   & img {
