@@ -1,0 +1,108 @@
+@import "../../styles/theme.scss";
+
+$colors: ("primary", "secondary", "info", "success", "warning", "error");
+
+.root {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--cvos-text);
+  column-gap: $padding;
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 100%;
+  justify-items: center;
+  outline: 0;
+  padding: $padding/2;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  &.full-width {
+    display: block;
+    width: 100%;
+  }
+
+  &.xs {
+    padding: 0;
+  }
+  &.sm {
+    padding: $padding/3;
+  }
+  &.md {
+    padding: $padding/2;
+  }
+  &.lg {
+    font-size: 1.2rem;
+    padding: $padding;
+  }
+  &.xl {
+    font-size: 1.5rem;
+    padding: $padding * 1.5;
+  }
+
+  @each $color in $colors {
+    &.#{$color} {
+      background-color: var(--cvos-#{$color});
+    }
+  }
+
+  &.outlined {
+    border: 1px solid var(--cvos-divider);
+  }
+  &.flat {
+    background-color: var(--cvos-background);
+  }
+  &.blur {
+    background-color: var(--cvos-background);
+    @each $color in $colors {
+      &.#{$color} {
+        background-color: var(--cvos-#{$color});
+      }
+    }
+    @supports (backdrop-filter: blur(6px)) {
+      background-color: var(--cvos-background-33);
+      backdrop-filter: blur(6px);
+      @each $color in $colors {
+        &.#{$color} {
+          background-color: var(--cvos-#{$color}#{-33});
+        }
+      }
+    }
+  }
+  &.filled {
+    background-color: var(--cvos-background);
+    border: 1px solid var(--cvos-divider);
+  }
+
+  &.has-start-img {
+    grid-template-columns: auto 1fr;
+  }
+  &.has-end-img {
+    grid-template-columns: 1fr auto;
+  }
+  &.has-start-img.has-end-img {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  &:hover {
+    background-color: var(--cvos-hint-33);
+  }
+
+  & img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &.align {
+    &--start {
+      justify-items: flex-start;
+    }
+    &--center {
+      justify-items: center;
+    }
+    &--end {
+      justify-items: flex-end;
+    }
+  }
+}
