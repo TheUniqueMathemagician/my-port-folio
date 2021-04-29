@@ -12,4 +12,10 @@
   &.padding {
     padding: $padding;
   }
+  @supports (backdrop-filter: $blur) {
+    &:not(.contrast) {
+      background-color: var(--cvos-paper-50);
+      backdrop-filter: $blur;
+    }
+  }
 }

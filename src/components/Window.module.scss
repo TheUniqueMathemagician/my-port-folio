@@ -37,8 +37,15 @@
 }
 
 .background {
-  background-color: var(--cvos-background);
   position: relative;
   overflow: auto;
   transition: background-color 0.3s ease;
+  background-color: var(--cvos-background);
+}
+
+.root:not(.contrast) .background {
+  @supports (backdrop-filter: $blur) {
+    background-color: var(--cvos-background-50);
+    backdrop-filter: $blur;
+  }
 }

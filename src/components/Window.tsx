@@ -54,6 +54,7 @@ const Window: FunctionComponent<IProps> = ({
   //#region window rendering checks
 
   const rootClasses = [classes["root"]];
+  const backgroundClasses = [classes["background"]];
 
   let width: number | "" = "";
   let height: number | "" = "";
@@ -154,7 +155,7 @@ const Window: FunctionComponent<IProps> = ({
         boundaries={boundaries}
         windowRef={windowRef}
       ></WindowHeader>
-      <div className={classes["background"]}>
+      <div className={backgroundClasses.join(" ")}>
         {component
           ? createElement(component, {
               args: application.args,

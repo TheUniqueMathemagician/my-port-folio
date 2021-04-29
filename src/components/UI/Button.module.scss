@@ -63,9 +63,9 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
         background-color: var(--cvos-#{$color});
       }
     }
-    @supports (backdrop-filter: blur(6px)) {
+    @supports (backdrop-filter: $blur) {
       background-color: var(--cvos-background-33);
-      backdrop-filter: blur(6px);
+      backdrop-filter: $blur;
       @each $color in $colors {
         &.#{$color} {
           background-color: var(--cvos-#{$color}#{-33});

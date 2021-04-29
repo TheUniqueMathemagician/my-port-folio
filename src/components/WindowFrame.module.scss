@@ -1,6 +1,6 @@
 @import "../styles/theme.scss";
 
-.window-frame {
+.root {
   height: 100%;
   position: absolute;
   top: 0;
@@ -10,10 +10,10 @@
   pointer-events: none;
 }
 
-.window-shadow {
+.shadow {
   background: var(--cvos-background-33);
-  box-shadow: inset 0 0 16px 0 var(--cvos-background);
-  border: 1px solid var(--cvos-background);
+  box-shadow: inset 0 0 16px 2px var(--cvos-background);
+  border: 1px solid var(--cvos-divider);
   position: absolute;
   top: 50%;
   bottom: 50%;
@@ -42,7 +42,15 @@
         right: 0;
       }
       transition: all 0.3s ease-in-out;
-      border-radius: 0;
     }
+  }
+}
+
+// TODO: fix this style not being applied
+@supports (backdrop-filter: 0) {
+  .shadow {
+    background: red;
+    backdrop-filter: 10px;
+    border: transparent;
   }
 }

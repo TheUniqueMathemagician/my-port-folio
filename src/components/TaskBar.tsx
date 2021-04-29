@@ -75,13 +75,10 @@ const TaskBarButton: FunctionComponent<ITaskBarButtonProps> = (props) => {
 const TaskBar = () => {
   const [mainShown, setMainShown] = useState<boolean>(false);
   const [langShown, setLangShown] = useState<boolean>(false);
-  const backgroundColor = useSelector(
-    (store) => store.theme.palette.background[store.theme.colorScheme]
+
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
   );
-  const color = useSelector(
-    (store) => store.theme.palette.text[store.theme.colorScheme]
-  );
-  const colorScheme = useSelector((store) => store.theme.colorScheme);
   const instances = useSelector(
     (store) => store.instances.elements,
     (left, right) => {
@@ -108,23 +105,20 @@ const TaskBar = () => {
       return true;
     }
   );
+
   const taskBarRef = useRef<HTMLDivElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);
+
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const rootClasses = [classes["root"]];
+
+  if (contrast) rootClasses.push(classes["contrast"]);
+
   return (
     <>
-      <div
-        className={classes["root"]}
-        ref={taskBarRef}
-        style={{
-          backgroundColor: `${backgroundColor}${
-            colorScheme === EColorScheme.contrast ? "" : "80"
-          }`,
-          color
-        }}
-      >
+      <div className={rootClasses.join(" ")} ref={taskBarRef}>
         <TaskBarButton small onClick={() => setMainShown(!mainShown)}>
           <MenuIcon></MenuIcon>
         </TaskBarButton>

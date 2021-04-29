@@ -1,10 +1,11 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useSelector } from "../hooks/Store";
 import { WindowInstance } from "../store/reducers/Instances";
+import { EColorScheme } from "../types/EColorScheme";
 import { IBoundaries } from "../types/IBoundaries";
 import Window from "./Window";
 
-import styles from "./WindowFrame.module.scss";
+import classes from "./WindowFrame.module.scss";
 
 const WindowFrame = () => {
   const instances = useSelector((store) => store.instances.elements);
@@ -13,6 +14,9 @@ const WindowFrame = () => {
   );
   const shadowShown = useSelector(
     (store) => store.instances.snapShadow.visible
+  );
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
   );
 
   const [boundaries, setBoundaries] = useState<IBoundaries>({
@@ -43,8 +47,13 @@ const WindowFrame = () => {
     };
   }, [resizeHandler]);
 
+  const rootClasses = [classes["root"]];
+  const shadowClasses = [classes["shadow"]];
+
+  if (contrast) shadowClasses.push(classes["contrast"]);
+
   return (
-    <div className={styles["window-frame"]} ref={frameRef}>
+    <div className={rootClasses.join(" ")} ref={frameRef}>
       <div
         style={{
           transitionDuration: shadowShown ? ".3s" : "",
@@ -56,7 +65,7 @@ const WindowFrame = () => {
           top: ShadowPosition.top ?? "",
           visibility: shadowShown ? "visible" : "collapse"
         }}
-        className={styles["window-shadow"]}
+        className={shadowClasses.join(" ")}
       ></div>
       {Object.keys(instances)
         .filter((key) => instances[key].type === "window")

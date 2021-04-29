@@ -18,7 +18,7 @@
     border: 0;
   }
   > .bg {
-    backdrop-filter: blur(6px);
+    backdrop-filter: $blur;
     position: absolute;
     top: 0;
     right: 0;
