@@ -1,5 +1,6 @@
+@import "../../styles/theme.scss";
+
 .root {
-  // display: block;
   color: var(--cvos-text);
 }
 
@@ -8,7 +9,7 @@ td.root {
 }
 
 th.root {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: normal;
 }
 
@@ -25,4 +26,5 @@ th.root {
 .container {
   display: flex;
   align-items: center;
+  padding: $padding/2;
 }

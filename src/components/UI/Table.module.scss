@@ -1,9 +1,19 @@
+@import "../../styles/theme.scss";
+
 .root {
+  border-spacing: 0;
+  border-collapse: collapse;
   &.full-width {
     width: 100%;
   }
-}
-
-.outlined {
-  border: 1px solid var(--cvos-divider);
+  &.outlined {
+    td,
+    th {
+      border: 1px solid var(--cvos-divider);
+    }
+  }
+  &:not(.outlined) {
+    border-spacing: 2px;
+    border-collapse: separate;
+  }
 }

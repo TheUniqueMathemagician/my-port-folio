@@ -18,6 +18,8 @@ import TableRow from "../UI/TableRow";
 import TableCell from "../UI/TableCell";
 import TableBody from "../UI/TableBody";
 import Checkbox from "../UI/Checkbox";
+import TableFoot from "../UI/TableFoot";
+import { EColorScheme } from "../../types/EColorScheme";
 
 const Manager = () => {
   const applications = useSelector((store) => store.applications);
@@ -35,6 +37,9 @@ const Manager = () => {
       return true;
     }
   );
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
+  );
 
   const [panelIndex, setPanelIndex] = useState(0);
 
@@ -50,7 +55,6 @@ const Manager = () => {
   return (
     <div className={classes["root"]}>
       <Tabs
-        separator
         direction="right"
         defaultValue={0}
         onChange={(v: number) => setPanelIndex(v)}
@@ -62,7 +66,7 @@ const Manager = () => {
         <Typography variant="h3">Applications</Typography>
         <Paper outlined spaced>
           <Typography variant="h4">Applications installées</Typography>
-          <Table aria-label="simple table" size="sm">
+          <Table aria-label="Applications" size="sm" outlined={contrast}>
             <TableHead>
               <TableRow>
                 <TableCell heading>Nom</TableCell>
@@ -87,14 +91,14 @@ const Manager = () => {
                       <Checkbox
                         color="primary"
                         checked={applications[key].runOnStartup}
-                        // onChange={(_,) => {
-                        //   dispatch(
-                        //     setRunOnStartup({
-                        //       application: applications[key],
-                        //       runOnStartup: value
-                        //     })
-                        //   );
-                        // }}
+                        onChange={(e) => {
+                          dispatch(
+                            setRunOnStartup({
+                              application: applications[key],
+                              runOnStartup: e.target.checked
+                            })
+                          );
+                        }}
                       ></Checkbox>
                     </form>
                   </TableCell>
@@ -106,6 +110,20 @@ const Manager = () => {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFoot>
+              <TableRow>
+                <TableCell heading>Nom</TableCell>
+                <TableCell heading align="center">
+                  AID
+                </TableCell>
+                <TableCell heading align="center">
+                  Startup
+                </TableCell>
+                <TableCell heading align="center">
+                  Fenêtré
+                </TableCell>
+              </TableRow>
+            </TableFoot>
           </Table>
         </Paper>
       </TabPanel>
@@ -113,7 +131,7 @@ const Manager = () => {
         <Typography variant="h3">Instances</Typography>
         <Paper outlined spaced>
           <Typography variant="h4">Instances actives</Typography>
-          <Table>
+          <Table outlined={contrast} size="sm">
             <TableHead>
               <TableRow>
                 <TableCell>Nom</TableCell>

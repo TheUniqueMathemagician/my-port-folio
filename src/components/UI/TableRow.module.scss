@@ -1,0 +1,5 @@
+.root {
+  &:nth-child(even) {
+    background-color: var(--cvos-hint-33);
+  }
+}

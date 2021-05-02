@@ -1,7 +1,6 @@
 import {
   createElement,
-  FunctionComponent,
-  memo
+  FunctionComponent
   // useEffect,
   // useMemo,
   // useRef
