@@ -69,7 +69,6 @@ const Settings: FunctionComponent<IProps> = (props) => {
         defaultValue={panelIndex}
         onChange={handleTabChange}
         direction="right"
-        separator
       >
         <Tab label="Theme" value={0} active={panelIndex === 0} />
         <Tab label="Langue" value={1} active={panelIndex === 1} />

@@ -1,11 +1,12 @@
 @import "../styles/theme.scss";
 
 .root {
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
   position: absolute;
   display: grid;
   grid-template-rows: auto 1fr;
   pointer-events: all;
+  background-color: var(--cvos-background);
   &:not(.contrast) {
     box-shadow: $shadow;
   }
@@ -38,15 +39,13 @@
 .background {
   position: relative;
   overflow: auto;
-  transition: background-color 0.3s ease;
-  background-color: var(--cvos-background);
 }
 
 .root.contrast {
   border: 1px solid var(--cvos-divider);
 }
 
-.root:not(.contrast) .background {
+.root:not(.contrast) {
   @supports (backdrop-filter: $blur) {
     background-color: var(--cvos-background-50);
     backdrop-filter: $blur;

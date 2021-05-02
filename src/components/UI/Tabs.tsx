@@ -1,6 +1,5 @@
 import classes from "./Tabs.module.scss";
 import {
-  Children,
   FunctionComponent,
   useCallback,
   useEffect,

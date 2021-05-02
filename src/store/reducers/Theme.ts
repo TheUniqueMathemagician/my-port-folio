@@ -57,7 +57,7 @@ const initialState: ThemeState = {
       [EColorScheme.contrast]: "#808000",
       [EColorScheme.dark]: "#808080",
       [EColorScheme.default]: "#808080",
-      [EColorScheme.light]: "#aaaaaa"
+      [EColorScheme.light]: "#808080"
     },
     divider: {
       [EColorScheme.contrast]: "#ffffff",

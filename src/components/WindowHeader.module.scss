@@ -6,7 +6,6 @@
   align-items: center;
   padding: 8px;
   position: relative;
-  background: var(--cvos-background);
   border-bottom: 1px solid var(--cvos-divider);
   transition: background-color 0.3s ease, border-color 0.3s ease;
   cursor: grab;
@@ -69,8 +68,6 @@
 
 @supports (backdrop-filter: $blur) {
   .root:not(.contrast) {
-    background: var(--cvos-background-67);
-    backdrop-filter: $blur;
     border-bottom: 0;
   }
 }
