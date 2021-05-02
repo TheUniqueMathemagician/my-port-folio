@@ -120,7 +120,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     top: 50%;
     left: 50%;
     width: 80%;
-    padding-top: 100%;
+    padding-top: 80%;
     border-radius: 50%;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     background-color: var(--cvos-hint-50);
@@ -163,6 +163,30 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     pointer-events: none;
     border-radius: 50%;
     animation: ripple 0.666s ease-out infinite alternate;
+  }
+}
+
+.is-icon {
+  align-items: center;
+  justify-items: center;
+  grid-template-columns: 1fr;
+  border-radius: 50%;
+  &.xs {
+    padding: 0;
+  }
+  &.sm {
+    padding: $padding/3;
+  }
+  &.md {
+    padding: $padding/2;
+  }
+  &.lg {
+    font-size: 1.2rem;
+    padding: $padding;
+  }
+  &.xl {
+    font-size: 1.5rem;
+    padding: $padding * 1.5;
   }
 }
 

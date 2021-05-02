@@ -7,6 +7,7 @@ interface IProps {
   color?: "primary" | "secondary" | "info" | "success" | "warning" | "error";
   disabled?: boolean;
   endIcon?: boolean;
+  isIcon?: boolean;
   fullWidth?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   outlined?: boolean;
@@ -24,6 +25,7 @@ const Button: FunctionComponent<IProps> = (props) => {
     disabled,
     endIcon,
     fullWidth,
+    isIcon,
     onClick,
     outlined,
     ripple,
@@ -77,6 +79,7 @@ const Button: FunctionComponent<IProps> = (props) => {
   if (align) rootClasses.push(classes[`align--${align}`]);
   if (color) rootClasses.push(classes[color]);
   if (outlined) rootClasses.push(classes["outlined"]);
+  if (isIcon) rootClasses.push(classes["is-icon"]);
 
   return (
     <button
