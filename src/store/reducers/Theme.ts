@@ -49,7 +49,7 @@ const initialState: ThemeState = {
   palette: {
     background: {
       [EColorScheme.contrast]: "#000000",
-      [EColorScheme.dark]: "#161616",
+      [EColorScheme.dark]: "#222222",
       [EColorScheme.default]: "#eeeeee",
       [EColorScheme.light]: "#ffffff"
     },
@@ -62,7 +62,7 @@ const initialState: ThemeState = {
     divider: {
       [EColorScheme.contrast]: "#ffffff",
       [EColorScheme.dark]: "#424242",
-      [EColorScheme.default]: "#161616",
+      [EColorScheme.default]: "#222222",
       [EColorScheme.light]: "#666666"
     },
     error: {
@@ -109,7 +109,7 @@ const initialState: ThemeState = {
     },
     // text: {
     //   [EColorScheme.contrast]: contrastColor("#000000"),
-    //   [EColorScheme.dark]: contrastColor("#161616"),
+    //   [EColorScheme.dark]: contrastColor("#222222"),
     //   [EColorScheme.default]: contrastColor("#fafafa"),
     //   [EColorScheme.light]: contrastColor("#fafafa")
     // },
