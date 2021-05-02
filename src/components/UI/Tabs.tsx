@@ -8,8 +8,6 @@ import {
   useState
 } from "react";
 
-// TODO: needs to be replaced with radios
-
 interface IProps {
   defaultValue?: number;
   direction: "bottom" | "left" | "right" | "top";
@@ -31,6 +29,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
 
   const ref = useRef<HTMLDivElement>(null);
   const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);
+  const [transition, setTransition] = useState<string>("");
   const [indicatorPosition, setIndicatorPosition] = useState<
     IHorizontalPosition | IVerticalPosition
   >({
@@ -100,6 +99,9 @@ const Tabs: FunctionComponent<IProps> = (props) => {
         });
       }
     }
+    setTimeout(() => {
+      setTransition("all 0.3s ease");
+    }, 0);
   }, [defaultValue, vertical]);
 
   const classesList = [classes["root"]];
@@ -138,7 +140,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
           style={{
             top: (indicatorPosition as IVerticalPosition).top,
             height: (indicatorPosition as IVerticalPosition).height,
-            transition: "all 0.3s ease"
+            transition
           }}
         ></div>
       </div>
@@ -156,7 +158,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
           style={{
             left: (indicatorPosition as IHorizontalPosition).left,
             width: (indicatorPosition as IHorizontalPosition).width,
-            transition: "all 0.3s ease"
+            transition
           }}
         ></div>
       </div>
