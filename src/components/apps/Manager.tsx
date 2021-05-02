@@ -20,6 +20,8 @@ import TableBody from "../UI/TableBody";
 import Checkbox from "../UI/Checkbox";
 import TableFoot from "../UI/TableFoot";
 import { EColorScheme } from "../../types/EColorScheme";
+import ButtonGroup from "../UI/ButtonGroup";
+import Button from "../UI/Button";
 
 const Manager = () => {
   const applications = useSelector((store) => store.applications);
@@ -134,9 +136,13 @@ const Manager = () => {
           <Table outlined={contrast} size="sm">
             <TableHead>
               <TableRow>
-                <TableCell>Nom</TableCell>
-                <TableCell align="center">PID</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell heading>Nom</TableCell>
+                <TableCell heading align="center">
+                  PID
+                </TableCell>
+                <TableCell heading align="center">
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -145,9 +151,10 @@ const Manager = () => {
                   <TableCell>{instances[key].displayName}</TableCell>
                   <TableCell align="center">{instances[key].id}</TableCell>
                   <TableCell align="center">
-                    {/* <ButtonGroup disableElevation variant="outlined">
+                    <ButtonGroup>
                       <Button
-                        size="large"
+                        isIcon
+                        size="md"
                         onClick={() => {
                           closeInstance(instances[key]);
                         }}
@@ -156,6 +163,8 @@ const Manager = () => {
                       </Button>
                       {instances[key].type === "window" && (
                         <Button
+                          isIcon
+                          size="md"
                           onClick={() => {
                             const instance = instances[key];
                             if (instance.type === "window") {
@@ -166,7 +175,7 @@ const Manager = () => {
                           <MdCenterFocusStrong color="primary"></MdCenterFocusStrong>
                         </Button>
                       )}
-                    </ButtonGroup> */}
+                    </ButtonGroup>
                   </TableCell>
                 </TableRow>
               ))}
