@@ -293,7 +293,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
     <div
       className={rootClasses.join(" ")}
       style={{
-        pointerEvents: application.dragging ? "none" : "all"
+        cursor: application.dragging ? "grabbing" : "grab"
       }}
       ref={headerRef}
       onMouseDown={handleDragMouseDown}
