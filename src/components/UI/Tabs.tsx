@@ -83,6 +83,25 @@ const Tabs: FunctionComponent<IProps> = (props) => {
     onChange(tabValue);
   }, [tabValue, onChange]);
 
+  useEffect(() => {
+    const button: HTMLButtonElement | null =
+      ref.current?.querySelector(`:nth-child(${(defaultValue || 0) + 1})`) ||
+      null;
+    if (button) {
+      if (vertical) {
+        setIndicatorPosition({
+          top: button.offsetTop,
+          height: button.offsetHeight
+        });
+      } else {
+        setIndicatorPosition({
+          left: button.offsetLeft,
+          width: button.offsetWidth
+        });
+      }
+    }
+  }, [defaultValue, vertical]);
+
   const classesList = [classes["root"]];
 
   switch (direction) {
@@ -113,6 +132,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
         className={classesList.join(" ")}
         ref={ref}
       >
+        {children}
         <div
           className={classes["indicator"]}
           style={{
@@ -121,7 +141,6 @@ const Tabs: FunctionComponent<IProps> = (props) => {
             transition: "all 0.3s ease"
           }}
         ></div>
-        {children}
       </div>
     );
   } else {
@@ -131,6 +150,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
         className={classesList.join(" ")}
         ref={ref}
       >
+        {children}
         <div
           className={classes["indicator"]}
           style={{
@@ -139,7 +159,6 @@ const Tabs: FunctionComponent<IProps> = (props) => {
             transition: "all 0.3s ease"
           }}
         ></div>
-        {children}
       </div>
     );
   }
