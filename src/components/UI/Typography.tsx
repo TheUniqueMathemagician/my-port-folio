@@ -1,6 +1,7 @@
 import {
   createElement,
-  FunctionComponent
+  FunctionComponent,
+  memo
   // useEffect,
   // useMemo,
   // useRef
@@ -8,6 +9,7 @@ import {
 import classes from "./Typography.module.scss";
 
 interface IProps {
+  bold?: boolean;
   noSelect?: boolean;
   noWrap?: boolean;
   variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "body" | "p";
@@ -23,13 +25,14 @@ interface IProps {
 }
 
 const Typography: FunctionComponent<IProps> = (props) => {
-  const { children, color, noSelect, noWrap, tag, variant } = props;
+  const { bold, children, color, noSelect, noWrap, tag, variant } = props;
   const rootClasses = [classes["root"]];
   // const childRef = useRef<HTMLElement>(null);
   // const parentRef = useRef<HTMLDivElement>(null);
 
-  if (variant) rootClasses.push(classes[variant]);
+  if (bold) rootClasses.push(classes["bold"]);
   if (color) rootClasses.push(classes[color]);
+  if (variant) rootClasses.push(classes[variant]);
   if (noSelect) rootClasses.push(classes["no-select"]);
 
   // const resizeObserver = useMemo(
