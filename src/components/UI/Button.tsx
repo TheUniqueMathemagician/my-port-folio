@@ -10,6 +10,7 @@ interface IProps {
   endIcon?: boolean;
   isIcon?: boolean;
   fullWidth?: boolean;
+  focusable?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   outlined?: boolean;
   ripple?: boolean;
@@ -28,6 +29,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       disabled,
       endIcon,
       fullWidth,
+      focusable,
       isIcon,
       onClick,
       outlined,
@@ -61,6 +63,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
               e.clientY -
               (button as HTMLButtonElement).getBoundingClientRect().y;
             const ripples = document.createElement("span");
+            ripples.classList.add(classes["ripple"]);
             ripples.style.left = `${x}px`;
             ripples.style.top = `${y}px`;
             (button as HTMLButtonElement).appendChild(ripples);
@@ -93,6 +96,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         onClick={handleClick}
         disabled={disabled}
         ref={ref}
+        tabIndex={focusable ? 0 : -1}
       >
         {children}
       </button>

@@ -22,7 +22,6 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   transition: background-color 0.3s ease;
   letter-spacing: 0.5px;
   &.full-width {
-    display: block;
     width: 100%;
   }
 
@@ -154,7 +153,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     }
   }
 
-  > span {
+  > span.ripple {
     z-index: -1;
     position: absolute;
     background: var(--cvos-text-50);
