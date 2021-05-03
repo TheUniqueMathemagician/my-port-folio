@@ -78,7 +78,7 @@
 
 @supports (backdrop-filter: $blur) {
   .root:not(.contrast) {
-    background: var(--cvos-background-50);
+    background: var(--cvos-background-33);
     backdrop-filter: $blur;
   }
 }

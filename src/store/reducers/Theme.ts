@@ -50,7 +50,7 @@ const initialState: ThemeState = {
     background: {
       [EColorScheme.contrast]: "#000000",
       [EColorScheme.dark]: "#222222",
-      [EColorScheme.default]: "#eeeeee",
+      [EColorScheme.default]: "#dddddd",
       [EColorScheme.light]: "#ffffff"
     },
     disabled: {
@@ -63,7 +63,7 @@ const initialState: ThemeState = {
       [EColorScheme.contrast]: "#ffffff",
       [EColorScheme.dark]: "#424242",
       [EColorScheme.default]: "#222222",
-      [EColorScheme.light]: "#666666"
+      [EColorScheme.light]: "#424242"
     },
     error: {
       [EColorScheme.contrast]: "#ff0000",
@@ -186,6 +186,9 @@ export const themeSlice = createSlice({
     setColorScheme: (state, action: PayloadAction<EColorScheme>) => {
       state.colorScheme = action.payload;
     },
+    setBackgroundColor: (state, action: PayloadAction<ColorPalette>) => {
+      state.palette.background = action.payload;
+    },
     setPrimaryColor: (state, action: PayloadAction<ColorPalette>) => {
       state.palette.primary = action.payload;
     },
@@ -198,6 +201,7 @@ export const themeSlice = createSlice({
 export const {
   setWorkspaceBackgroundURL,
   setColorScheme,
+  setBackgroundColor,
   setPrimaryColor,
   setSecondaryColor
 } = themeSlice.actions;
