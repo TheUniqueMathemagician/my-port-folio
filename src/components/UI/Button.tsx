@@ -1,5 +1,10 @@
 import classes from "./Button.module.scss";
-import { forwardRef, PropsWithChildren, useCallback } from "react";
+import {
+  createElement,
+  forwardRef,
+  PropsWithChildren,
+  useCallback
+} from "react";
 import { TSize } from "../../types/TSize";
 
 interface IProps {
@@ -17,6 +22,7 @@ interface IProps {
   ripple?: boolean;
   size?: TSize;
   startIcon?: boolean;
+  to?: string;
   variant?: "flat" | "filled" | "blur";
 }
 
@@ -38,6 +44,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       ripple,
       size,
       startIcon,
+      to,
       variant
     } = props;
 
@@ -93,30 +100,21 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     if (isIcon) rootClasses.push(classes["is-icon"]);
     if (className) rootClasses.push(className);
 
-    if (typeof children === "string") {
-      return (
-        <button
-          className={rootClasses.join(" ")}
-          onClick={handleClick}
-          disabled={disabled}
-          ref={ref}
-          tabIndex={focusable ? 0 : -1}
-        >
-          <div>{children}</div>
-        </button>
-      );
-    }
+    let tag = "button";
 
-    return (
-      <button
-        className={rootClasses.join(" ")}
-        onClick={handleClick}
-        disabled={disabled}
-        ref={ref}
-        tabIndex={focusable ? 0 : -1}
-      >
-        {children}
-      </button>
+    if (to) tag = "a";
+
+    return createElement(
+      tag,
+      {
+        className: rootClasses.join(" "),
+        onClick: handleClick,
+        disabled,
+        ref,
+        tabIndex: focusable ? 0 : -1,
+        href: to ?? undefined
+      },
+      typeof children === "string" ? <div>{children}</div> : children
     );
   }
 );

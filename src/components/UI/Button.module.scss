@@ -23,6 +23,10 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   font-size: 1rem;
   transition: background-color 0.3s ease;
   letter-spacing: 0.5px;
+  &:disabled {
+    color: var(--cvos-disabled);
+    cursor: default;
+  }
   &.full-width {
     width: 100%;
   }
@@ -47,7 +51,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
 
   @each $color in $colors {
     &.#{$color} {
-      background-color: var(--cvos-#{$color});
+      color: var(--cvos-#{$color});
     }
   }
 
@@ -70,6 +74,12 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   }
   &.filled {
     background-color: var(--cvos-background);
+    color: var(--cvos-text);
+    @each $color in $colors {
+      &.#{$color} {
+        background-color: var(--cvos-#{$color});
+      }
+    }
   }
   &.contrast {
     border: 1px solid var(--cvos-divider);
@@ -85,7 +95,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     grid-template-columns: auto 1fr auto;
   }
 
-  &::after {
+  &:not(:disabled)::after {
     pointer-events: none;
     content: "";
     position: absolute;
@@ -163,14 +173,19 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   justify-items: center;
   grid-template-columns: 1fr;
   border-radius: 50%;
-  &.xs {
-    padding: 0;
+  height: auto;
+  &::after,
+  &::before {
+    border-radius: 50%;
   }
-  &.sm {
+  &.xs {
     padding: $padding/3;
   }
-  &.md {
+  &.sm {
     padding: $padding/2;
+  }
+  &.md {
+    padding: $padding * 0.75;
   }
   &.lg {
     font-size: 1.2rem;
