@@ -1,5 +1,6 @@
 import classes from "./Tab.module.scss";
 import { FunctionComponent, useCallback, useEffect, useRef } from "react";
+import Button from "./Button";
 
 interface IProps {
   label: string;
@@ -40,9 +41,9 @@ const Tab: FunctionComponent<IProps> = (props) => {
   if (active) rootClasses.push(classes["active"]);
 
   return (
-    <button className={rootClasses.join(" ")} onClick={handleclick} ref={ref}>
+    <Button className={rootClasses.join(" ")} onClick={handleclick} ref={ref}>
       {label}
-    </button>
+    </Button>
   );
 };
 
