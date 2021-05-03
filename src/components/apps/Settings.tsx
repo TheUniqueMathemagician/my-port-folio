@@ -20,6 +20,8 @@ import classes from "./Settings.module.scss";
 import Paper from "../UI/Paper";
 import Button from "../UI/Button";
 
+import { MdInfo } from "react-icons/md";
+
 interface IProps {
   pid: string;
   args: { [key: string]: string };
@@ -90,7 +92,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
       setBackgroundColor({
         [EColorScheme.contrast]: "#000000",
         [EColorScheme.dark]: "#222222",
-        [EColorScheme.default]: "#dddddd",
+        [EColorScheme.default]: "#cccccc",
         [EColorScheme.light]: "#ffffff"
       })
     );
@@ -113,10 +115,10 @@ const Settings: FunctionComponent<IProps> = (props) => {
   const handleResetPrimary = useCallback(() => {
     dispatch(
       setPrimaryColor({
-        [EColorScheme.contrast]: "#3496fe",
-        [EColorScheme.dark]: "#3496fe",
-        [EColorScheme.default]: "#3496fe",
-        [EColorScheme.light]: "#3496fe"
+        [EColorScheme.contrast]: "#ffff00",
+        [EColorScheme.dark]: "#f99eff",
+        [EColorScheme.default]: "#006eff",
+        [EColorScheme.light]: "#599dd9"
       })
     );
   }, [dispatch]);
@@ -174,6 +176,15 @@ const Settings: FunctionComponent<IProps> = (props) => {
               checked={colorScheme === EColorScheme.contrast}
             ></Radio>
           </RadioGroup>
+          <br />
+          <div className={classes["flex"]}>
+            <Typography variant="body" noSelect color="info">
+              <MdInfo></MdInfo>
+            </Typography>
+            <Typography variant="body" noSelect>
+              Le thème contrasté améliore les performances de rendu
+            </Typography>
+          </div>
         </Paper>
         <br />
         <Paper outlined fullWidth spaced>

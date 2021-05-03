@@ -75,7 +75,7 @@ const initialState: ThemeState = {
       [EColorScheme.contrast]: "#808080",
       [EColorScheme.dark]: "#808080",
       [EColorScheme.default]: "#808080",
-      [EColorScheme.light]: "#808080"
+      [EColorScheme.light]: "#aaaaaa"
     },
     info: {
       [EColorScheme.contrast]: "#0080ff",
@@ -90,10 +90,10 @@ const initialState: ThemeState = {
       [EColorScheme.light]: "#fafafa"
     },
     primary: {
-      [EColorScheme.contrast]: "#3496fe",
-      [EColorScheme.dark]: "#3496fe",
-      [EColorScheme.default]: "#3496fe",
-      [EColorScheme.light]: "#3496fe"
+      [EColorScheme.contrast]: "#ffff00",
+      [EColorScheme.dark]: "#f99eff",
+      [EColorScheme.default]: "#006eff",
+      [EColorScheme.light]: "#599dd9"
     },
     secondary: {
       [EColorScheme.contrast]: "#d772f3",
@@ -107,12 +107,6 @@ const initialState: ThemeState = {
       [EColorScheme.default]: "#45d97e",
       [EColorScheme.light]: "#45d97e"
     },
-    // text: {
-    //   [EColorScheme.contrast]: contrastColor("#000000"),
-    //   [EColorScheme.dark]: contrastColor("#222222"),
-    //   [EColorScheme.default]: contrastColor("#fafafa"),
-    //   [EColorScheme.light]: contrastColor("#fafafa")
-    // },
     text: {
       [EColorScheme.contrast]: "#ffffff",
       [EColorScheme.dark]: "#ffffff",
