@@ -51,6 +51,17 @@
     background-color: var(--cvos-primary);
     transform: scale(1);
   }
+  input[readonly] ~ .radio::before {
+    background-color: var(--cvos-text);
+  }
+  input[readonly] ~ .radio {
+    border-color: var(--cvos-text);
+    cursor: default;
+  }
+  input[readonly] ~ .radio ~ .label {
+    color: var(--cvos-text);
+    cursor: default;
+  }
   input:disabled ~ .radio::before {
     background-color: var(--cvos-disabled);
   }

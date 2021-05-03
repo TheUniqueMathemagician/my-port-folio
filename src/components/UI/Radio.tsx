@@ -7,11 +7,12 @@ interface IProps {
   label?: string;
   name: string;
   noSelect?: boolean;
+  readOnly?: boolean;
   value: number;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const { checked, disabeld, label, name, noSelect, value } = props;
+  const { checked, disabeld, label, name, noSelect, readOnly, value } = props;
 
   const rootClasses = [classes["root"]];
 
@@ -33,10 +34,11 @@ const Radio: FunctionComponent<IProps> = (props) => {
     <label className={rootClasses.join(" ")}>
       <input
         checked={checked}
-        disabled={!!disabeld}
+        disabled={disabeld}
         name={name}
         onChange={handleChange}
         type="radio"
+        readOnly={readOnly}
         value={value}
       ></input>
       <div className={classes["radio"]}>
