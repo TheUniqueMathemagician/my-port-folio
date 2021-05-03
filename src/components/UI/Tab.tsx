@@ -41,7 +41,12 @@ const Tab: FunctionComponent<IProps> = (props) => {
   if (active) rootClasses.push(classes["active"]);
 
   return (
-    <Button className={rootClasses.join(" ")} onClick={handleclick} ref={ref}>
+    <Button
+      ripple
+      className={rootClasses.join(" ")}
+      onClick={handleclick}
+      ref={ref}
+    >
       {label}
     </Button>
   );
