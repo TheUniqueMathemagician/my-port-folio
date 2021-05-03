@@ -1,7 +1,11 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { EColorScheme } from "../../types/EColorScheme";
-import { setColorScheme, setPrimaryColor } from "../../store/reducers/Theme";
+import {
+  setBackgroundColor,
+  setColorScheme,
+  setPrimaryColor
+} from "../../store/reducers/Theme";
 
 import Radio from "../UI/Radio";
 import Typography from "../UI/Typography";
@@ -14,6 +18,7 @@ import Container from "../UI/Container";
 
 import classes from "./Settings.module.scss";
 import Paper from "../UI/Paper";
+import Button from "../UI/Button";
 
 interface IProps {
   pid: string;
@@ -32,11 +37,11 @@ const Settings: FunctionComponent<IProps> = (props) => {
   //#region Selectors
 
   const users = useSelector((store) => store.users.elements);
+  const background = useSelector(
+    (store) => store.theme.palette.background[store.theme.colorScheme]
+  );
   const primary = useSelector(
     (store) => store.theme.palette.primary[store.theme.colorScheme]
-    // (left, right) => {
-    //   return false;
-    // }
   );
   const palette = useSelector((store) => store.theme.palette);
   const colorScheme = useSelector((store) => store.theme.colorScheme);
@@ -52,12 +57,69 @@ const Settings: FunctionComponent<IProps> = (props) => {
     const root = document.getElementById("root");
     Object.keys(palette).forEach((key) => {
       const value = ((palette as any)[key] as any)[colorScheme];
+      root?.style.setProperty(`--cvos-${key}`, value);
       root?.style.setProperty(`--cvos-${key}-33`, `${value}55`);
       root?.style.setProperty(`--cvos-${key}-50`, `${value}80`);
       root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`);
-      root?.style.setProperty(`--cvos-${key}`, value);
     });
   }, [palette, colorScheme]);
+
+  const handleThemeChange = useCallback(
+    (v: number) => {
+      dispatch(setColorScheme(v));
+    },
+    [dispatch]
+  );
+
+  const handleBackgroundInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(
+        setBackgroundColor({
+          [EColorScheme.contrast]: e.target.value,
+          [EColorScheme.dark]: e.target.value,
+          [EColorScheme.default]: e.target.value,
+          [EColorScheme.light]: e.target.value
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const handleResetBackground = useCallback(() => {
+    dispatch(
+      setBackgroundColor({
+        [EColorScheme.contrast]: "#000000",
+        [EColorScheme.dark]: "#222222",
+        [EColorScheme.default]: "#dddddd",
+        [EColorScheme.light]: "#ffffff"
+      })
+    );
+  }, [dispatch]);
+
+  const handlePrimaryInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(
+        setPrimaryColor({
+          [EColorScheme.contrast]: e.target.value,
+          [EColorScheme.dark]: e.target.value,
+          [EColorScheme.default]: e.target.value,
+          [EColorScheme.light]: e.target.value
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const handleResetPrimary = useCallback(() => {
+    dispatch(
+      setPrimaryColor({
+        [EColorScheme.contrast]: "#3496fe",
+        [EColorScheme.dark]: "#3496fe",
+        [EColorScheme.default]: "#3496fe",
+        [EColorScheme.light]: "#3496fe"
+      })
+    );
+  }, [dispatch]);
 
   const otherUsersKeys = Object.keys(users).filter(
     (key) => key !== users[currentUserID].id
@@ -82,11 +144,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           <Typography variant="h4" noWrap noSelect>
             Thème de l'interface
           </Typography>
-          <RadioGroup
-            onChange={(value) => {
-              dispatch(setColorScheme(value));
-            }}
-          >
+          <RadioGroup onChange={handleThemeChange}>
             <Radio
               name={pid + "_theme"}
               label="Défaut"
@@ -117,26 +175,54 @@ const Settings: FunctionComponent<IProps> = (props) => {
             ></Radio>
           </RadioGroup>
         </Paper>
-        <Typography variant="h4" noWrap noSelect>
-          Couleur de l'interface
-        </Typography>
-        <form action="" method="post" onSubmit={(e) => e.preventDefault()}>
-          <input
-            type="color"
-            name="head"
-            value={primary}
-            onChange={(e) => {
-              dispatch(
-                setPrimaryColor({
-                  [EColorScheme.contrast]: e.target.value,
-                  [EColorScheme.dark]: e.target.value,
-                  [EColorScheme.default]: e.target.value,
-                  [EColorScheme.light]: e.target.value
-                })
-              );
-            }}
-          ></input>
-        </form>
+        <br />
+        <Paper outlined fullWidth spaced>
+          <Typography variant="h4" noWrap noSelect>
+            Couleur de l'interface
+          </Typography>
+          <div className={classes["flex"]}>
+            <input
+              type="color"
+              name={pid + "_background"}
+              value={background}
+              onChange={handleBackgroundInputChange}
+            ></input>
+            <Button
+              contrast={colorScheme === EColorScheme.contrast}
+              focusable
+              ripple
+              size="md"
+              variant="filled"
+              onClick={handleResetBackground}
+            >
+              Par défaut
+            </Button>
+          </div>
+        </Paper>
+        <br />
+        <Paper outlined fullWidth spaced>
+          <Typography variant="h4" noWrap noSelect>
+            Couleur des éléments interactifs
+          </Typography>
+          <div className={classes["flex"]}>
+            <input
+              type="color"
+              name={pid + "_primary"}
+              value={primary}
+              onChange={handlePrimaryInputChange}
+            ></input>
+            <Button
+              contrast={colorScheme === EColorScheme.contrast}
+              focusable
+              ripple
+              size="md"
+              variant="filled"
+              onClick={handleResetPrimary}
+            >
+              Par défaut
+            </Button>
+          </div>
+        </Paper>
       </TabPanel>
       <TabPanel value={panelIndex} index={1} spaced>
         <Typography variant="h3" noWrap noSelect>
