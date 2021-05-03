@@ -1,4 +1,4 @@
-import { useRef, useState, memo, FunctionComponent, RefObject } from "react";
+import { useRef, useState, memo } from "react";
 
 import classes from "./TaskBar.module.scss";
 import TaskBarMenu from "./TaskBarMenu";
