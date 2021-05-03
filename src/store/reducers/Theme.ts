@@ -29,6 +29,7 @@ interface ThemeState {
     secondary: ColorPalette;
     success: ColorPalette;
     text: ColorPalette;
+    ctext: ColorPalette;
     warning: ColorPalette;
   };
   transparency: boolean;
@@ -49,8 +50,8 @@ const initialState: ThemeState = {
   palette: {
     background: {
       [EColorScheme.contrast]: "#000000",
-      [EColorScheme.dark]: "#222222",
-      [EColorScheme.default]: "#dddddd",
+      [EColorScheme.dark]: "#333333",
+      [EColorScheme.default]: "#cccccc",
       [EColorScheme.light]: "#ffffff"
     },
     disabled: {
@@ -91,9 +92,9 @@ const initialState: ThemeState = {
     },
     primary: {
       [EColorScheme.contrast]: "#ffff00",
-      [EColorScheme.dark]: "#f99eff",
-      [EColorScheme.default]: "#006eff",
-      [EColorScheme.light]: "#599dd9"
+      [EColorScheme.dark]: "#4489f8",
+      [EColorScheme.default]: "#0075db",
+      [EColorScheme.light]: "#0088ff"
     },
     secondary: {
       [EColorScheme.contrast]: "#d772f3",
@@ -112,6 +113,12 @@ const initialState: ThemeState = {
       [EColorScheme.dark]: "#ffffff",
       [EColorScheme.default]: "#000000",
       [EColorScheme.light]: "#000000"
+    },
+    ctext: {
+      [EColorScheme.contrast]: "#000000",
+      [EColorScheme.dark]: "#000000",
+      [EColorScheme.default]: "#ffffff",
+      [EColorScheme.light]: "#ffffff"
     },
     warning: {
       [EColorScheme.contrast]: "#ffff00",

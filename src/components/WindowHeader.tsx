@@ -55,11 +55,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
   //#region button handlers
 
   const handleDragDoubleClick = useCallback(() => {
-    if (application.maximized) {
-      dispatch(setMaximized({ application, maximized: ESnap.none }));
-    } else {
-      dispatch(setMaximized({ application, maximized: ESnap.top }));
-    }
+    dispatch(setMaximized({ application, maximized: ESnap.top }));
   }, [application, dispatch]);
 
   const handleRedClick = useCallback(

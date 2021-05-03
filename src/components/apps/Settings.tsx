@@ -91,7 +91,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
     dispatch(
       setBackgroundColor({
         [EColorScheme.contrast]: "#000000",
-        [EColorScheme.dark]: "#222222",
+        [EColorScheme.dark]: "#333333",
         [EColorScheme.default]: "#cccccc",
         [EColorScheme.light]: "#ffffff"
       })
@@ -116,9 +116,9 @@ const Settings: FunctionComponent<IProps> = (props) => {
     dispatch(
       setPrimaryColor({
         [EColorScheme.contrast]: "#ffff00",
-        [EColorScheme.dark]: "#f99eff",
-        [EColorScheme.default]: "#006eff",
-        [EColorScheme.light]: "#599dd9"
+        [EColorScheme.dark]: "#4489f8",
+        [EColorScheme.default]: "#0075db",
+        [EColorScheme.light]: "#0088ff"
       })
     );
   }, [dispatch]);
@@ -133,6 +133,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         defaultValue={panelIndex}
         onChange={handleTabChange}
         direction="right"
+        separator={colorScheme === EColorScheme.contrast}
       >
         <Tab label="Theme" value={0} active={panelIndex === 0} />
         <Tab label="Langue" value={1} active={panelIndex === 1} />

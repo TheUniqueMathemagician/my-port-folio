@@ -60,6 +60,7 @@ const Manager = () => {
         direction="right"
         defaultValue={0}
         onChange={(v: number) => setPanelIndex(v)}
+        separator={contrast}
       >
         <Tab label="Applications" active={panelIndex === 0} value={0} />
         <Tab label="Instances" active={panelIndex === 1} value={1} />
