@@ -112,7 +112,9 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         disabled,
         ref,
         tabIndex: focusable ? 0 : -1,
-        href: to ?? undefined
+        href: to ?? undefined,
+        rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
+        target: to?.startsWith("/") ? undefined : "_blank"
       },
       typeof children === "string" ? <div>{children}</div> : children
     );
