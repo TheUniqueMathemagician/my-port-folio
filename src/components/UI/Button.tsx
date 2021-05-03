@@ -6,6 +6,7 @@ interface IProps {
   align?: "center" | "end" | "start";
   color?: "primary" | "secondary" | "info" | "success" | "warning" | "error";
   className?: string;
+  contrast?: boolean;
   disabled?: boolean;
   endIcon?: boolean;
   isIcon?: boolean;
@@ -26,6 +27,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       children,
       className,
       color,
+      contrast,
       disabled,
       endIcon,
       fullWidth,
@@ -86,9 +88,24 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     if (endIcon) rootClasses.push(classes["has-end-img"]);
     if (align) rootClasses.push(classes[`align--${align}`]);
     if (color) rootClasses.push(classes[color]);
+    if (contrast) rootClasses.push(classes["contrast"]);
     if (outlined) rootClasses.push(classes["outlined"]);
     if (isIcon) rootClasses.push(classes["is-icon"]);
     if (className) rootClasses.push(className);
+
+    if (typeof children === "string") {
+      return (
+        <button
+          className={rootClasses.join(" ")}
+          onClick={handleClick}
+          disabled={disabled}
+          ref={ref}
+          tabIndex={focusable ? 0 : -1}
+        >
+          <div>{children}</div>
+        </button>
+      );
+    }
 
     return (
       <button

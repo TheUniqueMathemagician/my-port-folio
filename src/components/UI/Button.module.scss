@@ -54,28 +54,24 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   &.outlined {
     border: 1px solid var(--cvos-divider);
   }
-  &.flat {
-    background-color: var(--cvos-background);
-  }
   &.blur {
     background-color: var(--cvos-background);
-    @each $color in $colors {
-      &.#{$color} {
-        background-color: var(--cvos-#{$color});
-      }
-    }
-    @supports (backdrop-filter: $blur) {
-      background-color: var(--cvos-background-33);
-      backdrop-filter: $blur;
-      @each $color in $colors {
-        &.#{$color} {
-          background-color: var(--cvos-#{$color}#{-33});
+    &:not(.contrast) {
+      @supports (backdrop-filter: $blur) {
+        background-color: var(--cvos-background-33);
+        backdrop-filter: $blur;
+        @each $color in $colors {
+          &.#{$color} {
+            background-color: var(--cvos-#{$color}#{-33});
+          }
         }
       }
     }
   }
   &.filled {
     background-color: var(--cvos-background);
+  }
+  &.contrast {
     border: 1px solid var(--cvos-divider);
   }
 
@@ -92,14 +88,12 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   &::after {
     pointer-events: none;
     content: "";
-    z-index: -1;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     opacity: 0;
-    // transition: background-color 0.3s ease;
     transition: opacity 0.3s ease;
     background-color: var(--cvos-hint-33);
   }
@@ -113,7 +107,6 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   &::before {
     pointer-events: none;
     content: "";
-    z-index: -1;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -129,8 +122,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     opacity: 1;
     transform: translateX(-50%) translateY(-50%) scale(1);
   }
-
-  &:active::before {
+  &:active:focus::before {
     opacity: 1;
     transform: translateX(-50%) translateY(-50%) scale(1.5);
   }
@@ -152,15 +144,17 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     }
   }
 
-  > span.ripple {
-    z-index: -1;
+  > .ripple {
     position: absolute;
     background: var(--cvos-text-50);
     width: 250%;
     padding-top: 250%;
     pointer-events: none;
     border-radius: 50%;
-    animation: ripple 0.666s ease-out infinite alternate;
+    animation: ripple 0.666s ease-out;
+  }
+  > :not(.ripple) {
+    z-index: 1;
   }
 }
 
