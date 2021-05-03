@@ -15,62 +15,7 @@ import { setHasRanStartupApplications } from "../store/reducers/OS";
 import TaskBarTimeDate from "./TaskBarTimeDate";
 import MenuIcon from "./icons/Menu";
 import { EColorScheme } from "../types/EColorScheme";
-
-interface ITaskBarButtonProps {
-  cref?: RefObject<HTMLButtonElement>;
-  disabled?: boolean;
-  onClick?: () => void;
-  small?: boolean;
-  startIcon?: boolean;
-  endIcon?: boolean;
-  tabIndex?: number;
-  fullWidth?: boolean;
-  align?: "start" | "center" | "end";
-}
-
-const TaskBarButton: FunctionComponent<ITaskBarButtonProps> = (props) => {
-  const {
-    align,
-    small,
-    children,
-    cref,
-    startIcon,
-    endIcon,
-    fullWidth,
-    ...others
-  } = props;
-  const classNames = [classes["menu-button"]];
-  if (startIcon) {
-    classNames.push(classes["has-start-img"]);
-  }
-  if (endIcon) {
-    classNames.push(classes["has-end-img"]);
-  }
-  if (small) {
-    classNames.push(classes["small"]);
-  }
-  switch (align) {
-    case "center":
-      classNames.push(classes["align--center"]);
-      break;
-    case "end":
-      classNames.push(classes["align--end"]);
-      break;
-    case "start":
-      classNames.push(classes["align--start"]);
-      break;
-    default:
-      break;
-  }
-  if (fullWidth) {
-    classNames.push(classes["full-width"]);
-  }
-  return (
-    <button {...others} className={classNames.join(" ")} ref={cref}>
-      {children}
-    </button>
-  );
-};
+import Button from "./UI/Button";
 
 const TaskBar = () => {
   const [mainShown, setMainShown] = useState<boolean>(false);
@@ -119,17 +64,17 @@ const TaskBar = () => {
   return (
     <>
       <div className={rootClasses.join(" ")} ref={taskBarRef}>
-        <TaskBarButton small onClick={() => setMainShown(!mainShown)}>
+        <Button size="md" onClick={() => setMainShown(!mainShown)}>
           <MenuIcon></MenuIcon>
-        </TaskBarButton>
+        </Button>
         <Divider inset margin vertical></Divider>
         <div className={classes["apps"]}>
           {Object.keys(instances)
             .map((x) => instances[x])
             .filter((app) => app.type === "window")
             .map((application) => (
-              <TaskBarButton
-                small
+              <Button
+                size="md"
                 key={application.id}
                 onClick={() => {
                   if (application.type === "window") {
@@ -139,21 +84,22 @@ const TaskBar = () => {
                 }}
               >
                 <img src={application.icon} alt={application.displayName} />
-              </TaskBarButton>
+              </Button>
             ))}
         </div>
         <Divider inset margin vertical></Divider>
-        <TaskBarButton
-          small
-          cref={langButtonRef}
+        <Button
+          size="lg"
+          ripple
+          ref={langButtonRef}
           onClick={() => setLangShown(!langShown)}
         >
           Français
-        </TaskBarButton>
+        </Button>
         <Divider inset margin vertical></Divider>
-        <TaskBarButton small disabled>
+        <Button size="md" disabled ripple>
           <TaskBarTimeDate></TaskBarTimeDate>
-        </TaskBarButton>
+        </Button>
       </div>
       <TaskBarMenu
         shown={mainShown}
@@ -169,8 +115,10 @@ const TaskBar = () => {
             .filter((key) => !!applications[key].shortcut)
             .map((key) => (
               <li key={key}>
-                <TaskBarButton
-                  tabIndex={mainShown ? 0 : -1}
+                <Button
+                  ripple
+                  size="lg"
+                  focusable={mainShown}
                   onClick={() => {
                     dispatch(
                       runApplication({
@@ -189,17 +137,19 @@ const TaskBar = () => {
                     src={applications[key].icon}
                   ></img>
                   <span>{applications[key].displayName} </span>
-                </TaskBarButton>
+                </Button>
               </li>
             ))}
         </ul>
         <Divider inset margin></Divider>
         <ul>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              size="lg"
+              ripple
+              focusable={mainShown}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -212,13 +162,15 @@ const TaskBar = () => {
               }}
             >
               Profil
-            </TaskBarButton>
+            </Button>
           </li>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              size="lg"
+              ripple
+              focusable={mainShown}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -231,13 +183,15 @@ const TaskBar = () => {
               }}
             >
               Paramètres
-            </TaskBarButton>
+            </Button>
           </li>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              ripple
+              size="lg"
+              focusable={mainShown}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -250,28 +204,32 @@ const TaskBar = () => {
               }}
             >
               Applications
-            </TaskBarButton>
+            </Button>
           </li>
         </ul>
         <Divider inset margin></Divider>
         <ul>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              size="lg"
+              ripple
+              focusable={mainShown}
               onClick={() => {
                 history.push("/lock");
               }}
             >
               Verouiller
-            </TaskBarButton>
+            </Button>
           </li>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              size="lg"
+              ripple
+              focusable={mainShown}
               onClick={() => {
                 history.push("/lock");
                 Object.keys(instances).forEach((key) => {
@@ -281,13 +239,15 @@ const TaskBar = () => {
               }}
             >
               Se déconnecter
-            </TaskBarButton>
+            </Button>
           </li>
           <li>
-            <TaskBarButton
+            <Button
               align="start"
               fullWidth
-              tabIndex={mainShown ? 0 : -1}
+              size="lg"
+              ripple
+              focusable={mainShown}
               onClick={() => {
                 history.push("/boot");
                 Object.keys(instances).forEach((key) => {
@@ -297,7 +257,7 @@ const TaskBar = () => {
               }}
             >
               Éteindre
-            </TaskBarButton>
+            </Button>
           </li>
         </ul>
       </TaskBarMenu>
@@ -312,14 +272,16 @@ const TaskBar = () => {
       >
         <ul>
           <li>
-            <TaskBarButton
+            <Button
               fullWidth
+              size="lg"
+              ripple
               onClick={() => {
                 setLangShown(false);
               }}
             >
               Français
-            </TaskBarButton>
+            </Button>
           </li>
         </ul>
       </TaskBarMenu>
@@ -329,4 +291,4 @@ const TaskBar = () => {
 
 export default memo(TaskBar);
 
-// TODO: Add colors for the lasts 3 TaskBarButtons
+// TODO: Add colors for the lasts 3 Buttons

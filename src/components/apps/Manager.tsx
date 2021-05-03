@@ -154,6 +154,7 @@ const Manager = () => {
                     <ButtonGroup>
                       <Button
                         isIcon
+                        ripple
                         size="md"
                         onClick={() => {
                           closeInstance(instances[key]);
@@ -164,6 +165,7 @@ const Manager = () => {
                       {instances[key].type === "window" && (
                         <Button
                           isIcon
+                          ripple
                           size="md"
                           onClick={() => {
                             const instance = instances[key];
