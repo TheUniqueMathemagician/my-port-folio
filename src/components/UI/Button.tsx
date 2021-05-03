@@ -19,6 +19,7 @@ interface IProps {
   focusable?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   outlined?: boolean;
+  readOnly?: boolean;
   ripple?: boolean;
   size?: TSize;
   startIcon?: boolean;
@@ -41,6 +42,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       isIcon,
       onClick,
       outlined,
+      readOnly,
       ripple,
       size,
       startIcon,
@@ -50,7 +52,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
 
     const handleClick = useCallback(
       (e: React.MouseEvent<any, MouseEvent>) => {
-        if (ripple) {
+        if (ripple && !readOnly) {
           let button: HTMLButtonElement | null = null;
           const findButton = (element: HTMLElement) => {
             if (
@@ -83,7 +85,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         }
         onClick?.(e);
       },
-      [onClick, ripple]
+      [onClick, ripple, readOnly]
     );
 
     const rootClasses = [classes["root"]];
@@ -111,9 +113,10 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         onClick: handleClick,
         disabled,
         ref,
-        tabIndex: focusable ? 0 : -1,
+        tabIndex: focusable && !readOnly ? 0 : -1,
         href: to ?? undefined,
         rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
+        readOnly,
         target: to?.startsWith("/") ? undefined : "_blank"
       },
       typeof children === "string" ? <div>{children}</div> : children

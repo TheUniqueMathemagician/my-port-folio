@@ -23,6 +23,12 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   font-size: 1rem;
   transition: background-color 0.3s ease;
   letter-spacing: 0.5px;
+  &:read-only {
+    color: var(--cvos-text);
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
+  }
   &:disabled {
     color: var(--cvos-disabled);
     cursor: default;
@@ -95,7 +101,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     grid-template-columns: auto 1fr auto;
   }
 
-  &:not(:disabled)::after {
+  &:not(:disabled):not(:read-only)::after {
     pointer-events: none;
     content: "";
     position: absolute;
