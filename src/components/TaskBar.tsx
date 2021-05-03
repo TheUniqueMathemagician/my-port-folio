@@ -1,4 +1,4 @@
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useCallback } from "react";
 
 import classes from "./TaskBar.module.scss";
 import TaskBarMenu from "./TaskBarMenu";
@@ -16,10 +16,25 @@ import TaskBarTimeDate from "./TaskBarTimeDate";
 import MenuIcon from "./icons/Menu";
 import { EColorScheme } from "../types/EColorScheme";
 import Button from "./UI/Button";
+import {
+  MdLock,
+  MdMail,
+  MdPhone,
+  MdPowerSettingsNew,
+  MdSend
+} from "react-icons/md";
+
+import { IoLogOutOutline } from "react-icons/io5";
+
+enum EMenuShown {
+  none,
+  main,
+  contact,
+  language
+}
 
 const TaskBar = () => {
-  const [mainShown, setMainShown] = useState<boolean>(false);
-  const [langShown, setLangShown] = useState<boolean>(false);
+  const [menuShown, setMenuShown] = useState<EMenuShown>(EMenuShown.none);
 
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
@@ -51,15 +66,35 @@ const TaskBar = () => {
     }
   );
 
-  const taskBarRef = useRef<HTMLDivElement>(null);
+  const contactButtonRef = useRef<HTMLButtonElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);
+  const taskBarRef = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const closeMenu = useCallback(() => {
+    setMenuShown(EMenuShown.none);
+  }, []);
+
   const rootClasses = [classes["root"]];
 
   if (contrast) rootClasses.push(classes["contrast"]);
+
+  //#region Menu position calculations
+
+  // TOO: need fix
+
+  // const contactMenuLeftPosition = 0;
+  // const contactButton: HTMLButtonElement = contactButtonRef.current as HTMLButtonElement;
+  // if (contactButton) {
+  //   const clientWidth = contactButton.clientWidth;
+  //   const offsetLeft = contactButton.offsetLeft;
+  // }
+
+  // const langMenuLeftPosition = 0;
+
+  //#endregion
 
   return (
     <>
@@ -68,7 +103,13 @@ const TaskBar = () => {
           size="md"
           focusable
           ripple
-          onClick={() => setMainShown(!mainShown)}
+          onClick={() => {
+            if (menuShown === EMenuShown.main) {
+              closeMenu();
+            } else {
+              setMenuShown(EMenuShown.main);
+            }
+          }}
         >
           <MenuIcon></MenuIcon>
         </Button>
@@ -99,8 +140,30 @@ const TaskBar = () => {
           size="md"
           ripple
           focusable
+          ref={contactButtonRef}
+          onClick={() => {
+            if (menuShown === EMenuShown.contact) {
+              closeMenu();
+            } else {
+              setMenuShown(EMenuShown.contact);
+            }
+          }}
+        >
+          <MdSend></MdSend>
+        </Button>
+        <Divider inset margin vertical></Divider>
+        <Button
+          size="md"
+          ripple
+          focusable
           ref={langButtonRef}
-          onClick={() => setLangShown(!langShown)}
+          onClick={() => {
+            if (menuShown === EMenuShown.language) {
+              closeMenu();
+            } else {
+              setMenuShown(EMenuShown.language);
+            }
+          }}
         >
           Français
         </Button>
@@ -110,7 +173,7 @@ const TaskBar = () => {
         </Button>
       </div>
       <TaskBarMenu
-        shown={mainShown}
+        shown={menuShown === EMenuShown.main}
         position={{
           bottom: taskBarRef.current?.clientHeight ?? 0,
           left: 0,
@@ -126,7 +189,7 @@ const TaskBar = () => {
                 <Button
                   ripple
                   size="md"
-                  focusable={mainShown}
+                  focusable={menuShown === EMenuShown.main}
                   onClick={() => {
                     dispatch(
                       runApplication({
@@ -134,7 +197,7 @@ const TaskBar = () => {
                         args: {}
                       })
                     );
-                    setMainShown(false);
+                    closeMenu();
                   }}
                   startIcon
                   align="start"
@@ -157,7 +220,7 @@ const TaskBar = () => {
               fullWidth
               size="md"
               ripple
-              focusable={mainShown}
+              focusable={menuShown === EMenuShown.main}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -166,7 +229,7 @@ const TaskBar = () => {
                     args: { tab: "profile" }
                   })
                 );
-                setMainShown(false);
+                closeMenu();
               }}
             >
               Profil
@@ -178,7 +241,7 @@ const TaskBar = () => {
               fullWidth
               size="md"
               ripple
-              focusable={mainShown}
+              focusable={menuShown === EMenuShown.main}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -187,7 +250,7 @@ const TaskBar = () => {
                     args: {}
                   })
                 );
-                setMainShown(false);
+                closeMenu();
               }}
             >
               Paramètres
@@ -199,7 +262,7 @@ const TaskBar = () => {
               fullWidth
               ripple
               size="md"
-              focusable={mainShown}
+              focusable={menuShown === EMenuShown.main}
               onClick={() => {
                 const keys = Object.keys(applications);
                 dispatch(
@@ -208,7 +271,7 @@ const TaskBar = () => {
                     args: {}
                   })
                 );
-                setMainShown(false);
+                closeMenu();
               }}
             >
               Applications
@@ -220,24 +283,26 @@ const TaskBar = () => {
           <li>
             <Button
               align="start"
+              color="success"
+              focusable={menuShown === EMenuShown.main}
               fullWidth
-              size="md"
-              ripple
-              focusable={mainShown}
               onClick={() => {
                 history.push("/lock");
               }}
+              ripple
+              size="md"
+              startIcon
             >
-              Verouiller
+              <MdLock></MdLock>
+              <span>Verouiller</span>
             </Button>
           </li>
           <li>
             <Button
               align="start"
+              color="warning"
+              focusable={menuShown === EMenuShown.main}
               fullWidth
-              size="md"
-              ripple
-              focusable={mainShown}
               onClick={() => {
                 history.push("/lock");
                 Object.keys(instances).forEach((key) => {
@@ -245,17 +310,20 @@ const TaskBar = () => {
                 });
                 dispatch(setHasRanStartupApplications(false));
               }}
+              ripple
+              size="md"
+              startIcon
             >
-              Se déconnecter
+              <IoLogOutOutline></IoLogOutOutline>
+              <span>Se déconnecter</span>
             </Button>
           </li>
           <li>
             <Button
               align="start"
+              color="error"
+              focusable={menuShown === EMenuShown.main}
               fullWidth
-              size="md"
-              ripple
-              focusable={mainShown}
               onClick={() => {
                 history.push("/boot");
                 Object.keys(instances).forEach((key) => {
@@ -263,17 +331,22 @@ const TaskBar = () => {
                 });
                 dispatch(setHasRanStartupApplications(false));
               }}
+              ripple
+              size="md"
+              startIcon
             >
-              Éteindre
+              <MdPowerSettingsNew></MdPowerSettingsNew>
+              <span>Éteindre</span>
             </Button>
           </li>
         </ul>
       </TaskBarMenu>
       <TaskBarMenu
-        shown={langShown}
+        shown={menuShown === EMenuShown.contact}
         position={{
           bottom: taskBarRef.current?.clientHeight ?? 0,
-          left: langButtonRef.current?.offsetLeft ?? 0,
+          // left: contactMenuLeftPosition,
+          left: null,
           right: 0,
           top: null
         }}
@@ -281,12 +354,53 @@ const TaskBar = () => {
         <ul>
           <li>
             <Button
+              align="start"
+              size="md"
+              focusable={menuShown === EMenuShown.contact}
               fullWidth
+              startIcon
+              to="mailto: tamburrini.yannick@gmail.com"
+              onClick={closeMenu}
+            >
+              <MdMail></MdMail>
+              <span>tamburrini.yannick@gmail.com</span>
+            </Button>
+          </li>
+          <li>
+            <Button
+              align="start"
+              size="md"
+              focusable={menuShown === EMenuShown.contact}
+              fullWidth
+              startIcon
+              to="tel:+32 498 62 77 16"
+              onClick={closeMenu}
+            >
+              <MdPhone></MdPhone>
+              <span>+32 498 62 77 16</span>
+            </Button>
+          </li>
+        </ul>
+      </TaskBarMenu>
+      <TaskBarMenu
+        shown={menuShown === EMenuShown.language}
+        position={{
+          bottom: taskBarRef.current?.clientHeight ?? 0,
+          // left: langMenuLeftPosition,
+          left: null,
+          right: 0,
+          top: null
+        }}
+      >
+        <ul>
+          <li>
+            <Button
+              align="start"
+              fullWidth
+              focusable
               size="md"
               ripple
-              onClick={() => {
-                setLangShown(false);
-              }}
+              onClick={closeMenu}
             >
               Français
             </Button>
@@ -298,5 +412,3 @@ const TaskBar = () => {
 };
 
 export default memo(TaskBar);
-
-// TODO: Add colors for the lasts 3 Buttons
