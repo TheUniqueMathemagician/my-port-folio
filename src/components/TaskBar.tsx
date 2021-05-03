@@ -64,7 +64,12 @@ const TaskBar = () => {
   return (
     <>
       <div className={rootClasses.join(" ")} ref={taskBarRef}>
-        <Button size="md" onClick={() => setMainShown(!mainShown)}>
+        <Button
+          size="md"
+          focusable
+          ripple
+          onClick={() => setMainShown(!mainShown)}
+        >
           <MenuIcon></MenuIcon>
         </Button>
         <Divider inset margin vertical></Divider>
@@ -75,6 +80,8 @@ const TaskBar = () => {
             .map((application) => (
               <Button
                 size="md"
+                ripple
+                focusable
                 key={application.id}
                 onClick={() => {
                   if (application.type === "window") {
@@ -89,8 +96,9 @@ const TaskBar = () => {
         </div>
         <Divider inset margin vertical></Divider>
         <Button
-          size="lg"
+          size="md"
           ripple
+          focusable
           ref={langButtonRef}
           onClick={() => setLangShown(!langShown)}
         >
@@ -117,7 +125,7 @@ const TaskBar = () => {
               <li key={key}>
                 <Button
                   ripple
-                  size="lg"
+                  size="md"
                   focusable={mainShown}
                   onClick={() => {
                     dispatch(
@@ -147,7 +155,7 @@ const TaskBar = () => {
             <Button
               align="start"
               fullWidth
-              size="lg"
+              size="md"
               ripple
               focusable={mainShown}
               onClick={() => {
@@ -168,7 +176,7 @@ const TaskBar = () => {
             <Button
               align="start"
               fullWidth
-              size="lg"
+              size="md"
               ripple
               focusable={mainShown}
               onClick={() => {
@@ -190,7 +198,7 @@ const TaskBar = () => {
               align="start"
               fullWidth
               ripple
-              size="lg"
+              size="md"
               focusable={mainShown}
               onClick={() => {
                 const keys = Object.keys(applications);
@@ -213,7 +221,7 @@ const TaskBar = () => {
             <Button
               align="start"
               fullWidth
-              size="lg"
+              size="md"
               ripple
               focusable={mainShown}
               onClick={() => {
@@ -227,7 +235,7 @@ const TaskBar = () => {
             <Button
               align="start"
               fullWidth
-              size="lg"
+              size="md"
               ripple
               focusable={mainShown}
               onClick={() => {
@@ -245,7 +253,7 @@ const TaskBar = () => {
             <Button
               align="start"
               fullWidth
-              size="lg"
+              size="md"
               ripple
               focusable={mainShown}
               onClick={() => {
@@ -274,7 +282,7 @@ const TaskBar = () => {
           <li>
             <Button
               fullWidth
-              size="lg"
+              size="md"
               ripple
               onClick={() => {
                 setLangShown(false);

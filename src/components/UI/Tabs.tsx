@@ -3,6 +3,7 @@ import {
   FunctionComponent,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
@@ -82,7 +83,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
     onChange(tabValue);
   }, [tabValue, onChange]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const button: HTMLButtonElement | null =
       ref.current?.querySelector(`:nth-child(${(defaultValue || 0) + 1})`) ||
       null;
@@ -92,16 +93,19 @@ const Tabs: FunctionComponent<IProps> = (props) => {
           top: button.offsetTop,
           height: button.offsetHeight
         });
+        setTimeout(() => {
+          setTransition("top 0.3s ease,height 0.3s ease");
+        }, 0);
       } else {
         setIndicatorPosition({
           left: button.offsetLeft,
           width: button.offsetWidth
         });
+        setTimeout(() => {
+          setTransition("left 0.3s ease,width 0.3s ease");
+        }, 0);
       }
     }
-    setTimeout(() => {
-      setTransition("all 0.3s ease");
-    }, 0);
   }, [defaultValue, vertical]);
 
   const classesList = [classes["root"]];

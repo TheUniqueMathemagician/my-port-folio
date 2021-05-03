@@ -43,6 +43,8 @@ const Tab: FunctionComponent<IProps> = (props) => {
   return (
     <Button
       ripple
+      size="md"
+      focusable
       className={rootClasses.join(" ")}
       onClick={handleclick}
       ref={ref}

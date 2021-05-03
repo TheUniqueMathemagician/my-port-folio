@@ -1,3 +1,5 @@
+// TODO: fix strange issue on hover ( a shadow is appearing )
+
 @import "../../styles/theme.scss";
 
 $colors: ("primary", "secondary", "info", "success", "warning", "error");
@@ -90,7 +92,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   &::after {
     pointer-events: none;
     content: "";
-    z-index: -2;
+    z-index: -1;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -104,9 +106,6 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   &:hover::after {
     opacity: 0.5;
   }
-  // &:hover:not(:focus)::after {
-  //   opacity: 1;
-  // }
   &:hover:focus::after {
     transition: opacity 0 0;
   }

@@ -38,7 +38,9 @@ const TaskBarMenu: React.FunctionComponent<IProps> = ({
         right: position.right ?? "",
         pointerEvents: shown ? "all" : "none",
         opacity: shown ? 1 : 0,
-        transition: "all .3s ease"
+        transitionDuration: "0.3s",
+        transitionProperty: "top,left,bottom,right",
+        transitionTimingFunction: "ease"
       }}
     >
       {children}

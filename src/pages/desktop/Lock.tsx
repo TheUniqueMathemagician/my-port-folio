@@ -23,7 +23,9 @@ export default function Lock() {
           src={users[currentUserID].profileImage}
         ></Avatar>
         <Button
-          variant="filled"
+          ripple
+          variant="blur"
+          focusable
           size="md"
           onClick={() => history.push("/workspace")}
         >
@@ -35,6 +37,7 @@ export default function Lock() {
               startIcon
               variant="blur"
               size="md"
+              focusable
               ripple
               key={key}
               onClick={() => {

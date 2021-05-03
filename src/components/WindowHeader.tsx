@@ -87,7 +87,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
   const handleGreenClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      dispatch(sendToFront(application));
+      e.stopPropagation();
       dispatch(setMinimized({ application, minimized: true }));
     },
     [application, dispatch]

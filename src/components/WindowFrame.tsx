@@ -58,7 +58,7 @@ const WindowFrame = () => {
         style={{
           transitionDuration: shadowShown ? ".3s" : "",
           transitionTimingFunction: "ease",
-          transitionProperty: "all",
+          transitionProperty: "bottom, top,left,right",
           bottom: ShadowPosition.bottom ?? "",
           left: ShadowPosition.left ?? "",
           right: ShadowPosition.right ?? "",
