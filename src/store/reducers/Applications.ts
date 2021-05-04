@@ -5,6 +5,7 @@ import Contact from "../../components/apps/Contact";
 import Education from "../../components/apps/Education";
 import Experience from "../../components/apps/Experience";
 import Manager from "../../components/apps/Manager";
+import Maps from "../../components/apps/Maps";
 import Settings from "../../components/apps/Settings";
 import Snake from "../../components/apps/Snake";
 import Welcome from "../../components/apps/Welcome";
@@ -18,6 +19,7 @@ export enum EApplications {
   Education,
   Experience,
   Manager,
+  Maps,
   Settings,
   Snake,
   Welcome
@@ -90,6 +92,22 @@ initialState[aid] = {
   minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
+  runOnStartup: false,
+  shortcut: "",
+  type: "window"
+};
+
+aid = generateID();
+initialState[aid] = {
+  component: EApplications.Maps,
+  dimensions: defaultDimensions,
+  displayName: "Maps",
+  icon: "",
+  id: aid,
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
+  position: { bottom: null, left: null, right: null, top: null },
+  resizable: false,
   runOnStartup: false,
   shortcut: "",
   type: "window"
@@ -200,6 +218,7 @@ export const applicationsMap = new Map<
   [EApplications.Education, Education],
   [EApplications.Experience, Experience],
   [EApplications.Manager, Manager],
+  [EApplications.Maps, Maps],
   [EApplications.Settings, Settings],
   [EApplications.Snake, Snake],
   [EApplications.Welcome, Welcome]

@@ -168,7 +168,7 @@ const TaskBar = () => {
           Français
         </Button>
         <Divider inset margin vertical></Divider>
-        <Button size="md" disabled ripple>
+        <Button size="md" readOnly ripple>
           <TaskBarTimeDate></TaskBarTimeDate>
         </Button>
       </div>
