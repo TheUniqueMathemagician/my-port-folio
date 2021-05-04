@@ -1,5 +1,5 @@
 import classes from "./Avatar.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo } from "react";
 import { TSize } from "../../types/TSize";
 
 interface IProps {
@@ -18,10 +18,17 @@ const Avatar: FunctionComponent<IProps> = (props) => {
   if (size) rootClasses.push(classes[size]);
 
   return (
-    <img alt={alt} src={src} className={rootClasses.join(" ")}>
+    <img
+      onDragStart={(e) => {
+        e.preventDefault();
+      }}
+      alt={alt}
+      src={src}
+      className={rootClasses.join(" ")}
+    >
       {children}
     </img>
   );
 };
 
-export default Avatar;
+export default memo(Avatar);
