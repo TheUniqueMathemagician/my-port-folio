@@ -107,7 +107,7 @@ initialState[aid] = {
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
-  resizable: false,
+  resizable: true,
   runOnStartup: false,
   shortcut: "",
   type: "window"
