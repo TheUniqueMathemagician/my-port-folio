@@ -1,0 +1,17 @@
+@import "../../styles/theme.scss";
+
+.root {
+  padding: $padding;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: $margin;
+  row-gap: $margin;
+}
+
+.heading {
+  margin: $margin 0;
+}
