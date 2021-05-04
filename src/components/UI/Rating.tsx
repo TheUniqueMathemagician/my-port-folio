@@ -14,6 +14,11 @@ interface IProps {
   defaultValue?: number;
 }
 
+// TODO: add memo for all icons
+const Star = memo(() => {
+  return <MdStar></MdStar>;
+});
+
 const Rating: FunctionComponent<IProps> = (props) => {
   const {
     onChange,
@@ -66,7 +71,7 @@ const Rating: FunctionComponent<IProps> = (props) => {
               name={id.current + "_" + i}
             ></input>
             <span id={id.current}>{i + 1} étoile(s)</span>
-            <MdStar></MdStar>
+            <Star></Star>
           </label>
         ))}
       </fieldset>
@@ -79,4 +84,14 @@ const Rating: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default memo(Rating);
+const isEqual = (prevProps: IProps, nextProps: IProps) => {
+  if (prevProps.disabled !== nextProps.disabled) return false;
+  if (prevProps.max !== nextProps.max) return false;
+  if (prevProps.min !== nextProps.min) return false;
+  if (prevProps.output !== nextProps.output) return false;
+  if (prevProps.readOnly !== nextProps.readOnly) return false;
+
+  return true;
+};
+
+export default memo(Rating, isEqual);
