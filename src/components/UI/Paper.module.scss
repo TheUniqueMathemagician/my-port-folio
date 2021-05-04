@@ -14,7 +14,7 @@
   }
   @supports (backdrop-filter: $blur) {
     &:not(.contrast) {
-      background-color: transparent;
+      background-color: var(--cvos-paper-33);
       backdrop-filter: $blur;
     }
   }
