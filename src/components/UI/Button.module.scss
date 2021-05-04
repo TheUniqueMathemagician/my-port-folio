@@ -21,9 +21,9 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
   padding: $padding/2;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   letter-spacing: 0.5px;
-  &:read-only {
+  &[readonly] {
     color: var(--cvos-text);
     cursor: default;
     pointer-events: none;
@@ -101,7 +101,7 @@ $colors: ("primary", "secondary", "info", "success", "warning", "error");
     grid-template-columns: auto 1fr auto;
   }
 
-  &:not(:disabled):not(:read-only)::after {
+  &:not(:disabled):not([readonly])::after {
     pointer-events: none;
     content: "";
     position: absolute;
