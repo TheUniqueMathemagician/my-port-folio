@@ -41,6 +41,8 @@ const WindowResizer: FunctionComponent<IProps> = ({
       const resizer = resizerRef.current;
       const window = windowRef.current;
 
+      if (!application.resizable) return;
+
       if (!resizer || !window) return;
 
       const [x1, x2, y1, y2] = [
@@ -100,6 +102,8 @@ const WindowResizer: FunctionComponent<IProps> = ({
       if (e.button !== 0) return;
       e.stopPropagation();
       e.preventDefault();
+
+      if (!application.resizable) return;
 
       const window = windowRef.current;
       if (!window) return;
