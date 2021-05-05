@@ -134,7 +134,7 @@ const Manager = () => {
         <Typography variant="h3">Instances</Typography>
         <Paper outlined spaced>
           <Typography variant="h4">Instances actives</Typography>
-          <Table outlined={contrast} size="sm">
+          <Table aria-label="Instances" size="sm" outlined={contrast}>
             <TableHead>
               <TableRow>
                 <TableCell heading>Nom</TableCell>
@@ -156,7 +156,7 @@ const Manager = () => {
                       <Button
                         isIcon
                         ripple
-                        size="md"
+                        size="xs"
                         onClick={() => {
                           closeInstance(instances[key]);
                         }}
@@ -167,7 +167,7 @@ const Manager = () => {
                         <Button
                           isIcon
                           ripple
-                          size="md"
+                          size="xs"
                           onClick={() => {
                             const instance = instances[key];
                             if (instance.type === "window") {
