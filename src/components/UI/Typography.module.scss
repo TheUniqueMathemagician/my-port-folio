@@ -11,14 +11,13 @@
   cursor: default;
 }
 
-.no-wrap {
+.no-wrap,
+.no-wrap > * {
   width: 100%;
-  > * {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  // word-break: keep-all;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 }
 
 @for $i from 1 to 7 {

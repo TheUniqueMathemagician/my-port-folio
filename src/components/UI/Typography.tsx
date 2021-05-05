@@ -1,10 +1,10 @@
 import {
   createElement,
-  FunctionComponent
-  // useEffect,
-  // useMemo,
-  // useRef
+  FunctionComponent,
+  memo,
+  PropsWithChildren
 } from "react";
+import { shallowEqual } from "react-redux";
 import classes from "./Typography.module.scss";
 
 interface IProps {
@@ -35,60 +35,15 @@ const Typography: FunctionComponent<IProps> = (props) => {
     tag,
     variant
   } = props;
+
   const rootClasses = [classes["root"]];
-  // const childRef = useRef<HTMLElement>(null);
-  // const parentRef = useRef<HTMLDivElement>(null);
 
   if (bold) rootClasses.push(classes["bold"]);
-  if (color) rootClasses.push(classes[color]);
-  if (variant) rootClasses.push(classes[variant]);
   if (className) rootClasses.push(className);
+  if (color) rootClasses.push(classes[color]);
   if (noSelect) rootClasses.push(classes["no-select"]);
-
-  // const resizeObserver = useMemo(
-  //   () =>
-  //     noWrap
-  //       ? new ResizeObserver((entries) => {
-  //           console.log(entries);
-
-  //           if (parentRef.current && childRef.current) {
-  //             childRef.current.style.width = `${parentRef.current?.clientWidth}px`;
-  //           }
-  //         })
-  //       : null,
-  //   [noWrap]
-  // );
-
-  // useEffect(() => {
-  //   const parent = parentRef.current;
-  //   if (parent) resizeObserver?.observe(parent);
-  //   return () => {
-  //     if (parent) resizeObserver?.unobserve(parent);
-  //   };
-  // }, [parentRef, resizeObserver]);
-
-  // if (noWrap) {
-  //   return (
-  //     <div className={classes["no-wrap"]} ref={parentRef}>
-  //       {createElement(tag || "div", {
-  //         children,
-  //         className: rootClasses.join(" "),
-  //         ref: childRef
-  //       })}
-  //     </div>
-  //   );
-  // }
-
-  if (noWrap) {
-    return (
-      <div className={classes["no-wrap"]}>
-        {createElement(tag ?? variant === "body" ? "div" : variant, {
-          children,
-          className: rootClasses.join(" ")
-        })}
-      </div>
-    );
-  }
+  if (noWrap) rootClasses.push(classes["no-wrap"]);
+  if (variant) rootClasses.push(classes[variant]);
 
   return createElement(tag ?? variant === "body" ? "div" : variant, {
     children,
@@ -96,4 +51,4 @@ const Typography: FunctionComponent<IProps> = (props) => {
   });
 };
 
-export default Typography;
+export default memo<PropsWithChildren<IProps>>(Typography, shallowEqual);
