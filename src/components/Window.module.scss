@@ -37,8 +37,8 @@
 }
 
 .background {
-  position: relative;
   overflow: auto;
+  z-index: 1;
 }
 
 .root.contrast {
