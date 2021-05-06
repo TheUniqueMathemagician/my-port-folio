@@ -1,5 +1,5 @@
 import classes from "./TableCell.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 
 interface IProps {
   align?: "start" | "center" | "end";
@@ -27,4 +27,4 @@ const TableCell: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default TableCell;
+export default memo<PropsWithChildren<IProps>>(TableCell);

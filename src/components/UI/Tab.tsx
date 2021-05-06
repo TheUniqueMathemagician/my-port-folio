@@ -1,5 +1,5 @@
 import classes from "./Tab.module.scss";
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
+import { FunctionComponent, memo, useCallback, useEffect, useRef } from "react";
 import Button from "./Button";
 
 interface IProps {
@@ -54,4 +54,4 @@ const Tab: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Tab;
+export default memo(Tab);

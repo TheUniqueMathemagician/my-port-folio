@@ -1,5 +1,5 @@
 import classes from "./Menu.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo } from "react";
 interface IProps {}
 
 const Menu: FunctionComponent<IProps> = () => {
@@ -41,4 +41,4 @@ const Menu: FunctionComponent<IProps> = () => {
   );
 };
 
-export default Menu;
+export default memo(Menu);

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import classes from "./Mark.module.scss";
 
 const Mark = () => {
@@ -13,4 +14,4 @@ const Mark = () => {
   );
 };
 
-export default Mark;
+export default memo(Mark);

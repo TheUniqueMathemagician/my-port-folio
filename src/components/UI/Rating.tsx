@@ -15,9 +15,7 @@ interface IProps {
 }
 
 // TODO: add memo for all icons
-const Star = memo(() => {
-  return <MdStar></MdStar>;
-});
+const Star = memo(() => <MdStar></MdStar>);
 
 const Rating: FunctionComponent<IProps> = (props) => {
   const {

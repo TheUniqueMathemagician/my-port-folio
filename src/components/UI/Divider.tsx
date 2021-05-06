@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo } from "react";
 import styles from "./Divider.module.scss";
 
 interface IProps {
@@ -26,4 +26,4 @@ const Divider: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Divider;
+export default memo(Divider);

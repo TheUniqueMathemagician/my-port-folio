@@ -1,5 +1,5 @@
 import classes from "./Checkbox.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo } from "react";
 import { TSize } from "../../types/TSize";
 import Mark from "../icons/Mark";
 
@@ -57,4 +57,4 @@ const Checkbox: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Checkbox;
+export default memo(Checkbox);

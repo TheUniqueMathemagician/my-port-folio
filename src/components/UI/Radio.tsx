@@ -49,20 +49,4 @@ const Radio: FunctionComponent<IProps> = (props) => {
   );
 };
 
-const isEqual = (prevProps: IProps, nextProps: IProps): boolean => {
-  if (prevProps.checked !== nextProps.checked) {
-    return false;
-  }
-  if (prevProps.value !== nextProps.value) {
-    return false;
-  }
-  if (prevProps.name !== nextProps.name) {
-    return false;
-  }
-  if (prevProps.noSelect !== nextProps.noSelect) {
-    return false;
-  }
-  return true;
-};
-
-export default memo(Radio, isEqual);
+export default memo(Radio);

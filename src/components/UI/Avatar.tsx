@@ -10,7 +10,7 @@ interface IProps {
 }
 
 const Avatar: FunctionComponent<IProps> = (props) => {
-  const { alt, children, src, outlined, size } = props;
+  const { alt, src, outlined, size } = props;
 
   const rootClasses = [classes["root"]];
 
@@ -25,9 +25,7 @@ const Avatar: FunctionComponent<IProps> = (props) => {
       alt={alt}
       src={src}
       className={rootClasses.join(" ")}
-    >
-      {children}
-    </img>
+    ></img>
   );
 };
 

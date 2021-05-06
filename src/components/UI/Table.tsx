@@ -1,5 +1,5 @@
 import classes from "./Table.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 import { TSize } from "../../types/TSize";
 
 interface IProps {
@@ -19,4 +19,4 @@ const Table: FunctionComponent<IProps> = (props) => {
   return <table className={rootClasses.join(" ")}>{children}</table>;
 };
 
-export default Table;
+export default memo<PropsWithChildren<IProps>>(Table);
