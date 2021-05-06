@@ -6,10 +6,11 @@ import {
   useCallback
 } from "react";
 import { TSize } from "../../types/TSize";
+import { TColor } from "../../types/TColor";
 
 interface IProps {
   align?: "center" | "end" | "start";
-  color?: "primary" | "secondary" | "info" | "success" | "warning" | "error";
+  color?: TColor;
   className?: string;
   contrast?: boolean;
   disabled?: boolean;

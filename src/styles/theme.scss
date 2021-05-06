@@ -2,6 +2,17 @@ $shadow: 0 0 8px 0 #00000080;
 $shadowInset: 0 0 6px 0 #00000080;
 $border-radius: 16px;
 
+$colors: (
+  "text",
+  "background",
+  "primary",
+  "secondary",
+  "info",
+  "success",
+  "warning",
+  "error"
+);
+
 $padding: 16px;
 $margin: 16px;
 

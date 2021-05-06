@@ -18,4 +18,9 @@
       backdrop-filter: $blur;
     }
   }
+  @each $color in $colors {
+    &.#{$color} {
+      background-color: var(--cvos-#{$color});
+    }
+  }
 }
