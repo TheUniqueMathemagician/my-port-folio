@@ -51,6 +51,18 @@ const Window: FunctionComponent<IProps> = ({
     [dispatch, application, zIndexes]
   );
 
+  const handleWindowFocus = useCallback(
+    (e: React.FocusEvent<HTMLElement>) => {
+      if (
+        zIndexes.findIndex((id) => id === application.id) !==
+        zIndexes.length - 1
+      ) {
+        dispatch(sendToFront(application));
+      }
+    },
+    [dispatch, application, zIndexes]
+  );
+
   //#region window rendering checks
 
   const rootClasses = [classes["root"]];
@@ -128,6 +140,7 @@ const Window: FunctionComponent<IProps> = ({
 
   return (
     <section
+      onFocus={handleWindowFocus}
       className={rootClasses.join(" ")}
       style={{
         zIndex,
