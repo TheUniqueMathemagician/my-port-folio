@@ -14,10 +14,6 @@ $indicator-width: 2px;
   &.bottom {
     grid-auto-flow: column;
   }
-  &.left,
-  &.right {
-    min-height: 100%;
-  }
   &.left {
     & .indicator {
       width: $indicator-width;

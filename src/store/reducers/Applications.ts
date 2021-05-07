@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FunctionComponent } from "react";
 import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
-import Education from "../../components/apps/Education";
-import Experience from "../../components/apps/Experience";
 import Manager from "../../components/apps/Manager";
 import Maps from "../../components/apps/Maps";
 import Settings from "../../components/apps/Settings";
@@ -16,8 +14,6 @@ import { IPosition } from "../../types/IPosition";
 export enum EApplications {
   About,
   Contact,
-  Education,
-  Experience,
   Manager,
   Maps,
   Settings,
@@ -147,38 +143,6 @@ initialState[aid] = {
 
 aid = generateID();
 initialState[aid] = {
-  component: EApplications.Education,
-  dimensions: { height: 600, width: 600 },
-  displayName: "Diplômes et formations",
-  icon: require("../../assets/images/applications/education.svg").default,
-  id: aid,
-  maxDimensions: defaultMaxDimensions,
-  minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
-  resizable: true,
-  runOnStartup: false,
-  shortcut: require("../../assets/images/applications/education.svg").default,
-  type: "window"
-};
-
-aid = generateID();
-initialState[aid] = {
-  component: EApplications.Experience,
-  dimensions: { height: 600, width: 600 },
-  displayName: "Expériences",
-  icon: require("../../assets/images/applications/experience.svg").default,
-  id: aid,
-  maxDimensions: defaultMaxDimensions,
-  minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
-  resizable: true,
-  runOnStartup: false,
-  shortcut: require("../../assets/images/applications/experience.svg").default,
-  type: "window"
-};
-
-aid = generateID();
-initialState[aid] = {
   component: EApplications.Snake,
   dimensions: { height: 600, width: 600 },
   displayName: "le Serpent",
@@ -215,8 +179,6 @@ export const applicationsMap = new Map<
 >([
   [EApplications.About, About],
   [EApplications.Contact, Contact],
-  [EApplications.Education, Education],
-  [EApplications.Experience, Experience],
   [EApplications.Manager, Manager],
   [EApplications.Maps, Maps],
   [EApplications.Settings, Settings],

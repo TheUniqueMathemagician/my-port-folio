@@ -168,10 +168,11 @@ const setRootVariables = () => {
     const value = ((initialState.palette as any)[key] as ColorPalette)[
       initialState.colorScheme
     ];
+    root?.style.setProperty(`--cvos-${key}`, value);
+    // root?.style.setProperty(`--cvos-${key}-20`, `${value}14`);
     root?.style.setProperty(`--cvos-${key}-33`, `${value}55`);
     root?.style.setProperty(`--cvos-${key}-50`, `${value}80`);
     root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`);
-    root?.style.setProperty(`--cvos-${key}`, value);
   });
 };
 
