@@ -2,11 +2,18 @@ import classes from "./Button.module.scss";
 import {
   createElement,
   forwardRef,
+  memo,
   PropsWithChildren,
-  useCallback
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
 } from "react";
 import { TSize } from "../../types/TSize";
 import { TColor } from "../../types/TColor";
+import { useSelector } from "../../hooks/Store";
+import contrastColor from "../../functions/contrastColor";
 
 interface IProps {
   align?: "center" | "end" | "start";
@@ -29,7 +36,7 @@ interface IProps {
 }
 
 const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
-  (props, ref) => {
+  (props, parentRef) => {
     const {
       align,
       children,
@@ -51,34 +58,27 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       variant
     } = props;
 
+    const innerRef = useRef<HTMLButtonElement>(null);
+    const ref = (parentRef as RefObject<HTMLButtonElement>) ?? innerRef;
+
+    const palette = useSelector((store) => store.theme.palette);
+    const colorScheme = useSelector((store) => store.theme.colorScheme);
+
+    const [textColor, setTextColor] = useState<string>("#ffffff");
+
     const handleClick = useCallback(
       (e: React.MouseEvent<any, MouseEvent>) => {
-        if (ripple && !readOnly) {
-          let button: HTMLButtonElement | null = null;
-          const findButton = (element: HTMLElement) => {
-            if (
-              element &&
-              element.parentElement &&
-              element.tagName !== "BUTTON"
-            ) {
-              findButton(element.parentElement);
-            } else {
-              button = element as HTMLButtonElement;
-            }
-          };
-          findButton(e.target as HTMLElement);
+        if (ref && ripple && !readOnly) {
+          const button = ref.current;
           if (button) {
-            const x =
-              e.clientX -
-              (button as HTMLButtonElement).getBoundingClientRect().x;
-            const y =
-              e.clientY -
-              (button as HTMLButtonElement).getBoundingClientRect().y;
+            const x = e.clientX - button.getBoundingClientRect().x;
+            const y = e.clientY - button.getBoundingClientRect().y;
             const ripples = document.createElement("span");
             ripples.classList.add(classes["ripple"]);
             ripples.style.left = `${x}px`;
             ripples.style.top = `${y}px`;
-            (button as HTMLButtonElement).appendChild(ripples);
+            ripples.style.backgroundColor = textColor;
+            button.appendChild(ripples);
             setTimeout(() => {
               ripples.remove();
             }, 666);
@@ -86,8 +86,13 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         }
         onClick?.(e);
       },
-      [onClick, ripple, readOnly]
+      [onClick, ripple, readOnly, ref, textColor]
     );
+
+    useEffect(() => {
+      const backgroundColor = palette[color ?? "background"][colorScheme];
+      setTextColor(contrastColor(backgroundColor));
+    }, [palette, color, colorScheme]);
 
     const rootClasses = [classes["root"]];
 
@@ -114,6 +119,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         onClick: handleClick,
         disabled,
         ref,
+        style: { color: textColor },
         tabIndex: focusable && !readOnly ? 0 : -1,
         href: to ?? undefined,
         rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
@@ -125,4 +131,4 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
   }
 );
 
-export default Button;
+export default memo(Button);
