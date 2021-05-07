@@ -7,6 +7,7 @@ import { TColor } from "../../types/TColor";
 interface IProps {
   className?: string;
   background?: TColor;
+  blur?: boolean;
   fullWidth?: boolean;
   outlined?: boolean;
   spaced?: boolean;
@@ -15,6 +16,7 @@ interface IProps {
 const Paper: FunctionComponent<IProps> = (props) => {
   const {
     background,
+    blur,
     children,
     className,
     fullWidth,
@@ -34,6 +36,7 @@ const Paper: FunctionComponent<IProps> = (props) => {
   if (contrast) rootClasses.push(classes["contrast"]);
   if (className) rootClasses.push(className);
   if (background) rootClasses.push(classes[background]);
+  if (blur) rootClasses.push(classes["blur"]);
 
   return <div className={rootClasses.join(" ")}>{children}</div>;
 };

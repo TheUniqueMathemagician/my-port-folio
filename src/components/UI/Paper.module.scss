@@ -12,15 +12,23 @@
   &.padding {
     padding: $padding;
   }
-  @supports (backdrop-filter: $blur) {
-    &:not(.contrast) {
-      background-color: var(--cvos-paper-33);
-      backdrop-filter: $blur;
+  @each $color in $colors {
+    &.#{$color}.contrast {
+      background-color: var(--cvos-#{$color});
+    }
+    &.#{$color}:not(.contrast) {
+      background-color: var(--cvos-#{$color}#{-33});
     }
   }
-  @each $color in $colors {
-    &.#{$color} {
-      background-color: var(--cvos-#{$color});
+  @supports (backdrop-filter: $blur) {
+    &.blur:not(.contrast) {
+      background-color: transparent;
+      backdrop-filter: $blur;
+      @each $color in $colors {
+        &.#{$color} {
+          background-color: var(--cvos-#{$color}#{-33});
+        }
+      }
     }
   }
 }

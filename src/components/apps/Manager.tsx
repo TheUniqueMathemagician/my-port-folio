@@ -67,7 +67,7 @@ const Manager = () => {
       </Tabs>
       <TabPanel index={0} value={panelIndex} spaced>
         <Typography variant="h3">Applications</Typography>
-        <Paper outlined spaced>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4">Applications installées</Typography>
           <Table aria-label="Applications" size="sm" outlined={contrast}>
             <TableHead>
@@ -132,7 +132,7 @@ const Manager = () => {
       </TabPanel>
       <TabPanel index={1} value={panelIndex} spaced>
         <Typography variant="h3">Instances</Typography>
-        <Paper outlined spaced>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4">Instances actives</Typography>
           <Table aria-label="Instances" size="sm" outlined={contrast}>
             <TableHead>

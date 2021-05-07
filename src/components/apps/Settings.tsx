@@ -60,6 +60,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
     Object.keys(palette).forEach((key) => {
       const value = ((palette as any)[key] as any)[colorScheme];
       root?.style.setProperty(`--cvos-${key}`, value);
+      root?.style.setProperty(`--cvos-${key}-20`, `${value}14`);
       root?.style.setProperty(`--cvos-${key}-33`, `${value}55`);
       root?.style.setProperty(`--cvos-${key}-50`, `${value}80`);
       root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`);
@@ -143,7 +144,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3" noWrap noSelect>
           Préférences du thème
         </Typography>
-        <Paper outlined spaced fullWidth>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4" noWrap noSelect>
             Thème de l'interface
           </Typography>
@@ -188,7 +189,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           </div>
         </Paper>
         <br />
-        <Paper outlined fullWidth spaced>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4" noWrap noSelect>
             Couleur de l'interface
           </Typography>
@@ -200,6 +201,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               onChange={handleBackgroundInputChange}
             ></input>
             <Button
+              color="primary"
               contrast={colorScheme === EColorScheme.contrast}
               focusable
               ripple
@@ -212,7 +214,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           </div>
         </Paper>
         <br />
-        <Paper outlined fullWidth spaced>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4" noWrap noSelect>
             Couleur des éléments interactifs
           </Typography>
@@ -224,6 +226,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               onChange={handlePrimaryInputChange}
             ></input>
             <Button
+              color="primary"
               contrast={colorScheme === EColorScheme.contrast}
               focusable
               ripple
@@ -240,7 +243,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3" noWrap noSelect>
           Préférences linguistiques
         </Typography>
-        <Paper spaced outlined>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4" noWrap noSelect>
             Langue du système
           </Typography>
@@ -277,9 +280,9 @@ const Settings: FunctionComponent<IProps> = (props) => {
       </TabPanel>
       <TabPanel value={panelIndex} index={2} spaced>
         <Typography variant="h3" noWrap noSelect>
-          Utilisateurs
+          Préférences utilisateurs
         </Typography>
-        <Paper spaced outlined>
+        <Paper outlined fullWidth spaced blur background="background">
           <Typography variant="h4" noWrap noSelect>
             Utilisateur actuel
           </Typography>
