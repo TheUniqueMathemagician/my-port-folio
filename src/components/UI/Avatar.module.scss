@@ -2,6 +2,11 @@
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
+  object-fit: cover;
+  object-position: center;
+  &.square {
+    border-radius: 0;
+  }
 }
 
 .outlined {
