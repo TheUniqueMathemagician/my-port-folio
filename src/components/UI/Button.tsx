@@ -7,8 +7,7 @@ import {
   RefObject,
   useCallback,
   useEffect,
-  useRef,
-  useState
+  useRef
 } from "react";
 import { TSize } from "../../types/TSize";
 import { TColor } from "../../types/TColor";
@@ -64,8 +63,6 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     const palette = useSelector((store) => store.theme.palette);
     const colorScheme = useSelector((store) => store.theme.colorScheme);
 
-    const [textColor, setTextColor] = useState<string>("#ffffff");
-
     const handleClick = useCallback(
       (e: React.MouseEvent<any, MouseEvent>) => {
         if (ref && ripple && !readOnly) {
@@ -77,7 +74,6 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
             ripples.classList.add(classes["ripple"]);
             ripples.style.left = `${x}px`;
             ripples.style.top = `${y}px`;
-            ripples.style.backgroundColor = textColor;
             button.appendChild(ripples);
             setTimeout(() => {
               ripples.remove();
@@ -86,13 +82,19 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         }
         onClick?.(e);
       },
-      [onClick, ripple, readOnly, ref, textColor]
+      [onClick, ripple, readOnly, ref]
     );
 
     useEffect(() => {
-      const backgroundColor = palette[color ?? "background"][colorScheme];
-      setTextColor(contrastColor(backgroundColor));
-    }, [palette, color, colorScheme]);
+      const button = ref.current;
+      if (button) {
+        const backgroundColor = palette[color ?? "background"][colorScheme];
+        button.style.setProperty(
+          "--text-color",
+          contrastColor(backgroundColor)
+        );
+      }
+    }, [ref, colorScheme, palette, color]);
 
     const rootClasses = [classes["root"]];
 
@@ -119,7 +121,6 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         onClick: handleClick,
         disabled,
         ref,
-        style: { color: textColor },
         tabIndex: focusable && !readOnly ? 0 : -1,
         href: to ?? undefined,
         rel: to?.startsWith("/") ? undefined : "noreferrer noopener",

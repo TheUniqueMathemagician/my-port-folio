@@ -9,7 +9,7 @@
   background: none;
   border: 0;
   border-radius: 0;
-  color: var(--cvos-text);
+  color: var(--text-color);
   column-gap: $padding;
   display: grid;
   grid-template-columns: 1fr;
@@ -22,7 +22,7 @@
   transition: background-color 0.3s ease, color 0.3s ease;
   letter-spacing: 0.5px;
   &[readonly] {
-    color: var(--cvos-text);
+    color: var(--text-color);
     cursor: default;
     pointer-events: none;
     user-select: none;
@@ -78,7 +78,7 @@
   }
   &.filled {
     background-color: var(--cvos-background);
-    color: var(--cvos-text);
+    color: var(--text-color);
     @each $color in $colors {
       &.#{$color} {
         background-color: var(--cvos-#{$color});
@@ -128,16 +128,15 @@
     padding-top: 80%;
     border-radius: 50%;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    background-color: var(--cvos-hint-50);
+    background-color: var(--text-color);
     opacity: 0;
     transform: translateX(-50%) translateY(-50%) scale(0);
   }
   &:focus::before {
-    opacity: 1;
+    opacity: 0.333;
     transform: translateX(-50%) translateY(-50%) scale(1);
   }
   &:active:focus::before {
-    opacity: 1;
     transform: translateX(-50%) translateY(-50%) scale(1.5);
   }
 
@@ -160,7 +159,8 @@
 
   > .ripple {
     position: absolute;
-    background: var(--cvos-text-50);
+    background: var(--text-color);
+    opacity: 0;
     width: 250%;
     padding-top: 250%;
     pointer-events: none;
@@ -203,11 +203,11 @@
 
 @keyframes ripple {
   from {
-    opacity: 0.666;
+    opacity: 0.333;
     transform: translate(-50%, -50%) scale(0);
   }
   50% {
-    opacity: 0.666;
+    opacity: 0.5;
     transform: translate(-50%, -50%) scale(0.666);
   }
   to {
