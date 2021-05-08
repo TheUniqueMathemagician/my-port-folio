@@ -1,6 +1,6 @@
 import classes from "./Contact.module.scss";
 
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo } from "react";
 import { MdMail, MdPhone } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
 import Button from "../UI/Button";
@@ -8,6 +8,10 @@ import Paper from "../UI/Paper";
 import Typography from "../UI/Typography";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { runApplication } from "../../store/reducers/Instances";
+
+const Sharp = memo(IoLocationSharp);
+const Mail = memo(MdMail);
+const Phone = memo(MdPhone);
 
 interface IProps {}
 
@@ -38,8 +42,10 @@ const Contact: FunctionComponent<IProps> = () => {
             startIcon
             to="mailto: tamburrini.yannick@gmail.com"
           >
-            <MdMail></MdMail>
-            <span>tamburrini.yannick@gmail.com</span>
+            <Mail></Mail>
+            <Typography variant="body" noWrap>
+              tamburrini.yannick@gmail.com
+            </Typography>
           </Button>
           <Typography noSelect variant="body" className={classes["heading"]}>
             Téléphone
@@ -53,8 +59,10 @@ const Contact: FunctionComponent<IProps> = () => {
             startIcon
             to="tel:+32 498 62 77 16"
           >
-            <MdPhone></MdPhone>
-            <span>+32 498 62 77 16</span>
+            <Phone></Phone>
+            <Typography variant="body" noWrap>
+              +32 498 62 77 16
+            </Typography>
           </Button>
           <Typography noSelect variant="body" className={classes["heading"]}>
             Adresse
@@ -74,8 +82,10 @@ const Contact: FunctionComponent<IProps> = () => {
             }}
             to="https://www.google.com/maps/place/Avenue+des+Lanciers+45,+4900+Spa/@50.4888358,5.8542398,17z/data=!3m1!4b1!4m5!3m4!1s0x47c0617fcf8a2513:0xe0e509238ab82a8e!8m2!3d50.4888324!4d5.8564285"
           >
-            <IoLocationSharp></IoLocationSharp>
-            <span>Avenue des Lanciers 45, 4900 Spa, Liège Belgique</span>
+            <Sharp></Sharp>
+            <Typography variant="body" noWrap>
+              Avenue des Lanciers 45, 4900 Spa, Liège Belgique
+            </Typography>
           </Button>
         </div>
       </Paper>
