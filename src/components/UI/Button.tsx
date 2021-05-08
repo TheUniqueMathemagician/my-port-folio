@@ -14,7 +14,7 @@ import { TColor } from "../../types/TColor";
 import { useSelector } from "../../hooks/Store";
 import contrastColor from "../../functions/contrastColor";
 
-interface IProps {
+interface IProps extends React.HTMLAttributes<HTMLElement> {
   align?: "center" | "end" | "start";
   color?: TColor;
   className?: string;
@@ -54,7 +54,8 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       size,
       startIcon,
       to,
-      variant
+      variant,
+      ...other
     } = props;
 
     const innerRef = useRef<HTMLButtonElement>(null);
@@ -125,7 +126,8 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         href: to ?? undefined,
         rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
         readOnly,
-        target: to?.startsWith("/") ? undefined : "_blank"
+        target: to?.startsWith("/") ? undefined : "_blank",
+        ...other
       },
       typeof children === "string" ? <div>{children}</div> : children
     );
