@@ -1,65 +1,40 @@
-$indicator-width: 2px;
+$indicator-width: 4px;
 
 .root {
-  display: grid;
-  // grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-auto-rows: 3rem;
   position: relative;
+}
+
+.tabs {
+  display: grid;
+  grid-auto-rows: 3rem;
+  position: sticky;
   transition: border-color 0.3s ease;
-  & .indicator {
-    background-color: var(--cvos-primary);
-    position: absolute;
+}
+
+.indicator {
+  background-color: var(--cvos-primary-33);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.top {
+  .indicator {
+    border-top: $indicator-width solid var(--cvos-primary);
   }
-  &.top,
-  &.bottom {
-    grid-auto-flow: column;
+}
+.left {
+  .indicator {
+    border-left: $indicator-width solid var(--cvos-primary);
   }
-  &.left {
-    & .indicator {
-      width: $indicator-width;
-      left: 0;
-    }
-    &.separator {
-      border-left: 1px solid var(--cvos-divider);
-      & .indicator {
-        left: -1px;
-      }
-    }
+}
+.bottom {
+  .indicator {
+    border-bottom: $indicator-width solid var(--cvos-primary);
   }
-  &.right {
-    & .indicator {
-      width: $indicator-width;
-      right: 0;
-    }
-    &.separator {
-      border-right: 1px solid var(--cvos-divider);
-      & .indicator {
-        right: -1px;
-      }
-    }
-  }
-  &.top {
-    & .indicator {
-      height: $indicator-width;
-      top: 0;
-    }
-    &.separator {
-      border-top: 1px solid var(--cvos-divider);
-      & .indicator {
-        top: -1px;
-      }
-    }
-  }
-  &.bottom {
-    & .indicator {
-      height: $indicator-width;
-      bottom: 0;
-    }
-    &.separator {
-      border-bottom: 1px solid var(--cvos-divider);
-      & .indicator {
-        bottom: -1px;
-      }
-    }
+}
+.right {
+  .indicator {
+    border-right: $indicator-width solid var(--cvos-primary);
   }
 }

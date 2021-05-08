@@ -14,6 +14,7 @@ interface IProps {
   direction: "bottom" | "left" | "right" | "top";
   onChange: (value: number) => void;
   separator?: boolean;
+  className?: string;
 }
 
 interface IVerticalPosition {
@@ -26,7 +27,14 @@ interface IHorizontalPosition {
 }
 
 const Tabs: FunctionComponent<IProps> = (props) => {
-  const { onChange, children, defaultValue, direction, separator } = props;
+  const {
+    onChange,
+    children,
+    className,
+    defaultValue,
+    direction,
+    separator
+  } = props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);
@@ -108,66 +116,49 @@ const Tabs: FunctionComponent<IProps> = (props) => {
     }
   }, [defaultValue, vertical]);
 
-  const classesList = [classes["root"]];
+  const rootClasses = [classes["root"]];
+  const tabsClasses = [classes["tabs"]];
 
   switch (direction) {
     case "bottom":
-      classesList.push(classes["bottom"]);
+      rootClasses.push(classes["bottom"]);
       break;
     case "left":
-      classesList.push(classes["left"]);
+      rootClasses.push(classes["left"]);
       break;
     case "right":
-      classesList.push(classes["right"]);
+      rootClasses.push(classes["right"]);
       break;
     case "top":
-      classesList.push(classes["top"]);
+      rootClasses.push(classes["top"]);
       break;
     default:
       break;
   }
 
-  if (separator) {
-    classesList.push(classes["separator"]);
-  }
+  if (separator) tabsClasses.push(classes["separator"]);
+  if (className) rootClasses.push(className);
 
-  if (vertical) {
-    return (
-      <div
-        aria-label={"Onglets verticaux"}
-        className={classesList.join(" ")}
-        ref={ref}
-      >
+  return (
+    <div
+      aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"}
+      className={rootClasses.join(" ")}
+    >
+      <div className={classes["tabs"]} ref={ref}>
         {children}
         <div
           className={classes["indicator"]}
           style={{
             top: (indicatorPosition as IVerticalPosition).top,
             height: (indicatorPosition as IVerticalPosition).height,
-            transition
-          }}
-        ></div>
-      </div>
-    );
-  } else {
-    return (
-      <div
-        aria-label={"Onglets horizontaux"}
-        className={classesList.join(" ")}
-        ref={ref}
-      >
-        {children}
-        <div
-          className={classes["indicator"]}
-          style={{
             left: (indicatorPosition as IHorizontalPosition).left,
             width: (indicatorPosition as IHorizontalPosition).width,
             transition
           }}
         ></div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default Tabs;
