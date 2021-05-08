@@ -26,8 +26,9 @@ const TabPanel: FunctionComponent<IPropsA | IPropsB> = (props) => {
   const rootClasses = [classes["root"]];
   if (className) rootClasses.push(className);
   if (spaced) rootClasses.push(classes["spaced"]);
-  return value === index ? (
+  return (
     <div
+      hidden={value !== index}
       role="tabpanel"
       className={rootClasses.join(" ")}
       // aria-labelledby={`vertical-tab-${index}`}
@@ -35,7 +36,7 @@ const TabPanel: FunctionComponent<IPropsA | IPropsB> = (props) => {
     >
       {value === index && children}
     </div>
-  ) : null;
+  );
 };
 
 export default TabPanel;

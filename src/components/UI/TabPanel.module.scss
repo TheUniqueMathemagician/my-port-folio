@@ -1,11 +1,15 @@
 @import "../../styles/theme.scss";
 
+.spaced {
+  padding: $padding;
+}
+
 .root {
   overflow: auto;
   height: 100%;
   width: 100%;
-}
-
-.spaced {
-  padding: $padding;
+  &[hidden] {
+    visibility: hidden;
+    display: none;
+  }
 }
