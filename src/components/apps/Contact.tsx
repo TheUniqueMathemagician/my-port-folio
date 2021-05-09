@@ -87,6 +87,7 @@ const Contact: FunctionComponent<IProps> = () => {
               Avenue des Lanciers 45, 4900 Spa, Liège Belgique
             </Typography>
           </Button>
+          {/* TODO: add contact form  */}
         </div>
       </Paper>
     </div>
