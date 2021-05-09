@@ -1,20 +1,8 @@
 @import "../../styles/theme.scss";
 
 .root {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $padding $padding/2;
-  background-color: transparent;
-  color: var(--text-color);
-  transition: color 0.3s ease, background-color 0.3s ease;
-  font-size: 1rem;
-  font-family: "Karla", sans-serif;
   word-break: keep-all;
   white-space: nowrap;
-  user-select: none;
-  width: 150px;
   &:disabled {
     color: var(--cvos-disabled);
   }

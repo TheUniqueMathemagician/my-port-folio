@@ -9,7 +9,7 @@ interface IProps {
   half?: boolean;
   readOnly?: boolean;
   disabled?: boolean;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   output?: boolean;
   defaultValue?: number;
 }
@@ -37,7 +37,7 @@ const Rating: FunctionComponent<IProps> = (props) => {
       if (disabled || readOnly) return;
       const value = +(e.target as HTMLInputElement).value ?? null;
       setState(value);
-      onChange(value);
+      onChange?.(value);
     },
     [onChange, disabled, readOnly]
   );

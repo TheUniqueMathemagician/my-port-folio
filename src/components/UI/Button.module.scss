@@ -214,3 +214,7 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
+button.root {
+  user-select: none;
+}
