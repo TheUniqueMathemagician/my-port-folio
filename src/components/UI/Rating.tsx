@@ -6,7 +6,6 @@ import generateID from "../../functions/generateID";
 interface IProps {
   max?: number;
   min?: number;
-  half?: boolean;
   readOnly?: boolean;
   disabled?: boolean;
   onChange?: (value: number) => void;
@@ -24,7 +23,6 @@ const Rating: FunctionComponent<IProps> = (props) => {
     max,
     min,
     disabled,
-    // half,
     output,
     readOnly
   } = props;
@@ -32,8 +30,8 @@ const Rating: FunctionComponent<IProps> = (props) => {
 
   const id = useRef<string>(generateID());
 
-  const handleInput = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = useCallback(
+    (e: React.FormEvent<HTMLInputElement>) => {
       if (disabled || readOnly) return;
       const value = +(e.target as HTMLInputElement).value ?? null;
       setState(value);
@@ -51,45 +49,35 @@ const Rating: FunctionComponent<IProps> = (props) => {
   }
 
   return (
-    <form
-      action="#"
-      method="post"
-      className={rootClasses.join(" ")}
-      onInput={handleInput}
-    >
-      <fieldset disabled={disabled}>
-        {rates.map((i) => (
-          <label key={i} aria-selected={i === state}>
-            <input
-              readOnly={readOnly}
-              disabled={disabled}
-              value={i}
-              type="radio"
-              aria-labelledby={id.current}
-              name={id.current + "_" + i}
-            ></input>
-            <span id={id.current}>{i + 1} étoile(s)</span>
-            <Star></Star>
-          </label>
-        ))}
-      </fieldset>
+    <fieldset disabled={disabled} className={rootClasses.join(" ")}>
+      {rates.map((i) => (
+        <label
+          key={i}
+          aria-selected={i === state}
+          aria-checked={i === state}
+          aria-readonly={readOnly}
+        >
+          <input
+            readOnly={readOnly}
+            disabled={disabled}
+            value={i}
+            type="radio"
+            aria-labelledby={id.current}
+            name={id.current + "_" + i}
+            onChange={handleChange}
+            checked={i === state}
+          ></input>
+          <span id={id.current}>{i + 1} étoile(s)</span>
+          <Star></Star>
+        </label>
+      ))}
       {output && (
         <output name="result">
           {state ?? 0}/{10}
         </output>
       )}
-    </form>
+    </fieldset>
   );
 };
 
-const isEqual = (prevProps: IProps, nextProps: IProps) => {
-  if (prevProps.disabled !== nextProps.disabled) return false;
-  if (prevProps.max !== nextProps.max) return false;
-  if (prevProps.min !== nextProps.min) return false;
-  if (prevProps.output !== nextProps.output) return false;
-  if (prevProps.readOnly !== nextProps.readOnly) return false;
-
-  return true;
-};
-
-export default memo(Rating, isEqual);
+export default memo(Rating);
