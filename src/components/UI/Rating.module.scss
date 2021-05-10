@@ -30,16 +30,18 @@
   [aria-selected="true"] ~ label svg {
     color: var(--cvos-hint);
   }
-  fieldset:not(:disabled) label:hover svg {
+  fieldset:not(:disabled):not([readonly]) label:hover svg {
     transform: scale(1.3);
     color: var(--cvos-primary);
   }
-  fieldset:disabled label {
+  fieldset:disabled label,
+  fieldset:read-only label {
     cursor: default;
   }
   fieldset:disabled label svg {
     color: var(--cvos-text);
   }
+  fieldset[readonly] [aria-selected="true"] ~ label svg,
   fieldset:disabled [aria-selected="true"] ~ label svg {
     color: var(--cvos-disabled);
   }

@@ -1,0 +1,170 @@
+@import "../../styles/theme.scss";
+
+// TODO: think about a container for tabs and tabpannels
+.root {
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 100%;
+}
+
+.p {
+  max-width: 500px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  align-content: flex-start;
+  grid-template-columns: auto 1fr;
+  column-gap: $padding;
+  align-items: center;
+}
+.row-span {
+  grid-column-start: 1;
+  grid-column-end: -1;
+}
+
+.tab-panel {
+  display: flex;
+  justify-content: center;
+  > div {
+    display: grid;
+    row-gap: $padding;
+    max-width: 800px;
+  }
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  justify-items: center;
+  .container {
+    position: relative;
+    // background: red;
+    height: 340px;
+    width: 340px;
+    > .name {
+      position: absolute;
+      width: 16rem;
+      > * {
+        margin: 0;
+        font-size: 32px;
+      }
+      // &::after {
+      //   content: "";
+      //   position: absolute;
+      //   top: 0;
+      //   left: 0;
+      //   width: 100%;
+      //   height: 100%;
+      //   transform: translate(7px, 7px);
+      //   z-index: -1;
+      //   border: 1px solid var(--cvos-primary);
+      // }
+    }
+    > .avatar {
+      position: absolute;
+      left: 42px;
+      top: 42px;
+      height: 256px;
+      width: 256px;
+      > img {
+        height: 100%;
+        width: 100%;
+        object-position: top;
+      }
+      // &::after {
+      //   content: "";
+      //   position: absolute;
+      //   width: 256px;
+      //   height: 256px;
+      //   top: 0;
+      //   left: 0;
+      //   transform: translate(7px, 7px);
+      //   z-index: -1;
+      //   border-bottom: 1px solid var(--cvos-primary);
+      //   border-right: 1px solid var(--cvos-primary);
+      // }
+    }
+  }
+  > .text {
+    // background-color: var(--cvos-background);
+    display: flex;
+    align-items: center;
+    padding: $padding;
+  }
+}
+
+.skills {
+  display: grid;
+  column-gap: $padding * 2;
+  row-gap: $padding * 2;
+  grid-template-columns: repeat(auto-fit, 10rem);
+  justify-content: center;
+  align-content: center;
+  .bubble {
+    position: relative;
+    width: 10rem;
+    height: 10rem;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    align-items: center;
+    justify-items: center;
+    margin: 0 7px 7px 0;
+    .icon {
+      height: 4rem;
+      width: 4rem;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      transform: translate(7px, 7px);
+      z-index: -1;
+      border: 1px solid var(--cvos-primary);
+    }
+  }
+}
+
+.experiences {
+  > ul > li > * {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: $padding;
+    align-items: center;
+    ul {
+      list-style-type: disc;
+      padding-left: $padding/2;
+      margin-left: $margin;
+      display: grid;
+      row-gap: $padding/2;
+    }
+  }
+  .date {
+    height: 8rem;
+    width: 8rem;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    justify-content: center;
+    border: 1px solid var(--cvos-primary);
+    border-radius: 50%;
+    color: var(--cvos-hint);
+    font-weight: bold;
+    background-color: var(--cvos-background-33);
+  }
+  ul {
+    list-style-type: none;
+  }
+}
+
+.discover {
+  list-style-type: none;
+  color: var(--cvos-text);
+  cursor: cros;
+}
