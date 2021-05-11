@@ -2,6 +2,20 @@ $indicator-width: 4px;
 
 .root {
   position: relative;
+  &.separator {
+    &.top {
+      border-top: 1px solid var(--cvos-divider);
+    }
+    &.left {
+      border-left: 1px solid var(--cvos-divider);
+    }
+    &.bottom {
+      border-bottom: 1px solid var(--cvos-divider);
+    }
+    &.right {
+      border-right: 1px solid var(--cvos-divider);
+    }
+  }
 }
 
 .tabs {

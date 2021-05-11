@@ -119,7 +119,6 @@ const Tabs: FunctionComponent<IProps> = (props) => {
   }, [defaultValue, vertical]);
 
   const rootClasses = [classes["root"]];
-  const tabsClasses = [classes["tabs"]];
 
   switch (direction) {
     case "bottom":
@@ -138,7 +137,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
       break;
   }
 
-  if (separator) tabsClasses.push(classes["separator"]);
+  if (separator) rootClasses.push(classes["separator"]);
   if (className) rootClasses.push(className);
 
   return (
