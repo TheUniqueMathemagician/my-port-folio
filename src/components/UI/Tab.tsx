@@ -1,6 +1,6 @@
 import classes from "./Tab.module.scss";
 import { FunctionComponent, memo, useCallback, useEffect, useRef } from "react";
-import Button from "./Button";
+import Button from "./Input/Button";
 
 // TODO: try to remove active value
 interface IProps {

@@ -1,19 +1,18 @@
 import classes from "./Rating.module.scss";
 import { FunctionComponent, memo, useCallback, useRef, useState } from "react";
 import { MdStar } from "react-icons/md";
-import generateID from "../../functions/generateID";
+import generateID from "../../../functions/generateID";
 
 interface IProps {
   max?: number;
   min?: number;
   readOnly?: boolean;
   disabled?: boolean;
-  onChange?: (value: number) => void;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   output?: boolean;
   defaultValue?: number;
 }
 
-// TODO: add memo for all icons
 const Star = memo(() => <MdStar></MdStar>);
 
 const Rating: FunctionComponent<IProps> = (props) => {
@@ -31,11 +30,11 @@ const Rating: FunctionComponent<IProps> = (props) => {
   const id = useRef<string>(generateID());
 
   const handleChange = useCallback(
-    (e: React.FormEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled || readOnly) return;
       const value = +(e.target as HTMLInputElement).value ?? null;
       setState(value);
-      onChange?.(value);
+      onChange?.(e);
     },
     [onChange, disabled, readOnly]
   );

@@ -2,10 +2,9 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { setCurrentUserID } from "../../store/reducers/Users";
 
-import Button from "../../components/UI/Button";
-
-import classes from "./Lock.module.scss";
 import Avatar from "../../components/UI/Avatar";
+import Button from "../../components/UI/Input/Button";
+import classes from "./Lock.module.scss";
 import Typography from "../../components/UI/Typography";
 
 export default function Lock() {

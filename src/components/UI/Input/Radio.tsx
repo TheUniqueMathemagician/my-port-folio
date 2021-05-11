@@ -1,5 +1,5 @@
 import classes from "./Radio.module.scss";
-import { FunctionComponent, memo, useCallback } from "react";
+import { FunctionComponent, memo } from "react";
 
 interface IProps {
   checked: boolean;
@@ -7,36 +7,36 @@ interface IProps {
   label?: string;
   name: string;
   noSelect?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onClick?: React.MouseEventHandler<HTMLLabelElement>;
   readOnly?: boolean;
   value: number;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const { checked, disabeld, label, name, noSelect, readOnly, value } = props;
+  const {
+    checked,
+    disabeld,
+    label,
+    name,
+    noSelect,
+    onChange,
+    onClick,
+    readOnly,
+    value
+  } = props;
 
   const rootClasses = [classes["root"]];
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.target.dispatchEvent(
-        new CustomEvent<number>("input", {
-          detail: value,
-          bubbles: true
-        })
-      );
-    },
-    [value]
-  );
 
   if (noSelect) rootClasses.push(classes["no-select"]);
 
   return (
-    <label className={rootClasses.join(" ")}>
+    <label className={rootClasses.join(" ")} onClick={onClick}>
       <input
         checked={checked}
         disabled={disabeld}
         name={name}
-        onChange={handleChange}
+        onChange={onChange}
         type="radio"
         readOnly={readOnly}
         value={value}

@@ -1,14 +1,13 @@
 import classes from "./Checkbox.module.scss";
 import { FunctionComponent, memo } from "react";
-import { TSize } from "../../types/TSize";
-import Mark from "../icons/Mark";
+import { TSize } from "../../../types/TSize";
+import Mark from "../../icons/Mark";
 
 interface IProps {
-  ariaLabel?: string;
   color?: "primary" | "secondary" | "info" | "success" | "warning" | "error";
   disabled?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClick?: React.MouseEventHandler<HTMLLabelElement>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   outlined?: boolean;
   name?: string;
   size?: TSize;
@@ -17,11 +16,8 @@ interface IProps {
   variant?: "flat" | "filled" | "blur";
 }
 
-// "aria-label": "primary checkbox"
-
 const Checkbox: FunctionComponent<IProps> = (props) => {
   const {
-    ariaLabel,
     checked,
     color,
     disabled,
@@ -47,7 +43,7 @@ const Checkbox: FunctionComponent<IProps> = (props) => {
         type="checkbox"
         name={name}
         onChange={onChange}
-        aria-label={ariaLabel}
+        aria-label="Checkbox"
       ></input>
       <div className={classes["checkbox"]}>
         <div className={classes["effect"]}></div>

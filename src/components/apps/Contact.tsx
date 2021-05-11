@@ -3,7 +3,7 @@ import classes from "./Contact.module.scss";
 import { FunctionComponent, memo } from "react";
 import { MdMail, MdPhone } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
-import Button from "../UI/Button";
+import Button from "../UI/Input/Button";
 import Paper from "../UI/Paper";
 import Typography from "../UI/Typography";
 import { useDispatch, useSelector } from "../../hooks/Store";

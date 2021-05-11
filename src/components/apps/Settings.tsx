@@ -7,18 +7,18 @@ import {
   setPrimaryColor
 } from "../../store/reducers/Theme";
 
-import Radio from "../UI/Radio";
+import Radio from "../UI/Input/Radio";
 import Typography from "../UI/Typography";
 import Tab from "../UI/Tab";
 import TabPanel from "../UI/TabPanel";
 import Tabs from "../UI/Tabs";
-import RadioGroup from "../UI/RadioGroup";
+import RadioGroup from "../UI/Input/RadioGroup";
 import Avatar from "../UI/Avatar";
 import Container from "../UI/Container";
 
 import classes from "./Settings.module.scss";
 import Paper from "../UI/Paper";
-import Button from "../UI/Button";
+import Button from "../UI/Input/Button";
 
 import { MdInfo } from "react-icons/md";
 
@@ -148,7 +148,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           <Typography variant="h4" noWrap noSelect>
             Thème de l'interface
           </Typography>
-          <RadioGroup onChange={handleThemeChange}>
+          <RadioGroup>
             <Radio
               name={pid + "_theme"}
               label="Défaut"
@@ -248,9 +248,9 @@ const Settings: FunctionComponent<IProps> = (props) => {
             Langue du système
           </Typography>
           <RadioGroup
-            onChange={(value) => {
-              dispatch(setColorScheme(value));
-            }}
+          // onChange={(value) => {
+          //   dispatch(setColorScheme(value));
+          // }}
           >
             <Radio
               checked={true}

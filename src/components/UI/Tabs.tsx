@@ -1,6 +1,8 @@
 import classes from "./Tabs.module.scss";
 import {
+  memo,
   FunctionComponent,
+  PropsWithChildren,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -161,4 +163,4 @@ const Tabs: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Tabs;
+export default memo<PropsWithChildren<IProps>>(Tabs);

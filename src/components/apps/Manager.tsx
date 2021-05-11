@@ -17,11 +17,11 @@ import TableHead from "../UI/TableHead";
 import TableRow from "../UI/TableRow";
 import TableCell from "../UI/TableCell";
 import TableBody from "../UI/TableBody";
-import Checkbox from "../UI/Checkbox";
+import Checkbox from "../UI/Input/Checkbox";
 import TableFoot from "../UI/TableFoot";
 import { EColorScheme } from "../../types/EColorScheme";
-import ButtonGroup from "../UI/ButtonGroup";
-import Button from "../UI/Button";
+import ButtonGroup from "../UI/Input/ButtonGroup";
+import Button from "../UI/Input/Button";
 
 const Manager = () => {
   const applications = useSelector((store) => store.applications);

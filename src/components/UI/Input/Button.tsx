@@ -9,10 +9,10 @@ import {
   useEffect,
   useRef
 } from "react";
-import { TSize } from "../../types/TSize";
-import { TColor } from "../../types/TColor";
-import { useSelector } from "../../hooks/Store";
-import contrastColor from "../../functions/contrastColor";
+import { TSize } from "../../../types/TSize";
+import { TColor } from "../../../types/TColor";
+import { useSelector } from "../../../hooks/Store";
+import contrastColor from "../../../functions/contrastColor";
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
   align?: "center" | "end" | "start";
@@ -111,12 +111,8 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     if (isIcon) rootClasses.push(classes["is-icon"]);
     if (className) rootClasses.push(className);
 
-    let tag = "button";
-
-    if (to) tag = "a";
-
     return createElement(
-      tag,
+      to ? "a" : "button",
       {
         className: rootClasses.join(" "),
         onClick: handleClick,

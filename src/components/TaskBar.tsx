@@ -15,7 +15,7 @@ import { setHasRanStartupApplications } from "../store/reducers/OS";
 import TaskBarTimeDate from "./TaskBarTimeDate";
 import MenuIcon from "./icons/Menu";
 import { EColorScheme } from "../types/EColorScheme";
-import Button from "./UI/Button";
+import Button from "./UI/Input/Button";
 import {
   MdLock,
   MdMail,

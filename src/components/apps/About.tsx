@@ -3,14 +3,14 @@ import { FunctionComponent, memo, useState } from "react";
 import Typography from "../UI/Typography";
 import Paper from "../UI/Paper";
 import Avatar from "../UI/Avatar";
-import Rating from "../UI/Rating";
+import Rating from "../UI/Input/Rating";
 import Tab from "../UI/Tab";
 import Tabs from "../UI/Tabs";
 import { useSelector } from "../../hooks/Store";
 import { EColorScheme } from "../../types/EColorScheme";
 import TabPanel from "../UI/TabPanel";
 import Code from "../icons/Code";
-import Button from "../UI/Button";
+import Button from "../UI/Input/Button";
 import Divider from "../UI/Divider";
 
 interface IProps {}
@@ -298,13 +298,7 @@ const About: FunctionComponent<IProps> = () => {
         <Typography noWrap noSelect variant="h4">
           Compétences
         </Typography>
-        <Paper
-          spaced
-          blur
-          background="background"
-          outlined
-          className={classes["grid"]}
-        >
+        <Paper spaced background="background" className={classes["grid"]}>
           <Typography
             noWrap
             noSelect

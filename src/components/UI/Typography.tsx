@@ -4,7 +4,6 @@ import {
   memo,
   PropsWithChildren
 } from "react";
-import { shallowEqual } from "react-redux";
 import classes from "./Typography.module.scss";
 
 interface IProps {
@@ -67,4 +66,4 @@ const Typography: FunctionComponent<IProps> = (props) => {
   });
 };
 
-export default memo<PropsWithChildren<IProps>>(Typography, shallowEqual);
+export default memo<PropsWithChildren<IProps>>(Typography);
