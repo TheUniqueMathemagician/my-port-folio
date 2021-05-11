@@ -4,11 +4,10 @@
   display: grid;
   row-gap: $padding;
   user-select: none;
-  // background: var(--cvos-background);
   p {
-    display: grid;
-    grid-template-columns: auto 1fr;
     align-items: center;
+    display: grid;
+    grid: auto / auto 1fr;
     justify-items: flex-end;
     max-width: 400px;
   }
