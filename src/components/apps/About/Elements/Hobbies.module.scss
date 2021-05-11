@@ -1,3 +1,7 @@
+@import "../../../../styles/theme.scss";
+
 .root {
   user-select: none;
+  display: grid;
+  row-gap: $padding;
 }
