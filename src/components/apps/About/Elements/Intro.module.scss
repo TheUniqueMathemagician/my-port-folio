@@ -1,45 +1,10 @@
-@import "../../styles/theme.scss";
+@import "../../../../styles/theme.scss";
 
-// TODO: think about a container for tabs and tabpannels
 .root {
-  height: 100%;
-  position: relative;
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  grid-template-rows: 100%;
-}
-
-.p {
-  max-width: 500px;
-  text-align: center;
-}
-
-.grid {
-  display: grid;
-  align-content: flex-start;
-  grid-template-columns: auto 1fr;
-  column-gap: $padding;
-  align-items: center;
-}
-.row-span {
-  grid-column-start: 1;
-  grid-column-end: -1;
-}
-
-.tab-panel {
-  display: flex;
-  justify-content: center;
-  > div {
-    display: grid;
-    row-gap: $padding;
-    max-width: 800px;
-  }
-}
-
-.intro {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   justify-items: center;
+  user-select: none;
   .container {
     position: relative;
     // background: red;
@@ -154,17 +119,10 @@
     justify-content: center;
     border: 1px solid var(--cvos-primary);
     border-radius: 50%;
-    color: var(--cvos-hint);
-    font-weight: bold;
+    color: var(--cvos-text);
     background-color: var(--cvos-background-33);
   }
   ul {
     list-style-type: none;
   }
-}
-
-.discover {
-  list-style-type: none;
-  color: var(--cvos-text);
-  cursor: cros;
 }

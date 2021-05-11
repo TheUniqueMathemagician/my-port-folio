@@ -86,9 +86,9 @@ const initialState: ThemeState = {
     },
     paper: {
       [EColorScheme.contrast]: "#00000",
-      [EColorScheme.dark]: "#222222",
+      [EColorScheme.dark]: "#080808",
       [EColorScheme.default]: "#ffffff",
-      [EColorScheme.light]: "#fafafa"
+      [EColorScheme.light]: "#ffffff"
     },
     primary: {
       [EColorScheme.contrast]: "#ffff00",

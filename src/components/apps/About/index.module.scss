@@ -1,0 +1,13 @@
+@import "../../../styles/theme.scss";
+
+.root {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 100%;
+  > .tab-panel {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+  }
+}

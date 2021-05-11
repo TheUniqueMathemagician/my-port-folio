@@ -17,7 +17,7 @@
       background-color: var(--cvos-#{$color});
     }
     &.#{$color}:not(.contrast) {
-      background-color: var(--cvos-#{$color}#{-33});
+      background-color: var(--cvos-#{$color}#{-50});
     }
   }
   @supports (backdrop-filter: $blur) {
@@ -26,7 +26,7 @@
       backdrop-filter: $blur;
       @each $color in $colors {
         &.#{$color} {
-          background-color: var(--cvos-#{$color}#{-33});
+          background-color: var(--cvos-#{$color}#{-50});
         }
       }
     }

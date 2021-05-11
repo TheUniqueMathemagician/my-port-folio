@@ -1,0 +1,15 @@
+@import "../../../../styles/theme.scss";
+
+.root {
+  display: grid;
+  row-gap: $padding;
+  user-select: none;
+  // background: var(--cvos-background);
+  p {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    justify-items: flex-end;
+    max-width: 400px;
+  }
+}

@@ -6,4 +6,5 @@ export type TColor =
   | "info"
   | "success"
   | "warning"
-  | "error";
+  | "error"
+  | "paper";

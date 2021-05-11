@@ -160,14 +160,14 @@ initialState[aid] = {
 aid = generateID();
 initialState[aid] = {
   component: EApplications.Welcome,
-  dimensions: { height: 600, width: 600 },
+  dimensions: { height: 300, width: 300 },
   displayName: "Bienvenue",
   icon: require("../../assets/images/applications/welcome.svg").default,
   id: aid,
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
-  resizable: true,
+  resizable: false,
   runOnStartup: true,
   shortcut: "",
   type: "window"
