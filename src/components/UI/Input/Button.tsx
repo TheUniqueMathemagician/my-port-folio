@@ -1,5 +1,5 @@
 import classes from "./Button.module.scss";
-import {
+import React, {
   createElement,
   forwardRef,
   memo,
@@ -7,7 +7,8 @@ import {
   RefObject,
   useCallback,
   useEffect,
-  useRef
+  useRef,
+  useState
 } from "react";
 import { TSize } from "../../../types/TSize";
 import { TColor } from "../../../types/TColor";
@@ -24,7 +25,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   isIcon?: boolean;
   fullWidth?: boolean;
   focusable?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   outlined?: boolean;
   readOnly?: boolean;
   ripple?: boolean;
@@ -61,12 +62,39 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     const innerRef = useRef<HTMLButtonElement>(null);
     const ref = (parentRef as RefObject<HTMLButtonElement>) ?? innerRef;
 
+    const [mouseHasBeenDown, setMouseHasBeenDown] = useState<boolean>(false);
+
     const palette = useSelector((store) => store.theme.palette);
     const colorScheme = useSelector((store) => store.theme.colorScheme);
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<any, MouseEvent>) => {
-        if (ref && ripple && !readOnly) {
+    const handleKeyPress = useCallback(
+      (e: React.KeyboardEvent<HTMLElement>) => {
+        if (e.code === "Space" && ref && ripple && !readOnly) {
+          const button = ref.current;
+          if (button) {
+            const x = button.clientWidth / 2;
+            const y = button.clientHeight / 2;
+            const ripples = document.createElement("span");
+            ripples.classList.add(classes["ripple"]);
+            ripples.style.left = `${x}px`;
+            ripples.style.top = `${y}px`;
+            button.appendChild(ripples);
+            setTimeout(() => {
+              ripples.remove();
+            }, 666);
+          }
+        }
+      },
+      [ref, ripple, readOnly]
+    );
+
+    const handleMouseDown = useCallback(() => {
+      setMouseHasBeenDown(true);
+    }, []);
+
+    const handleMouseUp = useCallback(
+      (e: React.MouseEvent) => {
+        if (mouseHasBeenDown && ref && ripple && !readOnly) {
           const button = ref.current;
           if (button) {
             const x = e.clientX - button.getBoundingClientRect().x;
@@ -79,11 +107,11 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
             setTimeout(() => {
               ripples.remove();
             }, 666);
+            setMouseHasBeenDown(false);
           }
         }
-        onClick?.(e);
       },
-      [onClick, ripple, readOnly, ref]
+      [mouseHasBeenDown, ref, ripple, readOnly]
     );
 
     useEffect(() => {
@@ -115,7 +143,10 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       to ? "a" : "button",
       {
         className: rootClasses.join(" "),
-        onClick: handleClick,
+        onMouseDown: handleMouseDown,
+        onMouseUp: handleMouseUp,
+        onKeyPress: handleKeyPress,
+        onClick,
         disabled,
         ref,
         tabIndex: focusable && !readOnly ? 0 : -1,
