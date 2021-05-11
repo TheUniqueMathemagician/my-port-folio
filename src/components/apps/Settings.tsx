@@ -155,6 +155,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               value={EColorScheme.default}
               noSelect
               checked={colorScheme === EColorScheme.default}
+              onChange={() => dispatch(setColorScheme(EColorScheme.default))}
             ></Radio>
             <Radio
               name={pid + "_theme"}
@@ -162,6 +163,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               value={EColorScheme.light}
               noSelect
               checked={colorScheme === EColorScheme.light}
+              onChange={() => dispatch(setColorScheme(EColorScheme.light))}
             ></Radio>
             <Radio
               name={pid + "_theme"}
@@ -169,6 +171,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               value={EColorScheme.dark}
               noSelect
               checked={colorScheme === EColorScheme.dark}
+              onChange={() => dispatch(setColorScheme(EColorScheme.dark))}
             ></Radio>
             <Radio
               name={pid + "_theme"}
@@ -176,6 +179,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
               value={EColorScheme.contrast}
               noSelect
               checked={colorScheme === EColorScheme.contrast}
+              onChange={() => dispatch(setColorScheme(EColorScheme.contrast))}
             ></Radio>
           </RadioGroup>
           <br />
