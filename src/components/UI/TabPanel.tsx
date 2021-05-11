@@ -1,41 +1,32 @@
 import classes from "./TabPanel.module.scss";
-import { FunctionComponent } from "react";
+import { createElement, FunctionComponent } from "react";
 
-interface IPropsA
+interface IProps
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
   index: number;
   spaced?: boolean;
+  tag?: "div" | "article";
   value: number;
 }
 
-interface IPropsB
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  > {
-  index: string;
-  spaced?: boolean;
-  value: string;
-}
-
-const TabPanel: FunctionComponent<IPropsA | IPropsB> = (props) => {
-  const { children, spaced, value, index, className, ...other } = props;
+const TabPanel: FunctionComponent<IProps> = (props) => {
+  const { children, spaced, value, index, className, tag, ...other } = props;
   const rootClasses = [classes["root"]];
   if (className) rootClasses.push(className);
   if (spaced) rootClasses.push(classes["spaced"]);
-  return (
-    <div
-      hidden={value !== index}
-      role="tabpanel"
-      className={rootClasses.join(" ")}
+  return createElement(
+    tag ?? "div",
+    {
+      hidden: value !== index,
+      role: "tabpanel",
+      className: rootClasses.join(" "),
       // aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && children}
-    </div>
+      ...other
+    },
+    children
   );
 };
 
