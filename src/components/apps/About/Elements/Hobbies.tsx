@@ -2,11 +2,13 @@ import classes from "./Hobbies.module.scss";
 import { FunctionComponent, memo } from "react";
 import Paper from "../../../UI/Paper";
 import Typography from "../../../UI/Typography";
-import Divider from "../../../UI/Divider";
 
-interface IProps {}
+interface IProps {
+  pid: string;
+}
 
-const Hobbies: FunctionComponent<IProps> = () => {
+const Hobbies: FunctionComponent<IProps> = (props) => {
+  const { pid } = props;
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Loisirs</Typography>

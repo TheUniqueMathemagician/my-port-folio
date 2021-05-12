@@ -1,27 +1,41 @@
 import classes from "./Intro.module.scss";
-import { FunctionComponent, memo } from "react";
+import { FunctionComponent, memo, useEffect } from "react";
 import Avatar from "../../../UI/Avatar";
 import Typography from "../../../UI/Typography";
 import Paper from "../../../UI/Paper";
 import Divider from "../../../UI/Divider";
 
 import Code from "../../../icons/Code";
+import { useSelector } from "../../../../hooks/Store";
+import { WindowInstance } from "../../../../store/reducers/Instances";
 
-interface IProps {}
+interface IProps {
+  pid: string;
+}
 
-const Intro: FunctionComponent<IProps> = () => {
+const Intro: FunctionComponent<IProps> = (props) => {
+  const { pid } = props;
+  const small = useSelector(
+    (store) =>
+      ((store.instances.elements[pid] as WindowInstance)?.dimensions.width ??
+        0) < 800
+  );
+
+  const rootClasses = [classes["root"]];
+
+  if (small) rootClasses.push(classes["small"]);
+
   return (
-    <div className={classes["root"]}>
+    <div className={rootClasses.join(" ")}>
       <header className={classes["intro"]}>
-        <div className={classes["container"]}>
-          <div className={classes["avatar"]}>
-            <Avatar
-              square
-              alt="Moi"
-              src="https://alexstudio.ch/wp-content/uploads/2019/01/business.portrait.cv_.resume.geneva.30.jpg"
-              size="xl"
-            ></Avatar>
-          </div>
+        <div className={classes["avatar-container"]}>
+          <Avatar
+            square
+            className={classes["avatar"]}
+            alt="Moi"
+            src="https://alexstudio.ch/wp-content/uploads/2019/01/business.portrait.cv_.resume.geneva.30.jpg"
+            size="xl"
+          ></Avatar>
           <Paper
             blur
             spaced
@@ -33,12 +47,14 @@ const Intro: FunctionComponent<IProps> = () => {
             </Typography>
           </Paper>
         </div>
-        <Typography variant="p" className={classes["text"]}>
-          Electromécanicien de formation, développeur par passion. Esprit
-          analytique, team-player, enthousiaste des nouvelles technologies,
-          orienté performance et expérience utilisateur, spécialisé frameworks
-          fron-tend tels que Vue et React en TypeScript
-        </Typography>
+        <div className={classes["text-container"]}>
+          <Typography variant="p" className={classes["text"]}>
+            Electromécanicien de formation, développeur par passion. Esprit
+            analytique, team-player, enthousiaste des nouvelles technologies,
+            orienté performance et expérience utilisateur, spécialisé frameworks
+            fron-tend tels que Vue et React en TypeScript
+          </Typography>
+        </div>
         <Typography variant="body">
           PS: Ce n'est pas moi sur l'image, mais en attendant ça fait joli :p
         </Typography>
@@ -99,18 +115,60 @@ const Intro: FunctionComponent<IProps> = () => {
         </ul>
       </article>
       <Divider inset></Divider>
-      <article className={classes["experiences"]}>
+      <article className={classes["education"]}>
         <Typography variant="h4">Mes formations</Typography>
-        <Typography variant="h6">
-          Master électronique ( non complété )
-        </Typography>
-        <Typography variant="p">Haute Ecole de la Province de Liège</Typography>
-        <Typography variant="h6">Bachelier électromécanique</Typography>
-        <Typography variant="h6">Haute École Henallux Seraing</Typography>
-        <Typography variant="h6">CESS électronique-informatique</Typography>
-        <Typography variant="h6">Enseignement Polytechnique Vervier</Typography>
-        Soudure arc, oxy-acétylène, TIG Institut Saint-Laurent BA4, BA5, VCA
-        Vinçotte-Academy sa
+        <ul>
+          <li>
+            <Typography variant="h6">
+              Master électronique ( non complété )
+            </Typography>
+            <Typography variant="body" color="hint">
+              Haute Ecole de la Province de Liège
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="h6">Bachelier électromécanique</Typography>
+            <Typography variant="body" color="hint">
+              Haute École Henallux Seraing
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="h6">CESS électronique-informatique</Typography>
+            <Typography variant="body" color="hint">
+              Enseignement Polytechnique Vervier
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="h6">Soudure arc, oxy-acétylène</Typography>
+            <Typography variant="body" color="hint">
+              TIG Institut Saint-Laurent
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="h6">BA4, BA5, VCA</Typography>
+            <Typography variant="body" color="hint">
+              Vinçotte-Academy sa
+            </Typography>
+            <Typography variant="body" className={classes["date"]}>
+              1999
+            </Typography>
+          </li>
+        </ul>
       </article>
     </div>
   );

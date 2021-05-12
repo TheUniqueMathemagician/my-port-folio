@@ -12,7 +12,9 @@ import Intro from "./Elements/Intro";
 import Skills from "./Elements/Skills";
 import Hobbies from "./Elements/Hobbies";
 
-interface IProps {}
+interface IProps {
+  pid: string;
+}
 
 enum ETabs {
   about,
@@ -21,7 +23,8 @@ enum ETabs {
   // TODO: Add projects
 }
 
-const About: FunctionComponent<IProps> = () => {
+const About: FunctionComponent<IProps> = (props) => {
+  const { pid } = props;
   const [panelIndex, setPanelIndex] = useState<number>(0);
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
@@ -57,7 +60,7 @@ const About: FunctionComponent<IProps> = () => {
         value={panelIndex}
         spaced
       >
-        <Intro> </Intro>
+        <Intro pid={pid}></Intro>
       </TabPanel>
       <TabPanel
         className={classes["tab-panel"]}
@@ -65,7 +68,7 @@ const About: FunctionComponent<IProps> = () => {
         value={panelIndex}
         spaced
       >
-        <Skills></Skills>
+        <Skills pid={pid}></Skills>
       </TabPanel>
       <TabPanel
         className={classes["tab-panel"]}
@@ -73,7 +76,7 @@ const About: FunctionComponent<IProps> = () => {
         value={panelIndex}
         spaced
       >
-        <Hobbies></Hobbies>
+        <Hobbies pid={pid}></Hobbies>
       </TabPanel>
     </div>
   );
