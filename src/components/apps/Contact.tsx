@@ -28,9 +28,9 @@ const Contact: FunctionComponent<IProps> = () => {
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Me contacter</Typography>
-      <Paper spaced outlined blur background="paper">
+      <Paper spaced blur background="paper">
         <div className={classes["grid"]}>
-          <Typography noSelect variant="body" className={classes["heading"]}>
+          <Typography variant="body" className={classes["heading"]}>
             Email
           </Typography>
           <Button
@@ -47,7 +47,7 @@ const Contact: FunctionComponent<IProps> = () => {
               tamburrini.yannick@gmail.com
             </Typography>
           </Button>
-          <Typography noSelect variant="body" className={classes["heading"]}>
+          <Typography variant="body" className={classes["heading"]}>
             Téléphone
           </Typography>
           <Button
@@ -64,7 +64,7 @@ const Contact: FunctionComponent<IProps> = () => {
               +32 498 62 77 16
             </Typography>
           </Button>
-          <Typography noSelect variant="body" className={classes["heading"]}>
+          <Typography variant="body" className={classes["heading"]}>
             Adresse
           </Typography>
           <Button
