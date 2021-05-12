@@ -5,7 +5,6 @@ import Typography from "../../../UI/Typography";
 import Paper from "../../../UI/Paper";
 import Divider from "../../../UI/Divider";
 
-import Code from "../../../icons/Code";
 import { useSelector } from "../../../../hooks/Store";
 import { WindowInstance } from "../../../../store/reducers/Instances";
 
@@ -98,21 +97,36 @@ const Intro: FunctionComponent<IProps> = (props) => {
       <article className={classes["skills"]}>
         {/* TODO: open application with args ( dev, ui/ux, ... arguments) */}
         <Paper spaced className={classes["bubble"]} background="paper">
-          <Code className={classes["icon"]}></Code>
+          {/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
+          <img
+            src={require("../../../../assets/images/solved.svg").default}
+            alt="UI/UX"
+            className={classes["icon"]}
+          />
           <Typography variant="h6" tag="h5">
-            Développement
+            Problem solving
           </Typography>
         </Paper>
         <Paper spaced className={classes["bubble"]} background="paper">
-          <Code className={classes["icon"]}></Code>
+          {/* <div>Icônes conçues par <a href="https://www.flaticon.com/fr/auteurs/xnimrodx" title="xnimrodx">xnimrodx</a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com</a></div> */}
+          <img
+            src={require("../../../../assets/images/ui.svg").default}
+            alt="UI/UX"
+            className={classes["icon"]}
+          />
           <Typography variant="h6" tag="h5">
             UI / UX
           </Typography>
         </Paper>
         <Paper spaced className={classes["bubble"]} background="paper">
-          <Code className={classes["icon"]}></Code>
+          {/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
+          <img
+            src={require("../../../../assets/images/innovation.svg").default}
+            alt="UI/UX"
+            className={classes["icon"]}
+          />
           <Typography variant="h6" tag="h5">
-            Développement
+            Innovation
           </Typography>
         </Paper>
       </article>
