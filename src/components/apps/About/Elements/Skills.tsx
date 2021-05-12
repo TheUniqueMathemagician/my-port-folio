@@ -4,7 +4,9 @@ import Paper from "../../../UI/Paper";
 import Typography from "../../../UI/Typography";
 import Rating from "../../../UI/Input/Rating";
 
-interface IProps {}
+interface IProps {
+  pid: string;
+}
 
 interface ISKill {
   level: number;
@@ -104,7 +106,7 @@ const Skills: FunctionComponent<IProps> = () => {
         Langages
       </Typography>
       <Paper spaced blur background="paper">
-        <p>
+        <div className={classes["cat"]}>
           {languageSkills.map((skill) => (
             <>
               <Typography noWrap variant="body">
@@ -118,13 +120,13 @@ const Skills: FunctionComponent<IProps> = () => {
               ></Rating>
             </>
           ))}
-        </p>
+        </div>
       </Paper>
       <Typography noWrap variant="h5">
         Frameworks
       </Typography>
       <Paper spaced blur background="paper">
-        <p>
+        <div className={classes["cat"]}>
           {frameworkSkills.map((skill) => (
             <>
               <Typography noWrap variant="body">
@@ -138,13 +140,13 @@ const Skills: FunctionComponent<IProps> = () => {
               ></Rating>
             </>
           ))}
-        </p>
+        </div>
       </Paper>
       <Typography noWrap variant="h5">
         Logiciels
       </Typography>
       <Paper spaced blur background="paper">
-        <p>
+        <div className={classes["cat"]}>
           {softwareSkills.map((skill) => (
             <>
               <Typography noWrap variant="body">
@@ -158,7 +160,7 @@ const Skills: FunctionComponent<IProps> = () => {
               ></Rating>
             </>
           ))}
-        </p>
+        </div>
       </Paper>
     </div>
   );

@@ -4,7 +4,7 @@
   display: grid;
   row-gap: $padding;
   user-select: none;
-  p {
+  .cat {
     align-items: center;
     display: grid;
     grid: auto / auto 1fr;
