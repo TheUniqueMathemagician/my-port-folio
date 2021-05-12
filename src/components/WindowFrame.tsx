@@ -1,6 +1,5 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useSelector } from "../hooks/Store";
-import { WindowInstance } from "../store/reducers/Instances";
 import { EColorScheme } from "../types/EColorScheme";
 import { IBoundaries } from "../types/IBoundaries";
 import Window from "./Window";
@@ -71,7 +70,7 @@ const WindowFrame = () => {
         .filter((key) => instances[key].type === "window")
         .map((key) => (
           <Window
-            application={instances[key] as WindowInstance}
+            pid={key}
             boundaries={boundaries}
             borderOffset={16}
             resizerWidth={4}

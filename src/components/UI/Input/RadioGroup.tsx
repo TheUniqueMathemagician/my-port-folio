@@ -1,5 +1,5 @@
 import classes from "./RadioGroup.module.scss";
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
+import { FunctionComponent } from "react";
 
 interface IProps {}
 

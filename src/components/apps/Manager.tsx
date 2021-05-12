@@ -1,30 +1,29 @@
 import { memo, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { closeApplication, sendToFront } from "../../store/reducers/Instances";
-import { DaemonInstance, WindowInstance } from "../../store/reducers/Instances";
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md";
 import { setRunOnStartup } from "../../store/reducers/Applications";
 
-import Typography from "../UI/Typography";
+import Button from "../UI/Input/Button";
+import ButtonGroup from "../UI/Input/ButtonGroup";
+import Checkbox from "../UI/Input/Checkbox";
 import Paper from "../UI/Paper";
-import TabPanel from "../UI/TabPanel";
 import Tab from "../UI/Tab";
-import Tabs from "../UI/Tabs";
-
-import classes from "./Manager.module.scss";
 import Table from "../UI/Table";
+import TableBody from "../UI/TableBody";
+import TableCell from "../UI/TableCell";
+import TableFoot from "../UI/TableFoot";
 import TableHead from "../UI/TableHead";
 import TableRow from "../UI/TableRow";
-import TableCell from "../UI/TableCell";
-import TableBody from "../UI/TableBody";
-import Checkbox from "../UI/Input/Checkbox";
-import TableFoot from "../UI/TableFoot";
+import TabPanel from "../UI/TabPanel";
+import Tabs from "../UI/Tabs";
+import Typography from "../UI/Typography";
+
+import classes from "./Manager.module.scss";
 import { EColorScheme } from "../../types/EColorScheme";
-import ButtonGroup from "../UI/Input/ButtonGroup";
-import Button from "../UI/Input/Button";
 
 const Manager = () => {
-  const applications = useSelector((store) => store.applications);
+  const applications = useSelector((store) => store.applications.elements);
   const instances = useSelector(
     (store) => store.instances.elements,
     (left, right) => {
@@ -48,8 +47,8 @@ const Manager = () => {
   const dispatch = useDispatch();
 
   const closeInstance = useCallback(
-    (app: DaemonInstance | WindowInstance) => {
-      dispatch(closeApplication(app));
+    (pid) => {
+      dispatch(closeApplication(pid));
     },
     [dispatch]
   );
@@ -97,7 +96,7 @@ const Manager = () => {
                         onChange={(e) => {
                           dispatch(
                             setRunOnStartup({
-                              application: applications[key],
+                              aid: key,
                               runOnStartup: e.target.checked
                             })
                           );
@@ -158,7 +157,7 @@ const Manager = () => {
                         ripple
                         size="xs"
                         onClick={() => {
-                          closeInstance(instances[key]);
+                          closeInstance(key);
                         }}
                       >
                         <MdDelete></MdDelete>
@@ -171,7 +170,7 @@ const Manager = () => {
                           onClick={() => {
                             const instance = instances[key];
                             if (instance.type === "window") {
-                              dispatch(sendToFront(instance));
+                              dispatch(sendToFront(key));
                             }
                           }}
                         >

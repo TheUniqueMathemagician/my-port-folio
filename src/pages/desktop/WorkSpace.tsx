@@ -10,7 +10,7 @@ import { setHasRanStartupApplications } from "../../store/reducers/OS";
 
 const Main = () => {
   const dispatch = useDispatch();
-  const applications = useSelector((store) => store.applications);
+  const applications = useSelector((store) => store.applications.elements);
   const os = useSelector((store) => store.os);
   useEffect(() => {
     if (!os.hasRanStartupApplications) {

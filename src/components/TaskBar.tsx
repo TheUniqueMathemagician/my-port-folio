@@ -53,7 +53,7 @@ const TaskBar = () => {
     }
   );
   const applications = useSelector(
-    (store) => store.applications,
+    (store) => store.applications.elements,
     (left, right) => {
       for (const key in left) {
         const leftItem = left[key];
@@ -118,20 +118,22 @@ const TaskBar = () => {
           {Object.keys(instances)
             .map((x) => instances[x])
             .filter((app) => app.type === "window")
-            .map((application) => (
+            .map((instance) => (
               <Button
                 size="md"
                 ripple
                 focusable
-                key={application.id}
+                key={instance.id}
                 onClick={() => {
-                  if (application.type === "window") {
-                    dispatch(setMinimized({ application, minimized: false }));
-                    dispatch(sendToFront(application));
+                  if (instance.type === "window") {
+                    dispatch(
+                      setMinimized({ pid: instance.id, minimized: false })
+                    );
+                    dispatch(sendToFront(instance.id));
                   }
                 }}
               >
-                <img src={application.icon} alt={application.displayName} />
+                <img src={instance.icon} alt={instance.displayName} />
               </Button>
             ))}
         </div>
@@ -306,7 +308,7 @@ const TaskBar = () => {
               onClick={() => {
                 history.push("/lock");
                 Object.keys(instances).forEach((key) => {
-                  dispatch(closeApplication(instances[key]));
+                  dispatch(closeApplication(key));
                 });
                 dispatch(setHasRanStartupApplications(false));
               }}
@@ -327,7 +329,7 @@ const TaskBar = () => {
               onClick={() => {
                 history.push("/boot");
                 Object.keys(instances).forEach((key) => {
-                  dispatch(closeApplication(instances[key]));
+                  dispatch(closeApplication(key));
                 });
                 dispatch(setHasRanStartupApplications(false));
               }}

@@ -26,16 +26,14 @@ import { IOffset } from "../types/IOffset";
 import { EColorScheme } from "../types/EColorScheme";
 
 interface IProps {
-  application: WindowInstance;
+  pid: string;
   boundaries: IBoundaries;
   windowRef: RefObject<HTMLDivElement>;
 }
 
-const WindowHeader: FunctionComponent<IProps> = ({
-  application,
-  boundaries,
-  windowRef
-}) => {
+const WindowHeader: FunctionComponent<IProps> = (props) => {
+  const { pid, boundaries, windowRef } = props;
+
   const headerRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
@@ -43,50 +41,63 @@ const WindowHeader: FunctionComponent<IProps> = ({
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
-
-  const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 });
-
-  const [snap, setSnap] = useState<ESnap>(ESnap.none);
-
   const snapShadowVisible = useSelector(
     (store) => store.instances.snapShadow.visible
   );
+  const maximized = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).maximized
+  );
+  const dimensions = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).dimensions
+  );
+  const position = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).position
+  );
+  const dragging = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).dragging
+  );
+  const displayName = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).displayName
+  );
+
+  const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 });
+  const [snap, setSnap] = useState<ESnap>(ESnap.none);
 
   //#region button handlers
 
   const handleDragDoubleClick = useCallback(() => {
-    dispatch(setMaximized({ application, maximized: ESnap.top }));
-  }, [application, dispatch]);
+    dispatch(setMaximized({ pid, maximized: ESnap.top }));
+  }, [pid, dispatch]);
 
   const handleRedClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      dispatch(closeApplication(application));
+      dispatch(closeApplication(pid));
     },
-    [dispatch, application]
+    [dispatch, pid]
   );
 
   const handleOrangeClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      dispatch(sendToFront(application));
-      if (application.maximized) {
-        dispatch(setMaximized({ application, maximized: ESnap.none }));
+      dispatch(sendToFront(pid));
+      if (maximized) {
+        dispatch(setMaximized({ pid, maximized: ESnap.none }));
       } else {
-        dispatch(setMaximized({ application, maximized: ESnap.top }));
+        dispatch(setMaximized({ pid, maximized: ESnap.top }));
       }
     },
-    [application, dispatch]
+    [maximized, dispatch, pid]
   );
 
   const handleGreenClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      dispatch(setMinimized({ application, minimized: true }));
+      dispatch(setMinimized({ pid, minimized: true }));
     },
-    [application, dispatch]
+    [pid, dispatch]
   );
 
   const handleButtonMouseDown = useCallback((e: React.MouseEvent) => {
@@ -103,10 +114,10 @@ const WindowHeader: FunctionComponent<IProps> = ({
       if (e.button !== 0) return;
       e.preventDefault();
 
-      if (application.maximized) {
+      if (maximized) {
         const header = headerRef.current;
         if (header) {
-          let x = (application.dimensions.width || 0) / 2;
+          let x = (dimensions.width || 0) / 2;
           let y = header.clientHeight / 2;
           setOffset({ x, y });
         }
@@ -120,9 +131,9 @@ const WindowHeader: FunctionComponent<IProps> = ({
         }
       }
 
-      dispatch(setDragging({ application, dragging: true }));
+      dispatch(setDragging({ pid, dragging: true }));
     },
-    [dispatch, application, windowRef]
+    [dispatch, pid, windowRef, dimensions.width, maximized]
   );
 
   const handleDragMouseMove = useCallback(
@@ -220,20 +231,20 @@ const WindowHeader: FunctionComponent<IProps> = ({
         if (snapShadowVisible) {
           dispatch(setSnapShadowVisibility(false));
         }
-        if (application.maximized) {
-          dispatch(setMaximized({ application, maximized: ESnap.none }));
+        if (maximized) {
+          dispatch(setMaximized({ pid, maximized: ESnap.none }));
         }
         setSnap(ESnap.none);
       }
 
-      const position = {
+      const tmpPosition = {
         left: e.pageX - offset.x,
         top: e.pageY - offset.y,
-        right: application.position.right,
-        bottom: application.position.bottom
+        right: position.right,
+        bottom: position.bottom
       };
 
-      dispatch(setPosition({ application, position }));
+      dispatch(setPosition({ pid, position: tmpPosition }));
 
       if (!snapShadowVisible) {
         const window = windowRef.current;
@@ -252,24 +263,33 @@ const WindowHeader: FunctionComponent<IProps> = ({
         }
       }
     },
-    [dispatch, application, boundaries, offset, snapShadowVisible, windowRef]
+    [
+      dispatch,
+      position,
+      boundaries,
+      offset,
+      snapShadowVisible,
+      windowRef,
+      maximized,
+      pid
+    ]
   );
 
   const handleDragMouseUp = useCallback(
     (e: globalThis.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      dispatch(setDragging({ application, dragging: false }));
+      dispatch(setDragging({ pid, dragging: false }));
       dispatch(setSnapShadowVisibility(false));
-      dispatch(setMaximized({ application, maximized: snap }));
+      dispatch(setMaximized({ pid, maximized: snap }));
     },
-    [application, dispatch, snap]
+    [pid, dispatch, snap]
   );
 
   //#endregion
 
   useEffect(() => {
-    if (application.dragging) {
+    if (dragging) {
       document.body.style.cursor = "grabbing";
       document.addEventListener("mousemove", handleDragMouseMove);
       document.addEventListener("mouseup", handleDragMouseUp);
@@ -279,7 +299,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
         document.removeEventListener("mouseup", handleDragMouseUp);
       };
     }
-  }, [application.dragging, handleDragMouseMove, handleDragMouseUp]);
+  }, [dragging, handleDragMouseMove, handleDragMouseUp]);
 
   const rootClasses = [classes["root"]];
 
@@ -289,7 +309,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
     <div
       className={rootClasses.join(" ")}
       style={{
-        cursor: application.dragging ? "grabbing" : "grab"
+        cursor: dragging ? "grabbing" : "grab"
       }}
       ref={headerRef}
       onMouseDown={handleDragMouseDown}
@@ -300,7 +320,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
         <button
           className={classes["red"]}
           style={{
-            pointerEvents: application.dragging ? "none" : "all"
+            pointerEvents: dragging ? "none" : "all"
           }}
           onClick={handleRedClick}
           onMouseDown={handleButtonMouseDown}
@@ -308,7 +328,7 @@ const WindowHeader: FunctionComponent<IProps> = ({
         <button
           className={classes["orange"]}
           style={{
-            pointerEvents: application.dragging ? "none" : "all"
+            pointerEvents: dragging ? "none" : "all"
           }}
           onClick={handleOrangeClick}
           onMouseDown={handleButtonMouseDown}
@@ -316,57 +336,15 @@ const WindowHeader: FunctionComponent<IProps> = ({
         <button
           className={classes["green"]}
           style={{
-            pointerEvents: application.dragging ? "none" : "all"
+            pointerEvents: dragging ? "none" : "all"
           }}
           onClick={handleGreenClick}
           onMouseDown={handleButtonMouseDown}
         ></button>
       </div>
-      <div className={classes["title"]}>{application.displayName}</div>
+      <div className={classes["title"]}>{displayName}</div>
     </div>
   );
 };
 
-const isEqual = (prevProps: IProps, nextProps: IProps) => {
-  if (
-    prevProps.application.resizable !== nextProps.application.resizable ||
-    prevProps.application.position.bottom !==
-      nextProps.application.position.bottom ||
-    prevProps.application.position.left !==
-      nextProps.application.position.left ||
-    prevProps.application.position.right !==
-      nextProps.application.position.right ||
-    prevProps.application.position.top !== nextProps.application.position.top
-  ) {
-    return false;
-  }
-  if (prevProps.application.resizable !== nextProps.application.resizable) {
-    return false;
-  }
-  if (prevProps.application.resizeMode !== nextProps.application.resizeMode) {
-    return false;
-  }
-  if (prevProps.application.resizing !== nextProps.application.resizing) {
-    return false;
-  }
-  if (prevProps.application.dragging !== nextProps.application.dragging) {
-    return false;
-  }
-  if (prevProps.application.displayName !== nextProps.application.displayName) {
-    return false;
-  }
-  if (prevProps.windowRef !== nextProps.windowRef) {
-    return false;
-  }
-  if (
-    prevProps.boundaries.x1 !== nextProps.boundaries.x1 ||
-    prevProps.boundaries.x2 !== nextProps.boundaries.x2 ||
-    prevProps.boundaries.y1 !== nextProps.boundaries.y1 ||
-    prevProps.boundaries.y1 !== nextProps.boundaries.y2
-  ) {
-    return false;
-  }
-  return true;
-};
-
-export default memo(WindowHeader, isEqual);
+export default memo(WindowHeader);

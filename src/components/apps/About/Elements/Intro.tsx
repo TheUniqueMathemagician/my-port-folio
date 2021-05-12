@@ -1,5 +1,5 @@
 import classes from "./Intro.module.scss";
-import { FunctionComponent, memo, useEffect } from "react";
+import { FunctionComponent, memo } from "react";
 import Avatar from "../../../UI/Avatar";
 import Typography from "../../../UI/Typography";
 import Paper from "../../../UI/Paper";

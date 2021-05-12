@@ -6,25 +6,24 @@ import React, {
   useRef
 } from "react";
 import classes from "./Window.module.scss";
-import { WindowInstance } from "../store/reducers/Instances";
 import { IPosition } from "../types/IPosition";
 import { IBoundaries } from "../types/IBoundaries";
 import { applicationsMap } from "../store/reducers/Applications";
-import { sendToFront } from "../store/reducers/Instances";
+import { sendToFront, WindowInstance } from "../store/reducers/Instances";
 import { useDispatch, useSelector } from "../hooks/Store";
 import WindowHeader from "./WindowHeader";
 import WindowResizer from "./WindowResizer";
 import { EColorScheme } from "../types/EColorScheme";
 
 interface IProps {
-  application: WindowInstance;
+  pid: string;
   boundaries: IBoundaries;
   borderOffset: number;
   resizerWidth: number;
 }
 
 const Window: FunctionComponent<IProps> = ({
-  application,
+  pid,
   boundaries,
   borderOffset,
   resizerWidth
@@ -35,32 +34,50 @@ const Window: FunctionComponent<IProps> = ({
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const maximized = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).maximized
+  );
+  const minimized = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).minimized
+  );
+  const dimensions = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).dimensions
+  );
+  const position = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).position
+  );
+  const dragging = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).dragging
+  );
+  const resizing = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).resizing
+  );
+  const component = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).component
+  );
+  const args = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).args
+  );
 
   const dispatch = useDispatch();
 
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
-      if (
-        zIndexes.findIndex((id) => id === application.id) !==
-        zIndexes.length - 1
-      ) {
-        dispatch(sendToFront(application));
+      if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) {
+        dispatch(sendToFront(pid));
       }
     },
-    [dispatch, application, zIndexes]
+    [dispatch, pid, zIndexes]
   );
 
   const handleWindowFocus = useCallback(
     (e: React.FocusEvent<HTMLElement>) => {
-      if (
-        zIndexes.findIndex((id) => id === application.id) !==
-        zIndexes.length - 1
-      ) {
-        dispatch(sendToFront(application));
+      if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) {
+        dispatch(sendToFront(pid));
       }
     },
-    [dispatch, application, zIndexes]
+    [dispatch, pid, zIndexes]
   );
 
   //#region window rendering checks
@@ -70,7 +87,7 @@ const Window: FunctionComponent<IProps> = ({
 
   let width: number | "" = "";
   let height: number | "" = "";
-  let position: IPosition = {
+  let tmpPosition: IPosition = {
     bottom: null,
     left: null,
     right: null,
@@ -78,65 +95,64 @@ const Window: FunctionComponent<IProps> = ({
   };
 
   const checkBoundaries = () => {
-    if (application.position.left) {
+    if (position.left) {
       if (
-        application.position.left <
-        boundaries.x1 - (application.dimensions.width ?? 0) + borderOffset
+        position.left <
+        boundaries.x1 - (dimensions.width ?? 0) + borderOffset
       ) {
-        position.left =
-          boundaries.x1 - (application.dimensions.width ?? 0) + borderOffset;
+        tmpPosition.left =
+          boundaries.x1 - (dimensions.width ?? 0) + borderOffset;
       }
-      if (application.position.left > boundaries.x2 - borderOffset) {
-        position.left = boundaries.x2 - borderOffset;
+      if (position.left > boundaries.x2 - borderOffset) {
+        tmpPosition.left = boundaries.x2 - borderOffset;
       }
     }
-    if (application.position.top) {
-      if (application.position.top < boundaries.y1) {
-        position.top = boundaries.y1;
+    if (position.top) {
+      if (position.top < boundaries.y1) {
+        tmpPosition.top = boundaries.y1;
       }
-      if (application.position.top > boundaries.y2 - borderOffset) {
-        position.top = boundaries.y2 - borderOffset;
+      if (position.top > boundaries.y2 - borderOffset) {
+        tmpPosition.top = boundaries.y2 - borderOffset;
       }
     }
   };
 
-  if (application.maximized) {
-    rootClasses.push(classes[`snap-${application.maximized}`]);
-  } else if (application.resizing) {
-    position.top = application.position.top;
-    position.left = application.position.left;
-    position.right = application.position.right;
-    position.bottom = application.position.bottom;
+  if (maximized) {
+    rootClasses.push(classes[`snap-${maximized}`]);
+  } else if (resizing) {
+    tmpPosition.top = position.top;
+    tmpPosition.left = position.left;
+    tmpPosition.right = position.right;
+    tmpPosition.bottom = position.bottom;
     checkBoundaries();
   } else if (
-    application.position.bottom === null &&
-    application.position.left === null &&
-    application.position.right === null &&
-    application.position.top === null
+    position.bottom === null &&
+    position.left === null &&
+    position.right === null &&
+    position.top === null
   ) {
-    position.left =
-      (boundaries.x2 - boundaries.x1 - (application.dimensions.width ?? 0)) / 2;
-    position.top =
-      (boundaries.y2 - boundaries.y1 - (application.dimensions.height ?? 0)) /
-      2;
-    width = application.dimensions.width ?? 0;
-    height = application.dimensions.height ?? 0;
+    tmpPosition.left =
+      (boundaries.x2 - boundaries.x1 - (dimensions.width ?? 0)) / 2;
+    tmpPosition.top =
+      (boundaries.y2 - boundaries.y1 - (dimensions.height ?? 0)) / 2;
+    width = dimensions.width ?? 0;
+    height = dimensions.height ?? 0;
     checkBoundaries();
   } else {
-    position.top = application.position.top;
-    position.left = application.position.left;
-    width = application.dimensions.width ?? 0;
-    height = application.dimensions.height ?? 0;
+    tmpPosition.top = position.top;
+    tmpPosition.left = position.left;
+    width = dimensions.width ?? 0;
+    height = dimensions.height ?? 0;
     checkBoundaries();
   }
 
   //#endregion
 
-  const component = applicationsMap.get(application.component) || null;
-
-  const zIndex = zIndexes.indexOf(application.id);
+  const zIndex = zIndexes.indexOf(pid);
 
   if (contrast) rootClasses.push(classes["contrast"]);
+
+  const renderComponent = applicationsMap.get(component);
 
   return (
     <section
@@ -144,14 +160,14 @@ const Window: FunctionComponent<IProps> = ({
       className={rootClasses.join(" ")}
       style={{
         zIndex,
-        top: position.top ?? "",
-        left: position.left ?? "",
-        bottom: position.bottom ?? "",
-        right: position.right ?? "",
+        top: tmpPosition.top ?? "",
+        left: tmpPosition.left ?? "",
+        bottom: tmpPosition.bottom ?? "",
+        right: tmpPosition.right ?? "",
         height: height,
         width: width,
-        opacity: application.dragging ? "0.7" : "",
-        visibility: application.minimized ? "collapse" : "visible"
+        opacity: dragging ? "0.7" : "",
+        visibility: minimized ? "collapse" : "visible"
       }}
       ref={windowRef}
       onDragStart={() => false}
@@ -159,20 +175,20 @@ const Window: FunctionComponent<IProps> = ({
       onMouseDown={handleWindowMouseDown}
     >
       <WindowResizer
-        application={application}
+        pid={pid}
         windowRef={windowRef}
         width={resizerWidth}
       ></WindowResizer>
       <WindowHeader
-        application={application}
+        pid={pid}
         boundaries={boundaries}
         windowRef={windowRef}
       ></WindowHeader>
       <div className={backgroundClasses.join(" ")}>
-        {component
-          ? createElement(component, {
-              args: application.args,
-              pid: application.id
+        {renderComponent
+          ? createElement(renderComponent, {
+              args,
+              pid
             })
           : null}
       </div>

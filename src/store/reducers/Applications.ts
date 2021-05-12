@@ -43,9 +43,11 @@ export interface WindowApplication extends Application {
   readonly type: "window";
 }
 
-const initialState: {
-  [aid: string]: DaemonApplication | WindowApplication;
-} = {};
+let initialState: {
+  elements: {
+    [aid: string]: DaemonApplication | WindowApplication;
+  };
+} = { elements: {} };
 let aid = "";
 
 const defaultDimensions = {
@@ -62,7 +64,7 @@ const defaultMinDimensions = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Settings,
   dimensions: defaultDimensions,
   displayName: "Préférences du système",
@@ -78,7 +80,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Manager,
   dimensions: defaultDimensions,
   displayName: "Gestionnaire d'applications",
@@ -94,7 +96,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Maps,
   dimensions: defaultDimensions,
   displayName: "Maps",
@@ -110,7 +112,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.About,
   dimensions: defaultDimensions,
   displayName: "A Propos",
@@ -126,7 +128,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Contact,
   dimensions: { height: 600, width: 600 },
   displayName: "Contact",
@@ -142,7 +144,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Snake,
   dimensions: { height: 600, width: 600 },
   displayName: "le Serpent",
@@ -158,7 +160,7 @@ initialState[aid] = {
 };
 
 aid = generateID();
-initialState[aid] = {
+initialState.elements[aid] = {
   component: EApplications.Welcome,
   dimensions: { height: 300, width: 300 },
   displayName: "Bienvenue",
@@ -193,11 +195,11 @@ export const applicationsSlice = createSlice({
     setRunOnStartup(
       state,
       action: PayloadAction<{
-        application: Application;
+        aid: string;
         runOnStartup: boolean;
       }>
     ) {
-      const application = state[action.payload.application.id];
+      const application = state.elements[action.payload.aid];
       application.runOnStartup = action.payload.runOnStartup;
     }
   }

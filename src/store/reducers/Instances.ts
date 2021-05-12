@@ -62,13 +62,10 @@ export const instancesSlice = createSlice({
   name: "instances",
   initialState,
   reducers: {
-    closeApplication(
-      state,
-      action: PayloadAction<DaemonInstance | WindowInstance>
-    ) {
-      delete state.elements[action.payload.id];
+    closeApplication(state, action: PayloadAction<string>) {
+      delete state.elements[action.payload];
       state.zIndexes = state.zIndexes.filter(
-        (zIndex) => zIndex !== action.payload.id
+        (zIndex) => zIndex !== action.payload
       );
     },
     runApplication(
@@ -114,81 +111,60 @@ export const instancesSlice = createSlice({
           break;
       }
     },
-    sendToFront(state, action: PayloadAction<WindowInstance>) {
+    sendToFront(state, action: PayloadAction<string>) {
       const instanceIndex = state.zIndexes.findIndex(
-        (zIndex) => zIndex === action.payload.id
+        (zIndex) => zIndex === action.payload
       );
       state.zIndexes.splice(instanceIndex, 1);
-      state.zIndexes.push(action.payload.id);
+      state.zIndexes.push(action.payload);
     },
     setDimensions(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        dimensions: IDimensions;
-      }>
+      action: PayloadAction<{ pid: string; dimensions: IDimensions }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).dimensions = action.payload.dimensions;
     },
     setDragging(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        dragging: boolean;
-      }>
+      action: PayloadAction<{ pid: string; dragging: boolean }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).dragging = action.payload.dragging;
     },
     setPosition(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        position: IPosition;
-      }>
+      action: PayloadAction<{ pid: string; position: IPosition }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).position = action.payload.position;
     },
     setMaximized(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        maximized: ESnap;
-      }>
+      action: PayloadAction<{ pid: string; maximized: ESnap }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).maximized = action.payload.maximized;
     },
     setMinimized(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        minimized: boolean;
-      }>
+      action: PayloadAction<{ pid: string; minimized: boolean }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).minimized = action.payload.minimized;
     },
     setResizeMode(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        resizeMode: EResize;
-      }>
+      action: PayloadAction<{ pid: string; resizeMode: EResize }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).resizeMode = action.payload.resizeMode;
     },
     setResizing(
       state,
-      action: PayloadAction<{
-        application: WindowInstance;
-        resizing: boolean;
-      }>
+      action: PayloadAction<{ pid: string; resizing: boolean }>
     ) {
-      const instance = state.elements[action.payload.application.id];
+      const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).resizing = action.payload.resizing;
     },
     setSnapShadowVisibility(state, action: PayloadAction<boolean>) {

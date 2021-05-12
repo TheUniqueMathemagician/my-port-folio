@@ -1,17 +1,17 @@
 import { FunctionComponent, KeyboardEvent, useCallback } from "react";
-import { useDispatch } from "../hooks/Store";
-import {
-  DaemonApplication,
-  WindowApplication
-} from "../store/reducers/Applications";
+import { useDispatch, useSelector } from "../hooks/Store";
 import { runApplication } from "../store/reducers/Instances";
 import styles from "./Shortcut.module.scss";
 interface IProps {
-  application: DaemonApplication | WindowApplication;
+  aid: string;
 }
 
-const Shortcut: FunctionComponent<IProps> = ({ application }) => {
+const Shortcut: FunctionComponent<IProps> = (props) => {
+  const { aid } = props;
   const dispatch = useDispatch();
+
+  const application = useSelector((store) => store.applications.elements[aid]);
+
   const handleDoubleClick = useCallback(() => {
     dispatch(runApplication({ application, args: {} }));
   }, [application, dispatch]);

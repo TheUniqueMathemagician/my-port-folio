@@ -17,11 +17,11 @@ interface IProps {}
 
 const Contact: FunctionComponent<IProps> = () => {
   const dispatch = useDispatch();
-  const application = useSelector(
+  const maps = useSelector(
     (store) =>
-      store.applications[
-        Object.keys(store.applications).find(
-          (key) => store.applications[key].displayName === "Maps"
+      store.applications.elements[
+        Object.keys(store.applications.elements).find(
+          (key) => store.applications.elements[key].displayName === "Maps"
         ) ?? ""
       ]
   );
@@ -76,8 +76,8 @@ const Contact: FunctionComponent<IProps> = () => {
             startIcon
             onClick={(e) => {
               e.preventDefault();
-              if (application) {
-                dispatch(runApplication({ application, args: {} }));
+              if (maps) {
+                dispatch(runApplication({ application: maps, args: {} }));
               }
             }}
             to="https://www.google.com/maps/place/Avenue+des+Lanciers+45,+4900+Spa/@50.4888358,5.8542398,17z/data=!3m1!4b1!4m5!3m4!1s0x47c0617fcf8a2513:0xe0e509238ab82a8e!8m2!3d50.4888324!4d5.8564285"

@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef
 } from "react";
-import { useDispatch } from "../hooks/Store";
+import { useDispatch, useSelector } from "../hooks/Store";
 import {
   setMaximized,
   setDimensions,
@@ -21,27 +21,49 @@ import { ESnap } from "../types/ESnap";
 import styles from "./WindowResizer.module.scss";
 
 interface IProps {
-  application: WindowInstance;
+  pid: string;
   windowRef: RefObject<HTMLDivElement>;
   width: number;
 }
 
-const WindowResizer: FunctionComponent<IProps> = ({
-  application,
-  width,
-  windowRef
-}) => {
+const WindowResizer: FunctionComponent<IProps> = (props) => {
+  const { pid, width, windowRef } = props;
+
   const resizerRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
+  // const instance: WindowInstance = useSelector(
+  //   (store) => store.instances.elements[pid]
+  // ) as WindowInstance;
+  const resizable = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).resizable;
+  const resizing = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).resizing;
+  const resizeMode = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).resizeMode;
+  const position = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).position;
+  const maxDimensions = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).maxDimensions;
+  const minDimensions = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).minDimensions;
+  const dragging = useSelector(
+    (store) => store.instances.elements[pid] as WindowInstance
+  ).dragging;
+
   const handleResizerMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (application.resizing) return;
+      if (resizing || !resizable) return;
+
       const resizer = resizerRef.current;
       const window = windowRef.current;
-
-      if (!application.resizable) return;
 
       if (!resizer || !window) return;
 
@@ -53,57 +75,58 @@ const WindowResizer: FunctionComponent<IProps> = ({
       ];
 
       if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
-        if (application.resizeMode !== EResize.bottomRight) {
-          dispatch(
-            setResizeMode({ application, resizeMode: EResize.bottomRight })
-          );
+        if (resizeMode !== EResize.bottomRight) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.bottomRight }));
         }
       } else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
-        if (application.resizeMode !== EResize.bottomLeft) {
-          dispatch(
-            setResizeMode({ application, resizeMode: EResize.bottomLeft })
-          );
+        if (resizeMode !== EResize.bottomLeft) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.bottomLeft }));
         }
       } else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
-        if (application.resizeMode !== EResize.topRight) {
-          dispatch(
-            setResizeMode({ application, resizeMode: EResize.topRight })
-          );
+        if (resizeMode !== EResize.topRight) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.topRight }));
         }
       } else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
-        if (application.resizeMode !== EResize.topLeft) {
-          dispatch(setResizeMode({ application, resizeMode: EResize.topLeft }));
+        if (resizeMode !== EResize.topLeft) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.topLeft }));
         }
       } else if (e.pageX >= x2 - width) {
-        if (application.resizeMode !== EResize.right) {
-          dispatch(setResizeMode({ application, resizeMode: EResize.right }));
+        if (resizeMode !== EResize.right) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.right }));
         }
       } else if (e.pageY >= y2 - width) {
-        if (application.resizeMode !== EResize.bottom) {
-          dispatch(setResizeMode({ application, resizeMode: EResize.bottom }));
+        if (resizeMode !== EResize.bottom) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.bottom }));
         }
       } else if (e.pageY <= y1 + width) {
-        if (application.resizeMode !== EResize.top) {
-          dispatch(setResizeMode({ application, resizeMode: EResize.top }));
+        if (resizeMode !== EResize.top) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.top }));
         }
       } else if (e.pageX <= x1 + width) {
-        if (application.resizeMode !== EResize.left) {
-          dispatch(setResizeMode({ application, resizeMode: EResize.left }));
+        if (resizeMode !== EResize.left) {
+          dispatch(setResizeMode({ pid, resizeMode: EResize.left }));
         }
       } else {
-        dispatch(setResizeMode({ application, resizeMode: EResize.none }));
+        dispatch(setResizeMode({ pid, resizeMode: EResize.none }));
       }
     },
-    [application, dispatch, width, windowRef]
+    [
+      pid,
+      dispatch,
+      width,
+      windowRef,
+      resizeMode,
+      resizing,
+      resizable,
+      resizerRef
+    ]
   );
 
   const handleResizerDragMouseDown = useCallback(
     (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || !resizable) return;
       e.stopPropagation();
       e.preventDefault();
-
-      if (!application.resizable) return;
 
       const window = windowRef.current;
       if (!window) return;
@@ -113,11 +136,11 @@ const WindowResizer: FunctionComponent<IProps> = ({
       const windowBC = window.getBoundingClientRect();
       const windowFrameBC = windowFrame.getBoundingClientRect();
 
-      dispatch(setMaximized({ application, maximized: ESnap.none }));
-      dispatch(setResizing({ application, resizing: true }));
+      dispatch(setMaximized({ pid, maximized: ESnap.none }));
+      dispatch(setResizing({ pid, resizing: true }));
       dispatch(
         setPosition({
-          application,
+          pid,
           position: {
             bottom: windowFrameBC.height - windowBC.bottom - windowFrameBC.top,
             left: windowBC.left - windowFrameBC.left,
@@ -127,7 +150,7 @@ const WindowResizer: FunctionComponent<IProps> = ({
         })
       );
     },
-    [dispatch, windowRef, application]
+    [dispatch, windowRef, pid, resizable]
   );
 
   const handleResizerDragMouseMove = useCallback(
@@ -140,7 +163,7 @@ const WindowResizer: FunctionComponent<IProps> = ({
       const windowBC = window.getBoundingClientRect();
       const windowFrameBC = windowFrame.getBoundingClientRect();
 
-      const position = {
+      const tmpPosition = {
         bottom: () => windowFrameBC.height - e.pageY - windowFrameBC.top,
         left: () => e.pageX - windowFrameBC.left,
         right: () => windowFrameBC.width - e.pageX - windowFrameBC.left,
@@ -153,40 +176,32 @@ const WindowResizer: FunctionComponent<IProps> = ({
             windowFrameBC.height -
             windowFrameBC.top -
             windowBC.top -
-            (application.maxDimensions.height ?? 0),
+            (maxDimensions.height ?? 0),
           left: () =>
-            windowBC.right -
-            windowFrameBC.left -
-            (application.maxDimensions.width ?? 0),
+            windowBC.right - windowFrameBC.left - (maxDimensions.width ?? 0),
           right: () =>
             windowFrameBC.width -
             windowFrameBC.left -
             windowBC.left -
-            (application.maxDimensions.width ?? 0),
+            (maxDimensions.width ?? 0),
           top: () =>
-            windowBC.bottom -
-            windowFrameBC.top -
-            (application.maxDimensions.height ?? 0)
+            windowBC.bottom - windowFrameBC.top - (maxDimensions.height ?? 0)
         },
         max: {
           bottom: () =>
             windowFrameBC.height -
             windowFrameBC.top -
             windowBC.top -
-            (application.minDimensions.height ?? 0),
+            (minDimensions.height ?? 0),
           left: () =>
-            windowBC.right -
-            windowFrameBC.left -
-            (application.minDimensions.width ?? 0),
+            windowBC.right - windowFrameBC.left - (minDimensions.width ?? 0),
           right: () =>
             windowFrameBC.width -
             windowFrameBC.left -
             windowBC.left -
-            (application.minDimensions.width ?? 0),
+            (minDimensions.width ?? 0),
           top: () =>
-            windowBC.bottom -
-            windowFrameBC.top -
-            (application.minDimensions.height ?? 0)
+            windowBC.bottom - windowFrameBC.top - (minDimensions.height ?? 0)
         }
       };
 
@@ -203,13 +218,12 @@ const WindowResizer: FunctionComponent<IProps> = ({
       }) => {
         dispatch(
           setPosition({
-            application,
+            pid,
             position: {
-              bottom:
-                bottom !== undefined ? bottom : application.position.bottom,
-              left: left !== undefined ? left : application.position.left,
-              right: right !== undefined ? right : application.position.right,
-              top: top !== undefined ? top : application.position.top
+              bottom: bottom !== undefined ? bottom : position.bottom,
+              left: left !== undefined ? left : position.left,
+              right: right !== undefined ? right : position.right,
+              top: top !== undefined ? top : position.top
             }
           })
         );
@@ -217,11 +231,11 @@ const WindowResizer: FunctionComponent<IProps> = ({
 
       const restrictedPosition = {
         top: () => {
-          const top = position.top();
-          if (application.maxDimensions.height && top < limit.min.top()) {
+          const top = tmpPosition.top();
+          if (maxDimensions.height && top < limit.min.top()) {
             return limit.min.top();
           }
-          if (application.minDimensions.height && top > limit.max.top()) {
+          if (minDimensions.height && top > limit.max.top()) {
             return limit.max.top();
           }
           if (top < 0) {
@@ -230,38 +244,38 @@ const WindowResizer: FunctionComponent<IProps> = ({
           return top;
         },
         left: () => {
-          const left = position.left();
-          if (application.maxDimensions.width && left < limit.min.left()) {
+          const left = tmpPosition.left();
+          if (maxDimensions.width && left < limit.min.left()) {
             return limit.min.left();
           }
-          if (application.minDimensions.width && left > limit.max.left()) {
+          if (minDimensions.width && left > limit.max.left()) {
             return limit.max.left();
           }
           return left;
         },
         bottom: () => {
-          let bottom = position.bottom();
-          if (application.maxDimensions.height && bottom < limit.min.bottom()) {
+          let bottom = tmpPosition.bottom();
+          if (maxDimensions.height && bottom < limit.min.bottom()) {
             return limit.min.bottom();
           }
-          if (application.minDimensions.height && bottom > limit.max.bottom()) {
+          if (minDimensions.height && bottom > limit.max.bottom()) {
             return limit.max.bottom();
           }
           return bottom;
         },
         right: () => {
-          let right = position.right();
-          if (application.maxDimensions.width && right < limit.min.right()) {
+          let right = tmpPosition.right();
+          if (maxDimensions.width && right < limit.min.right()) {
             return limit.min.right();
           }
-          if (application.minDimensions.width && right > limit.max.right()) {
+          if (minDimensions.width && right > limit.max.right()) {
             return limit.max.right();
           }
           return right;
         }
       };
 
-      switch (application.resizeMode) {
+      switch (resizeMode) {
         case EResize.top: {
           return dispatchPosition({ top: restrictedPosition.top() });
         }
@@ -302,7 +316,15 @@ const WindowResizer: FunctionComponent<IProps> = ({
           break;
       }
     },
-    [application, windowRef, dispatch]
+    [
+      pid,
+      windowRef,
+      dispatch,
+      minDimensions,
+      maxDimensions,
+      resizeMode,
+      position
+    ]
   );
 
   const handleResizerDragMouseUp = useCallback(
@@ -318,7 +340,7 @@ const WindowResizer: FunctionComponent<IProps> = ({
 
       dispatch(
         setDimensions({
-          application,
+          pid,
           dimensions: {
             height: windowBC.height,
             width: windowBC.width
@@ -326,13 +348,13 @@ const WindowResizer: FunctionComponent<IProps> = ({
         })
       );
 
-      dispatch(setResizing({ application, resizing: false }));
+      dispatch(setResizing({ pid, resizing: false }));
     },
-    [application, dispatch, windowRef]
+    [dispatch, windowRef, pid]
   );
 
   useEffect(() => {
-    if (application.resizing) {
+    if (resizing) {
       const cursor = new Map<EResize, string>([
         [EResize.top, "ns-resize"],
         [EResize.bottom, "ns-resize"],
@@ -344,7 +366,7 @@ const WindowResizer: FunctionComponent<IProps> = ({
         [EResize.bottomRight, "nwse-resize"]
       ]);
 
-      document.body.style.cursor = cursor.get(application.resizeMode) || "";
+      document.body.style.cursor = cursor.get(resizeMode) || "";
       document.addEventListener("mousemove", handleResizerDragMouseMove);
       document.addEventListener("mouseup", handleResizerDragMouseUp);
       return () => {
@@ -354,8 +376,8 @@ const WindowResizer: FunctionComponent<IProps> = ({
       };
     }
   }, [
-    application.resizing,
-    application.resizeMode,
+    resizing,
+    resizeMode,
     handleResizerDragMouseMove,
     handleResizerDragMouseUp
   ]);
@@ -371,7 +393,7 @@ const WindowResizer: FunctionComponent<IProps> = ({
     [EResize.bottomLeft, "resize-bottom-left"],
     [EResize.bottomRight, "resize-bottom-right"]
   ]);
-  resizerClasses.push(styles[cursor.get(application.resizeMode) ?? ""]);
+  resizerClasses.push(styles[cursor.get(resizeMode) ?? ""]);
   return (
     <div
       className={resizerClasses.join(" ")}
@@ -379,57 +401,10 @@ const WindowResizer: FunctionComponent<IProps> = ({
       onMouseMove={handleResizerMouseMove}
       onMouseDown={handleResizerDragMouseDown}
       style={{
-        pointerEvents: application.dragging ? "none" : "all"
+        pointerEvents: dragging ? "none" : "all"
       }}
     ></div>
   );
 };
 
-const isEqual = (prevProps: IProps, nextProps: IProps) => {
-  if (prevProps.application.resizable !== nextProps.application.resizable) {
-    return false;
-  }
-  if (
-    prevProps.application.position.bottom !==
-    nextProps.application.position.bottom
-  ) {
-    return false;
-  }
-  if (
-    prevProps.application.position.left !== nextProps.application.position.left
-  ) {
-    return false;
-  }
-  if (
-    prevProps.application.position.right !==
-    nextProps.application.position.right
-  ) {
-    return false;
-  }
-  if (
-    prevProps.application.position.top !== nextProps.application.position.top
-  ) {
-    return false;
-  }
-  if (prevProps.application.resizable !== nextProps.application.resizable) {
-    return false;
-  }
-  if (prevProps.application.resizeMode !== nextProps.application.resizeMode) {
-    return false;
-  }
-  if (prevProps.application.resizing !== nextProps.application.resizing) {
-    return false;
-  }
-  if (prevProps.application.dragging !== nextProps.application.dragging) {
-    return false;
-  }
-  if (prevProps.windowRef !== nextProps.windowRef) {
-    return false;
-  }
-  if (prevProps.width !== nextProps.width) {
-    return false;
-  }
-  return true;
-};
-
-export default memo(WindowResizer, isEqual);
+export default memo(WindowResizer);

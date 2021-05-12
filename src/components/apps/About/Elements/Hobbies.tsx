@@ -7,8 +7,7 @@ interface IProps {
   pid: string;
 }
 
-const Hobbies: FunctionComponent<IProps> = (props) => {
-  const { pid } = props;
+const Hobbies: FunctionComponent<IProps> = () => {
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Loisirs</Typography>

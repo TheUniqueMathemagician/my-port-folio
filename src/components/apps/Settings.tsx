@@ -67,13 +67,6 @@ const Settings: FunctionComponent<IProps> = (props) => {
     });
   }, [palette, colorScheme]);
 
-  const handleThemeChange = useCallback(
-    (v: number) => {
-      dispatch(setColorScheme(v));
-    },
-    [dispatch]
-  );
-
   const handleBackgroundInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       dispatch(

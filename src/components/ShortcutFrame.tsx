@@ -3,14 +3,16 @@ import Shortcut from "./Shortcut";
 import styles from "./ShortcutFrame.module.scss";
 
 const ShortcutFrame = () => {
-  const applications = useSelector((state) => state.applications);
+  const keys = useSelector((store) =>
+    Object.keys(store.applications.elements).filter(
+      (key) => store.applications.elements[key].shortcut
+    )
+  );
   return (
     <div className={styles["shortcut-frame"]}>
-      {Object.keys(applications)
-        .filter((key) => applications[key].shortcut)
-        .map((key) => (
-          <Shortcut application={applications[key]} key={key}></Shortcut>
-        ))}
+      {keys.map((key) => (
+        <Shortcut aid={key} key={key}></Shortcut>
+      ))}
     </div>
   );
 };
