@@ -28,7 +28,7 @@ const Contact: FunctionComponent<IProps> = () => {
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Me contacter</Typography>
-      <Paper spaced outlined>
+      <Paper spaced outlined blur background="paper">
         <div className={classes["grid"]}>
           <Typography noSelect variant="body" className={classes["heading"]}>
             Email
