@@ -75,7 +75,7 @@
       right: 0;
       transform: translate(7px, 7px);
       z-index: -1;
-      border: 1px solid var(--cvos-primary);
+      border: 1px solid var(--cvos-divider);
     }
   }
 }
@@ -124,7 +124,7 @@
       justify-items: flex-start;
       background: var(--cvos-paper-50);
       column-gap: $padding;
-      > div:first-of-type {
+      > div:last-of-type {
         margin-bottom: 0.5em;
       }
       > .date {

@@ -13,6 +13,40 @@ interface IProps {
   pid: string;
 }
 
+interface IEducation {
+  date: number;
+  detail: string;
+  title: string;
+}
+
+const educations: IEducation[] = [
+  {
+    date: 2019,
+    title: "Master électronique ( non complété )",
+    detail: "Haute Ecole de la Province de Liège"
+  },
+  {
+    date: 2017,
+    title: "Bachelier électromécanique",
+    detail: "Haute École Henallux Seraing"
+  },
+  {
+    date: 2013,
+    title: "CESS électronique-informatique",
+    detail: "HEnseignement Polytechnique Verviers"
+  },
+  {
+    date: 2015,
+    title: "Soudure arc, oxy-acétylène, TIG",
+    detail: "Institut Saint-Laurent"
+  },
+  {
+    date: 2016,
+    title: "BA4, BA5, VCA",
+    detail: "Vinçotte-Academy sa"
+  }
+];
+
 const Intro: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
   const small = useSelector(
@@ -118,56 +152,19 @@ const Intro: FunctionComponent<IProps> = (props) => {
       <article className={classes["education"]}>
         <Typography variant="h4">Mes formations</Typography>
         <ul>
-          <li>
-            <Typography variant="h6">
-              Master électronique ( non complété )
-            </Typography>
-            <Typography variant="body" color="hint">
-              Haute Ecole de la Province de Liège
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-          </li>
-          <li>
-            <Typography variant="h6">Bachelier électromécanique</Typography>
-            <Typography variant="body" color="hint">
-              Haute École Henallux Seraing
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-          </li>
-          <li>
-            <Typography variant="h6">CESS électronique-informatique</Typography>
-            <Typography variant="body" color="hint">
-              Enseignement Polytechnique Vervier
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-          </li>
-          <li>
-            <Typography variant="h6">Soudure arc, oxy-acétylène</Typography>
-            <Typography variant="body" color="hint">
-              TIG Institut Saint-Laurent
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-          </li>
-          <li>
-            <Typography variant="h6">BA4, BA5, VCA</Typography>
-            <Typography variant="body" color="hint">
-              Vinçotte-Academy sa
-            </Typography>
-            <Typography variant="body" className={classes["date"]}>
-              1999
-            </Typography>
-          </li>
+          {educations
+            .sort((a, b) => b.date - a.date)
+            .map((education) => (
+              <li>
+                <Typography variant="body" className={classes["date"]}>
+                  {education.date}
+                </Typography>
+                <Typography variant="h6">{education.title}</Typography>
+                <Typography variant="body" color="hint">
+                  {education.detail}
+                </Typography>
+              </li>
+            ))}
         </ul>
       </article>
     </div>
