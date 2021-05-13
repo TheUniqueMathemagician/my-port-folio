@@ -4,8 +4,17 @@
   height: 100%;
   display: grid;
   grid: 100% / 150px 1fr;
-  > .tab-panel {
-    height: 100%;
-    overflow: auto;
+}
+
+.tab-panel {
+  height: 100%;
+  overflow: auto;
+}
+
+.left-bar {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  &.contrast {
+    border-right: 1px solid var(--cvos-divider);
   }
 }
