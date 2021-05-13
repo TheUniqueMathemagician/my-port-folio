@@ -1,5 +1,5 @@
 import classes from "./Text.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
 
 export interface IProps {
   readonly label?: string;
@@ -7,10 +7,18 @@ export interface IProps {
   readonly type?: "password" | "text" | "email" | "tel";
   readonly validator?: RegExp;
   readonly fullWidth?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const Text: FunctionComponent<IProps> = (props) => {
-  const { fullWidth, label, required, type } = props;
+  const { fullWidth, onChange, label, required, type } = props;
+
+  const [value, setValue] = useState<string>("");
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    onChange?.(e);
+  }, []);
 
   const rootClasses = [classes["root"]];
 
@@ -18,7 +26,12 @@ const Text: FunctionComponent<IProps> = (props) => {
 
   return (
     <label className={rootClasses.join(" ")}>
-      <input required={required} type={type ?? "text"}></input>
+      <input
+        onChange={handleChange}
+        required={required}
+        type={type ?? "text"}
+        value={value}
+      ></input>
       {label && <span>{label}</span>}
       <div className={classes["effect"]}></div>
     </label>
