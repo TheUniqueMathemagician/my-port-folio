@@ -60,12 +60,16 @@
 
   &.outlined {
     border: 1px solid var(--cvos-divider);
+    @each $color in $colors {
+      &.#{$color} {
+        border-color: var(--cvos-#{$color});
+      }
+    }
   }
   &.blur {
-    background-color: var(--cvos-background);
+    background-color: var(--cvos-paper-33);
     &:not(.contrast) {
       @supports (backdrop-filter: $blur) {
-        background-color: var(--cvos-background-33);
         backdrop-filter: $blur;
         @each $color in $colors {
           &.#{$color} {
@@ -76,7 +80,7 @@
     }
   }
   &.filled {
-    background-color: var(--cvos-background);
+    background-color: var(--cvos-paper-33);
     color: var(--text-color);
     @each $color in $colors {
       &.#{$color} {
@@ -132,7 +136,7 @@
     transform: translateX(-50%) translateY(-50%) scale(0);
   }
   &:focus::before {
-    opacity: 0.333;
+    opacity: 0.2;
     transform: translateX(-50%) translateY(-50%) scale(1);
   }
   &:active:focus::before {
