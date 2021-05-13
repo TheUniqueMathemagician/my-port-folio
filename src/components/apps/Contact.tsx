@@ -52,7 +52,7 @@ const Contact: FunctionComponent<IProps> = () => {
           <Button
             align="start"
             size="md"
-            outlined
+            variant="filled"
             focusable
             startIcon
             to="mailto: tamburrini.yannick@gmail.com"
@@ -67,7 +67,7 @@ const Contact: FunctionComponent<IProps> = () => {
             align="start"
             size="md"
             focusable
-            outlined
+            variant="filled"
             startIcon
             to="tel:+32 498 62 77 16"
           >
@@ -81,7 +81,7 @@ const Contact: FunctionComponent<IProps> = () => {
             align="start"
             size="md"
             focusable
-            outlined
+            variant="filled"
             startIcon
             onClick={(e) => {
               e.preventDefault();
