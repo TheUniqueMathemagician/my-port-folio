@@ -5,7 +5,7 @@ import classes from "./TextArea.module.scss";
 interface IProps {
   defaultValue?: string;
   autoResize?: boolean;
-  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
 }
 
 const TextArea: FunctionComponent<IProps> = (props) => {
@@ -19,7 +19,7 @@ const TextArea: FunctionComponent<IProps> = (props) => {
       if (autoResize) {
         e.target.style.height = `${e.target.scrollHeight + 2}px`;
       }
-      onChange(e);
+      onChange?.(e);
     },
     [autoResize, onChange]
   );
