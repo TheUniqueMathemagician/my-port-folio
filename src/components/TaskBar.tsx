@@ -33,6 +33,8 @@ enum EMenuShown {
   language
 }
 
+const Send = memo(() => <MdSend></MdSend>);
+
 const TaskBar = () => {
   const [menuShown, setMenuShown] = useState<EMenuShown>(EMenuShown.none);
 
@@ -151,7 +153,7 @@ const TaskBar = () => {
             }
           }}
         >
-          <MdSend></MdSend>
+          <Send></Send>
         </Button>
         <Divider inset margin vertical></Divider>
         <Button
