@@ -1,5 +1,7 @@
 @import "../../../../styles/theme.scss";
 
+$max-content-width: 500px;
+
 .root {
   display: grid;
   user-select: none;
@@ -40,7 +42,7 @@
     align-items: center;
     justify-content: center;
     > * {
-      max-width: 500px;
+      max-width: $max-content-width;
     }
   }
 }
@@ -92,6 +94,9 @@
       margin-left: $margin;
       display: grid;
       row-gap: $padding/2;
+      > li {
+        max-width: $max-content-width;
+      }
     }
   }
   .date {

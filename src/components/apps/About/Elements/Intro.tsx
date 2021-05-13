@@ -22,7 +22,7 @@ const educations: IEducation[] = [
   {
     date: 2019,
     title: "Master électronique ( non complété )",
-    detail: "Haute Ecole de la Province de Liège"
+    detail: "Haute École de la Province de Liège"
   },
   {
     date: 2017,
@@ -32,7 +32,7 @@ const educations: IEducation[] = [
   {
     date: 2013,
     title: "CESS électronique-informatique",
-    detail: "HEnseignement Polytechnique Verviers"
+    detail: "Enseignement Polytechnique Verviers"
   },
   {
     date: 2015,
