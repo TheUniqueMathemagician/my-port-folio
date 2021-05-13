@@ -3,13 +3,29 @@ import { FunctionComponent, memo, useCallback, useRef, useState } from "react";
 import classes from "./TextArea.module.scss";
 
 interface IProps {
-  defaultValue?: string;
-  autoResize?: boolean;
-  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
+  readonly autoResize?: boolean;
+  readonly className?: string;
+  readonly defaultValue?: string;
+  readonly fullWidth?: boolean;
+  readonly label?: string;
+  readonly name?: string;
+  readonly onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
+  readonly required?: boolean;
+  readonly vertical?: boolean;
 }
 
 const TextArea: FunctionComponent<IProps> = (props) => {
-  const { autoResize, defaultValue, onChange } = props;
+  const {
+    autoResize,
+    className,
+    defaultValue,
+    fullWidth,
+    label,
+    name,
+    onChange,
+    required,
+    vertical
+  } = props;
 
   const [value, setValue] = useState<string>(defaultValue ?? "");
 
@@ -27,11 +43,21 @@ const TextArea: FunctionComponent<IProps> = (props) => {
   const rootClasses = [classes["root"]];
 
   if (autoResize) rootClasses.push(classes["auto-resize"]);
+  if (fullWidth) rootClasses.push(classes["full-width"]);
+  if (vertical) rootClasses.push(classes["vertical"]);
+  if (className) rootClasses.push(className);
 
   return (
-    <textarea className={rootClasses.join(" ")} onChange={changeHandler}>
-      {value}
-    </textarea>
+    <label className={rootClasses.join(" ")}>
+      <textarea
+        defaultValue={defaultValue}
+        name={name}
+        onChange={changeHandler}
+        required={required}
+        value={value}
+      ></textarea>
+      {label && <span>{label}</span>}
+    </label>
   );
 };
 
