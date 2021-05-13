@@ -14,6 +14,7 @@
     color: var(--cvos-text);
     padding: $padding/2;
     background-color: var(--cvos-background-33);
+    border-right: 1px solid var(--cvos-divider);
   }
   input {
     flex-grow: 1;
@@ -23,9 +24,6 @@
     caret-color: var(--cvos-text);
     color: var(--cvos-text);
     padding: $padding/2;
-  }
-  &:focus {
-    // border-color: ;
   }
 }
 

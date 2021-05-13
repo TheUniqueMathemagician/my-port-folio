@@ -2,16 +2,28 @@ import classes from "./Text.module.scss";
 import { FunctionComponent, useCallback, useState } from "react";
 
 export interface IProps {
+  readonly className?: string;
+  readonly defaultValue?: string;
+  readonly fullWidth?: boolean;
   readonly label?: string;
+  readonly name?: string;
+  readonly onChange?: React.ChangeEventHandler<HTMLInputElement>;
   readonly required?: boolean;
   readonly type?: "password" | "text" | "email" | "tel";
   readonly validator?: RegExp;
-  readonly fullWidth?: boolean;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const Text: FunctionComponent<IProps> = (props) => {
-  const { fullWidth, onChange, label, required, type } = props;
+  const {
+    className,
+    defaultValue,
+    fullWidth,
+    onChange,
+    label,
+    name,
+    required,
+    type
+  } = props;
 
   const [value, setValue] = useState<string>("");
 
@@ -27,7 +39,10 @@ const Text: FunctionComponent<IProps> = (props) => {
   return (
     <label className={rootClasses.join(" ")}>
       <input
+        className={className}
+        defaultValue={defaultValue}
         onChange={handleChange}
+        name={name}
         required={required}
         type={type ?? "text"}
         value={value}
