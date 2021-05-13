@@ -24,6 +24,8 @@
   row-gap: $margin;
 }
 
-.heading {
-  margin: $margin 0;
+.text-area {
+  > textarea {
+    min-height: 250px;
+  }
 }

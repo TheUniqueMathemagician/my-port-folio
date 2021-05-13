@@ -2,7 +2,7 @@ import classes from "./Contact.module.scss";
 
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { runApplication } from "../../store/reducers/Instances";
-import { FunctionComponent, memo } from "react";
+import { FunctionComponent, memo, useCallback } from "react";
 
 import { MdMail, MdPhone } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
@@ -21,6 +21,7 @@ interface IProps {}
 
 const Contact: FunctionComponent<IProps> = () => {
   const dispatch = useDispatch();
+
   const maps = useSelector(
     (store) =>
       store.applications.elements[
@@ -29,18 +30,28 @@ const Contact: FunctionComponent<IProps> = () => {
         ) ?? ""
       ]
   );
+
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const data = new FormData(e.target as HTMLFormElement);
+
+    const body = JSON.stringify(Object.fromEntries(data.entries()));
+    fetch("/api/contact", { method: "post", headers, body });
+  }, []);
+
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Me contacter</Typography>
       <Paper spaced blur background="paper">
         <div className={classes["grid"]}>
-          <Typography variant="body" className={classes["heading"]}>
-            Email
-          </Typography>
+          <Typography variant="body">Email</Typography>
           <Button
             align="start"
             size="md"
-            variant="blur"
             outlined
             focusable
             startIcon
@@ -51,14 +62,11 @@ const Contact: FunctionComponent<IProps> = () => {
               tamburrini.yannick@gmail.com
             </Typography>
           </Button>
-          <Typography variant="body" className={classes["heading"]}>
-            Téléphone
-          </Typography>
+          <Typography variant="body">Téléphone</Typography>
           <Button
             align="start"
             size="md"
             focusable
-            variant="blur"
             outlined
             startIcon
             to="tel:+32 498 62 77 16"
@@ -68,14 +76,11 @@ const Contact: FunctionComponent<IProps> = () => {
               +32 498 62 77 16
             </Typography>
           </Button>
-          <Typography variant="body" className={classes["heading"]}>
-            Adresse
-          </Typography>
+          <Typography variant="body">Adresse</Typography>
           <Button
             align="start"
             size="md"
             focusable
-            variant="blur"
             outlined
             startIcon
             onClick={(e) => {
@@ -96,24 +101,27 @@ const Contact: FunctionComponent<IProps> = () => {
       </Paper>
       <Typography variant="h4">M'envoyer un message</Typography>
       <Paper spaced blur background="paper">
-        <form
-          action=""
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <Text fullWidth label="Nom*" required></Text>
-          <Text fullWidth label="Prénom*" required></Text>
-          <Text fullWidth label="Organisation*" required></Text>
-          <Text fullWidth label="Email*" required type="email"></Text>
-          <Text fullWidth label="Téléphone" type="tel"></Text>
-          <Typography variant="body">Message*</Typography>
-          <TextArea onChange={() => {}}></TextArea>
-          <Typography variant="body">
-            Je n'ai pas encore configuré de SMTP donc je ne verrai pas
-            immédiatement le message
-          </Typography>
-          <Button ripple focusable>
+        <form action="" onSubmit={handleSubmit}>
+          <Text fullWidth label="Nom*" name="lastname" required></Text>
+          <Text fullWidth label="Prénom*" name="firstname" required></Text>
+          <Text fullWidth label="Organisation*" name="org" required></Text>
+          <Text
+            fullWidth
+            label="Email*"
+            name="email"
+            required
+            type="email"
+          ></Text>
+          <Text fullWidth label="Téléphone" name="tel" type="tel"></Text>
+          <TextArea
+            className={classes["text-area"]}
+            fullWidth
+            label="Message*"
+            name="msg"
+            required
+            vertical
+          ></TextArea>
+          <Button ripple focusable color="primary" outlined>
             Envoyer
           </Button>
           <Typography variant="body">( * champs requis )</Typography>
