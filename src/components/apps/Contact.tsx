@@ -1,13 +1,17 @@
 import classes from "./Contact.module.scss";
 
+import { useDispatch, useSelector } from "../../hooks/Store";
+import { runApplication } from "../../store/reducers/Instances";
 import { FunctionComponent, memo } from "react";
+
 import { MdMail, MdPhone } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
+
 import Button from "../UI/Input/Button";
 import Paper from "../UI/Paper";
 import Typography from "../UI/Typography";
-import { useDispatch, useSelector } from "../../hooks/Store";
-import { runApplication } from "../../store/reducers/Instances";
+import Text from "../UI/Input/Text";
+import TextArea from "../UI/Input/TextArea";
 
 const Sharp = memo(IoLocationSharp);
 const Mail = memo(MdMail);
@@ -89,6 +93,31 @@ const Contact: FunctionComponent<IProps> = () => {
           </Button>
           {/* TODO: add contact form  */}
         </div>
+      </Paper>
+      <Typography variant="h4">M'envoyer un message</Typography>
+      <Paper spaced blur background="paper">
+        <form
+          action=""
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <Text fullWidth label="Nom*" required></Text>
+          <Text fullWidth label="Prénom*" required></Text>
+          <Text fullWidth label="Organisation*" required></Text>
+          <Text fullWidth label="Email*" required type="email"></Text>
+          <Text fullWidth label="Téléphone" type="tel"></Text>
+          <Typography variant="body">Message*</Typography>
+          <TextArea onChange={() => {}}></TextArea>
+          <Typography variant="body">
+            Je n'ai pas encore configuré de SMTP donc je ne verrai pas
+            immédiatement le message
+          </Typography>
+          <Button ripple focusable>
+            Envoyer
+          </Button>
+          <Typography variant="body">( * champs requis )</Typography>
+        </form>
       </Paper>
     </div>
   );

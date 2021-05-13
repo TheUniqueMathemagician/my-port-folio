@@ -6,6 +6,14 @@
   height: 100%;
   width: 100%;
   user-select: none;
+  display: grid;
+  h4:last-of-type {
+    margin-top: $margin * 2;
+  }
+  form {
+    display: grid;
+    row-gap: $padding;
+  }
 }
 
 .grid {
