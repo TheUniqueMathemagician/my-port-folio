@@ -1,0 +1,15 @@
+@import "../../../styles/theme.scss";
+
+.root {
+  padding: $padding;
+  background-color: var(--cvos-background-33);
+  border: 1px solid var(--cvos-divider);
+  outline: 0;
+  resize: vertical;
+  color: var(--cvos-text);
+}
+
+.auto-resize {
+  width: 100%;
+  resize: none;
+}
