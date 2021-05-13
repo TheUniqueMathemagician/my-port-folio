@@ -169,7 +169,7 @@ const Intro: FunctionComponent<IProps> = (props) => {
           {educations
             .sort((a, b) => b.date - a.date)
             .map((education) => (
-              <li>
+              <li key={education.title}>
                 <Typography variant="body" className={classes["date"]}>
                   {education.date}
                 </Typography>

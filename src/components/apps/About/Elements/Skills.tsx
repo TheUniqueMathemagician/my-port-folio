@@ -1,5 +1,5 @@
 import classes from "./Skills.module.scss";
-import { FunctionComponent, memo } from "react";
+import React, { FunctionComponent, memo } from "react";
 import Paper from "../../../UI/Paper";
 import Typography from "../../../UI/Typography";
 import Rating from "../../../UI/Input/Rating";
@@ -108,7 +108,7 @@ const Skills: FunctionComponent<IProps> = () => {
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
           {languageSkills.map((skill) => (
-            <>
+            <React.Fragment key={skill.name}>
               <Typography noWrap variant="body">
                 {skill.name}
               </Typography>
@@ -118,7 +118,7 @@ const Skills: FunctionComponent<IProps> = () => {
                 min={1}
                 max={5}
               ></Rating>
-            </>
+            </React.Fragment>
           ))}
         </div>
       </Paper>
@@ -128,7 +128,7 @@ const Skills: FunctionComponent<IProps> = () => {
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
           {frameworkSkills.map((skill) => (
-            <>
+            <React.Fragment key={skill.name}>
               <Typography noWrap variant="body">
                 {skill.name}
               </Typography>
@@ -138,7 +138,7 @@ const Skills: FunctionComponent<IProps> = () => {
                 min={1}
                 max={5}
               ></Rating>
-            </>
+            </React.Fragment>
           ))}
         </div>
       </Paper>
@@ -148,7 +148,7 @@ const Skills: FunctionComponent<IProps> = () => {
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
           {softwareSkills.map((skill) => (
-            <>
+            <React.Fragment key={skill.name}>
               <Typography noWrap variant="body">
                 {skill.name}
               </Typography>
@@ -158,7 +158,7 @@ const Skills: FunctionComponent<IProps> = () => {
                 min={1}
                 max={5}
               ></Rating>
-            </>
+            </React.Fragment>
           ))}
         </div>
       </Paper>
