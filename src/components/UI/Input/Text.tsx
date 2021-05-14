@@ -5,6 +5,7 @@ export interface IProps {
   readonly className?: string;
   readonly defaultValue?: string;
   readonly fullWidth?: boolean;
+  readonly disabled?: boolean;
   readonly label?: string;
   readonly name?: string;
   readonly onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -18,6 +19,7 @@ const Text: FunctionComponent<IProps> = (props) => {
     className,
     defaultValue,
     fullWidth,
+    disabled,
     onChange,
     label,
     name,
@@ -41,6 +43,7 @@ const Text: FunctionComponent<IProps> = (props) => {
       <input
         className={className}
         defaultValue={defaultValue}
+        disabled={disabled}
         onChange={handleChange}
         name={name}
         required={required}
