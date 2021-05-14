@@ -25,6 +25,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   isIcon?: boolean;
   fullWidth?: boolean;
   focusable?: boolean;
+  loading?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   outlined?: boolean;
   readOnly?: boolean;
@@ -48,6 +49,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
       fullWidth,
       focusable,
       isIcon,
+      loading,
       onClick,
       outlined,
       readOnly,
@@ -138,6 +140,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
     if (outlined) rootClasses.push(classes["outlined"]);
     if (isIcon) rootClasses.push(classes["is-icon"]);
     if (className) rootClasses.push(className);
+    if (loading) rootClasses.push(classes["loading"]);
 
     return createElement(
       to ? "a" : "button",
@@ -156,7 +159,14 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
         target: to?.startsWith("/") ? undefined : "_blank",
         ...other
       },
-      typeof children === "string" ? <div>{children}</div> : children
+      <>
+        <div className={classes["content"]}>{children}</div>
+        <div className={classes["loader"]}>
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" />
+          </svg>
+        </div>
+      </>
     );
   }
 );

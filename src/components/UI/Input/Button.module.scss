@@ -3,23 +3,26 @@
 @import "../../../styles/theme.scss";
 
 .root {
-  overflow: hidden;
   position: relative;
-  align-items: center;
   background: none;
   border: 0;
   border-radius: 0;
-  color: var(--text-color);
-  column-gap: $padding;
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
   outline: 0;
   padding: $padding/2;
   cursor: pointer;
-  font-size: 1rem;
   transition: background-color 0.3s ease, color 0.3s ease;
-  letter-spacing: 0.5px;
+  overflow: hidden;
+  .content {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+    column-gap: $padding;
+    color: var(--text-color);
+    overflow: hidden;
+    align-items: center;
+  }
   &[readonly] {
     color: var(--text-color);
     cursor: default;
@@ -35,21 +38,21 @@
   }
 
   &.xs {
-    padding: 0;
+    padding: $padding * 0.33;
   }
   &.sm {
-    padding: $padding/3 $padding * 3/4;
+    padding: $padding * 0.5 $padding * 0.75;
   }
   &.md {
-    padding: $padding/2 $padding;
+    padding: $padding * 0.5 $padding;
   }
   &.lg {
     font-size: 1.2rem;
-    padding: $padding $padding * 2;
+    padding: $padding * 0.66 $padding * 1.2;
   }
   &.xl {
     font-size: 1.5rem;
-    padding: $padding * 1.5 $padding * 3;
+    padding: $padding * 1.2 $padding * 1.5;
   }
 
   @each $color in $colors {
@@ -93,13 +96,19 @@
   }
 
   &.has-start-img {
-    grid-template-columns: auto 1fr;
+    .content {
+      grid-template-columns: auto 1fr;
+    }
   }
   &.has-end-img {
-    grid-template-columns: 1fr auto;
+    .content {
+      grid-template-columns: 1fr auto;
+    }
   }
   &.has-start-img.has-end-img {
-    grid-template-columns: auto 1fr auto;
+    .content {
+      grid-template-columns: auto 1fr auto;
+    }
   }
 
   &:not(:disabled)::after {
@@ -128,7 +137,7 @@
     width: 80%;
     padding-top: 80%;
     border-radius: 50%;
-    transition: transform 0.3s ease-in, opacity 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     background-color: var(--text-color);
     opacity: 0;
     transform: translateX(-50%) translateY(-50%) scale(0);
@@ -139,6 +148,17 @@
   }
   &:active:focus::before {
     transform: translateX(-50%) translateY(-50%) scale(1.5);
+  }
+
+  &.loading {
+    > .content {
+      visibility: hidden;
+    }
+  }
+  &:not(.loading) {
+    > .loader {
+      visibility: hidden;
+    }
   }
 
   & img {
@@ -219,4 +239,65 @@
 
 button.root {
   user-select: none;
+}
+
+.loader {
+  margin: auto;
+  height: 1.3em;
+  width: 1.3em;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  svg {
+    animation: svg-animation 2s linear infinite;
+    display: block;
+  }
+  circle {
+    animation: circle-animation 1.4s ease-in-out infinite both;
+    display: block;
+    fill: transparent;
+    stroke: var(--text-color);
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 280;
+    stroke-width: 10px;
+    transform-origin: 50% 50%;
+  }
+}
+
+.root {
+  @each $color in $colors {
+    &.#{$color} .loader circle {
+      stroke: var(--cvos-#{$color});
+    }
+  }
+}
+
+@keyframes svg-animation {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes circle-animation {
+  0%,
+  25% {
+    stroke-dashoffset: 280;
+    transform: rotate(0);
+  }
+
+  50%,
+  75% {
+    stroke-dashoffset: 75;
+    transform: rotate(45deg);
+  }
+
+  100% {
+    stroke-dashoffset: 280;
+    transform: rotate(360deg);
+  }
 }
