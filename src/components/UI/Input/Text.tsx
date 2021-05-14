@@ -1,5 +1,5 @@
 import classes from "./Text.module.scss";
-import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, memo, useCallback, useState } from "react";
 
 export interface IProps {
   readonly className?: string;
@@ -53,4 +53,4 @@ const Text: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Text;
+export default memo(Text);

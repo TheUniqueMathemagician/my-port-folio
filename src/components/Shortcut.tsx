@@ -1,4 +1,4 @@
-import { FunctionComponent, KeyboardEvent, useCallback } from "react";
+import { FunctionComponent, KeyboardEvent, memo, useCallback } from "react";
 import { useDispatch, useSelector } from "../hooks/Store";
 import { runApplication } from "../store/reducers/Instances";
 import styles from "./Shortcut.module.scss";
@@ -39,4 +39,4 @@ const Shortcut: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Shortcut;
+export default memo(Shortcut);

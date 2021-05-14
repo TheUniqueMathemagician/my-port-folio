@@ -1,5 +1,5 @@
 import { IPosition } from "../types/IPosition";
-import React from "react";
+import React, { memo, PropsWithChildren } from "react";
 
 import classes from "./TaskBarMenu.module.scss";
 import { useSelector } from "../hooks/Store";
@@ -48,4 +48,4 @@ const TaskBarMenu: React.FunctionComponent<IProps> = ({
   );
 };
 
-export default TaskBarMenu;
+export default memo<PropsWithChildren<IProps>>(TaskBarMenu);

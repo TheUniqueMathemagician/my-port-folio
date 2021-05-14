@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect } from "react";
+import { useCallback, useState, useRef, useEffect, memo } from "react";
 import { useSelector } from "../hooks/Store";
 import { EColorScheme } from "../types/EColorScheme";
 import { IBoundaries } from "../types/IBoundaries";
@@ -81,4 +81,4 @@ const WindowFrame = () => {
   );
 };
 
-export default WindowFrame;
+export default memo(WindowFrame);
