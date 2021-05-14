@@ -56,7 +56,7 @@
   }
 
   @each $color in $colors {
-    &.#{$color} {
+    &.#{$color} .content {
       color: var(--cvos-#{$color});
     }
   }
@@ -168,13 +168,19 @@
 
   &.align {
     &--start {
-      justify-items: flex-start;
+      .content {
+        justify-items: flex-start;
+      }
     }
     &--center {
-      justify-items: center;
+      .content {
+        justify-items: center;
+      }
     }
     &--end {
-      justify-items: flex-end;
+      .content {
+        justify-items: flex-end;
+      }
     }
   }
 
