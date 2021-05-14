@@ -23,6 +23,9 @@
     padding: $padding/2;
     width: 100%;
   }
+  textarea:disabled + span {
+    color: var(--cvos-disabled);
+  }
   span {
     grid-row-start: 1;
     grid-row-end: 2;
@@ -36,6 +39,7 @@
     padding: $padding/2;
     background-color: var(--cvos-background-33);
     border-right: 1px solid var(--cvos-divider);
+    transition: color 0.3s ease;
   }
   &.vertical {
     grid-template-columns: 1fr;

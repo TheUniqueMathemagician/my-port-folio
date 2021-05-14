@@ -6,6 +6,7 @@ interface IProps {
   readonly autoResize?: boolean;
   readonly className?: string;
   readonly defaultValue?: string;
+  readonly disabled?: boolean;
   readonly fullWidth?: boolean;
   readonly label?: string;
   readonly name?: string;
@@ -19,6 +20,7 @@ const TextArea: FunctionComponent<IProps> = (props) => {
     autoResize,
     className,
     defaultValue,
+    disabled,
     fullWidth,
     label,
     name,
@@ -51,6 +53,7 @@ const TextArea: FunctionComponent<IProps> = (props) => {
     <label className={rootClasses.join(" ")}>
       <textarea
         defaultValue={defaultValue}
+        disabled={disabled}
         name={name}
         onChange={changeHandler}
         required={required}
