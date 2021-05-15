@@ -1,5 +1,5 @@
 import classes from "./Maps.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 import { useSelector } from "../../hooks/Store";
 import { WindowInstance } from "../../store/reducers/Instances";
 
@@ -26,4 +26,4 @@ const Maps: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Maps;
+export default memo<PropsWithChildren<IProps>>(Maps);

@@ -1,11 +1,14 @@
 import classes from "./Paper.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 import { useSelector } from "../../hooks/Store";
 import { EColorScheme } from "../../types/EColorScheme";
 import { TColor } from "../../types/TColor";
 
-interface IProps {
-  className?: string;
+interface IProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
   background?: TColor;
   blur?: boolean;
   fullWidth?: boolean;
@@ -21,7 +24,8 @@ const Paper: FunctionComponent<IProps> = (props) => {
     className,
     fullWidth,
     outlined,
-    spaced
+    spaced,
+    ...other
   } = props;
 
   const contrast = useSelector(
@@ -38,7 +42,11 @@ const Paper: FunctionComponent<IProps> = (props) => {
   if (background) rootClasses.push(classes[background]);
   if (blur) rootClasses.push(classes["blur"]);
 
-  return <div className={rootClasses.join(" ")}>{children}</div>;
+  return (
+    <div className={rootClasses.join(" ")} {...other}>
+      {children}
+    </div>
+  );
 };
 
-export default Paper;
+export default memo<PropsWithChildren<IProps>>(Paper);

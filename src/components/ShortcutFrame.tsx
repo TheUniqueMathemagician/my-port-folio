@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useSelector } from "../hooks/Store";
 import Shortcut from "./Shortcut";
 import styles from "./ShortcutFrame.module.scss";
@@ -17,4 +18,4 @@ const ShortcutFrame = () => {
   );
 };
 
-export default ShortcutFrame;
+export default memo(ShortcutFrame);

@@ -1,5 +1,10 @@
 import classes from "./TabPanel.module.scss";
-import { createElement, FunctionComponent } from "react";
+import {
+  createElement,
+  FunctionComponent,
+  memo,
+  PropsWithChildren
+} from "react";
 
 interface IProps
   extends React.DetailedHTMLProps<
@@ -30,4 +35,4 @@ const TabPanel: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default TabPanel;
+export default memo<PropsWithChildren<IProps>>(TabPanel);

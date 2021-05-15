@@ -1,4 +1,11 @@
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import {
+  FunctionComponent,
+  memo,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState
+} from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { EColorScheme } from "../../types/EColorScheme";
 import {
@@ -301,4 +308,4 @@ const Settings: FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Settings;
+export default memo<PropsWithChildren<IProps>>(Settings);

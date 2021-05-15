@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 
 interface IProps {}
 
@@ -6,4 +6,4 @@ const Snake: FunctionComponent<IProps> = () => {
   return <div>Snake app</div>;
 };
 
-export default Snake;
+export default memo<PropsWithChildren<IProps>>(Snake);
