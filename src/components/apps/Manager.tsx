@@ -182,6 +182,17 @@ const Manager = () => {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFoot>
+              <TableRow>
+                <TableCell heading>Nom</TableCell>
+                <TableCell heading align="center">
+                  PID
+                </TableCell>
+                <TableCell heading align="center">
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableFoot>
           </Table>
         </Paper>
       </TabPanel>
