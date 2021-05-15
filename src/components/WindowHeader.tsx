@@ -50,6 +50,9 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   const dimensions = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dimensions
   );
+  const resizing = useSelector(
+    (store) => (store.instances.elements[pid] as WindowInstance).resizing
+  );
   const dragging = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dragging
   );
@@ -301,7 +304,8 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
     <div
       className={rootClasses.join(" ")}
       style={{
-        cursor: dragging ? "grabbing" : "grab"
+        cursor: dragging ? "grabbing" : "grab",
+        pointerEvents: resizing ? "none" : "all"
       }}
       ref={headerRef}
       onMouseDown={handleDragMouseDown}
