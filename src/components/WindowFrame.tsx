@@ -1,4 +1,11 @@
-import { useCallback, useState, useRef, useEffect, memo } from "react";
+import {
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+  memo,
+  FunctionComponent
+} from "react";
 import { useSelector } from "../hooks/Store";
 import { EColorScheme } from "../types/EColorScheme";
 import { IBoundaries } from "../types/IBoundaries";
@@ -6,7 +13,9 @@ import Window from "./Window";
 
 import classes from "./WindowFrame.module.scss";
 
-const WindowFrame = () => {
+interface IProps {}
+
+const WindowFrame: FunctionComponent<IProps> = () => {
   const instances = useSelector((store) => store.instances.elements);
   const ShadowPosition = useSelector(
     (store) => store.instances.snapShadow.position
@@ -51,6 +60,7 @@ const WindowFrame = () => {
 
   if (contrast) shadowClasses.push(classes["contrast"]);
 
+  // TODO: put snap shadow in its own component
   return (
     <div className={rootClasses.join(" ")} ref={frameRef}>
       <div

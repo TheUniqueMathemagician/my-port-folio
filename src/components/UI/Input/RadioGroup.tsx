@@ -1,5 +1,5 @@
 import classes from "./RadioGroup.module.scss";
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, PropsWithChildren } from "react";
 
 interface IProps {}
 
@@ -9,4 +9,4 @@ const RadioGroup: FunctionComponent<IProps> = (props) => {
   return <div className={classes["root"]}>{children}</div>;
 };
 
-export default RadioGroup;
+export default memo<PropsWithChildren<IProps>>(RadioGroup);

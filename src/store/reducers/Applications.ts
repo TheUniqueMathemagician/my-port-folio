@@ -57,13 +57,15 @@ const defaultDimensions = {
   width: 800
 };
 const defaultMaxDimensions = {
-  height: 1200,
+  height: 900,
   width: 1600
 };
 const defaultMinDimensions = {
   height: 300,
   width: 400
 };
+
+// TODO: add daemon that checks if the user opens too many windows => alert for blur mode
 
 aid = generateID();
 initialState.elements[aid] = {

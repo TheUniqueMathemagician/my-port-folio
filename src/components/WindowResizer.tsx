@@ -133,19 +133,18 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       const windowFrame = window.offsetParent;
       if (!windowFrame) return;
 
-      const windowBC = window.getBoundingClientRect();
-      const windowFrameBC = windowFrame.getBoundingClientRect();
-
       dispatch(setMaximized({ pid, maximized: ESnap.none }));
       dispatch(setResizing({ pid, resizing: true }));
       dispatch(
         setPosition({
           pid,
           position: {
-            bottom: windowFrameBC.height - windowBC.bottom - windowFrameBC.top,
-            left: windowBC.left - windowFrameBC.left,
-            right: windowFrameBC.width - windowBC.right - windowFrameBC.left,
-            top: windowBC.top - windowFrameBC.top
+            bottom:
+              windowFrame.clientHeight - window.offsetTop - window.offsetHeight,
+            left: window.offsetLeft,
+            right:
+              windowFrame.clientWidth - window.offsetLeft - window.offsetWidth,
+            top: window.offsetTop
           }
         })
       );
@@ -157,51 +156,45 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
     (e: globalThis.MouseEvent) => {
       const window = windowRef.current;
       if (!window) return;
-      const windowFrame = window.offsetParent;
+      const windowFrame = window.offsetParent as HTMLDivElement;
       if (!windowFrame) return;
 
-      const windowBC = window.getBoundingClientRect();
-      const windowFrameBC = windowFrame.getBoundingClientRect();
-
+      //TODO: e.offsetY e.offsetX
       const tmpPosition = {
-        bottom: () => windowFrameBC.height - e.pageY - windowFrameBC.top,
-        left: () => e.pageX - windowFrameBC.left,
-        right: () => windowFrameBC.width - e.pageX - windowFrameBC.left,
-        top: () => e.pageY - windowFrameBC.top
+        bottom: () => windowFrame.clientHeight - e.pageY,
+        left: () => e.pageX - windowFrame.offsetLeft,
+        right: () => windowFrame.clientWidth - e.pageX - windowFrame.offsetLeft,
+        top: () => e.pageY - windowFrame.offsetTop
       };
 
       const limit = {
         min: {
           bottom: () =>
-            windowFrameBC.height -
-            windowFrameBC.top -
-            windowBC.top -
+            windowFrame.clientHeight -
+            window.offsetTop -
             (maxDimensions.height ?? 0),
           left: () =>
-            windowBC.right - windowFrameBC.left - (maxDimensions.width ?? 0),
+            window.offsetLeft + window.clientWidth - (maxDimensions.width ?? 0),
           right: () =>
-            windowFrameBC.width -
-            windowFrameBC.left -
-            windowBC.left -
+            windowFrame.clientWidth -
+            window.offsetLeft -
             (maxDimensions.width ?? 0),
           top: () =>
-            windowBC.bottom - windowFrameBC.top - (maxDimensions.height ?? 0)
+            window.offsetTop + window.clientHeight - (maxDimensions.height ?? 0)
         },
         max: {
           bottom: () =>
-            windowFrameBC.height -
-            windowFrameBC.top -
-            windowBC.top -
+            windowFrame.clientHeight -
+            window.offsetTop -
             (minDimensions.height ?? 0),
           left: () =>
-            windowBC.right - windowFrameBC.left - (minDimensions.width ?? 0),
+            window.offsetLeft + window.clientWidth - (minDimensions.width ?? 0),
           right: () =>
-            windowFrameBC.width -
-            windowFrameBC.left -
-            windowBC.left -
+            windowFrame.clientWidth -
+            window.offsetLeft -
             (minDimensions.width ?? 0),
           top: () =>
-            windowBC.bottom - windowFrameBC.top - (minDimensions.height ?? 0)
+            window.offsetTop + window.clientHeight - (minDimensions.height ?? 0)
         }
       };
 
@@ -336,14 +329,12 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       if (!window) return;
 
-      const windowBC = window.getBoundingClientRect();
-
       dispatch(
         setDimensions({
           pid,
           dimensions: {
-            height: windowBC.height,
-            width: windowBC.width
+            height: window.clientHeight,
+            width: window.clientWidth
           }
         })
       );

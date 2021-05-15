@@ -126,15 +126,16 @@ const Button = forwardRef<
       if (mouseHasBeenDown && ref && ripple && !readOnly) {
         const button = ref.current;
         if (button) {
-          const x = e.clientX - button.getBoundingClientRect().x;
-          const y = e.clientY - button.getBoundingClientRect().y;
-          const ripples = document.createElement("span");
-          ripples.classList.add(classes["ripple"]);
-          ripples.style.left = `${x}px`;
-          ripples.style.top = `${y}px`;
-          button.prepend(ripples);
+          const BC = button.getBoundingClientRect();
+          const x = e.clientX - BC.x;
+          const y = e.clientY - BC.y;
+          const ripple = document.createElement("span");
+          ripple.classList.add(classes["ripple"]);
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          button.prepend(ripple);
           setTimeout(() => {
-            ripples.remove();
+            ripple.remove();
           }, 666);
           setMouseHasBeenDown(false);
         }

@@ -50,9 +50,6 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   const dimensions = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dimensions
   );
-  const position = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).position
-  );
   const dragging = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dragging
   );
@@ -124,9 +121,8 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       } else {
         const window = windowRef.current;
         if (window) {
-          const windowBC = window.getBoundingClientRect();
-          let x = e.pageX - windowBC.left;
-          let y = e.pageY - windowBC.top;
+          let x = e.pageX - window.offsetLeft;
+          let y = e.pageY - window.offsetTop;
           setOffset({ x, y });
         }
       }
@@ -240,8 +236,8 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       const tmpPosition = {
         left: e.pageX - offset.x,
         top: e.pageY - offset.y,
-        right: position.right,
-        bottom: position.bottom
+        right: null,
+        bottom: null
       };
 
       dispatch(setPosition({ pid, position: tmpPosition }));
@@ -249,30 +245,26 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       if (!snapShadowVisible) {
         const window = windowRef.current;
         if (window) {
-          const windowBC = window.getBoundingClientRect();
           const snapShadowPosition = {
             bottom:
-              boundaries.y2 - boundaries.y1 - windowBC.top - windowBC.height,
-            left: windowBC.left,
+              boundaries.y2 -
+              boundaries.y1 -
+              window.offsetTop -
+              window.clientHeight,
+            left: window.offsetLeft,
             right:
-              boundaries.x2 - boundaries.x1 - windowBC.left - windowBC.width,
-            top: windowBC.top
+              boundaries.x2 -
+              boundaries.x1 -
+              window.offsetLeft -
+              window.clientWidth,
+            top: window.offsetTop
           };
 
           dispatch(setSnapShadowPosition(snapShadowPosition));
         }
       }
     },
-    [
-      dispatch,
-      position,
-      boundaries,
-      offset,
-      snapShadowVisible,
-      windowRef,
-      maximized,
-      pid
-    ]
+    [dispatch, boundaries, offset, snapShadowVisible, windowRef, maximized, pid]
   );
 
   const handleDragMouseUp = useCallback(
