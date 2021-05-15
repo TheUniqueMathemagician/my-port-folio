@@ -4,6 +4,7 @@ import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
 import Manager from "../../components/apps/Manager";
 import Maps from "../../components/apps/Maps";
+import Projects from "../../components/apps/Projects";
 import Settings from "../../components/apps/Settings";
 import Snake from "../../components/apps/Snake";
 import Welcome from "../../components/apps/Welcome";
@@ -16,6 +17,7 @@ export enum EApplications {
   Contact,
   Manager,
   Maps,
+  Projects,
   Settings,
   Snake,
   Welcome
@@ -129,6 +131,22 @@ initialState.elements[aid] = {
 
 aid = generateID();
 initialState.elements[aid] = {
+  component: EApplications.Projects,
+  dimensions: defaultDimensions,
+  displayName: "Projets",
+  icon: require("../../assets/images/applications/about.svg").default,
+  id: aid,
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
+  position: { bottom: null, left: null, right: null, top: null },
+  resizable: true,
+  runOnStartup: false,
+  shortcut: require("../../assets/images/applications/about.svg").default,
+  type: "window"
+};
+
+aid = generateID();
+initialState.elements[aid] = {
   component: EApplications.Contact,
   dimensions: { height: 600, width: 600 },
   displayName: "Contact",
@@ -183,6 +201,7 @@ export const applicationsMap = new Map<
   [EApplications.Contact, Contact],
   [EApplications.Manager, Manager],
   [EApplications.Maps, Maps],
+  [EApplications.Projects, Projects],
   [EApplications.Settings, Settings],
   [EApplications.Snake, Snake],
   [EApplications.Welcome, Welcome]
