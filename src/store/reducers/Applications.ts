@@ -173,7 +173,8 @@ initialState.elements[aid] = {
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
-  shortcut: require("../../assets/images/applications/snake.svg").default,
+  shortcut: "",
+  // shortcut: require("../../assets/images/applications/snake.svg").default,
   type: "window"
 };
 
