@@ -69,9 +69,9 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       const [x1, x2, y1, y2] = [
         window.offsetLeft,
-        window.offsetLeft + window.clientWidth,
+        window.offsetLeft + window.offsetWidth,
         window.offsetTop,
-        window.offsetTop + window.clientHeight
+        window.offsetTop + window.offsetHeight
       ];
 
       if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
@@ -130,7 +130,7 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       const window = windowRef.current;
       if (!window) return;
-      const windowFrame = window.offsetParent;
+      const windowFrame = window.offsetParent as HTMLDivElement;
       if (!windowFrame) return;
 
       dispatch(setMaximized({ pid, maximized: ESnap.none }));
@@ -140,10 +140,10 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
           pid,
           position: {
             bottom:
-              windowFrame.clientHeight - window.offsetTop - window.offsetHeight,
+              windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
             left: window.offsetLeft,
             right:
-              windowFrame.clientWidth - window.offsetLeft - window.offsetWidth,
+              windowFrame.offsetWidth - window.offsetLeft - window.offsetWidth,
             top: window.offsetTop
           }
         })
@@ -161,40 +161,40 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       //TODO: e.offsetY e.offsetX
       const tmpPosition = {
-        bottom: () => windowFrame.clientHeight - e.pageY,
+        bottom: () => windowFrame.offsetHeight - e.pageY,
         left: () => e.pageX - windowFrame.offsetLeft,
-        right: () => windowFrame.clientWidth - e.pageX - windowFrame.offsetLeft,
+        right: () => windowFrame.offsetWidth - e.pageX - windowFrame.offsetLeft,
         top: () => e.pageY - windowFrame.offsetTop
       };
 
       const limit = {
         min: {
           bottom: () =>
-            windowFrame.clientHeight -
+            windowFrame.offsetHeight -
             window.offsetTop -
             (maxDimensions.height ?? 0),
           left: () =>
-            window.offsetLeft + window.clientWidth - (maxDimensions.width ?? 0),
+            window.offsetLeft + window.offsetWidth - (maxDimensions.width ?? 0),
           right: () =>
-            windowFrame.clientWidth -
+            windowFrame.offsetWidth -
             window.offsetLeft -
             (maxDimensions.width ?? 0),
           top: () =>
-            window.offsetTop + window.clientHeight - (maxDimensions.height ?? 0)
+            window.offsetTop + window.offsetHeight - (maxDimensions.height ?? 0)
         },
         max: {
           bottom: () =>
-            windowFrame.clientHeight -
+            windowFrame.offsetHeight -
             window.offsetTop -
             (minDimensions.height ?? 0),
           left: () =>
-            window.offsetLeft + window.clientWidth - (minDimensions.width ?? 0),
+            window.offsetLeft + window.offsetWidth - (minDimensions.width ?? 0),
           right: () =>
-            windowFrame.clientWidth -
+            windowFrame.offsetWidth -
             window.offsetLeft -
             (minDimensions.width ?? 0),
           top: () =>
-            window.offsetTop + window.clientHeight - (minDimensions.height ?? 0)
+            window.offsetTop + window.offsetHeight - (minDimensions.height ?? 0)
         }
       };
 
@@ -333,8 +333,8 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
         setDimensions({
           pid,
           dimensions: {
-            height: window.clientHeight,
-            width: window.clientWidth
+            height: window.offsetHeight,
+            width: window.offsetWidth
           }
         })
       );
