@@ -29,10 +29,13 @@ const Text: FunctionComponent<IProps> = (props) => {
 
   const [value, setValue] = useState<string>("");
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    onChange?.(e);
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+      onChange?.(e);
+    },
+    [onChange]
+  );
 
   const rootClasses = [classes["root"]];
 

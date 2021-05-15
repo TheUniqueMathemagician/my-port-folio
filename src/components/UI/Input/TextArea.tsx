@@ -1,4 +1,4 @@
-import { FunctionComponent, memo, useCallback, useRef, useState } from "react";
+import { FunctionComponent, memo, useCallback, useState } from "react";
 
 import classes from "./TextArea.module.scss";
 

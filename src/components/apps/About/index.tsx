@@ -54,7 +54,7 @@ const About: FunctionComponent<IProps> = (props) => {
         dispatch(runApplication({ application: contact, args: {} }));
       }
     },
-    []
+    [contact, dispatch]
   );
 
   const leftBarClasses = [classes["left-bar"]];

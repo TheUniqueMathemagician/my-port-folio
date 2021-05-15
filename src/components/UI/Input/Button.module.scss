@@ -157,7 +157,7 @@
   }
   &:not(.loading) {
     > .loader {
-      visibility: hidden;
+      display: none;
     }
   }
 
