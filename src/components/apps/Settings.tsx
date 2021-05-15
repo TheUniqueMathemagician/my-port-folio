@@ -48,6 +48,9 @@ const Settings: FunctionComponent<IProps> = (props) => {
   const palette = useSelector((store) => store.theme.palette);
   const colorScheme = useSelector((store) => store.theme.colorScheme);
   const currentUserID = useSelector((store) => store.users.currentUserID);
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
+  );
 
   //#endregion
 
@@ -137,7 +140,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3" noWrap noSelect>
           Préférences du thème
         </Typography>
-        <Paper outlined fullWidth spaced blur background="background">
+        <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4" noWrap noSelect>
             Thème de l'interface
           </Typography>
@@ -186,7 +189,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           </div>
         </Paper>
         <br />
-        <Paper outlined fullWidth spaced blur background="background">
+        <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4" noWrap noSelect>
             Couleur de l'interface
           </Typography>
@@ -211,7 +214,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
           </div>
         </Paper>
         <br />
-        <Paper outlined fullWidth spaced blur background="background">
+        <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4" noWrap noSelect>
             Couleur des éléments interactifs
           </Typography>
@@ -240,7 +243,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3" noWrap noSelect>
           Préférences linguistiques
         </Typography>
-        <Paper outlined fullWidth spaced blur background="background">
+        <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4" noWrap noSelect>
             Langue du système
           </Typography>
@@ -259,7 +262,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3" noWrap noSelect>
           Préférences utilisateurs
         </Typography>
-        <Paper outlined fullWidth spaced blur background="background">
+        <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4" noWrap noSelect>
             Utilisateur actuel
           </Typography>

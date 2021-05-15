@@ -13,6 +13,7 @@ import Typography from "../../UI/Typography";
 import Text from "../../UI/Input/Text";
 import TextArea from "../../UI/Input/TextArea";
 import Time from "./Elements/Time";
+import { EColorScheme } from "../../../types/EColorScheme";
 
 const Sharp = memo(IoLocationSharp);
 const Mail = memo(MdMail);
@@ -30,6 +31,9 @@ const Contact: FunctionComponent<IProps> = () => {
           (key) => store.applications.elements[key].displayName === "Maps"
         ) ?? ""
       ]
+  );
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
   );
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -83,16 +87,17 @@ const Contact: FunctionComponent<IProps> = () => {
   return (
     <div className={classes["root"]}>
       <Typography variant="h4">Me contacter</Typography>
-      <Paper spaced blur background="paper">
+      <Paper outlined={contrast} spaced blur background="paper">
         <div className={classes["grid"]}>
           <Typography variant="body">Email</Typography>
           <Button
             align="start"
-            size="md"
-            variant="filled"
             focusable
+            outlined
+            size="md"
             startIcon
             to="mailto: tamburrini.yannick@gmail.com"
+            variant="filled"
           >
             <Mail></Mail>
             <Typography variant="body" noWrap>
@@ -102,11 +107,12 @@ const Contact: FunctionComponent<IProps> = () => {
           <Typography variant="body">Téléphone</Typography>
           <Button
             align="start"
-            size="md"
             focusable
-            variant="filled"
+            outlined
+            size="md"
             startIcon
             to="tel:+32 498 62 77 16"
+            variant="filled"
           >
             <Phone></Phone>
             <Typography variant="body" noWrap>
@@ -116,12 +122,13 @@ const Contact: FunctionComponent<IProps> = () => {
           <Typography variant="body">Adresse</Typography>
           <Button
             align="start"
-            size="md"
             focusable
-            variant="filled"
-            startIcon
             onClick={handleMapsClick}
+            outlined
+            size="md"
+            startIcon
             to="https://www.google.com/maps/place/Avenue+des+Lanciers+45,+4900+Spa/@50.4888358,5.8542398,17z/data=!3m1!4b1!4m5!3m4!1s0x47c0617fcf8a2513:0xe0e509238ab82a8e!8m2!3d50.4888324!4d5.8564285"
+            variant="filled"
           >
             <Sharp></Sharp>
             <Typography variant="body" noWrap>
@@ -131,7 +138,7 @@ const Contact: FunctionComponent<IProps> = () => {
         </div>
       </Paper>
       <Typography variant="h4">M'envoyer un message</Typography>
-      <Paper spaced blur background="paper">
+      <Paper outlined={contrast} spaced blur background="paper">
         <form action="" onSubmit={handleSubmit}>
           <Text
             disabled={loading}
