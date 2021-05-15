@@ -10,39 +10,6 @@
     position: absolute;
     width: 0;
   }
-  .checkbox {
-    cursor: pointer;
-    border: 2px solid var(--cvos-primary);
-    height: 1rem;
-    position: relative;
-    width: 1rem;
-  }
-  .effect {
-    position: absolute;
-    top: -6px;
-    bottom: -6px;
-    left: -6px;
-    right: -6px;
-    border: 6px solid var(--cvos-primary);
-    opacity: 0.3;
-    transform: scale(0);
-    transition: transform 0.3s ease;
-  }
-  svg {
-    fill: white;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1px;
-    transform: scale(0);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  .label {
-    color: var(--cvos-text);
-    cursor: pointer;
-  }
   input:checked ~ .checkbox > svg {
     background-color: var(--cvos-primary);
     transform: scale(1);
@@ -61,4 +28,40 @@
   input:focus ~ .checkbox > .effect {
     transform: scale(1);
   }
+}
+
+.label {
+  color: var(--cvos-text);
+  cursor: pointer;
+}
+
+.checkbox {
+  cursor: pointer;
+  border: 2px solid var(--cvos-primary);
+  height: 1rem;
+  position: relative;
+  width: 1rem;
+  svg {
+    fill: white;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1px;
+    transform: scale(0);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+}
+
+.effect {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
+  border: 6px solid var(--cvos-primary);
+  opacity: 0.3;
+  transform: scale(0);
+  transition: transform 0.3s ease;
 }
