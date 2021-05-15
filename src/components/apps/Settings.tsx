@@ -244,34 +244,14 @@ const Settings: FunctionComponent<IProps> = (props) => {
           <Typography variant="h4" noWrap noSelect>
             Langue du système
           </Typography>
-          <RadioGroup
-          // onChange={(value) => {
-          //   dispatch(setColorScheme(value));
-          // }}
-          >
+          <RadioGroup>
             <Radio
-              checked={true}
+              defaultChecked
               label="Français"
               name={pid + "_language"}
-              noSelect
-              value={2}
             ></Radio>
-            <Radio
-              checked={false}
-              disabeld
-              label="English"
-              name={pid + "_language"}
-              noSelect
-              value={1}
-            ></Radio>
-            <Radio
-              checked={false}
-              disabeld
-              label="Deutsch"
-              name={pid + "_language"}
-              noSelect
-              value={2}
-            ></Radio>
+            <Radio disabled label="English" name={pid + "_language"}></Radio>
+            <Radio disabled label="Deutsch" name={pid + "_language"}></Radio>
           </RadioGroup>
         </Paper>
       </TabPanel>

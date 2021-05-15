@@ -10,43 +10,6 @@
     position: absolute;
     width: 0;
   }
-  .radio {
-    cursor: pointer;
-    border: 2px solid var(--cvos-primary);
-    border-radius: 50%;
-    height: 1rem;
-    margin-right: $margin/2;
-    position: relative;
-    width: 1rem;
-    &::before {
-      border-radius: 50%;
-      bottom: 3px;
-      content: "";
-      left: 3px;
-      position: absolute;
-      right: 3px;
-      top: 3px;
-      transform: scale(0);
-      transition: transform 0.3s ease;
-    }
-  }
-  .effect {
-    border-radius: 50%;
-    position: absolute;
-    top: -6px;
-    bottom: -6px;
-    left: -6px;
-    right: -6px;
-    border: 6px solid var(--cvos-primary);
-    opacity: 0.3;
-    transform: scale(0);
-    transition: transform 0.3s ease;
-  }
-  .label {
-    transition: color 0.3s ease;
-    color: var(--cvos-text);
-    cursor: pointer;
-  }
   input:checked ~ .radio::before {
     background-color: var(--cvos-primary);
     transform: scale(1);
@@ -76,6 +39,46 @@
   input:focus ~ .radio > .effect {
     transform: scale(1);
   }
+}
+
+.radio {
+  cursor: pointer;
+  border: 2px solid var(--cvos-primary);
+  border-radius: 50%;
+  height: 1rem;
+  margin-right: $margin/2;
+  position: relative;
+  width: 1rem;
+  &::before {
+    border-radius: 50%;
+    bottom: 3px;
+    content: "";
+    left: 3px;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+}
+
+.effect {
+  border-radius: 50%;
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
+  border: 6px solid var(--cvos-primary);
+  opacity: 0.3;
+  transform: scale(0);
+  transition: transform 0.3s ease;
+}
+
+.label {
+  transition: color 0.3s ease;
+  color: var(--cvos-text);
+  cursor: pointer;
 }
 
 .no-select span.label {

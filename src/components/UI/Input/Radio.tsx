@@ -1,46 +1,37 @@
 import classes from "./Radio.module.scss";
 import { FunctionComponent, memo } from "react";
 
-interface IProps {
-  checked: boolean;
-  disabeld?: boolean;
-  label?: string;
-  name: string;
-  noSelect?: boolean;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onClick?: React.MouseEventHandler<HTMLLabelElement>;
-  readOnly?: boolean;
-  value: number;
+interface IProps
+  extends Omit<
+    React.DetailedHTMLProps<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      HTMLInputElement
+    >,
+    "onClick" | "type"
+  > {
+  readonly color?:
+    | "primary"
+    | "secondary"
+    | "info"
+    | "success"
+    | "warning"
+    | "error";
+  readonly label: string;
+  readonly noSelect?: boolean;
+  readonly onClick?: React.MouseEventHandler<HTMLLabelElement>;
 }
 
 const Radio: FunctionComponent<IProps> = (props) => {
-  const {
-    checked,
-    disabeld,
-    label,
-    name,
-    noSelect,
-    onChange,
-    onClick,
-    readOnly,
-    value
-  } = props;
+  const { label, noSelect, onClick, className, ...other } = props;
 
   const rootClasses = [classes["root"]];
 
   if (noSelect) rootClasses.push(classes["no-select"]);
+  if (className) rootClasses.push(className);
 
   return (
     <label className={rootClasses.join(" ")} onClick={onClick}>
-      <input
-        checked={checked}
-        disabled={disabeld}
-        name={name}
-        onChange={onChange}
-        type="radio"
-        readOnly={readOnly}
-        value={value}
-      ></input>
+      <input type="radio" {...other}></input>
       <div className={classes["radio"]}>
         <div className={classes["effect"]}></div>
       </div>
