@@ -12,17 +12,6 @@
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   overflow: hidden;
-  .content {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    letter-spacing: 0.5px;
-    font-size: 1rem;
-    column-gap: $padding;
-    color: var(--text-color);
-    overflow: hidden;
-    align-items: center;
-  }
   &[readonly] {
     color: var(--text-color);
     cursor: default;
@@ -60,55 +49,8 @@
       color: var(--cvos-#{$color});
     }
   }
-
-  &.outlined {
-    border: 1px solid var(--cvos-divider);
-    @each $color in $colors {
-      &.#{$color} {
-        border-color: var(--cvos-#{$color});
-      }
-    }
-  }
-  &.blur {
-    background-color: var(--cvos-paper-33);
-    &:not(.contrast) {
-      @supports (backdrop-filter: $blur) {
-        backdrop-filter: $blur;
-        @each $color in $colors {
-          &.#{$color} {
-            background-color: var(--cvos-#{$color}#{-33});
-          }
-        }
-      }
-    }
-  }
-  &.filled {
-    background-color: var(--cvos-paper-33);
-    color: var(--text-color);
-    @each $color in $colors {
-      &.#{$color} {
-        background-color: var(--cvos-#{$color});
-      }
-    }
-  }
-  &.contrast {
-    border: 1px solid var(--cvos-divider);
-  }
-
-  &.has-start-img {
-    .content {
-      grid-template-columns: auto 1fr;
-    }
-  }
-  &.has-end-img {
-    .content {
-      grid-template-columns: 1fr auto;
-    }
-  }
-  &.has-start-img.has-end-img {
-    .content {
-      grid-template-columns: auto 1fr auto;
-    }
+  &.filled .content {
+    color: var(--cvos-tet);
   }
 
   &:not(:disabled)::after {
@@ -165,38 +107,102 @@
     width: 1.5rem;
     height: 1.5rem;
   }
+}
 
-  &.align {
-    &--start {
-      .content {
-        justify-items: flex-start;
-      }
-    }
-    &--center {
-      .content {
-        justify-items: center;
-      }
-    }
-    &--end {
-      .content {
-        justify-items: flex-end;
-      }
-    }
-  }
+.ripple {
+  position: absolute;
+  background: var(--text-color);
+  opacity: 0;
+  width: 250%;
+  padding-top: 250%;
+  pointer-events: none;
+  border-radius: 50%;
+  animation: ripple 0.666s ease-out;
+  z-index: 0;
+}
 
-  > .ripple {
-    position: absolute;
-    background: var(--text-color);
-    opacity: 0;
-    width: 250%;
-    padding-top: 250%;
-    pointer-events: none;
-    border-radius: 50%;
-    animation: ripple 0.666s ease-out;
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  letter-spacing: 0.5px;
+  font-size: 1rem;
+  column-gap: $padding;
+  color: var(--text-color);
+  overflow: hidden;
+  align-items: center;
+  z-index: 1;
+}
+
+.align {
+  &--start {
+    .content {
+      justify-items: flex-start;
+    }
   }
-  > :not(.ripple) {
-    z-index: 1;
+  &--center {
+    .content {
+      justify-items: center;
+    }
   }
+  &--end {
+    .content {
+      justify-items: flex-end;
+    }
+  }
+}
+
+.has-start-img {
+  .content {
+    grid-template-columns: auto 1fr;
+  }
+}
+.has-end-img {
+  .content {
+    grid-template-columns: 1fr auto;
+  }
+}
+.has-start-img.has-end-img {
+  .content {
+    grid-template-columns: auto 1fr auto;
+  }
+}
+
+.outlined {
+  border: 1px solid var(--cvos-divider);
+  @each $color in $colors {
+    &.#{$color} {
+      border-color: var(--cvos-#{$color});
+    }
+  }
+}
+
+.blur {
+  background-color: var(--cvos-paper-33);
+  &:not(.contrast) {
+    @supports (backdrop-filter: $blur) {
+      backdrop-filter: $blur;
+      @each $color in $colors {
+        &.#{$color} {
+          background-color: var(--cvos-#{$color}#{-33});
+        }
+      }
+    }
+  }
+}
+
+.filled {
+  background-color: var(--cvos-paper-33);
+  color: var(--text-color);
+  @each $color in $colors {
+    &.#{$color} {
+      background-color: var(--cvos-#{$color});
+    }
+  }
+}
+
+.contrast {
+  border: 1px solid var(--cvos-divider);
 }
 
 .is-icon {

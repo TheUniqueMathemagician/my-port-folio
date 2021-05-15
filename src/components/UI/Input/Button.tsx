@@ -15,20 +15,26 @@ import { TColor } from "../../../types/TColor";
 import { useSelector } from "../../../hooks/Store";
 import contrastColor from "../../../functions/contrastColor";
 
-interface IProps extends React.HTMLAttributes<HTMLElement> {
+type HTMLProps = React.DetailedHTMLProps<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  HTMLAnchorElement
+> &
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >;
+interface IPropsA extends Omit<HTMLProps, "onClick"> {
   align?: "center" | "end" | "start";
   color?: TColor;
-  className?: string;
+  readOnly: undefined;
   contrast?: boolean;
-  disabled?: boolean;
   endIcon?: boolean;
   isIcon?: boolean;
   fullWidth?: boolean;
   focusable?: boolean;
   loading?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLLinkElement>;
   outlined?: boolean;
-  readOnly?: boolean;
   ripple?: boolean;
   size?: TSize;
   startIcon?: boolean;
@@ -36,139 +42,155 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   variant?: "flat" | "filled" | "blur";
 }
 
-const Button = forwardRef<HTMLButtonElement, PropsWithChildren<IProps>>(
-  (props, parentRef) => {
-    const {
-      align,
-      children,
-      className,
-      color,
-      contrast,
-      disabled,
-      endIcon,
-      fullWidth,
-      focusable,
-      isIcon,
-      loading,
-      onClick,
-      outlined,
-      readOnly,
-      ripple,
-      size,
-      startIcon,
-      to,
-      variant,
-      ...other
-    } = props;
+interface IPropsButton extends Omit<HTMLProps, "onClick"> {
+  align?: "center" | "end" | "start";
+  color?: TColor;
+  readOnly?: boolean;
+  contrast?: boolean;
+  endIcon?: boolean;
+  isIcon?: boolean;
+  fullWidth?: boolean;
+  focusable?: boolean;
+  loading?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLLinkElement>;
+  outlined?: boolean;
+  ripple?: boolean;
+  size?: TSize;
+  startIcon?: boolean;
+  to: undefined;
+  variant?: "flat" | "filled" | "blur";
+}
 
-    const innerRef = useRef<HTMLButtonElement>(null);
-    const ref = (parentRef as RefObject<HTMLButtonElement>) ?? innerRef;
+const Button = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<IPropsA | IPropsButton>
+>((props, parentRef) => {
+  const {
+    align,
+    children,
+    className,
+    color,
+    contrast,
+    disabled,
+    endIcon,
+    fullWidth,
+    focusable,
+    isIcon,
+    loading,
+    onClick,
+    outlined,
+    readOnly,
+    ripple,
+    size,
+    startIcon,
+    to,
+    variant,
+    ...other
+  } = props;
 
-    const [mouseHasBeenDown, setMouseHasBeenDown] = useState<boolean>(false);
+  const innerRef = useRef<HTMLButtonElement>(null);
+  const ref = (parentRef as RefObject<HTMLButtonElement>) ?? innerRef;
 
-    const palette = useSelector((store) => store.theme.palette);
-    const colorScheme = useSelector((store) => store.theme.colorScheme);
+  const [mouseHasBeenDown, setMouseHasBeenDown] = useState<boolean>(false);
 
-    const handleKeyPress = useCallback(
-      (e: React.KeyboardEvent<HTMLElement>) => {
-        if (e.code === "Space" && ref && ripple && !readOnly) {
-          const button = ref.current;
-          if (button) {
-            const x = button.clientWidth / 2;
-            const y = button.clientHeight / 2;
-            const ripples = document.createElement("span");
-            ripples.classList.add(classes["ripple"]);
-            ripples.style.left = `${x}px`;
-            ripples.style.top = `${y}px`;
-            button.appendChild(ripples);
-            setTimeout(() => {
-              ripples.remove();
-            }, 666);
-          }
+  const palette = useSelector((store) => store.theme.palette);
+  const colorScheme = useSelector((store) => store.theme.colorScheme);
+
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLElement>) => {
+      if (e.code === "Space" && ref && ripple && !readOnly) {
+        const button = ref.current;
+        if (button) {
+          const x = button.clientWidth / 2;
+          const y = button.clientHeight / 2;
+          const ripples = document.createElement("span");
+          ripples.classList.add(classes["ripple"]);
+          ripples.style.left = `${x}px`;
+          ripples.style.top = `${y}px`;
+          button.appendChild(ripples);
+          setTimeout(() => {
+            ripples.remove();
+          }, 666);
         }
-      },
-      [ref, ripple, readOnly]
-    );
-
-    const handleMouseDown = useCallback(() => {
-      setMouseHasBeenDown(true);
-    }, []);
-
-    const handleMouseUp = useCallback(
-      (e: React.MouseEvent) => {
-        if (mouseHasBeenDown && ref && ripple && !readOnly) {
-          const button = ref.current;
-          if (button) {
-            const x = e.clientX - button.getBoundingClientRect().x;
-            const y = e.clientY - button.getBoundingClientRect().y;
-            const ripples = document.createElement("span");
-            ripples.classList.add(classes["ripple"]);
-            ripples.style.left = `${x}px`;
-            ripples.style.top = `${y}px`;
-            button.appendChild(ripples);
-            setTimeout(() => {
-              ripples.remove();
-            }, 666);
-            setMouseHasBeenDown(false);
-          }
-        }
-      },
-      [mouseHasBeenDown, ref, ripple, readOnly]
-    );
-
-    useEffect(() => {
-      const button = ref.current;
-      if (button) {
-        const backgroundColor = palette[color ?? "background"][colorScheme];
-        button.style.setProperty(
-          "--text-color",
-          contrastColor(backgroundColor)
-        );
       }
-    }, [ref, colorScheme, palette, color]);
+    },
+    [ref, ripple, readOnly]
+  );
 
-    const rootClasses = [classes["root"]];
+  const handleMouseDown = useCallback(() => {
+    setMouseHasBeenDown(true);
+  }, []);
 
-    if (fullWidth) rootClasses.push(classes["full-width"]);
-    if (size) rootClasses.push(classes[size]);
-    if (variant) rootClasses.push(classes[variant]);
-    if (startIcon) rootClasses.push(classes["has-start-img"]);
-    if (endIcon) rootClasses.push(classes["has-end-img"]);
-    if (align) rootClasses.push(classes[`align--${align}`]);
-    if (color) rootClasses.push(classes[color]);
-    if (contrast) rootClasses.push(classes["contrast"]);
-    if (outlined) rootClasses.push(classes["outlined"]);
-    if (isIcon) rootClasses.push(classes["is-icon"]);
-    if (className) rootClasses.push(className);
-    if (loading) rootClasses.push(classes["loading"]);
+  const handleMouseUp = useCallback(
+    (e: React.MouseEvent) => {
+      if (mouseHasBeenDown && ref && ripple && !readOnly) {
+        const button = ref.current;
+        if (button) {
+          const x = e.clientX - button.getBoundingClientRect().x;
+          const y = e.clientY - button.getBoundingClientRect().y;
+          const ripples = document.createElement("span");
+          ripples.classList.add(classes["ripple"]);
+          ripples.style.left = `${x}px`;
+          ripples.style.top = `${y}px`;
+          button.prepend(ripples);
+          setTimeout(() => {
+            ripples.remove();
+          }, 666);
+          setMouseHasBeenDown(false);
+        }
+      }
+    },
+    [mouseHasBeenDown, ref, ripple, readOnly]
+  );
 
-    return createElement(
-      to ? "a" : "button",
-      {
-        className: rootClasses.join(" "),
-        onMouseDown: handleMouseDown,
-        onMouseUp: handleMouseUp,
-        onKeyPress: handleKeyPress,
-        onClick,
-        disabled,
-        ref,
-        tabIndex: focusable && !readOnly ? 0 : -1,
-        href: to ?? undefined,
-        rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
-        readOnly,
-        target: to?.startsWith("/") ? undefined : "_blank",
-        ...other
-      },
-      <>
-        <div className={classes["content"]}>{children}</div>
-        <div className={classes["loader"]}>
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" />
-          </svg>
-        </div>
-      </>
-    );
-  }
-);
+  useEffect(() => {
+    const button = ref.current;
+    if (button) {
+      const backgroundColor = palette[color ?? "background"][colorScheme];
+      button.style.setProperty("--text-color", contrastColor(backgroundColor));
+    }
+  }, [ref, colorScheme, palette, color]);
+
+  const rootClasses = [classes["root"]];
+
+  if (fullWidth) rootClasses.push(classes["full-width"]);
+  if (size) rootClasses.push(classes[size]);
+  if (variant) rootClasses.push(classes[variant]);
+  if (startIcon) rootClasses.push(classes["has-start-img"]);
+  if (endIcon) rootClasses.push(classes["has-end-img"]);
+  if (align) rootClasses.push(classes[`align--${align}`]);
+  if (color) rootClasses.push(classes[color]);
+  if (contrast) rootClasses.push(classes["contrast"]);
+  if (outlined) rootClasses.push(classes["outlined"]);
+  if (isIcon) rootClasses.push(classes["is-icon"]);
+  if (className) rootClasses.push(className);
+  if (loading) rootClasses.push(classes["loading"]);
+  return createElement(
+    to ? "a" : "button",
+    {
+      className: rootClasses.join(" "),
+      onMouseDown: handleMouseDown,
+      onMouseUp: handleMouseUp,
+      onKeyPress: handleKeyPress,
+      onClick,
+      disabled,
+      ref,
+      tabIndex: focusable && !readOnly ? 0 : -1,
+      href: to ?? undefined,
+      rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
+      readOnly,
+      target: to?.startsWith("/") ? undefined : "_blank",
+      ...other
+    },
+    <>
+      <div className={classes["content"]}>{children}</div>
+      <div className={classes["loader"]}>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" />
+        </svg>
+      </div>
+    </>
+  );
+});
 
 export default memo(Button);
