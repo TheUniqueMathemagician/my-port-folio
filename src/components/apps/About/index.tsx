@@ -89,6 +89,7 @@ const About: FunctionComponent<IProps> = (props) => {
           focusable
           fullWidth
           startIcon
+          color="primary"
           style={{ height: "3rem" }}
           onClick={handleContactClick}
         >

@@ -192,6 +192,7 @@ const Contact: FunctionComponent<IProps> = () => {
             color="primary"
             outlined
             size="md"
+            variant="filled"
             loading={loading}
           >
             {resendDate.getTime() > 0 ? (
