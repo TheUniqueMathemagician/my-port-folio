@@ -56,8 +56,6 @@
   }
 
   &:not(:disabled)::after {
-    // &:not(:disabled):not([readonly])::after {
-    pointer-events: none;
     content: "";
     position: absolute;
     top: 0;
@@ -73,7 +71,6 @@
   }
 
   &::before {
-    pointer-events: none;
     content: "";
     position: absolute;
     top: 50%;
@@ -117,7 +114,6 @@
   opacity: 0;
   width: 250%;
   padding-top: 250%;
-  pointer-events: none;
   border-radius: 50%;
   animation: ripple 0.666s ease-out;
   z-index: 0;

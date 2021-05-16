@@ -51,24 +51,3 @@
     backdrop-filter: $blur;
   }
 }
-
-.resizing :nth-child(2),
-.resizing :nth-child(2) * {
-  pointer-events: none;
-}
-
-.dragging :nth-child(1),
-.dragging :nth-child(1) * {
-  pointer-events: none;
-}
-
-.dragging :nth-child(2) {
-  cursor: grabbing;
-}
-
-.resizing,
-.dragging {
-  :nth-child(3) * {
-    pointer-events: none;
-  }
-}

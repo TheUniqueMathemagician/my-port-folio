@@ -60,11 +60,11 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 });
   const [snap, setSnap] = useState<ESnap>(ESnap.none);
 
-  //#region button handlers
-
   const handleDragDoubleClick = useCallback(() => {
     dispatch(setMaximized({ pid, maximized: ESnap.top }));
   }, [pid, dispatch]);
+
+  //#region button handlers
 
   const handleRedClick = useCallback(
     (e: React.MouseEvent) => {
@@ -127,6 +127,7 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
         }
       }
 
+      document.body.style.cursor = "grabbing";
       dispatch(setDragging({ pid, dragging: true }));
     },
     [dispatch, pid, windowRef, dimensions.width, maximized]
@@ -271,6 +272,7 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
     (e: globalThis.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
+      document.body.style.cursor = "";
       dispatch(setDragging({ pid, dragging: false }));
       dispatch(setSnapShadowVisibility(false));
       dispatch(setMaximized({ pid, maximized: snap }));
@@ -282,11 +284,9 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
 
   useEffect(() => {
     if (dragging) {
-      document.body.style.cursor = "grabbing";
       document.addEventListener("mousemove", handleDragMouseMove);
       document.addEventListener("mouseup", handleDragMouseUp);
       return () => {
-        document.body.style.cursor = "";
         document.removeEventListener("mousemove", handleDragMouseMove);
         document.removeEventListener("mouseup", handleDragMouseUp);
       };

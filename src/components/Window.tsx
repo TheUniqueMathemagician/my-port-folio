@@ -151,8 +151,6 @@ const Window: FunctionComponent<IProps> = ({
   const zIndex = zIndexes.indexOf(pid);
 
   if (contrast) rootClasses.push(classes["contrast"]);
-  if (resizing) rootClasses.push(classes["resizing"]);
-  if (dragging) rootClasses.push(classes["dragging"]);
 
   const renderComponent = applicationsMap.get(component);
 

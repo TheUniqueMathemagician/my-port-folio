@@ -26,6 +26,8 @@ const WindowFrame: FunctionComponent<IProps> = () => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const dragging = useSelector((store) => store.instances.dragging);
+  const resizing = useSelector((store) => store.instances.resizing);
 
   const [boundaries, setBoundaries] = useState<IBoundaries>({
     x1: 0,
@@ -59,6 +61,9 @@ const WindowFrame: FunctionComponent<IProps> = () => {
   const shadowClasses = [classes["shadow"]];
 
   if (contrast) shadowClasses.push(classes["contrast"]);
+
+  if (dragging) rootClasses.push(classes["dragging"]);
+  if (resizing) rootClasses.push(classes["resizing"]);
 
   // TODO: put snap shadow in its own component
   return (

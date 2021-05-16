@@ -52,3 +52,8 @@
     backdrop-filter: blur(6px);
   }
 }
+
+.resizing *,
+.dragging * {
+  pointer-events: none;
+}

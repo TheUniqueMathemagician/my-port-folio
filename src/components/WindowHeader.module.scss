@@ -13,12 +13,12 @@
   .button-list {
     display: grid;
     grid-auto-flow: column;
-    column-gap: 8px;
+    column-gap: $padding/2;
   }
   button {
     position: relative;
-    height: 12px;
-    width: 12px;
+    height: $padding * 0.75;
+    width: $padding * 0.75;
     border-radius: 50%;
     border: 0;
     outline: none;
@@ -59,21 +59,9 @@
       background: var(--cvos-success);
     }
   }
-  h2 {
-    pointer-events: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 
 .title {
-  user-select: none;
   font-weight: 500;
   pointer-events: none;
   display: flex;

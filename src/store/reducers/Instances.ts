@@ -41,6 +41,8 @@ interface IState {
   elements: {
     [pid: string]: DaemonInstance | WindowInstance;
   };
+  dragging: boolean;
+  resizing: boolean;
   snapShadow: { position: IdomPosition; visible: boolean };
   zIndexes: Array<string>;
 }
@@ -51,6 +53,8 @@ const initialState: IState = {
     position: { bottom: 0, left: 0, right: 0, top: 0 },
     visible: false
   },
+  dragging: false,
+  resizing: false,
   zIndexes: []
 };
 
@@ -131,6 +135,7 @@ export const instancesSlice = createSlice({
     ) {
       const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).dragging = action.payload.dragging;
+      state.dragging = action.payload.dragging;
     },
     setPosition(
       state,
@@ -166,6 +171,7 @@ export const instancesSlice = createSlice({
     ) {
       const instance = state.elements[action.payload.pid];
       (instance as WindowInstance).resizing = action.payload.resizing;
+      state.resizing = action.payload.resizing;
     },
     setSnapShadowVisibility(state, action: PayloadAction<boolean>) {
       state.snapShadow.visible = action.payload;
