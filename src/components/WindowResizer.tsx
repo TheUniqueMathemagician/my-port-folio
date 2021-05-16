@@ -4,6 +4,7 @@ import React, {
   RefObject,
   useCallback,
   useEffect,
+  useMemo,
   useRef
 } from "react";
 import { useDispatch, useSelector } from "../hooks/Store";
@@ -28,6 +29,35 @@ interface IProps {
 
 const WindowResizer: FunctionComponent<IProps> = (props) => {
   const { pid, width, windowRef } = props;
+
+  const cursor = useMemo(
+    () =>
+      new Map<EResize, string>([
+        [EResize.top, "ns-resize"],
+        [EResize.bottom, "ns-resize"],
+        [EResize.left, "ew-resize"],
+        [EResize.right, "ew-resize"],
+        [EResize.topLeft, "nwse-resize"],
+        [EResize.topRight, "nesw-resize"],
+        [EResize.bottomLeft, "nesw-resize"],
+        [EResize.bottomRight, "nwse-resize"]
+      ]),
+    []
+  );
+  const csscursor = useMemo(
+    () =>
+      new Map<EResize, string>([
+        [EResize.top, "resize-top"],
+        [EResize.bottom, "resize-bottom"],
+        [EResize.left, "resize-left"],
+        [EResize.right, "resize-right"],
+        [EResize.topLeft, "resize-top-left"],
+        [EResize.topRight, "resize-top-right"],
+        [EResize.bottomLeft, "resize-bottom-left"],
+        [EResize.bottomRight, "resize-bottom-right"]
+      ]),
+    []
+  );
 
   const resizerRef = useRef<HTMLDivElement>(null);
 
@@ -122,6 +152,8 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       e.stopPropagation();
       e.preventDefault();
 
+      document.body.style.cursor = cursor.get(resizeMode) || "";
+
       const window = windowRef.current;
       if (!window) return;
       const windowFrame = window.offsetParent as HTMLDivElement;
@@ -143,7 +175,7 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
         })
       );
     },
-    [dispatch, windowRef, pid, resizable]
+    [dispatch, windowRef, pid, resizable, resizeMode, cursor]
   );
 
   const handleResizerDragMouseMove = useCallback(
@@ -319,6 +351,8 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       e.stopPropagation();
       e.preventDefault();
 
+      document.body.style.cursor = "";
+
       const window = windowRef.current;
 
       if (!window) return;
@@ -332,7 +366,6 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
           }
         })
       );
-
       dispatch(setResizing({ pid, resizing: false }));
     },
     [dispatch, windowRef, pid]
@@ -340,22 +373,9 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
   useEffect(() => {
     if (resizing) {
-      const cursor = new Map<EResize, string>([
-        [EResize.top, "ns-resize"],
-        [EResize.bottom, "ns-resize"],
-        [EResize.left, "ew-resize"],
-        [EResize.right, "ew-resize"],
-        [EResize.topLeft, "nwse-resize"],
-        [EResize.topRight, "nesw-resize"],
-        [EResize.bottomLeft, "nesw-resize"],
-        [EResize.bottomRight, "nwse-resize"]
-      ]);
-
-      document.body.style.cursor = cursor.get(resizeMode) || "";
       document.addEventListener("mousemove", handleResizerDragMouseMove);
       document.addEventListener("mouseup", handleResizerDragMouseUp);
       return () => {
-        document.body.style.cursor = "";
         document.removeEventListener("mousemove", handleResizerDragMouseMove);
         document.removeEventListener("mouseup", handleResizerDragMouseUp);
       };
@@ -368,17 +388,8 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
   ]);
 
   const resizerClasses: string[] = [styles["window-resizer"]];
-  const cursor = new Map<EResize, string>([
-    [EResize.top, "resize-top"],
-    [EResize.bottom, "resize-bottom"],
-    [EResize.left, "resize-left"],
-    [EResize.right, "resize-right"],
-    [EResize.topLeft, "resize-top-left"],
-    [EResize.topRight, "resize-top-right"],
-    [EResize.bottomLeft, "resize-bottom-left"],
-    [EResize.bottomRight, "resize-bottom-right"]
-  ]);
-  resizerClasses.push(styles[cursor.get(resizeMode) ?? ""]);
+
+  resizerClasses.push(styles[csscursor.get(resizeMode) ?? ""]);
   return (
     <div
       className={resizerClasses.join(" ")}
