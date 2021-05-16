@@ -33,9 +33,6 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
   const dispatch = useDispatch();
 
-  // const instance: WindowInstance = useSelector(
-  //   (store) => store.instances.elements[pid]
-  // ) as WindowInstance;
   const resizable = useSelector(
     (store) => store.instances.elements[pid] as WindowInstance
   ).resizable;
@@ -54,9 +51,6 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
   const minDimensions = useSelector(
     (store) => store.instances.elements[pid] as WindowInstance
   ).minDimensions;
-  const dragging = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
-  ).dragging;
 
   const handleResizerMouseMove = useCallback(
     (e: React.MouseEvent) => {
@@ -391,9 +385,6 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       ref={resizerRef}
       onMouseMove={handleResizerMouseMove}
       onMouseDown={handleResizerDragMouseDown}
-      style={{
-        pointerEvents: dragging ? "none" : "all"
-      }}
     ></div>
   );
 };

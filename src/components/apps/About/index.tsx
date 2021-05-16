@@ -90,7 +90,7 @@ const About: FunctionComponent<IProps> = (props) => {
           fullWidth
           startIcon
           color="primary"
-          style={{ height: "3rem" }}
+          size="xl"
           onClick={handleContactClick}
         >
           <Send></Send>

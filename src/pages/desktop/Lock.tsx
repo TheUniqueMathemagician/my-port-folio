@@ -30,7 +30,7 @@ export default function Lock() {
         >
           Se connecter
         </Button>
-        <div style={{ position: "fixed", bottom: 0, left: 0, padding: "2rem" }}>
+        <div className={classes["users"]}>
           {Object.keys(users).map((key) => (
             <Button
               startIcon

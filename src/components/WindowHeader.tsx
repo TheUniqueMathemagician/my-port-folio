@@ -50,9 +50,6 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   const dimensions = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dimensions
   );
-  const resizing = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).resizing
-  );
   const dragging = useSelector(
     (store) => (store.instances.elements[pid] as WindowInstance).dragging
   );
@@ -303,10 +300,6 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   return (
     <div
       className={rootClasses.join(" ")}
-      style={{
-        cursor: dragging ? "grabbing" : "grab",
-        pointerEvents: resizing ? "none" : "all"
-      }}
       ref={headerRef}
       onMouseDown={handleDragMouseDown}
       onDoubleClick={handleDragDoubleClick}
@@ -315,25 +308,16 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       <div className={classes["button-list"]}>
         <button
           className={classes["red"]}
-          style={{
-            pointerEvents: dragging ? "none" : "all"
-          }}
           onClick={handleRedClick}
           onMouseDown={handleButtonMouseDown}
         ></button>
         <button
           className={classes["orange"]}
-          style={{
-            pointerEvents: dragging ? "none" : "all"
-          }}
           onClick={handleOrangeClick}
           onMouseDown={handleButtonMouseDown}
         ></button>
         <button
           className={classes["green"]}
-          style={{
-            pointerEvents: dragging ? "none" : "all"
-          }}
           onClick={handleGreenClick}
           onMouseDown={handleButtonMouseDown}
         ></button>

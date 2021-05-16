@@ -24,7 +24,6 @@
     outline: none;
     cursor: pointer;
     box-shadow: 0 0 6px 0 #00000033;
-    pointer-events: all;
     &::before {
       content: "";
       z-index: -1;
