@@ -1,5 +1,10 @@
 import classes from "./Paper.module.scss";
-import { FunctionComponent, memo, PropsWithChildren } from "react";
+import {
+  createElement,
+  FunctionComponent,
+  memo,
+  PropsWithChildren
+} from "react";
 import { useSelector } from "../../hooks/Store";
 import { EColorScheme } from "../../types/EColorScheme";
 import { TColor } from "../../types/TColor";
@@ -14,6 +19,7 @@ interface IProps
   fullWidth?: boolean;
   outlined?: boolean;
   spaced?: boolean;
+  tag?: "header" | "footer" | "main" | "article" | "section" | "div";
 }
 
 const Paper: FunctionComponent<IProps> = (props) => {
@@ -25,6 +31,7 @@ const Paper: FunctionComponent<IProps> = (props) => {
     fullWidth,
     outlined,
     spaced,
+    tag,
     ...other
   } = props;
 
@@ -42,10 +49,10 @@ const Paper: FunctionComponent<IProps> = (props) => {
   if (background) rootClasses.push(classes[background]);
   if (blur) rootClasses.push(classes["blur"]);
 
-  return (
-    <div className={rootClasses.join(" ")} {...other}>
-      {children}
-    </div>
+  return createElement(
+    tag ?? "div",
+    { className: rootClasses.join(" "), ...other },
+    children
   );
 };
 
