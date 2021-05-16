@@ -12,11 +12,11 @@ const Hobbies: FunctionComponent<IProps> = () => {
     <div className={classes["root"]}>
       <Typography variant="h4">Loisirs</Typography>
       <Typography variant="h5">Code</Typography>
-      <Paper spaced background="paper">
-        {/* <Typography variant="p">
-          Voici une liste (non exhaustive) des choses que j'aime et que j'aime
-          faire
-        </Typography> */}
+      <Paper spaced background="paper" className={classes["paper"]}>
+        <img
+          src={require("../../../../assets/images/coding.svg").default}
+          alt="Coding"
+        />
         <Typography variant="p">
           Bien évidement le code et le développement en font partie. J'ai
           commencé vers à l'adolescence et j'ai très vite accroché. La vie et
@@ -25,7 +25,11 @@ const Hobbies: FunctionComponent<IProps> = () => {
         </Typography>
       </Paper>
       <Typography variant="h5">Guitare</Typography>
-      <Paper spaced background="paper">
+      <Paper spaced background="paper" className={classes["paper"]}>
+        <img
+          src={require("../../../../assets/images/guitar.svg").default}
+          alt="Coding"
+        />
         <Typography variant="p">
           Je joue de la guitare depuis une bonne décénie et je ne m'en lasse
           pas. Actuellement je ne suis pas dans un groupe, mais si vous cherchez
@@ -34,7 +38,11 @@ const Hobbies: FunctionComponent<IProps> = () => {
         </Typography>
       </Paper>
       <Typography variant="h5">Nature</Typography>
-      <Paper spaced background="paper">
+      <Paper spaced background="paper" className={classes["paper"]}>
+        <img
+          src={require("../../../../assets/images/nature.svg").default}
+          alt="Coding"
+        />
         <Typography variant="p">
           J'aime tout ce qui touche à la nature, que ce soit une promenade en
           forêt ou encore entretenir mon petit potager.
