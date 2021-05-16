@@ -16,15 +16,8 @@ interface IProps {
 const Star = memo(() => <MdStar></MdStar>);
 
 const Rating: FunctionComponent<IProps> = (props) => {
-  const {
-    onChange,
-    defaultValue,
-    max,
-    min,
-    disabled,
-    output,
-    readOnly
-  } = props;
+  const { onChange, defaultValue, max, min, disabled, output, readOnly } =
+    props;
   const [state, setState] = useState<number | null>(defaultValue ?? null);
 
   const id = useRef<string>(generateID());
@@ -46,7 +39,7 @@ const Rating: FunctionComponent<IProps> = (props) => {
   for (let i = min ?? 0; i <= (max ?? 0); i++) {
     rates.push(i);
   }
-
+  // TODO: make this accessible with tabs
   return (
     <fieldset disabled={disabled} className={rootClasses.join(" ")}>
       {rates.map((i) => (
