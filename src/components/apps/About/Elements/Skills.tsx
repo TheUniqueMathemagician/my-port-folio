@@ -1,8 +1,10 @@
 import classes from "./Skills.module.scss";
-import React, { FunctionComponent, memo } from "react";
+import React, { FunctionComponent, memo, useCallback, useState } from "react";
 import Paper from "../../../UI/Paper";
 import Typography from "../../../UI/Typography";
 import Rating from "../../../UI/Input/Rating";
+
+import { FaFilter } from "react-icons/fa";
 
 interface IProps {
   pid: string;
@@ -11,6 +13,12 @@ interface IProps {
 interface ISKill {
   level: number;
   name: string;
+}
+
+enum EEqualityOption {
+  smallerOrEqual,
+  equal,
+  greaterOrEqual
 }
 
 const languageSkills: ISKill[] = [
@@ -57,6 +65,10 @@ const languageSkills: ISKill[] = [
   {
     level: 2,
     name: "noSQL"
+  },
+  {
+    level: 2,
+    name: "Dart"
   }
 ];
 const technoSkills: ISKill[] = [
@@ -139,6 +151,10 @@ const frameworkSkills: ISKill[] = [
   {
     level: 3,
     name: "React"
+  },
+  {
+    level: 2,
+    name: "Flutter"
   }
 ];
 const incommingSkills: { name: string }[] = [
@@ -206,30 +222,86 @@ const ripSkills: { name: string }[] = [
   }
 ];
 
+const Filter = memo(() => (
+  <FaFilter style={{ color: "var(--cvos-text)" }}></FaFilter>
+));
+
 const Skills: FunctionComponent<IProps> = () => {
+  const [ratingFilter, setRatingFilter] = useState<number>(1);
+  const [ratingFilterType, setRatingFilterType] = useState<EEqualityOption>(
+    EEqualityOption.greaterOrEqual
+  );
+
+  const filter = useCallback(
+    (skill: ISKill) => {
+      switch (ratingFilterType) {
+        case EEqualityOption.smallerOrEqual:
+          return skill.level <= ratingFilter;
+        case EEqualityOption.equal:
+          return skill.level === ratingFilter;
+        case EEqualityOption.greaterOrEqual:
+          return skill.level >= ratingFilter;
+        default:
+          return false;
+      }
+    },
+    [ratingFilter, ratingFilterType]
+  );
+
+  const map = useCallback(
+    (skill) => (
+      <React.Fragment key={skill.name}>
+        <Typography noWrap variant="body">
+          {skill.name}
+        </Typography>
+        <Rating readOnly defaultValue={skill.level} min={1} max={5}></Rating>
+      </React.Fragment>
+    ),
+    []
+  );
+
   return (
     <div className={classes["root"]}>
       <Typography noWrap variant="h4">
         Compétences
       </Typography>
+      {/* TOTO: add rating filter field */}
+      <form action="" method="post">
+        <div
+          style={{
+            display: "grid",
+            gridAutoFlow: "column",
+            columnGap: "1rem",
+            justifyContent: "flex-start",
+            alignItems: "center"
+          }}
+        >
+          <Filter></Filter>
+          <Typography tag="span" variant="body">
+            Compétences
+          </Typography>
+          {/* TODO: make a select component */}
+          <select
+            onChange={(e) => setRatingFilterType(parseInt(e.target.value))}
+          >
+            <option value={EEqualityOption.greaterOrEqual}>{">="}</option>
+            <option value={EEqualityOption.equal}>{"="}</option>
+            <option value={EEqualityOption.smallerOrEqual}>{"<="}</option>
+          </select>
+          <Rating
+            defaultValue={1}
+            min={1}
+            max={5}
+            onChange={(e) => setRatingFilter(parseInt(e.target.value))}
+          ></Rating>
+        </div>
+      </form>
       <Typography noWrap variant="h5">
         Langages
       </Typography>
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
-          {languageSkills.map((skill) => (
-            <React.Fragment key={skill.name}>
-              <Typography noWrap variant="body">
-                {skill.name}
-              </Typography>
-              <Rating
-                readOnly
-                defaultValue={skill.level}
-                min={1}
-                max={5}
-              ></Rating>
-            </React.Fragment>
-          ))}
+          {languageSkills.filter(filter).map(map)}
         </div>
       </Paper>
       <Typography noWrap variant="h5">
@@ -237,19 +309,7 @@ const Skills: FunctionComponent<IProps> = () => {
       </Typography>
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
-          {frameworkSkills.map((skill) => (
-            <React.Fragment key={skill.name}>
-              <Typography noWrap variant="body">
-                {skill.name}
-              </Typography>
-              <Rating
-                readOnly
-                defaultValue={skill.level}
-                min={1}
-                max={5}
-              ></Rating>
-            </React.Fragment>
-          ))}
+          {frameworkSkills.filter(filter).map(map)}
         </div>
       </Paper>
       <Typography noWrap variant="h5">
@@ -257,19 +317,7 @@ const Skills: FunctionComponent<IProps> = () => {
       </Typography>
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
-          {softwareSkills.map((skill) => (
-            <React.Fragment key={skill.name}>
-              <Typography noWrap variant="body">
-                {skill.name}
-              </Typography>
-              <Rating
-                readOnly
-                defaultValue={skill.level}
-                min={1}
-                max={5}
-              ></Rating>
-            </React.Fragment>
-          ))}
+          {softwareSkills.filter(filter).map(map)}
         </div>
       </Paper>
       <Typography noWrap variant="h5">
@@ -277,19 +325,7 @@ const Skills: FunctionComponent<IProps> = () => {
       </Typography>
       <Paper spaced blur background="paper">
         <div className={classes["cat"]}>
-          {technoSkills.map((skill) => (
-            <React.Fragment key={skill.name}>
-              <Typography noWrap variant="body">
-                {skill.name}
-              </Typography>
-              <Rating
-                readOnly
-                defaultValue={skill.level}
-                min={1}
-                max={5}
-              ></Rating>
-            </React.Fragment>
-          ))}
+          {technoSkills.filter(filter).map(map)}
         </div>
       </Paper>
       <Typography noWrap variant="h5">
