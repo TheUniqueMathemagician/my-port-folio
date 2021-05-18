@@ -259,26 +259,27 @@ button.root {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
   svg {
     animation: svg-animation 2s linear infinite;
     display: block;
-  }
-  circle {
-    animation: circle-animation 1.4s ease-in-out infinite both;
-    display: block;
-    fill: transparent;
-    stroke: var(--text-color);
-    stroke-linecap: round;
-    stroke-dasharray: 283;
-    stroke-dashoffset: 280;
-    stroke-width: 10px;
-    transform-origin: 50% 50%;
+    circle {
+      animation: circle-animation 1.4s ease-in-out infinite both;
+      display: block;
+      fill: transparent;
+      stroke: var(--text-color);
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 280;
+      stroke-width: 10px;
+      transform-origin: 50% 50%;
+    }
   }
 }
 
 .root {
   @each $color in $colors {
-    &.#{$color} .loader circle {
+    &.#{$color}:not(.filled) .loader circle {
       stroke: var(--cvos-#{$color});
     }
   }
