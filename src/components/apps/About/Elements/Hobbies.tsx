@@ -18,10 +18,10 @@ const Hobbies: FunctionComponent<IProps> = () => {
           alt="Coding"
         />
         <Typography variant="p">
-          Bien évidement le code et le développement en font partie. J'ai
-          commencé vers à l'adolescence et j'ai très vite accroché. La vie et
-          les choix que j'ai fait m'ont amené à étudier l'électromécanique, celà
-          dit j'aimerais coupler mes études à ma passion.
+          Evidemment le code et le développement en font partie. J'ai commencé
+          vers à l'adolescence et j'ai très vite accroché. Bien que la vie et
+          les choix que j'ai fait m'ont amené à étudier l'électromécanique,
+          j'aimerais coupler mes études à ma passion.
         </Typography>
       </Paper>
       <Typography variant="h5">Guitare</Typography>
@@ -34,7 +34,7 @@ const Hobbies: FunctionComponent<IProps> = () => {
           Je joue de la guitare depuis une bonne décénie et je ne m'en lasse
           pas. Actuellement je ne suis pas dans un groupe, mais si vous cherchez
           un guitariste dans la région de Liège et que vous aimez le métal \m/ (
-          sachant que je ne suis pas forcément sataniste )
+          PS: Je ne suis pas pour autant sataniste )
         </Typography>
       </Paper>
       <Typography variant="h5">Nature</Typography>
