@@ -4,8 +4,8 @@ import Typography from "../UI/Typography";
 import Avatar from "../UI/Avatar";
 import Paper from "../UI/Paper";
 import Button from "../UI/Input/Button";
-import { useSelector } from "../../hooks/Store";
-import { WindowInstance } from "../../store/reducers/Instances";
+import { useDispatch, useSelector } from "../../hooks/Store";
+import { runApplication, WindowInstance } from "../../store/reducers/Instances";
 
 interface IProps {
   pid: string;
@@ -19,10 +19,21 @@ interface IProps {
 const Projects: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
 
+  const dispatch = useDispatch();
+
   const small = useSelector(
     (store) =>
       (store.instances.elements[pid] as WindowInstance).dimensions.width ??
       0 < 600
+  );
+
+  const contact = useSelector(
+    (store) =>
+      store.applications.elements[
+        Object.keys(store.applications.elements).find(
+          (key) => store.applications.elements[key].displayName === "Contact"
+        ) ?? ""
+      ]
   );
 
   const rootClasses = [classes["root"]];
@@ -55,38 +66,47 @@ const Projects: FunctionComponent<IProps> = (props) => {
             </Button>
             <div>
               <Typography variant="p">
-                L'image affichée vient d'une version précédente de ce port
-                folio.
+                L'image affichée vient d'une version précédente de ce
+                port-folio.
               </Typography>
               <Typography variant="p">
-                Ce projet a compté plusieurs versions, chacunes basées sur des
+                Ce projet a compté plusieurs versions, chacune basée sur des
                 technologies différentes et des concepts à part. Au final, j'ai
                 décidé d'apprendre React et perfectionner TypeScript en le
                 faisant.
               </Typography>
               <Typography variant="p">
-                Il m'a permis d'en apprendre plus sur react ( memoization,
-                profiler, HOC, render props, etc ...), plus sur Typescript
-                (interfaces, enumérations, Omit, union types, etc ...) et redux.
-                J'ai d'abords été très réticent à l'utilisation de redux,
-                surtout dû à sa syntaxe peu avenante, et puis je suis tombé sur
+                Il m'a permis d'en apprendre plus sur react (memoization,
+                profiler, HOC, render props, etc...), plus sur Typescript
+                (interfaces, énumérations, Omit, union types, etc...) et redux.
+                J'ai d'abord été très réticent à l'utilisation de redux, surtout
+                dû à sa syntaxe peu avenante, et puis je suis tombé sur
                 redux/toolkit qui m'a fait changer d'avis. J'avais avant tout
                 besoin d'une solution de state management car l'application
                 commençait à devenir complexe. J'ai testé d'autres solutions
                 mais celle-ci s'est avérée être plus que suffisante et
-                relativement efficace ( bien que je n'aime pas l'approche du
-                flux unidirectionnel de redux )
+                relativement efficace (bien que je n'adhère pas l'approche du
+                flux unidirectionnel de redux).
               </Typography>
               <Typography variant="p">
-                Au départ, j'avais utilisé plusieurs librairies, notament
+                Au départ, j'avais utilisé plusieurs librairies, notamment
                 material UI pour l'interface. J'ai finalement choisi de faire
                 toute l'application avec mes petites mains car le but était
                 surtout de montrer ce que je savais faire, et non ce que les
                 autres savent faire.
               </Typography>
               <Typography variant="p">
-                Pour rester bref, je vais m'arrêter là mais si{" "}
-                <span onClick={() => {}}>vous avez des questions</span>{" "}
+                Pour rester bref, je vais m'arrêter là. Si
+                <span
+                  className={classes["link"]}
+                  onClick={() => {
+                    dispatch(
+                      runApplication({ application: contact, args: {} })
+                    );
+                  }}
+                >
+                  &nbsp;vous avez des questions&nbsp;
+                </span>
                 n'hésitez pas.
               </Typography>
             </div>
@@ -117,13 +137,13 @@ const Projects: FunctionComponent<IProps> = (props) => {
               <Typography variant="p">
                 Ce projet avait pour but de prendre en main Unity. Il avait
                 aussi pour objectif de tester le Web Assembly. Je n'ai pas été
-                fort loin car le développement de jeux vidéos est un monde à
-                part et qu'il nécessite plusieurs domaines d'expertise ce qui
-                m'aurait vallu de consacrer bien plus de temps que je ne peux et
-                ne veux y accorder.
+                fort loin étant donné que le développement de jeux vidéos est un
+                monde à part et qu'il nécessite plusieurs domaines d'expertise
+                ce qui m'aurait valut de consacrer bien plus de temps que je ne
+                peux et ne veux y accorder.
               </Typography>
               <Typography variant="p">
-                J'en garde toutefois une bonne expérience, et espère que le WASM
+                J'en garde toutefois une bonne expérience et espère que le WASM
                 sera plus abouti et utilisé à l'avenir.
               </Typography>
             </div>
@@ -156,16 +176,16 @@ const Projects: FunctionComponent<IProps> = (props) => {
                 application afin de les aider à Masteriser des parties ou à y
                 jouer. Bien que le temps m'ait manqué pour continuer le
                 développement, il est encore d'actualité. Ici le projet est en
-                cours de migration car il a d'abords été développé pour desktop
-                sous Electron, mais dans l'optique de le rendre plus accessible
-                et plus flexible quant aux supports des utilisateurs, j'en fais
+                cours de migration, car il a d'abords été développé pour desktop
+                sous Electron mais dans l'optique de le rendre plus accessible
+                et plus flexible quant aux support des utilisateurs, j'en fais
                 une application web.
               </Typography>
               <Typography variant="p">
                 Je compte également m'inspirer de ce port-folio afin de refaire
                 la base de code du projet, dans le but qu'il soit plus souple et
                 plus permissif. L'objectif est de faire en sorte que ce soit les
-                utilisateurs qui imposent leur layout et choissisent leurs
+                utilisateurs qui imposent leur layout et choisissent leurs
                 outils, et pas l'inverse. Ici les widgets sont disposés sous
                 forme de grille, et je compte plutôt faire des fenêtres libres
                 de déplacement et redimensionnables. De plus, comme chaque
@@ -205,15 +225,15 @@ const Projects: FunctionComponent<IProps> = (props) => {
                 Ce projet était un petit projet afin de découvrir le framework
                 Quasar, basé sur VueJS, et Firebase. Son principe consistait à
                 fournir des outils afin de générer de l'aléatoire, que ce soit
-                des clés, une roue de la fortune, des lancés de dés ...
+                des clés, une roue de la fortune, des lancés de dés...
               </Typography>
               <Typography variant="p">
                 L'approche était mobile first et je n'ai pas encore implémenté
                 le responsive donc sur desktop l'affichage est un brin trop
                 large. Je ne compte pas l'implémenter dans l'immédiat, car
-                J'investi le temps qui me reste sur l'application pour rôlistes.
-                Par ailleurs, j'ai vu ce que je voulais voir, c'est à dire ce
-                que Firebase et Quasar pouvaient m'offrir.
+                J'investis le temps qui me reste sur l'application pour
+                rôlistes. Par ailleurs, j'ai vu ce que je voulais voir,
+                c'est-à-dire ce que Firebase et Quasar pouvaient m'offrir.
               </Typography>
             </div>
           </div>
@@ -248,8 +268,9 @@ const Projects: FunctionComponent<IProps> = (props) => {
               <Typography variant="p">
                 Parmis les projets perdus, on peut compter un utilitaire de
                 communication pour le port série écrit en C# ( WPF ), des
-                e-commerces, un site de soluce, des projest Raspi & arduino, et
-                de nombreux autres ...
+                e-commerces, un site de soluce, des projets Raspi & arduino, une
+                todo sur Xamarin ainsi qu'une sur Flutter et de nombreux
+                autres...
               </Typography>
             </div>
           </div>
