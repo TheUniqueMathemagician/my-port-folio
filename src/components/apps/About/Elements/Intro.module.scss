@@ -40,7 +40,7 @@ $max-content-width: 500px;
     padding: $padding;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     > * {
       max-width: $max-content-width;
     }
@@ -52,7 +52,7 @@ $max-content-width: 500px;
   column-gap: $padding * 2;
   row-gap: $padding * 2;
   grid-template-columns: repeat(auto-fit, 10rem);
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
   width: 100%;
   .bubble {
@@ -157,4 +157,8 @@ $max-content-width: 500px;
     justify-items: center;
     grid-template-columns: 1fr;
   }
+}
+
+.root hr {
+  margin: $margin * 2;
 }

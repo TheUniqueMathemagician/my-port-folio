@@ -18,7 +18,7 @@ interface IEducation {
   title: string;
 }
 
-const educations: IEducation[] = [
+const emEducation: IEducation[] = [
   {
     date: 2019,
     title: "Master électronique ( non complété )",
@@ -43,6 +43,34 @@ const educations: IEducation[] = [
     date: 2016,
     title: "BA4, BA5, VCA",
     detail: "Vinçotte-Academy sa"
+  }
+];
+
+const itEducation: IEducation[] = [
+  {
+    date: -1,
+    title: "HTML CSS  JS C++  C#",
+    detail: "Openclassroom"
+  },
+  {
+    date: -1,
+    title: "WebPack",
+    detail: "Openclassroom"
+  },
+  {
+    date: -1,
+    title: "NodeJS",
+    detail: "Openclassroom"
+  },
+  {
+    date: -1,
+    title: "HTML CSS  JS C++  C#",
+    detail: "Sololearn"
+  },
+  {
+    date: -1,
+    title: "Le reste",
+    detail: "Autodidacte"
   }
 ];
 
@@ -165,13 +193,30 @@ const Intro: FunctionComponent<IProps> = (props) => {
       <Divider inset></Divider>
       <article className={classes["education"]}>
         <Typography variant="h4">Mes formations</Typography>
+        <Typography variant="h5">Enseignement</Typography>
         <ul>
-          {educations
+          {emEducation
             .sort((a, b) => b.date - a.date)
             .map((education) => (
               <li key={education.title}>
                 <Typography variant="body" className={classes["date"]}>
                   {education.date}
+                </Typography>
+                <Typography variant="h6">{education.title}</Typography>
+                <Typography variant="body" color="hint">
+                  {education.detail}
+                </Typography>
+              </li>
+            ))}
+        </ul>
+        <Typography variant="h5">Autodidacte</Typography>
+        <ul>
+          {itEducation
+            .sort((a, b) => b.date - a.date)
+            .map((education) => (
+              <li key={education.title}>
+                <Typography variant="body" className={classes["date"]}>
+                  /
                 </Typography>
                 <Typography variant="h6">{education.title}</Typography>
                 <Typography variant="body" color="hint">
