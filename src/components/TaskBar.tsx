@@ -25,6 +25,7 @@ import {
 } from "react-icons/md";
 
 import { IoLogOutOutline } from "react-icons/io5";
+import { setCurrentUserID } from "../store/reducers/Users";
 
 enum EMenuShown {
   none,
@@ -321,6 +322,7 @@ const TaskBar = () => {
                   dispatch(closeApplication(key));
                 });
                 dispatch(setHasRanStartupApplications(false));
+                dispatch(setCurrentUserID(""));
               }}
               ripple
               size="md"
@@ -342,6 +344,7 @@ const TaskBar = () => {
                   dispatch(closeApplication(key));
                 });
                 dispatch(setHasRanStartupApplications(false));
+                dispatch(setCurrentUserID(""));
               }}
               ripple
               size="md"

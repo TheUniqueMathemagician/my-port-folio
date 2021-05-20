@@ -1,5 +1,12 @@
+import { useEffect } from "react";
+import { useHistory } from "react-router";
+
 const Index = () => {
-  return <main></main>;
+  const history = useHistory();
+  useEffect(() => {
+    history.replace("/boot");
+  }, [history]);
+  return null;
 };
 
 export default Index;

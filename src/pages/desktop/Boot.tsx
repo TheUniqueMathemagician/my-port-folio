@@ -1,17 +1,18 @@
 import {
   ChangeEvent,
-  FormEvent,
   FunctionComponent,
   ReactEventHandler,
   SyntheticEvent,
   useRef,
   useState,
   useEffect,
-  useCallback
+  useCallback,
+  useLayoutEffect
 } from "react";
 import { useHistory } from "react-router";
+import { useSelector } from "../../hooks/Store";
 
-import styles from "./Boot.module.scss";
+import classes from "./Boot.module.scss";
 
 const header = ` ██████╗██╗   ██╗ ██████╗ ███████╗
 ██╔════╝██║   ██║██╔═══██╗██╔════╝
@@ -23,25 +24,42 @@ const header = ` ██████╗██╗   ██╗ ██████�
 
 interface IProps {}
 
-interface IState {
-  step: number;
+enum EState {
+  Error,
+  Loading,
+  Next
 }
 
+const Loading: FunctionComponent = () => {
+  const [index, setIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = globalThis.setInterval(() => {
+      if (index > 2) setIndex(0);
+      else setIndex((index) => index + 1);
+    }, 150);
+    return () => globalThis.clearInterval(interval);
+  }, [index]);
+
+  return (
+    <p className={classes["loading"]}>
+      <span>Chargement</span>
+      <span>{["\\", "|", "/", "-"][index]}</span>
+    </p>
+  );
+};
+
 const Boot: FunctionComponent<IProps> = () => {
-  const [state, setState] = useState<IState>({ step: 0 });
+  const [state, setState] = useState<EState>(EState.Loading);
 
   const customInputRef = useRef<HTMLTextAreaElement>(null);
   const history = useHistory();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    history.push("/lock");
-  };
+  const currentUserID = useSelector((store) => store.users.currentUserID);
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const input = e.target;
     if (input.value[input.value.length - 1] === "\n") {
-      fullscreen(input.value.substring(1, input.value.length - 1));
       input.form?.reset();
     } else {
       input.style.height = `${input.scrollHeight}px`;
@@ -55,6 +73,7 @@ const Boot: FunctionComponent<IProps> = () => {
       input.selectionStart = 1;
     }
     input.value = input.value.match(/>.*$/gi)?.[0] ?? ">";
+    history.push("/lock");
   };
 
   const handleSelect: ReactEventHandler<HTMLTextAreaElement> = (
@@ -66,38 +85,16 @@ const Boot: FunctionComponent<IProps> = () => {
     }
   };
 
-  const fullscreen = async (response: string) => {
-    switch (response.toUpperCase()) {
-      case "Y":
-        try {
-          await document.documentElement.requestFullscreen();
-          setState((state) => ({ ...state, step: 2 }));
-        } catch (error) {
-          setState((state) => ({ ...state, step: 1 }));
-        } finally {
-        }
-        break;
-      case "N":
-        setState((state) => ({ ...state, step: 2 }));
-        break;
-      default:
-        break;
-    }
-  };
+  useLayoutEffect(() => {
+    if (currentUserID) history.push("/lock");
+  }, [currentUserID, history]);
 
   useEffect(() => {
-    switch (state.step) {
-      case 0:
-        break;
-      case 1:
-        break;
-      case 2:
-        history.push("/lock");
-        break;
-      default:
-        break;
-    }
-  }, [state.step, history]);
+    const interval = globalThis.setInterval(() => {
+      setState(EState.Next);
+    }, 999);
+    return () => globalThis.clearInterval(interval);
+  }, []);
 
   const split = useCallback((str: string) => {
     return str.split("").map((letter, i) =>
@@ -118,46 +115,43 @@ const Boot: FunctionComponent<IProps> = () => {
 
   return (
     <main
-      className={styles["boot"]}
+      className={classes["boot"]}
       onMouseUp={() => customInputRef.current?.focus()}
     >
-      {state.step === 0 && (
+      <h2 className={classes["monospace"]}>{split(header)}</h2>
+      {state === EState.Loading && (
         <article>
-          <h2>{split(header)}</h2>
           <br />
-          <p>
-            Cette application vous offrira une meilleure expérience en plein
-            écran.
-          </p>
-          <br />
-          <p>Souhaitez-vous activer cette fonctionnalité (Y/n)?</p>
+          <Loading></Loading>
         </article>
       )}
-      {state.step === 1 && (
+      {state === EState.Error && (
         <article>
           <p>Le plein écran a rencontré un problème...</p>
         </article>
       )}
-      {state.step === 2 && (
+      {state === EState.Next && (
         <article>
-          <p>Chargement...</p>
+          <br />
+          <p>Appuyez sur une touche pour continuer</p>
+          <br />
+          <form action="#" method="post" onSubmit={(e) => e.preventDefault()}>
+            <label>
+              <textarea
+                className={classes["custom-input"]}
+                spellCheck="false"
+                name="input"
+                autoFocus
+                rows={1}
+                onChange={handleChange}
+                ref={customInputRef}
+                defaultValue={">"}
+                onSelect={handleSelect}
+              ></textarea>
+            </label>
+          </form>
         </article>
       )}
-      <form action="#" method="post" onSubmit={handleSubmit}>
-        <label>
-          <textarea
-            className={styles["custom-input"]}
-            spellCheck="false"
-            name="input"
-            autoFocus
-            rows={1}
-            onChange={handleChange}
-            ref={customInputRef}
-            defaultValue={">"}
-            onSelect={handleSelect}
-          ></textarea>
-        </label>
-      </form>
     </main>
   );
 };
