@@ -1,4 +1,4 @@
-.shortcut-frame {
+.root {
   height: 100%;
   display: grid;
   grid-auto-flow: dense;
@@ -7,4 +7,5 @@
   row-gap: 1rem;
   column-gap: 0;
   padding: 0.5rem;
+  user-select: none;
 }

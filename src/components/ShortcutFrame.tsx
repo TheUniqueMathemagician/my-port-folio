@@ -10,7 +10,7 @@ const ShortcutFrame = () => {
     )
   );
   return (
-    <div className={styles["shortcut-frame"]}>
+    <div className={styles["root"]}>
       {keys.map((key) => (
         <Shortcut aid={key} key={key}></Shortcut>
       ))}
