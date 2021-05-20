@@ -5,9 +5,9 @@
   align-items: center;
   justify-items: center;
   min-height: 100%;
-  grid-template-rows: 1fr 1fr;
   overflow: auto;
   padding: $padding;
+  row-gap: $padding;
   user-select: none;
   :nth-child(2) {
     align-self: flex-start;

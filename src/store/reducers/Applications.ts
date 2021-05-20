@@ -219,7 +219,7 @@ initialState.elements[aid] = {
 aid = generateID();
 initialState.elements[aid] = {
   component: EApplications.Welcome,
-  dimensions: { height: 300, width: 300 },
+  dimensions: { height: 400, width: 400 },
   displayName: "Bienvenue",
   icon: require("../../assets/images/applications/welcome.svg").default,
   id: aid,
