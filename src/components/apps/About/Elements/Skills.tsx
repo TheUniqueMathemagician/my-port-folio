@@ -184,6 +184,15 @@ const incommingSkills: { name: string }[] = [
   },
   {
     name: "AWS"
+  },
+  {
+    name: "Azure"
+  },
+  {
+    name: "GCP"
+  },
+  {
+    name: "..."
   }
 ];
 const ripSkills: { name: string }[] = [
@@ -219,6 +228,9 @@ const ripSkills: { name: string }[] = [
   },
   {
     name: "VHDL - Verilog"
+  },
+  {
+    name: "..."
   }
 ];
 
@@ -265,7 +277,6 @@ const Skills: FunctionComponent<IProps> = () => {
       <Typography noWrap variant="h4">
         Compétences
       </Typography>
-      {/* TOTO: add rating filter field */}
       <form action="" method="post">
         <div
           style={{
@@ -331,13 +342,15 @@ const Skills: FunctionComponent<IProps> = () => {
       <Typography noWrap variant="h5">
         Sur ma liste
       </Typography>
+      <Typography variant="p">
+        Je compte apprendre ces différents éléments dans un avenir proche.
+      </Typography>
+      {/* TODO: make chips */}
       <Paper spaced blur background="paper">
         {incommingSkills.map((skill) => (
-          <React.Fragment key={skill.name}>
-            <Typography noWrap variant="body">
-              {skill.name}
-            </Typography>
-          </React.Fragment>
+          <Typography noWrap variant="body" key={skill.name}>
+            {skill.name}
+          </Typography>
         ))}
       </Paper>
       <Typography noWrap variant="h5">
@@ -349,11 +362,9 @@ const Skills: FunctionComponent<IProps> = () => {
       </Typography>
       <Paper spaced blur background="paper">
         {ripSkills.map((skill) => (
-          <React.Fragment key={skill.name}>
-            <Typography noWrap variant="body">
-              {skill.name}
-            </Typography>
-          </React.Fragment>
+          <Typography noWrap variant="body" key={skill.name}>
+            {skill.name}
+          </Typography>
         ))}
       </Paper>
     </div>
