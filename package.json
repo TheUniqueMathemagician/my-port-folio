@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "move ./build ../server/src/public",
     "test": "react-scripts test"
   },
   "eslintConfig": {
