@@ -1,0 +1,9 @@
+.root {
+  height: 100%;
+  overflow: auto;
+  img {
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+}

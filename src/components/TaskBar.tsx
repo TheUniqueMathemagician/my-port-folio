@@ -67,6 +67,27 @@ const TaskBar = () => {
       return true;
     }
   );
+  const manager = useSelector(
+    (store) =>
+      store.applications.elements[
+        Object.keys(store.applications.elements).find(
+          (key) =>
+            store.applications.elements[key].displayName ===
+            "Gestionnaire d'applications"
+        ) ?? ""
+      ]
+  );
+  const settings = useSelector(
+    (store) =>
+      store.applications.elements[
+        Object.keys(store.applications.elements).find(
+          (key) =>
+            store.applications.elements[key].displayName ===
+            "Préférences du système"
+        ) ?? ""
+      ]
+  );
+  // TODO: change gettings apps by display name
 
   const contactButtonRef = useRef<HTMLButtonElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);
@@ -226,10 +247,9 @@ const TaskBar = () => {
               ripple
               focusable={menuShown === EMenuShown.main}
               onClick={() => {
-                const keys = Object.keys(applications);
                 dispatch(
                   runApplication({
-                    application: applications[keys[0]],
+                    application: settings,
                     args: { tab: "profile" }
                   })
                 );
@@ -247,13 +267,7 @@ const TaskBar = () => {
               ripple
               focusable={menuShown === EMenuShown.main}
               onClick={() => {
-                const keys = Object.keys(applications);
-                dispatch(
-                  runApplication({
-                    application: applications[keys[0]],
-                    args: {}
-                  })
-                );
+                dispatch(runApplication({ application: settings, args: {} }));
                 closeMenu();
               }}
             >
@@ -268,13 +282,7 @@ const TaskBar = () => {
               size="md"
               focusable={menuShown === EMenuShown.main}
               onClick={() => {
-                const keys = Object.keys(applications);
-                dispatch(
-                  runApplication({
-                    application: applications[keys[1]],
-                    args: {}
-                  })
-                );
+                dispatch(runApplication({ application: manager, args: {} }));
                 closeMenu();
               }}
             >

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FunctionComponent } from "react";
 import About from "../../components/apps/About";
 import Contact from "../../components/apps/Contact";
+import Image from "../../components/apps/Image";
 import Manager from "../../components/apps/Manager";
 import Maps from "../../components/apps/Maps";
 import Projects from "../../components/apps/Projects";
@@ -16,6 +17,7 @@ import { IPosition } from "../../types/IPosition";
 export enum EApplications {
   About,
   Contact,
+  Image,
   Manager,
   Maps,
   Projects,
@@ -68,6 +70,22 @@ const defaultMinDimensions = {
 };
 
 // TODO: add daemon that checks if the user opens too many windows => alert for blur mode
+
+aid = generateID();
+initialState.elements[aid] = {
+  component: EApplications.Image,
+  dimensions: defaultDimensions,
+  displayName: "Image",
+  icon: "",
+  id: aid,
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
+  position: { bottom: null, left: null, right: null, top: null },
+  resizable: true,
+  runOnStartup: false,
+  shortcut: "",
+  type: "window"
+};
 
 aid = generateID();
 initialState.elements[aid] = {
@@ -214,12 +232,18 @@ initialState.elements[aid] = {
   type: "window"
 };
 
+interface IRunApp {
+  args: any;
+  pid: string;
+}
+
 export const applicationsMap = new Map<
   EApplications,
-  FunctionComponent<{ args: { [key: string]: string }; pid: string }>
+  FunctionComponent<IRunApp>
 >([
   [EApplications.About, About],
   [EApplications.Contact, Contact],
+  [EApplications.Image, Image],
   [EApplications.Manager, Manager],
   [EApplications.Maps, Maps],
   [EApplications.Randit, Randit],
