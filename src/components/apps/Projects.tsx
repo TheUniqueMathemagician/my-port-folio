@@ -36,6 +36,15 @@ const Projects: FunctionComponent<IProps> = (props) => {
       ]
   );
 
+  const randit = useSelector(
+    (store) =>
+      store.applications.elements[
+        Object.keys(store.applications.elements).find(
+          (key) => store.applications.elements[key].displayName === "Randit"
+        ) ?? ""
+      ]
+  );
+
   const rootClasses = [classes["root"]];
 
   if (small) rootClasses.push(classes["small"]);
@@ -212,11 +221,13 @@ const Projects: FunctionComponent<IProps> = (props) => {
             <Button
               isIcon
               focusable
-              to="https://randit.web.app/"
               className={classes["project-link"]}
+              onClick={() =>
+                dispatch(runApplication({ application: randit, args: {} }))
+              }
             >
               <Avatar
-                alt="Karting"
+                alt="Randit"
                 src="https://i.ibb.co/6Ynwzrv/dice.png"
               ></Avatar>
             </Button>

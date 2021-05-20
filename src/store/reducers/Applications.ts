@@ -5,6 +5,7 @@ import Contact from "../../components/apps/Contact";
 import Manager from "../../components/apps/Manager";
 import Maps from "../../components/apps/Maps";
 import Projects from "../../components/apps/Projects";
+import Randit from "../../components/apps/Randit";
 import Settings from "../../components/apps/Settings";
 import Snake from "../../components/apps/Snake";
 import Welcome from "../../components/apps/Welcome";
@@ -18,6 +19,7 @@ export enum EApplications {
   Manager,
   Maps,
   Projects,
+  Randit,
   Settings,
   Snake,
   Welcome
@@ -104,6 +106,22 @@ initialState.elements[aid] = {
   component: EApplications.Maps,
   dimensions: defaultDimensions,
   displayName: "Maps",
+  icon: "",
+  id: aid,
+  maxDimensions: defaultMaxDimensions,
+  minDimensions: defaultMinDimensions,
+  position: { bottom: null, left: null, right: null, top: null },
+  resizable: true,
+  runOnStartup: false,
+  shortcut: "",
+  type: "window"
+};
+
+aid = generateID();
+initialState.elements[aid] = {
+  component: EApplications.Randit,
+  dimensions: defaultDimensions,
+  displayName: "Randit",
   icon: "",
   id: aid,
   maxDimensions: defaultMaxDimensions,
@@ -204,6 +222,7 @@ export const applicationsMap = new Map<
   [EApplications.Contact, Contact],
   [EApplications.Manager, Manager],
   [EApplications.Maps, Maps],
+  [EApplications.Randit, Randit],
   [EApplications.Projects, Projects],
   [EApplications.Settings, Settings],
   [EApplications.Snake, Snake],
