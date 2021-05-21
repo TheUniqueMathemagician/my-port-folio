@@ -1,7 +1,7 @@
 import classes from "./index.module.scss";
 
 import { useDispatch, useSelector } from "../../../hooks/Store";
-import { runApplication } from "../../../store/reducers/Instances";
+import { runApplication } from "../../../store/slices/Applications";
 import { FunctionComponent, memo, useCallback, useState } from "react";
 
 import { MdMail, MdPhone } from "react-icons/md";
@@ -14,6 +14,7 @@ import Text from "../../UI/Input/Text";
 import TextArea from "../../UI/Input/TextArea";
 import Time from "./Elements/Time";
 import { EColorScheme } from "../../../types/EColorScheme";
+import { Applications } from "../../../store/slices/Applications/Types";
 
 const Sharp = memo(IoLocationSharp);
 const Mail = memo(MdMail);
@@ -24,14 +25,6 @@ interface IProps {}
 const Contact: FunctionComponent<IProps> = () => {
   const dispatch = useDispatch();
 
-  const maps = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) => store.applications.elements[key].displayName === "Maps"
-        ) ?? ""
-      ]
-  );
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
@@ -44,11 +37,9 @@ const Contact: FunctionComponent<IProps> = () => {
   const handleMapsClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
-      if (maps) {
-        dispatch(runApplication({ application: maps, args: {} }));
-      }
+      dispatch(runApplication({ aid: Applications.Maps, args: {} }));
     },
-    [maps, dispatch]
+    [dispatch]
   );
 
   const handleSubmit = useCallback(

@@ -1,8 +1,8 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useState } from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
-import { closeApplication, sendToFront } from "../../store/reducers/Instances";
+import { closeApplication, sendToFront } from "../../store/slices/Applications";
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md";
-import { setRunOnStartup } from "../../store/reducers/Applications";
+import { setRunOnStartup } from "../../store/slices/Applications";
 
 import Button from "../UI/Input/Button";
 import ButtonGroup from "../UI/Input/ButtonGroup";
@@ -23,9 +23,9 @@ import classes from "./Manager.module.scss";
 import { EColorScheme } from "../../types/EColorScheme";
 
 const Manager = () => {
-  const applications = useSelector((store) => store.applications.elements);
+  const applications = useSelector((store) => store.applications.pool);
   const instances = useSelector(
-    (store) => store.instances.elements,
+    (store) => store.applications.instances,
     (left, right) => {
       for (const key in left) {
         const leftItem = left[key];
@@ -45,13 +45,6 @@ const Manager = () => {
   const [panelIndex, setPanelIndex] = useState(0);
 
   const dispatch = useDispatch();
-
-  const closeInstance = useCallback(
-    (pid) => {
-      dispatch(closeApplication(pid));
-    },
-    [dispatch]
-  );
 
   return (
     <div className={classes["root"]}>
@@ -84,33 +77,36 @@ const Manager = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(applications).map((key) => (
-                <TableRow key={key}>
-                  <TableCell>{applications[key].displayName}</TableCell>
-                  <TableCell align="center">{applications[key].id}</TableCell>
-                  <TableCell align="center">
-                    <form action="#" onSubmit={(e) => e.preventDefault()}>
-                      <Checkbox
-                        color="primary"
-                        checked={applications[key].runOnStartup}
-                        onChange={(e) => {
-                          dispatch(
-                            setRunOnStartup({
-                              aid: key,
-                              runOnStartup: e.target.checked
-                            })
-                          );
-                        }}
-                      ></Checkbox>
-                    </form>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body">
-                      {applications[key].type === "window" ? "Oui" : "Non"}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {Object.keys(applications).map((key) => {
+                const aid = +key;
+                return (
+                  <TableRow key={key}>
+                    <TableCell>{applications[aid].displayName}</TableCell>
+                    <TableCell align="center">{aid}</TableCell>
+                    <TableCell align="center">
+                      <form action="#" onSubmit={(e) => e.preventDefault()}>
+                        <Checkbox
+                          color="primary"
+                          checked={applications[aid].runOnStartup}
+                          onChange={(e) => {
+                            dispatch(
+                              setRunOnStartup({
+                                aid,
+                                runOnStartup: e.target.checked
+                              })
+                            );
+                          }}
+                        ></Checkbox>
+                      </form>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography variant="body">
+                        {applications[aid].type === "window" ? "Oui" : "Non"}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
             <TableFoot>
               <TableRow>
@@ -149,7 +145,7 @@ const Manager = () => {
               {Object.keys(instances).map((key) => (
                 <TableRow key={key}>
                   <TableCell>{instances[key].displayName}</TableCell>
-                  <TableCell align="center">{instances[key].id}</TableCell>
+                  <TableCell align="center">{instances[key].pid}</TableCell>
                   <TableCell align="center">
                     <ButtonGroup>
                       <Button
@@ -157,7 +153,7 @@ const Manager = () => {
                         ripple
                         size="xs"
                         onClick={() => {
-                          closeInstance(key);
+                          dispatch(closeApplication({ pid: key }));
                         }}
                       >
                         <MdDelete></MdDelete>
@@ -170,7 +166,7 @@ const Manager = () => {
                           onClick={() => {
                             const instance = instances[key];
                             if (instance.type === "window") {
-                              dispatch(sendToFront(key));
+                              dispatch(sendToFront({ pid: key }));
                             }
                           }}
                         >

@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "../../hooks/Store";
-import { setCurrentUserID } from "../../store/reducers/Users";
+import { setCurrentUserID } from "../../store/slices/Users";
 
 import Avatar from "../../components/UI/Avatar";
 import Button from "../../components/UI/Input/Button";

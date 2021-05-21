@@ -12,7 +12,7 @@ import {
   setBackgroundColor,
   setColorScheme,
   setPrimaryColor
-} from "../../store/reducers/Theme";
+} from "../../store/slices/Theme";
 
 import Radio from "../UI/Input/Radio";
 import Typography from "../UI/Typography";
@@ -128,7 +128,7 @@ const Settings: FunctionComponent<IProps> = (props) => {
   }, [dispatch]);
 
   const otherUsersKeys = Object.keys(users).filter(
-    (key) => key !== users[currentUserID].id
+    (key) => key !== users[currentUserID]?.id
   );
 
   return (

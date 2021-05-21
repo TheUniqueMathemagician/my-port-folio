@@ -8,12 +8,14 @@ import React, {
 import classes from "./Window.module.scss";
 import { IPosition } from "../types/IPosition";
 import { IBoundaries } from "../types/IBoundaries";
-import { applicationsMap } from "../store/reducers/Applications";
-import { sendToFront, WindowInstance } from "../store/reducers/Instances";
+
+import { sendToFront } from "../store/slices/Applications";
 import { useDispatch, useSelector } from "../hooks/Store";
 import WindowHeader from "./WindowHeader";
 import WindowResizer from "./WindowResizer";
 import { EColorScheme } from "../types/EColorScheme";
+import { WindowInstance } from "../store/slices/Applications/Types";
+import { applicationsMap } from "../store/slices/Applications/Constants";
 
 interface IProps {
   pid: string;
@@ -30,33 +32,33 @@ const Window: FunctionComponent<IProps> = ({
 }) => {
   const windowRef = useRef<HTMLDivElement>(null);
 
-  const zIndexes = useSelector((store) => store.instances.zIndexes);
+  const zIndexes = useSelector((store) => store.applications.zIndexes);
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
   const maximized = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).maximized
+    (store) => (store.applications.instances[pid] as WindowInstance).maximized
   );
   const minimized = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).minimized
+    (store) => (store.applications.instances[pid] as WindowInstance).minimized
   );
   const dimensions = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).dimensions
+    (store) => (store.applications.instances[pid] as WindowInstance).dimensions
   );
   const position = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).position
+    (store) => (store.applications.instances[pid] as WindowInstance).position
   );
   const dragging = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).dragging
+    (store) => (store.applications.instances[pid] as WindowInstance).dragging
   );
   const resizing = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).resizing
+    (store) => (store.applications.instances[pid] as WindowInstance).resizing
   );
   const component = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).component
+    (store) => (store.applications.instances[pid] as WindowInstance).component
   );
   const args = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).args
+    (store) => (store.applications.instances[pid] as WindowInstance).args
   );
 
   const dispatch = useDispatch();
@@ -65,7 +67,7 @@ const Window: FunctionComponent<IProps> = ({
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
       if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) {
-        dispatch(sendToFront(pid));
+        dispatch(sendToFront({ pid }));
       }
     },
     [dispatch, pid, zIndexes]
@@ -74,7 +76,7 @@ const Window: FunctionComponent<IProps> = ({
   const handleWindowFocus = useCallback(
     (e: React.FocusEvent<HTMLElement>) => {
       if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) {
-        dispatch(sendToFront(pid));
+        dispatch(sendToFront({ pid }));
       }
     },
     [dispatch, pid, zIndexes]

@@ -1,20 +1,20 @@
 import { FunctionComponent, KeyboardEvent, memo, useCallback } from "react";
 import { useDispatch, useSelector } from "../hooks/Store";
-import { runApplication } from "../store/reducers/Instances";
+import { runApplication } from "../store/slices/Applications";
 import styles from "./Shortcut.module.scss";
 interface IProps {
-  aid: string;
+  aid: number;
 }
 
 const Shortcut: FunctionComponent<IProps> = (props) => {
   const { aid } = props;
   const dispatch = useDispatch();
 
-  const application = useSelector((store) => store.applications.elements[aid]);
+  const application = useSelector((store) => store.applications.pool[aid]);
 
   const handleDoubleClick = useCallback(() => {
-    dispatch(runApplication({ application, args: {} }));
-  }, [application, dispatch]);
+    dispatch(runApplication({ aid, args: {} }));
+  }, [aid, dispatch]);
 
   return (
     <button
@@ -24,7 +24,7 @@ const Shortcut: FunctionComponent<IProps> = (props) => {
         switch (e.code) {
           case "Enter":
           case "Space":
-            dispatch(runApplication({ application, args: {} }));
+            dispatch(runApplication({ aid, args: {} }));
             break;
           default:
             break;

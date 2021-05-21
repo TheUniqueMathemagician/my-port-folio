@@ -6,7 +6,7 @@ import Paper from "../../../UI/Paper";
 import Divider from "../../../UI/Divider";
 
 import { useSelector } from "../../../../hooks/Store";
-import { WindowInstance } from "../../../../store/reducers/Instances";
+import { WindowInstance } from "../../../../store/slices/Applications/Types";
 
 interface IProps {
   pid: string;
@@ -78,8 +78,8 @@ const Intro: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
   const small = useSelector(
     (store) =>
-      ((store.instances.elements[pid] as WindowInstance)?.dimensions.width ??
-        0) < 800
+      ((store.applications.instances[pid] as WindowInstance)?.dimensions
+        .width ?? 0) < 800
   );
 
   const rootClasses = [classes["root"]];

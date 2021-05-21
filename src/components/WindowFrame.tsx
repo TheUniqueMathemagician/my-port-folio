@@ -16,18 +16,18 @@ import classes from "./WindowFrame.module.scss";
 interface IProps {}
 
 const WindowFrame: FunctionComponent<IProps> = () => {
-  const instances = useSelector((store) => store.instances.elements);
+  const instances = useSelector((store) => store.applications.instances);
   const ShadowPosition = useSelector(
-    (store) => store.instances.snapShadow.position
+    (store) => store.applications.snapShadow.position
   );
   const shadowShown = useSelector(
-    (store) => store.instances.snapShadow.visible
+    (store) => store.applications.snapShadow.visible
   );
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
-  const dragging = useSelector((store) => store.instances.dragging);
-  const resizing = useSelector((store) => store.instances.resizing);
+  const dragging = useSelector((store) => store.applications.dragging);
+  const resizing = useSelector((store) => store.applications.resizing);
 
   const [boundaries, setBoundaries] = useState<IBoundaries>({
     x1: 0,
@@ -89,7 +89,7 @@ const WindowFrame: FunctionComponent<IProps> = () => {
             boundaries={boundaries}
             borderOffset={16}
             resizerWidth={4}
-            key={instances[key].id}
+            key={instances[key].pid}
           ></Window>
         ))}
     </div>

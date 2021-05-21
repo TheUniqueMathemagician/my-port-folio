@@ -7,15 +7,17 @@ import React, {
   useMemo,
   useRef
 } from "react";
+
 import { useDispatch, useSelector } from "../hooks/Store";
 import {
-  setMaximized,
   setDimensions,
+  setMaximized,
   setPosition,
   setResizeMode,
-  WindowInstance,
   setResizing
-} from "../store/reducers/Instances";
+} from "../store/slices/Applications";
+import { WindowInstance } from "../store/slices/Applications/Types";
+
 import { EResize } from "../types/EResize";
 import { ESnap } from "../types/ESnap";
 
@@ -64,22 +66,22 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
   const dispatch = useDispatch();
 
   const resizable = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).resizable;
   const resizing = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).resizing;
   const resizeMode = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).resizeMode;
   const position = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).position;
   const maxDimensions = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).maxDimensions;
   const minDimensions = useSelector(
-    (store) => store.instances.elements[pid] as WindowInstance
+    (store) => store.applications.instances[pid] as WindowInstance
   ).minDimensions;
 
   const handleResizerMouseMove = useCallback(

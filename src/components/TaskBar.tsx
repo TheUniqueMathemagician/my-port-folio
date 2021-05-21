@@ -1,21 +1,24 @@
-import { useRef, useState, memo, useCallback } from "react";
-
 import classes from "./TaskBar.module.scss";
-import TaskBarMenu from "./TaskBarMenu";
+
+import { useRef, useState, memo, useCallback } from "react";
 import { useHistory } from "react-router";
+
 import { useDispatch, useSelector } from "../hooks/Store";
 import {
   closeApplication,
   runApplication,
+  setMinimized,
   sendToFront
-} from "../store/reducers/Instances";
-import { setMinimized } from "../store/reducers/Instances";
-import Divider from "./UI/Divider";
-import { setHasRanStartupApplications } from "../store/reducers/OS";
-import TaskBarTimeDate from "./TaskBarTimeDate";
-import MenuIcon from "./icons/Menu";
+} from "../store/slices/Applications";
+import { setHasRanStartupApplications } from "../store/slices/OS";
+
 import { EColorScheme } from "../types/EColorScheme";
+
+import TaskBarMenu from "./TaskBarMenu";
+import TaskBarTimeDate from "./TaskBarTimeDate";
 import Button from "./UI/Input/Button";
+import MenuIcon from "./icons/Menu";
+import Divider from "./UI/Divider";
 import {
   MdLock,
   MdMail,
@@ -25,7 +28,8 @@ import {
 } from "react-icons/md";
 
 import { IoLogOutOutline } from "react-icons/io5";
-import { setCurrentUserID } from "../store/reducers/Users";
+import { setCurrentUserID } from "../store/slices/Users";
+import { Applications } from "../store/slices/Applications/Types";
 
 enum EMenuShown {
   none,
@@ -43,7 +47,7 @@ const TaskBar = () => {
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
   const instances = useSelector(
-    (store) => store.instances.elements,
+    (store) => store.applications.instances,
     (left, right) => {
       for (const key in left) {
         const leftItem = left[key];
@@ -56,7 +60,7 @@ const TaskBar = () => {
     }
   );
   const applications = useSelector(
-    (store) => store.applications.elements,
+    (store) => store.applications.pool,
     (left, right) => {
       for (const key in left) {
         const leftItem = left[key];
@@ -67,26 +71,6 @@ const TaskBar = () => {
         return false;
       return true;
     }
-  );
-  const manager = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) =>
-            store.applications.elements[key].displayName ===
-            "Gestionnaire d'applications"
-        ) ?? ""
-      ]
-  );
-  const settings = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) =>
-            store.applications.elements[key].displayName ===
-            "Préférences du système"
-        ) ?? ""
-      ]
   );
   // TODO: change gettings apps by display name
 
@@ -147,13 +131,13 @@ const TaskBar = () => {
                 size="md"
                 ripple
                 focusable
-                key={instance.id}
+                key={instance.pid}
                 onClick={() => {
                   if (instance.type === "window") {
                     dispatch(
-                      setMinimized({ pid: instance.id, minimized: false })
+                      setMinimized({ pid: instance.pid, minimized: false })
                     );
-                    dispatch(sendToFront(instance.id));
+                    dispatch(sendToFront({ pid: instance.pid }));
                   }
                 }}
               >
@@ -209,7 +193,7 @@ const TaskBar = () => {
       >
         <ul>
           {Object.keys(applications)
-            .filter((key) => !!applications[key].shortcut)
+            .filter((key) => !!applications[+key].shortcut)
             .map((key) => (
               <li key={key}>
                 <Button
@@ -219,7 +203,7 @@ const TaskBar = () => {
                   onClick={() => {
                     dispatch(
                       runApplication({
-                        application: applications[key],
+                        aid: +key,
                         args: {}
                       })
                     );
@@ -230,10 +214,10 @@ const TaskBar = () => {
                   fullWidth
                 >
                   <img
-                    alt={applications[key].displayName}
-                    src={applications[key].icon}
+                    alt={applications[+key].displayName}
+                    src={applications[+key].icon}
                   ></img>
-                  <span>{applications[key].displayName} </span>
+                  <span>{applications[+key].displayName} </span>
                 </Button>
               </li>
             ))}
@@ -250,7 +234,7 @@ const TaskBar = () => {
               onClick={() => {
                 dispatch(
                   runApplication({
-                    application: settings,
+                    aid: Applications.Settings,
                     args: { tab: "profile" }
                   })
                 );
@@ -268,7 +252,9 @@ const TaskBar = () => {
               ripple
               focusable={menuShown === EMenuShown.main}
               onClick={() => {
-                dispatch(runApplication({ application: settings, args: {} }));
+                dispatch(
+                  runApplication({ aid: Applications.Settings, args: {} })
+                );
                 closeMenu();
               }}
             >
@@ -283,7 +269,9 @@ const TaskBar = () => {
               size="md"
               focusable={menuShown === EMenuShown.main}
               onClick={() => {
-                dispatch(runApplication({ application: manager, args: {} }));
+                dispatch(
+                  runApplication({ aid: Applications.Manager, args: {} })
+                );
                 closeMenu();
               }}
             >
@@ -319,7 +307,7 @@ const TaskBar = () => {
               onClick={() => {
                 history.push("/lock");
                 Object.keys(instances).forEach((key) => {
-                  dispatch(closeApplication(key));
+                  dispatch(closeApplication({ pid: key }));
                 });
                 dispatch(setHasRanStartupApplications(false));
                 dispatch(setCurrentUserID(""));
@@ -341,7 +329,7 @@ const TaskBar = () => {
               onClick={() => {
                 history.push("/boot");
                 Object.keys(instances).forEach((key) => {
-                  dispatch(closeApplication(key));
+                  dispatch(closeApplication({ pid: key }));
                 });
                 dispatch(setHasRanStartupApplications(false));
                 dispatch(setCurrentUserID(""));

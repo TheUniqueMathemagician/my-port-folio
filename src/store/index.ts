@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import applications from "./reducers/Applications";
-import instances from "./reducers/Instances";
-import os from "./reducers/OS";
-import theme from "./reducers/Theme";
-import users from "./reducers/Users";
+import applications from "./slices/Applications";
+import os from "./slices/OS";
+import theme from "./slices/Theme";
+import users from "./slices/Users";
 
 export const store = configureStore({
-  reducer: { applications, instances, theme, os, users }
+  reducer: { applications, theme, os, users }
 });
 
 export type StoreState = ReturnType<typeof store.getState>;

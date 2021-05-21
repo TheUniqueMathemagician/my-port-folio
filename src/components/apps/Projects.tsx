@@ -5,7 +5,11 @@ import Avatar from "../UI/Avatar";
 import Paper from "../UI/Paper";
 import Button from "../UI/Input/Button";
 import { useDispatch, useSelector } from "../../hooks/Store";
-import { runApplication, WindowInstance } from "../../store/reducers/Instances";
+import { runApplication } from "../../store/slices/Applications";
+import {
+  Applications,
+  WindowInstance
+} from "../../store/slices/Applications/Types";
 
 interface IProps {
   pid: string;
@@ -25,32 +29,8 @@ const Projects: FunctionComponent<IProps> = (props) => {
 
   const small = useSelector(
     (store) =>
-      (store.instances.elements[pid] as WindowInstance).dimensions.width ??
+      (store.applications.instances[pid] as WindowInstance).dimensions.width ??
       0 < 600
-  );
-  const contact = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) => store.applications.elements[key].displayName === "Contact"
-        ) ?? ""
-      ]
-  );
-  const image = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) => store.applications.elements[key].displayName === "Image"
-        ) ?? ""
-      ]
-  );
-  const randit = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) => store.applications.elements[key].displayName === "Randit"
-        ) ?? ""
-      ]
   );
 
   const rootClasses = [classes["root"]];
@@ -76,7 +56,7 @@ const Projects: FunctionComponent<IProps> = (props) => {
               onClick={() => {
                 dispatch(
                   runApplication({
-                    application: image,
+                    aid: Applications.Image,
                     args: {
                       alt: "Port-folio",
                       src: "https://i.ibb.co/P4Zj5hZ/SPOILER-Desktop-2.png"
@@ -128,7 +108,7 @@ const Projects: FunctionComponent<IProps> = (props) => {
                   className={classes["link"]}
                   onClick={() => {
                     dispatch(
-                      runApplication({ application: contact, args: {} })
+                      runApplication({ aid: Applications.Contact, args: {} })
                     );
                   }}
                 >
@@ -192,7 +172,7 @@ const Projects: FunctionComponent<IProps> = (props) => {
               onClick={() => {
                 dispatch(
                   runApplication({
-                    application: image,
+                    aid: Applications.Image,
                     args: {
                       alt: "Lost",
                       src: "https://i.ibb.co/Mgydw0M/theme-clair.png"
@@ -251,7 +231,7 @@ const Projects: FunctionComponent<IProps> = (props) => {
               focusable
               className={classes["project-link"]}
               onClick={() =>
-                dispatch(runApplication({ application: randit, args: {} }))
+                dispatch(runApplication({ aid: Applications.Randit, args: {} }))
               }
             >
               <Avatar
@@ -293,7 +273,7 @@ const Projects: FunctionComponent<IProps> = (props) => {
               onClick={() => {
                 dispatch(
                   runApplication({
-                    application: image,
+                    aid: Applications.Image,
                     args: {
                       alt: "Lost",
                       src: "https://images.unsplash.com/photo-1515879128292-964efc3ebb25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2082&q=80"

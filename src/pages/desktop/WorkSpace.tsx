@@ -5,23 +5,19 @@ import TaskBar from "../../components/TaskBar";
 import WindowFrame from "../../components/WindowFrame";
 import WorkspaceFrame from "../../components/WorkspaceFrame";
 import { useDispatch, useSelector } from "../../hooks/Store";
-import { runApplication } from "../../store/reducers/Instances";
-import { setHasRanStartupApplications } from "../../store/reducers/OS";
+import { runApplication } from "../../store/slices/Applications";
+import { setHasRanStartupApplications } from "../../store/slices/OS";
 
 const Main = () => {
   const dispatch = useDispatch();
-  const applications = useSelector((store) => store.applications.elements);
+  const applications = useSelector((store) => store.applications.pool);
   const os = useSelector((store) => store.os);
   useEffect(() => {
     if (!os.hasRanStartupApplications) {
       Object.keys(applications).forEach((key) => {
-        if (applications[key].runOnStartup) {
-          dispatch(
-            runApplication({
-              application: applications[key],
-              args: {}
-            })
-          );
+        const aid = +key;
+        if (applications[aid].runOnStartup) {
+          dispatch(runApplication({ aid, args: {} }));
         }
       });
       dispatch(setHasRanStartupApplications(true));

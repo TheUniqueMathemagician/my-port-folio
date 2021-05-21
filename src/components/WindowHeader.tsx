@@ -10,7 +10,6 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "../hooks/Store";
 import {
-  WindowInstance,
   closeApplication,
   setDragging,
   setMaximized,
@@ -19,11 +18,12 @@ import {
   sendToFront,
   setSnapShadowPosition,
   setSnapShadowVisibility
-} from "../store/reducers/Instances";
+} from "../store/slices/Applications";
 import { ESnap } from "../types/ESnap";
 import { IBoundaries } from "../types/IBoundaries";
 import { IOffset } from "../types/IOffset";
 import { EColorScheme } from "../types/EColorScheme";
+import { WindowInstance } from "../store/slices/Applications/Types";
 
 interface IProps {
   pid: string;
@@ -42,19 +42,19 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
   const snapShadowVisible = useSelector(
-    (store) => store.instances.snapShadow.visible
+    (store) => store.applications.snapShadow.visible
   );
   const maximized = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).maximized
+    (store) => (store.applications.instances[pid] as WindowInstance).maximized
   );
   const dimensions = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).dimensions
+    (store) => (store.applications.instances[pid] as WindowInstance).dimensions
   );
   const dragging = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).dragging
+    (store) => (store.applications.instances[pid] as WindowInstance).dragging
   );
   const displayName = useSelector(
-    (store) => (store.instances.elements[pid] as WindowInstance).displayName
+    (store) => (store.applications.instances[pid] as WindowInstance).displayName
   );
 
   const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 });
@@ -70,7 +70,7 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
     (e: React.MouseEvent) => {
       e.stopPropagation();
       e.preventDefault();
-      dispatch(closeApplication(pid));
+      dispatch(closeApplication({ pid }));
     },
     [dispatch, pid]
   );
@@ -78,7 +78,7 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
   const handleOrangeClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      dispatch(sendToFront(pid));
+      dispatch(sendToFront({ pid }));
       if (maximized) {
         dispatch(setMaximized({ pid, maximized: ESnap.none }));
       } else {

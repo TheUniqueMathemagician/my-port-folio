@@ -12,8 +12,9 @@ import Intro from "./Elements/Intro";
 import Skills from "./Elements/Skills";
 import Hobbies from "./Elements/Hobbies";
 import Button from "../../UI/Input/Button";
-import { runApplication } from "../../../store/reducers/Instances";
+import { runApplication } from "../../../store/slices/Applications";
 import { MdSend } from "react-icons/md";
+import { Applications } from "../../../store/slices/Applications/Types";
 
 interface IProps {
   pid: string;
@@ -39,23 +40,9 @@ const About: FunctionComponent<IProps> = (props) => {
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
 
-  const contact = useSelector(
-    (store) =>
-      store.applications.elements[
-        Object.keys(store.applications.elements).find(
-          (key) => store.applications.elements[key].displayName === "Contact"
-        ) ?? ""
-      ]
-  );
-
-  const handleContactClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      if (contact) {
-        dispatch(runApplication({ application: contact, args: {} }));
-      }
-    },
-    [contact, dispatch]
-  );
+  const handleContactClick = useCallback(() => {
+    dispatch(runApplication({ aid: Applications.Contact, args: {} }));
+  }, [dispatch]);
 
   const leftBarClasses = [classes["left-bar"]];
 
