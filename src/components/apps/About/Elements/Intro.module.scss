@@ -15,24 +15,28 @@ $max-content-width: 500px;
     position: relative;
     height: 340px;
     width: 340px;
+    padding: $padding * 2;
     > .name {
+      line-height: 1.8em;
+      text-align: center;
       position: absolute;
-      width: 16rem;
+      padding: $padding/2;
+      top: 0;
+      left: 0;
+      right: 0;
       > * {
         margin: 0;
         font-size: 32px;
       }
     }
     > .avatar {
-      position: absolute;
-      left: 42px;
-      top: 42px;
-      height: 256px;
-      width: 256px;
+      height: 100%;
+      width: 100%;
       > img {
         height: 100%;
         width: 100%;
         object-position: top;
+        object-fit: contain;
       }
     }
   }

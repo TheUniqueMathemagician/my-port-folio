@@ -327,12 +327,12 @@ const TaskBar = () => {
               focusable={menuShown === EMenuShown.main}
               fullWidth
               onClick={() => {
-                history.push("/boot");
                 Object.keys(instances).forEach((key) => {
                   dispatch(closeApplication({ pid: key }));
                 });
                 dispatch(setHasRanStartupApplications(false));
                 dispatch(setCurrentUserID(""));
+                history.push("/boot");
               }}
               ripple
               size="md"

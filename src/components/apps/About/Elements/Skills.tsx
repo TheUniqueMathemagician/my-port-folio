@@ -6,6 +6,9 @@ import Rating from "../../../UI/Input/Rating";
 
 import { FaFilter } from "react-icons/fa";
 
+// TODO: Make 3 columns, each defining an appreciation (junior, medior, senior).
+// Each categ. has it's filter.
+
 interface IProps {
   pid: string;
 }
