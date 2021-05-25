@@ -7,7 +7,8 @@ import {
   useState,
   useEffect,
   useCallback,
-  useLayoutEffect
+  useLayoutEffect,
+  memo
 } from "react";
 import { useHistory } from "react-router";
 import { useSelector } from "../../hooks/Store";
@@ -156,4 +157,4 @@ const Boot: FunctionComponent<IProps> = () => {
   );
 };
 
-export default Boot;
+export default memo(Boot);

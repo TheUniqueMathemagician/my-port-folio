@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import ScreenFrame from "../../components/ScreenFrame";
 import ShortcutFrame from "../../components/ShortcutFrame";
 import TaskBar from "../../components/TaskBar";
@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from "../../hooks/Store";
 import { runApplication } from "../../store/slices/Applications";
 import { setHasRanStartupApplications } from "../../store/slices/OS";
 
-const Main = () => {
+const WorkSpace = () => {
   const dispatch = useDispatch();
+
   const applications = useSelector((store) => store.applications.pool);
   const os = useSelector((store) => store.os);
+
   useEffect(() => {
     if (!os.hasRanStartupApplications) {
       Object.keys(applications).forEach((key) => {
@@ -23,6 +25,7 @@ const Main = () => {
       dispatch(setHasRanStartupApplications(true));
     }
   }, [dispatch, os.hasRanStartupApplications, applications]);
+
   return (
     <ScreenFrame>
       <WorkspaceFrame>
@@ -34,4 +37,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default memo(WorkSpace);
