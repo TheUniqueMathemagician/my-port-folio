@@ -2,20 +2,20 @@
 
 .root {
   outline: 0;
-  // transition: border-color .3s ease;
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  flex-basis: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
   border: 1px solid var(--cvos-divider);
   input {
-    flex-grow: 1;
     outline: 0;
     background-color: var(--cvos-paper-33);
     border: 0;
     caret-color: var(--cvos-text);
     color: var(--cvos-text);
     padding: $padding/2;
+    min-width: 0;
+    text-overflow: ellipsis;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
   }
   input:disabled + span {
     color: var(--cvos-disabled);
@@ -25,6 +25,9 @@
     min-width: 150px;
     color: var(--cvos-text);
     padding: $padding/2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--cvos-background-33);
     border-right: 1px solid var(--cvos-divider);
     transition: color 0.3s ease;
