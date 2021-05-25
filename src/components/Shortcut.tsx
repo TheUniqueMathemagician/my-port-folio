@@ -11,15 +11,21 @@ const Shortcut: FunctionComponent<IProps> = (props) => {
   const dispatch = useDispatch();
 
   const application = useSelector((store) => store.applications.pool[aid]);
+  const isMobile = useSelector((store) => store.os.isMobile);
 
   const handleDoubleClick = useCallback(() => {
     dispatch(runApplication({ aid, args: {} }));
   }, [aid, dispatch]);
 
+  const handleClick = useCallback(() => {
+    if (isMobile) dispatch(runApplication({ aid, args: {} }));
+  }, [aid, dispatch, isMobile]);
+
   return (
     <button
       className={styles["shortcut"]}
       onDoubleClick={handleDoubleClick}
+      onClick={handleClick}
       onKeyPress={(e: KeyboardEvent) => {
         switch (e.code) {
           case "Enter":
