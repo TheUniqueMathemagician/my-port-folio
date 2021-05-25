@@ -1,0 +1,41 @@
+@import "../../styles/theme.scss";
+
+.root {
+  background: url("https://images.unsplash.com/photo-1607053075722-dff3fb966413?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  > section {
+    position: relative;
+    padding: $padding;
+    min-height: 100vh;
+    display: grid;
+    row-gap: $padding;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    border: 0;
+  }
+  > .bg {
+    backdrop-filter: $blur;
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 100vh;
+    left: 0;
+  }
+}
+
+.avatar {
+  height: 5rem;
+  width: 5rem;
+}
+
+.users {
+  position: fixed;
+  padding: $padding;
+  bottom: 0;
+  left: 0;
+  padding: "2rem";
+}

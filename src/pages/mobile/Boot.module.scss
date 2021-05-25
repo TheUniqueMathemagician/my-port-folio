@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300&display=swap");
+
+$color: #00e271;
+$text-shadow: 0 0 8px $color;
+
+.boot {
+  h2 {
+    font-size: 1em;
+  }
+  box-shadow: inset 0 0 36px 0
+    change-color($color, $alpha: 0.3, $saturation: 3%, $lightness: 40%);
+  font-size: 1.2rem;
+  overflow: collapse;
+  padding: 1em 1ch;
+  line-height: 1em;
+  min-height: 100vh;
+  background-color: black;
+  color: $color;
+  font-family: "IBM Plex Mono", monospace;
+  background: $color;
+  text-shadow: 0 0 2px 8px $color;
+  background: radial-gradient(
+    circle,
+    rgba(0, 30, 0, 100) 50%,
+    rgba(0, 0, 0, 100) 200%
+  );
+  *::selection {
+    background: $color;
+    color: black;
+  }
+  > article {
+    text-shadow: $text-shadow;
+    max-width: 500px;
+    animation-name: fade;
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+  .custom-input {
+    font-size: 1em;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: collapse;
+    resize: none;
+    text-shadow: $text-shadow;
+    font-family: "Cutive Mono", monospace;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    outline: none;
+    color: $color;
+    min-width: 0;
+    width: 100%;
+    overflow: collapse;
+  }
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.loading {
+  > :nth-child(2) {
+    width: 1ch;
+    height: 1.2rem;
+    display: inline-block;
+  }
+}
+
+.monospace {
+  span {
+    width: 1ch;
+    height: 1.2rem;
+    display: inline-block;
+  }
+}
