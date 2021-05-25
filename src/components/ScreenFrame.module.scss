@@ -1,7 +1,11 @@
 @import "../styles/theme.scss";
 
-.screen-frame {
+.root {
   display: grid;
   grid-template-rows: 1fr auto;
   height: 100vh;
+}
+
+.mobile {
+  grid-template-rows: 1fr;
 }
