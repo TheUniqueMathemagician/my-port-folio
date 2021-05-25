@@ -1,23 +1,33 @@
+import Boot from "../pages/mobile/Boot";
 import Error404 from "../pages/mobile/Error404";
-import { Switch, Route } from "react-router-dom";
+import Index from "../pages/mobile/Index";
+import Lock from "../pages/mobile/Lock";
+import WorkSpace from "../pages/mobile/WorkSpace";
 
-const Mobile = () => {
+import { Switch, Route, useHistory } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { useSelector } from "../hooks/Store";
+
+const Desktop = () => {
+  const history = useHistory();
+
+  const currentUser = useSelector((store) => store.users.currentUserID);
+
+  useLayoutEffect(() => {
+    if (!currentUser) {
+      history.replace("/lock");
+    }
+  }, [currentUser, history]);
+
   return (
     <Switch>
-      <Route exact path="/">
-        <div>Mobile Home</div>
-      </Route>
-      <Route path="boot">
-        <div>Mobile Boot</div>
-      </Route>
-      <Route path="workspace">
-        <div>Mobile Workspace</div>
-      </Route>
-      <Route path="*">
-        <Error404></Error404>
-      </Route>
+      <Route exact path="/" component={Index}></Route>
+      <Route exact path="/boot" component={Boot}></Route>
+      <Route exact path="/lock" component={Lock}></Route>
+      <Route exact path="/workspace" component={WorkSpace}></Route>
+      <Route exact path="*" component={Error404}></Route>
     </Switch>
   );
 };
 
-export default Mobile;
+export default Desktop;
