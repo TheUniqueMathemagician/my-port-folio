@@ -76,15 +76,17 @@ const itEducation: IEducation[] = [
 
 const Intro: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
+
   const small = useSelector(
     (store) =>
       ((store.applications.instances[pid] as WindowInstance)?.dimensions
         .width ?? 0) < 800
   );
+  const isMobile = useSelector((store) => store.os.isMobile);
 
   const rootClasses = [classes["root"]];
 
-  if (small) rootClasses.push(classes["small"]);
+  if (small || isMobile) rootClasses.push(classes["small"]);
 
   return (
     <div className={rootClasses.join(" ")}>

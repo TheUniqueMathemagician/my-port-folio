@@ -161,6 +161,9 @@ $max-content-width: 500px;
     justify-items: center;
     grid-template-columns: 1fr;
   }
+  .skills {
+    justify-content: center;
+  }
 }
 
 .root hr {

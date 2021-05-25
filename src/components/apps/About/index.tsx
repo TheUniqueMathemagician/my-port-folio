@@ -13,8 +13,9 @@ import Skills from "./Elements/Skills";
 import Hobbies from "./Elements/Hobbies";
 import Button from "../../UI/Input/Button";
 import { runApplication } from "../../../store/slices/Applications";
-import { MdSend } from "react-icons/md";
 import { Applications } from "../../../store/slices/Applications/Types";
+
+import { MdSend } from "react-icons/md";
 
 interface IProps {
   pid: string;
@@ -27,7 +28,7 @@ enum ETabs {
   // TODO: Add projects
 }
 
-const Send = memo(() => <MdSend></MdSend>);
+const Send = memo(MdSend);
 
 const About: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
@@ -39,20 +40,23 @@ const About: FunctionComponent<IProps> = (props) => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const isMobile = useSelector((store) => store.os.isMobile);
 
   const handleContactClick = useCallback(() => {
     dispatch(runApplication({ aid: Applications.Contact, args: {} }));
   }, [dispatch]);
 
   const leftBarClasses = [classes["left-bar"]];
+  const rootClasses = [classes["root"]];
 
   if (contrast) leftBarClasses.push(classes["contrast"]);
+  if (isMobile) rootClasses.push(classes["mobile"]);
 
   return (
-    <div className={classes["root"]}>
+    <div className={rootClasses.join(" ")}>
       <div className={leftBarClasses.join(" ")}>
         <Tabs
-          direction="right"
+          direction={isMobile ? "bottom" : "right"}
           defaultValue={0}
           onChange={(v: number) => setPanelIndex(v)}
         >
@@ -72,17 +76,18 @@ const About: FunctionComponent<IProps> = (props) => {
             value={ETabs.hobbies}
           />
         </Tabs>
-        <Button
-          focusable
-          fullWidth
-          startIcon
-          color="primary"
-          size="xl"
-          onClick={handleContactClick}
-        >
-          <Send></Send>
-          <span>Contact</span>
-        </Button>
+        {!isMobile && (
+          <Button
+            focusable
+            fullWidth
+            startIcon
+            color="primary"
+            onClick={handleContactClick}
+          >
+            <Send></Send>
+            <span>Contacter</span>
+          </Button>
+        )}
       </div>
       <TabPanel
         className={classes["tab-panel"]}
