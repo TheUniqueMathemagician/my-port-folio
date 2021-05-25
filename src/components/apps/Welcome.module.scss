@@ -1,17 +1,15 @@
 @import "../../styles/theme.scss";
 
 .root {
-  display: grid;
+  align-content: flex-start;
   align-items: center;
+  display: grid;
   justify-items: center;
   min-height: 100%;
   overflow: auto;
   padding: $padding;
   row-gap: $padding;
   user-select: none;
-  :nth-child(2) {
-    align-self: flex-start;
-  }
   > * {
     text-align: center;
   }
