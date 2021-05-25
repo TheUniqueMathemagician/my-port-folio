@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import isMobile from "../../functions/isMobile";
 
 interface OsState {
   hasRanStartupApplications: boolean;
+  isMobile: boolean;
 }
 
 const initialState: OsState = {
-  hasRanStartupApplications: false
+  hasRanStartupApplications: false,
+  isMobile: isMobile()
 };
 
 export const osSlice = createSlice({

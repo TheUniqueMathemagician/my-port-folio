@@ -1,17 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+import { useSelector } from "./hooks/Store";
+
 import Desktop from "./layouts/Desktop";
 import Mobile from "./layouts/Mobile";
-import isMobile from "./functions/isMobile";
-import { Provider as StoreProvider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import { store } from "./store";
 
 const OS = () => {
+  const isMobile = useSelector((store) => store.os.isMobile);
+
   return (
-    <StoreProvider store={store}>
-      <BrowserRouter>
-        {isMobile() ? <Mobile></Mobile> : <Desktop></Desktop>}
-      </BrowserRouter>
-    </StoreProvider>
+    <BrowserRouter>
+      {isMobile ? <Mobile></Mobile> : <Desktop></Desktop>}
+    </BrowserRouter>
   );
 };
 
