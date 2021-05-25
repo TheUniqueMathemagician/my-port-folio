@@ -29,14 +29,8 @@ interface IHorizontalPosition {
 }
 
 const Tabs: FunctionComponent<IProps> = (props) => {
-  const {
-    onChange,
-    children,
-    className,
-    defaultValue,
-    direction,
-    separator
-  } = props;
+  const { onChange, children, className, defaultValue, direction, separator } =
+    props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);

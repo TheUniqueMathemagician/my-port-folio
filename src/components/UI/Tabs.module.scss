@@ -16,6 +16,7 @@ $indicator-width: 4px;
       border-right: 1px solid var(--cvos-divider);
     }
   }
+  overflow-y: auto;
 }
 
 .tabs {
@@ -23,6 +24,18 @@ $indicator-width: 4px;
   grid-auto-rows: 3rem;
   position: sticky;
   transition: border-color 0.3s ease;
+}
+
+.top,
+.bottom {
+  overflow-x: auto;
+  .tabs {
+    grid-auto-flow: column;
+    overflow: auto;
+    button {
+      width: auto;
+    }
+  }
 }
 
 .indicator {
