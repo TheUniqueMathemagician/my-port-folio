@@ -9,7 +9,6 @@ import { IoMdClose } from "react-icons/io";
 import { MdSend } from "react-icons/md";
 
 import classes from "./MenuBar.module.scss";
-import MenuBarTimeDate from "./MenuBarTimeDate";
 
 const Close = memo(IoMdClose);
 const Send = memo(MdSend);
