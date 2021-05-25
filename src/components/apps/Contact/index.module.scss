@@ -1,11 +1,10 @@
 @import "../../../styles/theme.scss";
 
 .root {
-  padding: $padding;
-  overflow: auto;
   height: 100%;
   width: 100%;
   user-select: none;
+  overflow: auto;
   h4:last-of-type {
     margin-top: $margin * 2;
   }
@@ -27,4 +26,10 @@
   > textarea {
     min-height: 250px;
   }
+}
+
+.container {
+  padding: $padding;
+  display: grid;
+  grid: auto 1fr / 100%;
 }
