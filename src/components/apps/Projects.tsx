@@ -29,8 +29,8 @@ const Projects: FunctionComponent<IProps> = (props) => {
 
   const small = useSelector(
     (store) =>
-      (store.applications.instances[pid] as WindowInstance).dimensions.width ??
-      0 < 800
+      ((store.applications.instances[pid] as WindowInstance).dimensions.width ??
+        0) < 600
   );
   const isMobile = useSelector((store) => store.os.isMobile);
 
