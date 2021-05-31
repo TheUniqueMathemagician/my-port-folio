@@ -25,7 +25,6 @@ interface IProps {}
 const Contact: FunctionComponent<IProps> = () => {
   const dispatch = useDispatch();
 
-  const isMobile = useSelector((store) => store.os.isMobile);
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
@@ -77,8 +76,6 @@ const Contact: FunctionComponent<IProps> = () => {
   );
 
   const rootClasses = [classes["root"]];
-
-  if (isMobile) rootClasses.push(classes["mobile"]);
 
   return (
     <div className={rootClasses.join(" ")}>

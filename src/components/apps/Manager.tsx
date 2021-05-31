@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { FunctionComponent, memo, useState } from "react";
 import { useDispatch, useSelector } from "../../hooks/Store";
 import { closeApplication, sendToFront } from "../../store/slices/Applications";
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md";
@@ -21,8 +21,16 @@ import Typography from "../UI/Typography";
 
 import classes from "./Manager.module.scss";
 import { EColorScheme } from "../../types/EColorScheme";
+import { EBreakpoints } from "../../types/EBreakpoints";
+import { WindowInstance } from "../../store/slices/Applications/Types";
 
-const Manager = () => {
+interface IProps {
+  pid: string;
+}
+
+const Manager: FunctionComponent<IProps> = (props) => {
+  const { pid } = props;
+
   const applications = useSelector((store) => store.applications.pool);
   const instances = useSelector(
     (store) => store.applications.instances,
@@ -41,15 +49,25 @@ const Manager = () => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const small = useSelector((store) => {
+    const instance = store.applications.instances[pid] as WindowInstance;
+    if (instance.breakpoint === EBreakpoints.sm) return true;
+    if (instance.breakpoint === EBreakpoints.xs) return true;
+    return false;
+  });
 
   const [panelIndex, setPanelIndex] = useState(0);
 
   const dispatch = useDispatch();
 
+  const rootClasses = [classes["root"]];
+
+  if (small) rootClasses.push(classes["small"]);
+
   return (
-    <div className={classes["root"]}>
+    <div className={rootClasses.join(" ")}>
       <Tabs
-        direction="right"
+        direction={small ? "bottom" : "right"}
         defaultValue={0}
         onChange={(v: number) => setPanelIndex(v)}
         separator={contrast}

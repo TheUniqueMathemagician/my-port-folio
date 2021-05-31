@@ -11,6 +11,7 @@ import React, {
 import { useDispatch, useSelector } from "../hooks/Store";
 import {
   closeApplication,
+  setBreakpoint,
   setDragging,
   setMaximized,
   setMinimized,
@@ -24,6 +25,8 @@ import { IBoundaries } from "../types/IBoundaries";
 import { IOffset } from "../types/IOffset";
 import { EColorScheme } from "../types/EColorScheme";
 import { WindowInstance } from "../store/slices/Applications/Types";
+import { batch } from "react-redux";
+import { EBreakpoints } from "../types/EBreakpoints";
 
 interface IProps {
   pid: string;
@@ -273,9 +276,12 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       e.stopPropagation();
       e.preventDefault();
       document.body.style.cursor = "";
-      dispatch(setDragging({ pid, dragging: false }));
-      dispatch(setSnapShadowVisibility(false));
-      dispatch(setMaximized({ pid, maximized: snap }));
+
+      batch(() => {
+        dispatch(setDragging({ pid, dragging: false }));
+        dispatch(setSnapShadowVisibility(false));
+        dispatch(setMaximized({ pid, maximized: snap }));
+      });
     },
     [pid, dispatch, snap]
   );
@@ -292,6 +298,22 @@ const WindowHeader: FunctionComponent<IProps> = (props) => {
       };
     }
   }, [dragging, handleDragMouseMove, handleDragMouseUp]);
+
+  // TODO: need further performance improvments
+  useEffect(() => {
+    const window = windowRef.current;
+
+    if (!window) return;
+
+    let breakpoint = EBreakpoints.xl;
+
+    if (window.offsetWidth <= 1200) breakpoint = EBreakpoints.lg;
+    if (window.offsetWidth <= 1024) breakpoint = EBreakpoints.md;
+    if (window.offsetWidth <= 768) breakpoint = EBreakpoints.sm;
+    if (window.offsetWidth <= 480) breakpoint = EBreakpoints.xs;
+
+    dispatch(setBreakpoint({ pid, breakpoint }));
+  }, [maximized, windowRef, dispatch, pid]);
 
   const rootClasses = [classes["root"]];
 

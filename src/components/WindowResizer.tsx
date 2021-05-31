@@ -7,9 +7,11 @@ import React, {
   useMemo,
   useRef
 } from "react";
+import { batch } from "react-redux";
 
 import { useDispatch, useSelector } from "../hooks/Store";
 import {
+  setBreakpoint,
   setDimensions,
   setMaximized,
   setPosition,
@@ -17,6 +19,7 @@ import {
   setResizing
 } from "../store/slices/Applications";
 import { WindowInstance } from "../store/slices/Applications/Types";
+import { EBreakpoints } from "../types/EBreakpoints";
 
 import { EResize } from "../types/EResize";
 import { ESnap } from "../types/ESnap";
@@ -161,21 +164,27 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       const windowFrame = window.offsetParent as HTMLDivElement;
       if (!windowFrame) return;
 
-      dispatch(setMaximized({ pid, maximized: ESnap.none }));
-      dispatch(setResizing({ pid, resizing: true }));
-      dispatch(
-        setPosition({
-          pid,
-          position: {
-            bottom:
-              windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
-            left: window.offsetLeft,
-            right:
-              windowFrame.offsetWidth - window.offsetLeft - window.offsetWidth,
-            top: window.offsetTop
-          }
-        })
-      );
+      batch(() => {
+        dispatch(setMaximized({ pid, maximized: ESnap.none }));
+        dispatch(setResizing({ pid, resizing: true }));
+        dispatch(
+          setPosition({
+            pid,
+            position: {
+              bottom:
+                windowFrame.offsetHeight -
+                window.offsetTop -
+                window.offsetHeight,
+              left: window.offsetLeft,
+              right:
+                windowFrame.offsetWidth -
+                window.offsetLeft -
+                window.offsetWidth,
+              top: window.offsetTop
+            }
+          })
+        );
+      });
     },
     [dispatch, windowRef, pid, resizable, resizeMode, cursor]
   );
@@ -226,7 +235,14 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
         }
       };
 
-      const dispatchPosition = ({
+      let breakpoint = EBreakpoints.xl;
+
+      if (window.offsetWidth <= 1200) breakpoint = EBreakpoints.lg;
+      if (window.offsetWidth <= 1024) breakpoint = EBreakpoints.md;
+      if (window.offsetWidth <= 768) breakpoint = EBreakpoints.sm;
+      if (window.offsetWidth <= 480) breakpoint = EBreakpoints.xs;
+
+      const dispatchPositionAndBreakpoint = ({
         bottom,
         left,
         right,
@@ -237,17 +253,20 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
         right?: number;
         top?: number;
       }) => {
-        dispatch(
-          setPosition({
-            pid,
-            position: {
-              bottom: bottom !== undefined ? bottom : position.bottom,
-              left: left !== undefined ? left : position.left,
-              right: right !== undefined ? right : position.right,
-              top: top !== undefined ? top : position.top
-            }
-          })
-        );
+        batch(() => {
+          dispatch(
+            setPosition({
+              pid,
+              position: {
+                bottom: bottom !== undefined ? bottom : position.bottom,
+                left: left !== undefined ? left : position.left,
+                right: right !== undefined ? right : position.right,
+                top: top !== undefined ? top : position.top
+              }
+            })
+          );
+          dispatch(setBreakpoint({ pid, breakpoint }));
+        });
       };
 
       const restrictedPosition = {
@@ -298,37 +317,45 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       switch (resizeMode) {
         case EResize.top: {
-          return dispatchPosition({ top: restrictedPosition.top() });
+          return dispatchPositionAndBreakpoint({
+            top: restrictedPosition.top()
+          });
         }
         case EResize.left: {
-          return dispatchPosition({ left: restrictedPosition.left() });
+          return dispatchPositionAndBreakpoint({
+            left: restrictedPosition.left()
+          });
         }
         case EResize.bottom: {
-          return dispatchPosition({ bottom: restrictedPosition.bottom() });
+          return dispatchPositionAndBreakpoint({
+            bottom: restrictedPosition.bottom()
+          });
         }
         case EResize.right: {
-          return dispatchPosition({ right: restrictedPosition.right() });
+          return dispatchPositionAndBreakpoint({
+            right: restrictedPosition.right()
+          });
         }
         case EResize.topLeft: {
-          return dispatchPosition({
+          return dispatchPositionAndBreakpoint({
             top: restrictedPosition.top(),
             left: restrictedPosition.left()
           });
         }
         case EResize.topRight: {
-          return dispatchPosition({
+          return dispatchPositionAndBreakpoint({
             top: restrictedPosition.top(),
             right: restrictedPosition.right()
           });
         }
         case EResize.bottomLeft: {
-          return dispatchPosition({
+          return dispatchPositionAndBreakpoint({
             bottom: restrictedPosition.bottom(),
             left: restrictedPosition.left()
           });
         }
         case EResize.bottomRight: {
-          return dispatchPosition({
+          return dispatchPositionAndBreakpoint({
             bottom: restrictedPosition.bottom(),
             right: restrictedPosition.right()
           });
@@ -359,16 +386,18 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
 
       if (!window) return;
 
-      dispatch(
-        setDimensions({
-          pid,
-          dimensions: {
-            height: window.offsetHeight,
-            width: window.offsetWidth
-          }
-        })
-      );
-      dispatch(setResizing({ pid, resizing: false }));
+      batch(() => {
+        dispatch(
+          setDimensions({
+            pid,
+            dimensions: {
+              height: window.offsetHeight,
+              width: window.offsetWidth
+            }
+          })
+        );
+        dispatch(setResizing({ pid, resizing: false }));
+      });
     },
     [dispatch, windowRef, pid]
   );

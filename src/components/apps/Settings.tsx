@@ -28,6 +28,8 @@ import Paper from "../UI/Paper";
 import Button from "../UI/Input/Button";
 
 import { MdInfo } from "react-icons/md";
+import { EBreakpoints } from "../../types/EBreakpoints";
+import { WindowInstance } from "../../store/slices/Applications/Types";
 
 interface IProps {
   pid: string;
@@ -58,6 +60,12 @@ const Settings: FunctionComponent<IProps> = (props) => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const small = useSelector((store) => {
+    const instance = store.applications.instances[pid] as WindowInstance;
+    if (instance.breakpoint === EBreakpoints.sm) return true;
+    if (instance.breakpoint === EBreakpoints.xs) return true;
+    return false;
+  });
 
   //#endregion
 
@@ -131,12 +139,16 @@ const Settings: FunctionComponent<IProps> = (props) => {
     (key) => key !== users[currentUserID]?.id
   );
 
+  const rootClasses = [classes["root"]];
+
+  if (small) rootClasses.push(classes["small"]);
+
   return (
-    <div className={classes["root"]}>
+    <div className={rootClasses.join(" ")}>
       <Tabs
         defaultValue={panelIndex}
         onChange={handleTabChange}
-        direction="right"
+        direction={small ? "bottom" : "right"}
         separator={colorScheme === EColorScheme.contrast}
       >
         <Tab label="Theme" value={0} active={panelIndex === 0} />

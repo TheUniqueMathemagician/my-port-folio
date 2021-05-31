@@ -48,6 +48,7 @@
 }
 
 .project-link {
+  width: auto;
   border-radius: 0;
   &::before {
     border-radius: 0;
@@ -70,6 +71,7 @@
 .small {
   .paper {
     .content {
+      text-align: center;
       grid-template-columns: auto;
     }
     &:nth-child(even) .content {

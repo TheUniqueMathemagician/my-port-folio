@@ -13,9 +13,13 @@ import Skills from "./Elements/Skills";
 import Hobbies from "./Elements/Hobbies";
 import Button from "../../UI/Input/Button";
 import { runApplication } from "../../../store/slices/Applications";
-import { Applications } from "../../../store/slices/Applications/Types";
+import {
+  Applications,
+  WindowInstance
+} from "../../../store/slices/Applications/Types";
 
 import { MdSend } from "react-icons/md";
+import { EBreakpoints } from "../../../types/EBreakpoints";
 
 interface IProps {
   pid: string;
@@ -40,7 +44,12 @@ const About: FunctionComponent<IProps> = (props) => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
-  const isMobile = useSelector((store) => store.os.isMobile);
+  const small = useSelector((store) => {
+    const instance = store.applications.instances[pid] as WindowInstance;
+    if (instance.breakpoint === EBreakpoints.sm) return true;
+    if (instance.breakpoint === EBreakpoints.xs) return true;
+    return false;
+  });
 
   const handleContactClick = useCallback(() => {
     dispatch(runApplication({ aid: Applications.Contact, args: {} }));
@@ -50,13 +59,13 @@ const About: FunctionComponent<IProps> = (props) => {
   const rootClasses = [classes["root"]];
 
   if (contrast) leftBarClasses.push(classes["contrast"]);
-  if (isMobile) rootClasses.push(classes["mobile"]);
+  if (small) rootClasses.push(classes["small"]);
 
   return (
     <div className={rootClasses.join(" ")}>
       <div className={leftBarClasses.join(" ")}>
         <Tabs
-          direction={isMobile ? "bottom" : "right"}
+          direction={small ? "bottom" : "right"}
           defaultValue={0}
           onChange={(v: number) => setPanelIndex(v)}
         >
@@ -76,7 +85,7 @@ const About: FunctionComponent<IProps> = (props) => {
             value={ETabs.hobbies}
           />
         </Tabs>
-        {!isMobile && (
+        {!small && (
           <Button
             focusable
             fullWidth

@@ -7,6 +7,7 @@ import Divider from "../../../UI/Divider";
 
 import { useSelector } from "../../../../hooks/Store";
 import { WindowInstance } from "../../../../store/slices/Applications/Types";
+import { EBreakpoints } from "../../../../types/EBreakpoints";
 
 interface IProps {
   pid: string;
@@ -77,16 +78,16 @@ const itEducation: IEducation[] = [
 const Intro: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
 
-  const small = useSelector(
-    (store) =>
-      ((store.applications.instances[pid] as WindowInstance)?.dimensions
-        .width ?? 0) < 800
-  );
-  const isMobile = useSelector((store) => store.os.isMobile);
+  const small = useSelector((store) => {
+    const instance = store.applications.instances[pid] as WindowInstance;
+    if (instance.breakpoint === EBreakpoints.sm) return true;
+    if (instance.breakpoint === EBreakpoints.xs) return true;
+    return false;
+  });
 
   const rootClasses = [classes["root"]];
 
-  if (small || isMobile) rootClasses.push(classes["small"]);
+  if (small) rootClasses.push(classes["small"]);
 
   return (
     <div className={rootClasses.join(" ")}>
