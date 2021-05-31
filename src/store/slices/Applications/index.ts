@@ -97,7 +97,7 @@ initialState.pool[Applications.Manager] = {
   aid: Applications.Manager,
   dimensions: defaultDimensions,
   displayName: "Gestionnaire d'applications",
-  icon: require("../../../assets/images/applications/about.svg").default,
+  icon: require("../../../assets/images/applications/manager.svg").default,
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
@@ -125,13 +125,13 @@ initialState.pool[Applications.Projects] = {
   aid: Applications.Projects,
   dimensions: defaultDimensions,
   displayName: "Projets",
-  icon: require("../../../assets/images/applications/about.svg").default,
+  icon: require("../../../assets/images/applications/projects.svg").default,
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: { bottom: null, left: null, right: null, top: null },
   resizable: true,
   runOnStartup: false,
-  shortcut: require("../../../assets/images/applications/about.svg").default,
+  shortcut: require("../../../assets/images/applications/projects.svg").default,
   type: "window"
 };
 
