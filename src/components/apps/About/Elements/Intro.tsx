@@ -8,6 +8,7 @@ import Divider from "../../../UI/Divider";
 import { useSelector } from "../../../../hooks/Store";
 import { WindowInstance } from "../../../../store/slices/Applications/Types";
 import { EBreakpoints } from "../../../../types/EBreakpoints";
+import generateID from "../../../../functions/generateID";
 
 interface IProps {
   pid: string;
@@ -217,7 +218,7 @@ const Intro: FunctionComponent<IProps> = (props) => {
           {itEducation
             .sort((a, b) => b.date - a.date)
             .map((education) => (
-              <li key={education.title}>
+              <li key={generateID()}>
                 <Typography variant="body" className={classes["date"]}>
                   /
                 </Typography>
