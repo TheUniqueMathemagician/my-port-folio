@@ -178,9 +178,9 @@ const Button = forwardRef<
       ref,
       tabIndex: focusable && !readOnly ? 0 : -1,
       href: to ?? undefined,
-      rel: to?.startsWith("/") ? undefined : "noreferrer noopener",
+      rel: to ? "noreferrer noopener" : undefined,
       readOnly,
-      target: to?.startsWith("/") ? undefined : "_blank",
+      target: to ? "_blank" : undefined,
       ...other
     },
     <>
