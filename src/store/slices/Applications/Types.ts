@@ -1,3 +1,4 @@
+import { EBreakpoints } from "../../../types/EBreakpoints";
 import { EResize } from "../../../types/EResize";
 import { ESnap } from "../../../types/ESnap";
 import { IDimensions } from "../../../types/IDimensions";
@@ -50,6 +51,7 @@ export interface DaemonInstance extends Instance {
 }
 
 export interface WindowInstance extends Instance {
+  breakpoint: EBreakpoints;
   position: IPosition;
   dimensions: IDimensions;
   minDimensions: IDimensions;

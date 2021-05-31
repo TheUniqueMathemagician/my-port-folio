@@ -19,6 +19,7 @@ import { ESnap } from "../../../types/ESnap";
 import { EResize } from "../../../types/EResize";
 import { IDimensions } from "../../../types/IDimensions";
 import { IPosition } from "../../../types/IPosition";
+import { EBreakpoints } from "../../../types/EBreakpoints";
 
 interface State {
   pool: {
@@ -239,6 +240,7 @@ export const applicationsSlice = createSlice({
         case "window":
           state.instances[pid] = {
             args: action.payload.args,
+            breakpoint: EBreakpoints.xs,
             component: application.aid,
             icon: application.icon,
             displayName: application.displayName,
@@ -267,6 +269,13 @@ export const applicationsSlice = createSlice({
       );
       state.zIndexes.splice(instanceIndex, 1);
       state.zIndexes.push(action.payload.pid);
+    },
+    setBreakpoint(
+      state,
+      action: PayloadAction<{ pid: string; breakpoint: EBreakpoints }>
+    ) {
+      const instance = state.instances[action.payload.pid];
+      (instance as WindowInstance).breakpoint = action.payload.breakpoint;
     },
     setDimensions(
       state,
@@ -333,6 +342,7 @@ export const {
   closeApplication,
   runApplication,
   sendToFront,
+  setBreakpoint,
   setDimensions,
   setDragging,
   setPosition,
