@@ -12,6 +12,7 @@ import Randit from "../../../components/apps/Randit";
 import Settings from "../../../components/apps/Settings";
 import Snake from "../../../components/apps/Snake";
 import Welcome from "../../../components/apps/Welcome";
+import NightWatcher from "../../../components/apps/NightWatcher";
 
 export const defaultDimensions = {
   height: 600,
@@ -38,6 +39,7 @@ export const applicationsMap = new Map<Applications, FunctionComponent<RunApp>>(
     [Applications.Image, Image],
     [Applications.Manager, Manager],
     [Applications.Maps, Maps],
+    [Applications.NightWatcher, NightWatcher],
     [Applications.Randit, Randit],
     [Applications.Projects, Projects],
     [Applications.Settings, Settings],

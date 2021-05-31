@@ -121,6 +121,15 @@ initialState.pool[Applications.Maps] = {
   type: "window"
 };
 
+initialState.pool[Applications.NightWatcher] = {
+  aid: Applications.NightWatcher,
+  displayName: "NightWatcher",
+  icon: require("../../../assets/images/applications/nightwatcher.svg").default,
+  runOnStartup: true,
+  shortcut: "",
+  type: "daemon"
+};
+
 initialState.pool[Applications.Projects] = {
   aid: Applications.Projects,
   dimensions: defaultDimensions,

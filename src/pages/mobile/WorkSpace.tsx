@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import ActivityFrame from "../../components/ActivityFrame";
+import DaemonFrame from "../../components/DaemonFrame";
 import ScreenFrame from "../../components/ScreenFrame";
 import ShortcutFrame from "../../components/ShortcutFrame";
 import WorkspaceFrame from "../../components/WorkspaceFrame";
@@ -11,12 +12,12 @@ const WorkSpace = () => {
   const dispatch = useDispatch();
 
   const applications = useSelector((store) => store.applications.pool);
-  const shouldStartApps = useSelector(
-    (store) => !store.os.hasRanStartupApplications
+  const hasRanStartupApplications = useSelector(
+    (store) => store.os.hasRanStartupApplications
   );
 
   useEffect(() => {
-    if (shouldStartApps) {
+    if (!hasRanStartupApplications) {
       Object.keys(applications).forEach((key) => {
         const aid = +key;
         if (applications[aid].runOnStartup) {
@@ -25,15 +26,18 @@ const WorkSpace = () => {
       });
       dispatch(setHasRanStartupApplications(true));
     }
-  }, [dispatch, shouldStartApps, applications]);
+  }, [dispatch, hasRanStartupApplications, applications]);
 
   return (
-    <ScreenFrame>
-      <WorkspaceFrame>
-        <ShortcutFrame></ShortcutFrame>
-        <ActivityFrame></ActivityFrame>
-      </WorkspaceFrame>
-    </ScreenFrame>
+    <>
+      <DaemonFrame></DaemonFrame>
+      <ScreenFrame>
+        <WorkspaceFrame>
+          <ShortcutFrame></ShortcutFrame>
+          <ActivityFrame></ActivityFrame>
+        </WorkspaceFrame>
+      </ScreenFrame>
+    </>
   );
 };
 

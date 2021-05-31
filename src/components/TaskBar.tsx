@@ -72,7 +72,6 @@ const TaskBar = () => {
       return true;
     }
   );
-  // TODO: change gettings apps by display name
 
   const contactButtonRef = useRef<HTMLButtonElement>(null);
   const langButtonRef = useRef<HTMLButtonElement>(null);

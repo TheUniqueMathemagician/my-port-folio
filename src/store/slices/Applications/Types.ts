@@ -10,6 +10,7 @@ export enum Applications {
   Image,
   Manager,
   Maps,
+  NightWatcher,
   Projects,
   Randit,
   Settings,

@@ -196,7 +196,6 @@ const WindowResizer: FunctionComponent<IProps> = (props) => {
       const windowFrame = window.offsetParent as HTMLDivElement;
       if (!windowFrame) return;
 
-      //TODO: e.offsetY e.offsetX
       const tmpPosition = {
         bottom: () => windowFrame.offsetHeight - e.pageY,
         left: () => e.pageX - windowFrame.offsetLeft,

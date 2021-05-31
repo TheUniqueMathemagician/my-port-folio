@@ -1,4 +1,5 @@
 import { memo, useEffect } from "react";
+import DaemonFrame from "../../components/DaemonFrame";
 import ScreenFrame from "../../components/ScreenFrame";
 import ShortcutFrame from "../../components/ShortcutFrame";
 import TaskBar from "../../components/TaskBar";
@@ -12,10 +13,12 @@ const WorkSpace = () => {
   const dispatch = useDispatch();
 
   const applications = useSelector((store) => store.applications.pool);
-  const os = useSelector((store) => store.os);
+  const hasRanStartupApplications = useSelector(
+    (store) => store.os.hasRanStartupApplications
+  );
 
   useEffect(() => {
-    if (!os.hasRanStartupApplications) {
+    if (!hasRanStartupApplications) {
       Object.keys(applications).forEach((key) => {
         const aid = +key;
         if (applications[aid].runOnStartup) {
@@ -24,16 +27,19 @@ const WorkSpace = () => {
       });
       dispatch(setHasRanStartupApplications(true));
     }
-  }, [dispatch, os.hasRanStartupApplications, applications]);
+  }, [dispatch, hasRanStartupApplications, applications]);
 
   return (
-    <ScreenFrame>
-      <WorkspaceFrame>
-        <ShortcutFrame></ShortcutFrame>
-        <WindowFrame></WindowFrame>
-      </WorkspaceFrame>
-      <TaskBar></TaskBar>
-    </ScreenFrame>
+    <>
+      <DaemonFrame></DaemonFrame>
+      <ScreenFrame>
+        <WorkspaceFrame>
+          <ShortcutFrame></ShortcutFrame>
+          <WindowFrame></WindowFrame>
+        </WorkspaceFrame>
+        <TaskBar></TaskBar>
+      </ScreenFrame>
+    </>
   );
 };
 
