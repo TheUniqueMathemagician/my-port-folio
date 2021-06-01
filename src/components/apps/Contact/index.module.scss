@@ -3,8 +3,11 @@
 .root {
   height: 100%;
   width: 100%;
-  user-select: none;
   overflow: auto;
+  h4,
+  label {
+    user-select: none;
+  }
   h4:last-of-type {
     margin-top: $margin * 2;
   }
