@@ -49,8 +49,6 @@ let initialState: State = {
   zIndexes: []
 };
 
-// TODO: add daemon that checks if the user opens too many windows => alert for blur mode
-
 initialState.pool[Applications.About] = {
   aid: Applications.About,
   dimensions: defaultDimensions,

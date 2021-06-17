@@ -48,6 +48,18 @@ const Hobbies: FunctionComponent<IProps> = () => {
           forêt ou encore entretenir mon petit potager.
         </Typography>
       </Paper>
+      <Typography variant="h5">Technologies</Typography>
+      <Paper spaced background="paper" className={classes["paper"]}>
+        <img
+          src={require("../../../../assets/images/electronics.svg").default}
+          alt="Coding"
+        />
+        <Typography variant="p">
+          Je suis un grand amateur de nouvelles technologies, qu'elles soient
+          domestiques ou industrielles. Il m'arrive de temps à autres de
+          bricoler, que ce soit arduinos, raspberry pi, serveurs domotiques, ...
+        </Typography>
+      </Paper>
     </div>
   );
 };

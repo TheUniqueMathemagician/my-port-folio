@@ -127,7 +127,6 @@ const Intro: FunctionComponent<IProps> = (props) => {
       <Divider inset></Divider>
       <Typography variant="h4">Mes compétences</Typography>
       <article className={classes["skills"]}>
-        {/* TODO: open application with args ( dev, ui/ux, ... arguments) */}
         <Paper spaced className={classes["bubble"]} background="paper">
           {/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
           <img
