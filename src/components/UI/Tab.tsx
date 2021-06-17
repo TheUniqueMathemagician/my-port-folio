@@ -48,6 +48,7 @@ const Tab: FunctionComponent<IProps> = (props) => {
       onClick={handleclick}
       ref={ref}
       role="tab"
+      title={label}
       aria-controls={`tabpanel-${value}`}
     >
       {label}
