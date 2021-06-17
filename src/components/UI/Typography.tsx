@@ -19,11 +19,11 @@ interface IProps {
     | "h4"
     | "h5"
     | "h6"
-    | "h1"
     | "div"
     | "p"
-    | "span"
-    | "li";
+    | "label"
+    | "li"
+    | "span";
   color?:
     | "error"
     | "hint"
@@ -35,16 +35,8 @@ interface IProps {
 }
 
 const Typography: FunctionComponent<IProps> = (props) => {
-  const {
-    bold,
-    children,
-    className,
-    color,
-    noSelect,
-    noWrap,
-    tag,
-    variant
-  } = props;
+  const { bold, children, className, color, noSelect, noWrap, tag, variant } =
+    props;
 
   const rootClasses = [classes["root"]];
 
