@@ -27,9 +27,8 @@ interface IProps {
 
 enum ETabs {
   about,
-  hobbies,
-  skills
-  // TODO: Add projects
+  skills,
+  hobbies
 }
 
 const Send = memo(MdSend);
@@ -44,6 +43,9 @@ const About: FunctionComponent<IProps> = (props) => {
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const resizing = useSelector(
+    (store) => store.applications.instances[pid] as WindowInstance
+  ).resizing;
   const small = useSelector((store) => {
     const instance = store.applications.instances[pid] as WindowInstance;
     if (instance.breakpoint === EBreakpoints.sm) return true;
@@ -65,9 +67,10 @@ const About: FunctionComponent<IProps> = (props) => {
     <div className={rootClasses.join(" ")}>
       <div className={leftBarClasses.join(" ")}>
         <Tabs
-          direction={small ? "bottom" : "right"}
+          direction={small ? "top" : "right"}
           defaultValue={0}
           onChange={(v: number) => setPanelIndex(v)}
+          shouldRefresh={resizing}
         >
           <Tab
             active={panelIndex === ETabs.about}

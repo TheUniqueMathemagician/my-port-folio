@@ -16,7 +16,7 @@ $indicator-width: 4px;
       border-right: 1px solid var(--cvos-divider);
     }
   }
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .tabs {
@@ -28,10 +28,8 @@ $indicator-width: 4px;
 
 .top,
 .bottom {
-  overflow-x: auto;
   .tabs {
     grid-auto-flow: column;
-    overflow: auto;
     button {
       width: auto;
     }

@@ -32,6 +32,9 @@ const Manager: FunctionComponent<IProps> = (props) => {
   const { pid } = props;
 
   const applications = useSelector((store) => store.applications.pool);
+  const contrast = useSelector(
+    (store) => store.theme.colorScheme === EColorScheme.contrast
+  );
   const instances = useSelector(
     (store) => store.applications.instances,
     (left, right) => {
@@ -46,9 +49,9 @@ const Manager: FunctionComponent<IProps> = (props) => {
       return true;
     }
   );
-  const contrast = useSelector(
-    (store) => store.theme.colorScheme === EColorScheme.contrast
-  );
+  const resizing = useSelector(
+    (store) => store.applications.instances[pid] as WindowInstance
+  ).resizing;
   const small = useSelector((store) => {
     const instance = store.applications.instances[pid] as WindowInstance;
     if (instance.breakpoint === EBreakpoints.sm) return true;
@@ -67,10 +70,11 @@ const Manager: FunctionComponent<IProps> = (props) => {
   return (
     <div className={rootClasses.join(" ")}>
       <Tabs
-        direction={small ? "bottom" : "right"}
         defaultValue={0}
+        direction={small ? "bottom" : "right"}
         onChange={(v: number) => setPanelIndex(v)}
         separator={contrast}
+        shouldRefresh={resizing}
       >
         <Tab label="Applications" active={panelIndex === 0} value={0} />
         <Tab label="Instances" active={panelIndex === 1} value={1} />
@@ -79,7 +83,12 @@ const Manager: FunctionComponent<IProps> = (props) => {
         <Typography variant="h3">Applications</Typography>
         <Paper outlined={contrast} fullWidth spaced blur background="paper">
           <Typography variant="h4">Applications installées</Typography>
-          <Table aria-label="Applications" size="sm" outlined={contrast}>
+          <Table
+            aria-label="Applications"
+            size="sm"
+            outlined={contrast}
+            fullWidth={small}
+          >
             <TableHead>
               <TableRow>
                 <TableCell heading>Nom</TableCell>

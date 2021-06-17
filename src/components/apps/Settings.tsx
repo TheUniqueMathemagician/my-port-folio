@@ -47,25 +47,28 @@ const Settings: FunctionComponent<IProps> = (props) => {
 
   //#region Selectors
 
-  const users = useSelector((store) => store.users.elements);
   const background = useSelector(
     (store) => store.theme.palette.background[store.theme.colorScheme]
   );
-  const primary = useSelector(
-    (store) => store.theme.palette.primary[store.theme.colorScheme]
-  );
-  const palette = useSelector((store) => store.theme.palette);
-  const colorScheme = useSelector((store) => store.theme.colorScheme);
-  const currentUserID = useSelector((store) => store.users.currentUserID);
   const contrast = useSelector(
     (store) => store.theme.colorScheme === EColorScheme.contrast
   );
+  const colorScheme = useSelector((store) => store.theme.colorScheme);
+  const currentUserID = useSelector((store) => store.users.currentUserID);
+  const palette = useSelector((store) => store.theme.palette);
+  const primary = useSelector(
+    (store) => store.theme.palette.primary[store.theme.colorScheme]
+  );
+  const resizing = useSelector(
+    (store) => store.applications.instances[pid] as WindowInstance
+  ).resizing;
   const small = useSelector((store) => {
     const instance = store.applications.instances[pid] as WindowInstance;
     if (instance.breakpoint === EBreakpoints.sm) return true;
     if (instance.breakpoint === EBreakpoints.xs) return true;
     return false;
   });
+  const users = useSelector((store) => store.users.elements);
 
   //#endregion
 
@@ -147,8 +150,9 @@ const Settings: FunctionComponent<IProps> = (props) => {
     <div className={rootClasses.join(" ")}>
       <Tabs
         defaultValue={panelIndex}
-        onChange={handleTabChange}
         direction={small ? "bottom" : "right"}
+        shouldRefresh={resizing}
+        onChange={handleTabChange}
         separator={colorScheme === EColorScheme.contrast}
       >
         <Tab label="Theme" value={0} active={panelIndex === 0} />

@@ -11,4 +11,10 @@
 .small {
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-align: center;
+  }
 }

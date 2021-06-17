@@ -12,11 +12,12 @@ import {
 } from "react";
 
 interface IProps {
+  className?: string;
   defaultValue?: number;
   direction: "bottom" | "left" | "right" | "top";
   onChange: (value: number) => void;
   separator?: boolean;
-  className?: string;
+  shouldRefresh?: boolean;
 }
 
 interface IVerticalPosition {
@@ -29,8 +30,15 @@ interface IHorizontalPosition {
 }
 
 const Tabs: FunctionComponent<IProps> = (props) => {
-  const { onChange, children, className, defaultValue, direction, separator } =
-    props;
+  const {
+    children,
+    className,
+    defaultValue,
+    direction,
+    onChange,
+    separator,
+    shouldRefresh
+  } = props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);
@@ -52,6 +60,7 @@ const Tabs: FunctionComponent<IProps> = (props) => {
   const handleInput = useCallback(
     (e: Event) => {
       e.stopPropagation();
+
       const event = e as CustomEvent;
       const target = e.target as HTMLDivElement;
       setTabValue(event.detail);
@@ -70,6 +79,32 @@ const Tabs: FunctionComponent<IProps> = (props) => {
     },
     [vertical]
   );
+
+  const refresh = useCallback(() => {
+    const els = ref.current?.querySelectorAll("button:not(:last-child)");
+    if (els) {
+      const el = Array.from(els)[tabValue] as HTMLButtonElement;
+      if (vertical) {
+        setIndicatorPosition({
+          top: el.offsetTop,
+          height: el.offsetHeight
+        });
+      } else {
+        setIndicatorPosition({
+          left: el.offsetLeft,
+          width: el.offsetWidth
+        });
+      }
+    }
+  }, [ref, vertical, tabValue]);
+
+  useLayoutEffect(() => {
+    if (shouldRefresh) {
+      refresh();
+      const it = setInterval(refresh, 10);
+      return () => clearInterval(it);
+    }
+  }, [refresh, shouldRefresh]);
 
   useEffect(() => {
     const el = ref.current;
@@ -139,16 +174,13 @@ const Tabs: FunctionComponent<IProps> = (props) => {
       aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"}
       className={rootClasses.join(" ")}
     >
-      <div className={classes["tabs"]} ref={ref}>
+      <div className={classes["tabs"]} ref={ref} role="tablist">
         {children}
         <div
           className={classes["indicator"]}
           style={{
-            top: (indicatorPosition as IVerticalPosition).top,
-            height: (indicatorPosition as IVerticalPosition).height,
-            left: (indicatorPosition as IHorizontalPosition).left,
-            width: (indicatorPosition as IHorizontalPosition).width,
-            transition
+            ...indicatorPosition,
+            transition: shouldRefresh ? "" : transition
           }}
         ></div>
       </div>
