@@ -5,25 +5,23 @@
 :root,
 html,
 body {
-  color: var(--cvos-text);
-  font-family: "Rubik", sans-serif;
-  overflow: hidden;
+	color: var(--cvos-text);
+	font-family: "Rubik", sans-serif;
+	overflow: hidden;
+	background-color: black;
 }
 
 ::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
+	height: 10px;
+	width: 10px;
 }
-// ::-webkit-scrollbar-track {
-// background: var(--cvos-background-33);
-// }
 ::-webkit-scrollbar-thumb {
-  background: var(--cvos-primary);
+	background: var(--cvos-primary);
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
 }
