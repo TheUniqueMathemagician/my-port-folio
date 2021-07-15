@@ -4,29 +4,24 @@ import Index from "../pages/desktop/Index";
 import Lock from "../pages/desktop/Lock";
 import WorkSpace from "../pages/desktop/WorkSpace";
 
-import { Switch, Route, useHistory } from "react-router-dom";
-import { useLayoutEffect } from "react";
-import { useSelector } from "../hooks/Store";
+import { AnimatePresence } from "framer-motion";
+
+import { Switch, Route, useLocation } from "react-router-dom";
 
 const Desktop = () => {
-  const history = useHistory();
-  const currentUser = useSelector((store) => store.users.currentUserID);
+	const location = useLocation();
 
-  useLayoutEffect(() => {
-    if (!currentUser) {
-      history.replace("/lock");
-    }
-  }, [currentUser, history]);
-
-  return (
-    <Switch>
-      <Route exact path="/" component={Index}></Route>
-      <Route exact path="/boot" component={Boot}></Route>
-      <Route exact path="/lock" component={Lock}></Route>
-      <Route exact path="/workspace" component={WorkSpace}></Route>
-      <Route exact path="*" component={Error404}></Route>
-    </Switch>
-  );
+	return (
+		<AnimatePresence initial={false} exitBeforeEnter>
+			<Switch location={location} key={location.pathname}>
+				<Route exact path="/" component={Index}></Route>
+				<Route exact path="/boot" component={Boot}></Route>
+				<Route exact path="/lock" component={Lock}></Route>
+				<Route exact path="/workspace" component={WorkSpace}></Route>
+				<Route exact path="*" component={Error404}></Route>
+			</Switch>
+		</AnimatePresence>
+	);
 };
 
 export default Desktop;
