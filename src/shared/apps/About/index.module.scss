@@ -1,0 +1,32 @@
+@import "../../../styles/theme.scss";
+
+.root {
+  height: 100%;
+  display: grid;
+  grid: 100% / 150px 1fr;
+}
+
+.left-bar {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  &.contrast {
+    border-right: 1px solid var(--cvos-divider);
+  }
+}
+
+.small {
+  grid: auto 1fr / 100%;
+  overflow: auto;
+  .left-bar {
+    grid: auto/1fr auto;
+    &.contrast {
+      border-right: 0;
+      border-bottom: 1px solid var(--cvos-divider);
+    }
+  }
+}
+
+.menu-bar {
+  display: flex;
+  justify-content: space-between;
+}

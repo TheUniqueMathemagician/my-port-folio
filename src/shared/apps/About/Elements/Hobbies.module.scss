@@ -1,0 +1,22 @@
+@import "../../../../styles/theme.scss";
+
+.root {
+  user-select: none;
+  display: grid;
+  row-gap: $padding;
+}
+
+.paper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  justify-items: flex-start;
+  column-gap: $padding;
+  img {
+    height: 6rem;
+    width: 6rem;
+  }
+  p {
+    max-width: 500px;
+  }
+}
