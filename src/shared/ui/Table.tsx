@@ -1,15 +1,15 @@
+import {FC, memo, PropsWithChildren} from "react";
+import {TSize} from "../../types/TSize";
 import classes from "./Table.module.scss";
-import { FunctionComponent, memo, PropsWithChildren } from "react";
-import { TSize } from "../../types/TSize";
 
-interface IProps {
+interface Props {
   fullWidth?: boolean;
   outlined?: boolean;
   size?: TSize;
 }
 
-const Table: FunctionComponent<IProps> = (props) => {
-  const { children, outlined, fullWidth } = props;
+const Table: FC<Props> = (props) => {
+  const {children, outlined, fullWidth} = props;
 
   const rootClasses = [classes["root"]];
 
@@ -19,4 +19,4 @@ const Table: FunctionComponent<IProps> = (props) => {
   return <table className={rootClasses.join(" ")}>{children}</table>;
 };
 
-export default memo<PropsWithChildren<IProps>>(Table);
+export default memo<PropsWithChildren<Props>>(Table);
