@@ -1,25 +1,21 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-import { IdomPosition } from "../../../types/IdomPosition";
-
-import {
-  DaemonApplication,
-  DaemonInstance,
-  Applications,
-  WindowApplication,
-  WindowInstance
-} from "./Types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import generateID from "../../../functions/generateID";
+import {EBreakpoints} from "../../../types/EBreakpoints";
+import {EResize} from "../../../types/EResize";
+import {ESnap} from "../../../types/ESnap";
+import {IDimensions} from "../../../types/IDimensions";
+import {IdomPosition} from "../../../types/IdomPosition";
+import {IPosition} from "../../../types/IPosition";
 import {
   defaultDimensions,
   defaultMaxDimensions,
   defaultMinDimensions
 } from "./Constants";
-import generateID from "../../../functions/generateID";
-import { ESnap } from "../../../types/ESnap";
-import { EResize } from "../../../types/EResize";
-import { IDimensions } from "../../../types/IDimensions";
-import { IPosition } from "../../../types/IPosition";
-import { EBreakpoints } from "../../../types/EBreakpoints";
+import {
+  Applications, DaemonApplication,
+  DaemonInstance, WindowApplication,
+  WindowInstance
+} from "./Types";
 
 interface State {
   pool: {
@@ -43,7 +39,7 @@ let initialState: State = {
   dragging: false,
   resizing: false,
   snapShadow: {
-    position: { bottom: null, left: null, right: null, top: null },
+    position: {bottom: null, left: null, right: null, top: null},
     visible: false
   },
   zIndexes: []
@@ -53,27 +49,27 @@ initialState.pool[Applications.About] = {
   aid: Applications.About,
   dimensions: defaultDimensions,
   displayName: "A Propos",
-  icon: require("../../../assets/images/applications/about.svg").default,
+  icon: "/images/applications/about.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
-  shortcut: require("../../../assets/images/applications/about.svg").default,
+  shortcut: "/images/applications/about.svg",
   type: "window"
 };
 
 initialState.pool[Applications.Contact] = {
   aid: Applications.Contact,
-  dimensions: { height: 600, width: 600 },
+  dimensions: {height: 600, width: 600},
   displayName: "Contact",
-  icon: require("../../../assets/images/applications/contact.svg").default,
+  icon: "/images/applications/contact.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
-  shortcut: require("../../../assets/images/applications/contact.svg").default,
+  shortcut: "/images/applications/contact.svg",
   type: "window"
 };
 
@@ -84,7 +80,7 @@ initialState.pool[Applications.Image] = {
   icon: "",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
@@ -95,10 +91,10 @@ initialState.pool[Applications.Manager] = {
   aid: Applications.Manager,
   dimensions: defaultDimensions,
   displayName: "Gestionnaire d'applications",
-  icon: require("../../../assets/images/applications/manager.svg").default,
+  icon: "/images/applications/manager.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
@@ -112,7 +108,7 @@ initialState.pool[Applications.Maps] = {
   icon: "",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
@@ -122,7 +118,7 @@ initialState.pool[Applications.Maps] = {
 initialState.pool[Applications.NightWatcher] = {
   aid: Applications.NightWatcher,
   displayName: "NightWatcher",
-  icon: require("../../../assets/images/applications/nightwatcher.svg").default,
+  icon: "/images/applications/nightwatcher.svg",
   runOnStartup: true,
   shortcut: "",
   type: "daemon"
@@ -132,13 +128,13 @@ initialState.pool[Applications.Projects] = {
   aid: Applications.Projects,
   dimensions: defaultDimensions,
   displayName: "Projets",
-  icon: require("../../../assets/images/applications/projects.svg").default,
+  icon: "images/applications/projects.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
-  shortcut: require("../../../assets/images/applications/projects.svg").default,
+  shortcut: "/images/applications/projects.svg",
   type: "window"
 };
 
@@ -149,7 +145,7 @@ initialState.pool[Applications.Randit] = {
   icon: "",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
@@ -160,10 +156,10 @@ initialState.pool[Applications.Settings] = {
   aid: Applications.Settings,
   dimensions: defaultDimensions,
   displayName: "Préférences du système",
-  icon: require("../../../assets/images/applications/settings.svg").default,
+  icon: "/images/applications/settings.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
@@ -172,27 +168,27 @@ initialState.pool[Applications.Settings] = {
 
 initialState.pool[Applications.Snake] = {
   aid: Applications.Snake,
-  dimensions: { height: 600, width: 600 },
+  dimensions: {height: 600, width: 600},
   displayName: "le Serpent",
-  icon: require("../../../assets/images/applications/snake.svg").default,
+  icon: "/image/applications/snake.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: true,
   runOnStartup: false,
   shortcut: "",
-  // shortcut: require("../../../assets/images/applications/snake.svg").default,
+  // shortcut: "/images/applications/snake.svg",
   type: "window"
 };
 
 initialState.pool[Applications.Welcome] = {
   aid: Applications.Welcome,
-  dimensions: { height: 400, width: 400 },
+  dimensions: {height: 400, width: 400},
   displayName: "Bienvenue",
-  icon: require("../../../assets/images/applications/welcome.svg").default,
+  icon: "/image/applications/welcome.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
-  position: { bottom: null, left: null, right: null, top: null },
+  position: {bottom: null, left: null, right: null, top: null},
   resizable: false,
   runOnStartup: true,
   shortcut: "",
@@ -213,7 +209,7 @@ export const applicationsSlice = createSlice({
       const application = state.pool[action.payload.aid];
       application.runOnStartup = action.payload.runOnStartup;
     },
-    closeApplication(state, action: PayloadAction<{ pid: string }>) {
+    closeApplication(state, action: PayloadAction<{pid: string;}>) {
       if (!state.instances[action.payload.pid]) return;
       delete state.instances[action.payload.pid];
       state.zIndexes = state.zIndexes.filter(
@@ -224,7 +220,7 @@ export const applicationsSlice = createSlice({
       state,
       action: PayloadAction<{
         aid: number;
-        args: { [key: string]: string };
+        args: {[key: string]: string;};
       }>
     ) {
       const application = state.pool[action.payload.aid];
@@ -270,7 +266,7 @@ export const applicationsSlice = createSlice({
           break;
       }
     },
-    sendToFront(state, action: PayloadAction<{ pid: string }>) {
+    sendToFront(state, action: PayloadAction<{pid: string;}>) {
       const instanceIndex = state.zIndexes.findIndex(
         (zIndex) => zIndex === action.payload.pid
       );
@@ -279,21 +275,21 @@ export const applicationsSlice = createSlice({
     },
     setBreakpoint(
       state,
-      action: PayloadAction<{ pid: string; breakpoint: EBreakpoints }>
+      action: PayloadAction<{pid: string; breakpoint: EBreakpoints;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).breakpoint = action.payload.breakpoint;
     },
     setDimensions(
       state,
-      action: PayloadAction<{ pid: string; dimensions: IDimensions }>
+      action: PayloadAction<{pid: string; dimensions: IDimensions;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).dimensions = action.payload.dimensions;
     },
     setDragging(
       state,
-      action: PayloadAction<{ pid: string; dragging: boolean }>
+      action: PayloadAction<{pid: string; dragging: boolean;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).dragging = action.payload.dragging;
@@ -301,35 +297,35 @@ export const applicationsSlice = createSlice({
     },
     setPosition(
       state,
-      action: PayloadAction<{ pid: string; position: IPosition }>
+      action: PayloadAction<{pid: string; position: IPosition;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).position = action.payload.position;
     },
     setMaximized(
       state,
-      action: PayloadAction<{ pid: string; maximized: ESnap }>
+      action: PayloadAction<{pid: string; maximized: ESnap;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).maximized = action.payload.maximized;
     },
     setMinimized(
       state,
-      action: PayloadAction<{ pid: string; minimized: boolean }>
+      action: PayloadAction<{pid: string; minimized: boolean;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).minimized = action.payload.minimized;
     },
     setResizeMode(
       state,
-      action: PayloadAction<{ pid: string; resizeMode: EResize }>
+      action: PayloadAction<{pid: string; resizeMode: EResize;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).resizeMode = action.payload.resizeMode;
     },
     setResizing(
       state,
-      action: PayloadAction<{ pid: string; resizing: boolean }>
+      action: PayloadAction<{pid: string; resizing: boolean;}>
     ) {
       const instance = state.instances[action.payload.pid];
       (instance as WindowInstance).resizing = action.payload.resizing;
