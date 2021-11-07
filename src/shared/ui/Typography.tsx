@@ -1,42 +1,36 @@
-import {
-  createElement,
-  FunctionComponent,
-  memo,
-  PropsWithChildren
-} from "react";
+import {createElement, FunctionComponent, memo, PropsWithChildren} from "react";
 import classes from "./Typography.module.scss";
 
-interface IProps {
+interface Props {
   bold?: boolean;
   className?: string;
   noSelect?: boolean;
   noWrap?: boolean;
   variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "body" | "p";
   tag?:
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "div"
-    | "p"
-    | "label"
-    | "li"
-    | "span";
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "div"
+  | "p"
+  | "label"
+  | "li"
+  | "span";
   color?:
-    | "error"
-    | "hint"
-    | "info"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning";
+  | "error"
+  | "hint"
+  | "info"
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning";
 }
 
-const Typography: FunctionComponent<IProps> = (props) => {
-  const { bold, children, className, color, noSelect, noWrap, tag, variant } =
-    props;
+const Typography: FunctionComponent<Props> = (props) => {
+  const {bold, children, className, color, noSelect, noWrap, tag, variant} = props;
 
   const rootClasses = [classes["root"]];
 
@@ -58,4 +52,4 @@ const Typography: FunctionComponent<IProps> = (props) => {
   });
 };
 
-export default memo<PropsWithChildren<IProps>>(Typography);
+export default memo<PropsWithChildren<Props>>(Typography);
