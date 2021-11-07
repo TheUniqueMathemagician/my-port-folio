@@ -1,0 +1,38 @@
+@import "../../../styles/theme.scss";
+
+.root {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  h4,
+  label {
+    user-select: none;
+  }
+  h4:last-of-type {
+    margin-top: $margin * 2;
+  }
+  form {
+    display: grid;
+    row-gap: $padding;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: $margin;
+  row-gap: $margin;
+}
+
+.text-area {
+  > textarea {
+    min-height: 250px;
+  }
+}
+
+.container {
+  padding: $padding;
+  display: grid;
+  grid: auto 1fr / 100%;
+}
