@@ -1,12 +1,8 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import { useSelector } from "../../hooks/Store";
+import {FC, memo, useEffect, useState} from "react";
+import {useSelector} from "../../hooks/Store";
 
-interface IProps {}
-
-const NightWatcher: FunctionComponent<IProps> = () => {
-  const count = useSelector(
-    (store) => Object.keys(store.applications.instances).length
-  );
+const NightWatcher: FC = () => {
+  const count = useSelector((store) => Object.keys(store.applications.instances).length);
   const [hasWarned, setHasWarned] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,4 +23,4 @@ const NightWatcher: FunctionComponent<IProps> = () => {
   return null;
 };
 
-export default NightWatcher;
+export default memo(NightWatcher);
