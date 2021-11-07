@@ -1,16 +1,15 @@
+import {FC, memo, useCallback, useEffect, useRef} from "react";
+import Button from "./input/Button";
 import classes from "./Tab.module.scss";
-import { FunctionComponent, memo, useCallback, useEffect, useRef } from "react";
-import Button from "./Input/Button";
 
-// TODO: try to remove active value
-interface IProps {
+interface Props {
   label: string;
   value: number;
   active: boolean;
 }
 
-const Tab: FunctionComponent<IProps> = (props) => {
-  const { active, label, value } = props;
+const Tab: FC<Props> = (props) => {
+  const {active, label, value} = props;
 
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -42,6 +41,7 @@ const Tab: FunctionComponent<IProps> = (props) => {
   return (
     <Button
       ripple
+      readOnly
       size="md"
       focusable
       className={rootClasses.join(" ")}
@@ -49,7 +49,7 @@ const Tab: FunctionComponent<IProps> = (props) => {
       ref={ref}
       role="tab"
       title={label}
-      aria-controls={`tabpanel-${value}`}
+      aria-controls={`tabpanel-${ value }`}
     >
       {label}
     </Button>
