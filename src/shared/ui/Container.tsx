@@ -1,28 +1,26 @@
+import {FC} from "react";
 import classes from "./Container.module.scss";
-import { FunctionComponent } from "react";
 
-interface IPropsBox {
+interface PropsBox {
   type?: undefined;
   orientation?: undefined;
   space?: boolean;
 }
 
-interface IPropsFlex {
+interface PropsFlex {
   type: "flex";
   orientation?: "row" | "column";
   space?: boolean;
 }
 
-interface IPropsGrid {
+interface PropsGrid {
   type: "grid";
   orientation?: "row" | "column";
   space?: boolean;
 }
 
-const Container: FunctionComponent<IPropsBox | IPropsGrid | IPropsFlex> = (
-  props
-) => {
-  const { children, orientation, space, type } = props;
+const Container: FC<PropsBox | PropsGrid | PropsFlex> = (props) => {
+  const {children, orientation, space, type} = props;
   const rootClasses = [classes["root"]];
 
   switch (orientation) {
