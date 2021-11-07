@@ -1,18 +1,16 @@
-import { FunctionComponent } from "react";
-
-import { Applications } from "./Types";
-
-import About from "../../../components/apps/About";
-import Contact from "../../../components/apps/Contact";
-import Image from "../../../components/apps/Image";
-import Manager from "../../../components/apps/Manager";
-import Maps from "../../../components/apps/Maps";
-import Projects from "../../../components/apps/Projects";
-import Randit from "../../../components/apps/Randit";
-import Settings from "../../../components/apps/Settings";
-import Snake from "../../../components/apps/Snake";
-import Welcome from "../../../components/apps/Welcome";
-import NightWatcher from "../../../components/apps/NightWatcher";
+import {FunctionComponent} from "react";
+import About from "../../../shared/apps/About";
+import Contact from "../../../shared/apps/Contact";
+import Image from "../../../shared/apps/Image";
+import Manager from "../../../shared/apps/Manager";
+import Maps from "../../../shared/apps/Maps";
+import NightWatcher from "../../../shared/apps/NightWatcher";
+import Projects from "../../../shared/apps/Projects";
+import Randit from "../../../shared/apps/Randit";
+import Settings from "../../../shared/apps/Settings";
+import Snake from "../../../shared/apps/Snake";
+import Welcome from "../../../shared/apps/Welcome";
+import {Applications} from "./Types";
 
 export const defaultDimensions = {
   height: 600,
