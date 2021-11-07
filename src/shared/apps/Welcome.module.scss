@@ -1,0 +1,16 @@
+@import "../../styles/theme.scss";
+
+.root {
+  align-content: flex-start;
+  align-items: center;
+  display: grid;
+  justify-items: center;
+  min-height: 100%;
+  overflow: auto;
+  padding: $padding;
+  row-gap: $padding;
+  user-select: none;
+  > * {
+    text-align: center;
+  }
+}
