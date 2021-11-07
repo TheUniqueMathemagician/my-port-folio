@@ -3,7 +3,7 @@ import Head from "next/head";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {Provider} from "react-redux";
 import {store} from "../store";
-import "../styles/core/_reset.scss";
+import "../styles/global.scss";
 
 const client = new QueryClient();
 
