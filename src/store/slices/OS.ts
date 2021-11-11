@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import isMobile from "../../functions/isMobile";
 
 interface OsState {
@@ -24,6 +24,6 @@ export const osSlice = createSlice({
   }
 });
 
-export const { reset, setHasRanStartupApplications } = osSlice.actions;
+export const {reset, setHasRanStartupApplications} = osSlice.actions;
 
 export default osSlice.reducer;

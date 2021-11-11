@@ -165,7 +165,7 @@ const initialState: ThemeState = {
 };
 
 const setRootVariables = () => {
-  const root = document.getElementById("root");
+  const root = document.getElementById("__next");
   Object.keys(initialState.palette).forEach((key) => {
     const value = ((initialState.palette as any)[key] as ColorPalette)[
       initialState.colorScheme
