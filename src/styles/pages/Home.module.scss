@@ -20,16 +20,13 @@ $text-shadow: 0 0 8px $color;
 	color: $color;
 	font-family: "IBM Plex Mono", monospace;
 	background: $color;
-	display: grid;
-	justify-items: center;
-	align-content: flex-start;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
 	row-gap: 2rem;
 	text-shadow: 0 0 2px 8px $color;
-	background: radial-gradient(
-		circle,
-		rgba(0, 30, 0, 100) 50%,
-		rgba(0, 0, 0, 100) 200%
-	);
+	background: radial-gradient(circle, rgba(0, 30, 0, 100) 50%, rgba(0, 0, 0, 100) 200%);
 	*::selection {
 		background: $color;
 		color: black;
