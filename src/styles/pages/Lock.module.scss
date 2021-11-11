@@ -1,0 +1,44 @@
+@import "../theme/";
+
+.root {
+	background: url("https://images.unsplash.com/photo-1607053075722-dff3fb966413?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	> section {
+		padding: $space-md;
+		display: flex;
+		flex-direction: column;
+		row-gap: $space-md;
+		align-items: center;
+		justify-items: center;
+		z-index: 1;
+	}
+
+	> .bg {
+		backdrop-filter: $blur;
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+}
+
+.avatar {
+	height: 5rem;
+	width: 5rem;
+}
+
+.users {
+	position: fixed;
+	padding: $space-md;
+	bottom: 0;
+	left: 0;
+}

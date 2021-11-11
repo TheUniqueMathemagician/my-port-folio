@@ -1,4 +1,6 @@
-const isMobile = (a: any): boolean => {
+const isMobile = (): boolean => {
+  let a: any;
+
   if (typeof navigator === "undefined") return false;
 
   if (typeof a === "undefined") a = navigator.userAgent || navigator.vendor || (window as any).opera;

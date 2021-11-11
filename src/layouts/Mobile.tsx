@@ -1,12 +1,6 @@
 import {AnimatePresence} from "framer-motion";
-import {FC} from "react";
-import {useSelector} from "../hooks/Store";
+import {FC, memo} from "react";
 
+const Desktop: FC = ({children}) => <AnimatePresence initial={false} exitBeforeEnter> {children} </AnimatePresence>;
 
-const Desktop: FC = ({children}) => {
-  const currentUser = useSelector((store) => store.users.currentUserID);
-
-  return <AnimatePresence initial={false} exitBeforeEnter> {children} </AnimatePresence>;
-};
-
-export default Desktop;
+export default memo(Desktop);

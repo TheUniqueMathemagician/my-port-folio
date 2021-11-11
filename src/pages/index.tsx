@@ -2,7 +2,7 @@ import {motion} from "framer-motion";
 import {NextPage} from "next";
 import {useRouter} from "next/dist/client/router";
 import {FC, memo, useCallback, useEffect, useRef, useState} from "react";
-import classes from "../styles/pages/Boot.module.scss";
+import classes from "../styles/pages/Home.module.scss";
 
 const timing = 0.003;
 
@@ -160,7 +160,7 @@ const Loading: FC<LoadingProps> = (props) => {
   );
 };
 
-const Boot: NextPage = () => {
+const Home: NextPage = () => {
   const router = useRouter();
 
   const [step, setStep] = useState(0);
@@ -188,4 +188,4 @@ const Boot: NextPage = () => {
   </motion.main>;
 };
 
-export default memo(Boot);
+export default memo(Home);
