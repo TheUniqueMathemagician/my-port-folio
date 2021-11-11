@@ -1,23 +1,23 @@
-@import "../styles/theme.scss";
+@import "../../styles/theme/";
 
 .root {
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-  position: absolute;
-  display: grid;
-  grid: auto 1fr / 100%;
-  pointer-events: all;
-  background-color: var(--cvos-background);
-  height: 100%;
-  width: 100%;
+	transition: border-color 0.3s ease, background-color 0.3s ease;
+	position: absolute;
+	display: grid;
+	grid: auto 1fr / 100%;
+	pointer-events: all;
+	background-color: var(--cvos-background);
+	height: 100%;
+	width: 100%;
 }
 
 .root.contrast {
-  border: 1px solid var(--cvos-divider);
+	border: 1px solid var(--cvos-divider);
 }
 
 .root:not(.contrast) {
-  @supports (backdrop-filter: $blur) {
-    background-color: transparent;
-    backdrop-filter: $blur;
-  }
+	@supports (backdrop-filter: $blur) {
+		background-color: transparent;
+		backdrop-filter: $blur;
+	}
 }

@@ -1,53 +1,55 @@
-@import "../styles/theme.scss";
+@import "../../styles/theme/";
 
 .root {
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-  position: absolute;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  pointer-events: all;
-  background-color: var(--cvos-background);
-  &:not(.contrast) {
-    box-shadow: $shadow;
-  }
-  @for $i from 1 to 9 {
-    &.snap-#{$i} {
-      @if $i == 1 or $i == 3 {
-        bottom: 50%;
-      } @else {
-        bottom: 0;
-      }
-      @if $i < 5 or $i > 7 {
-        top: 0;
-      } @else {
-        top: 50%;
-      }
-      @if $i < 3 or $i > 5 {
-        left: 0;
-      } @else {
-        left: 50%;
-      }
-      @if $i < 2 or $i > 6 {
-        right: 50%;
-      } @else {
-        right: 0;
-      }
-    }
-  }
+	transition: border-color 0.3s ease, background-color 0.3s ease;
+	position: absolute;
+	display: grid;
+	grid-template-rows: auto 1fr;
+	pointer-events: all;
+	background-color: var(--cvos-background);
+
+	&:not(.contrast) {
+		box-shadow: $shadow-2;
+	}
+
+	@for $i from 1 to 9 {
+		&.snap-#{$i} {
+			@if $i == 1 or $i == 3 {
+				bottom: 50%;
+			} @else {
+				bottom: 0;
+			}
+			@if $i < 5 or $i > 7 {
+				top: 0;
+			} @else {
+				top: 50%;
+			}
+			@if $i < 3 or $i > 5 {
+				left: 0;
+			} @else {
+				left: 50%;
+			}
+			@if $i < 2 or $i > 6 {
+				right: 50%;
+			} @else {
+				right: 0;
+			}
+		}
+	}
 }
 
 .background {
-  z-index: 0;
-  overflow: hidden;
+	z-index: 0;
+	overflow: hidden;
 }
 
 .root.contrast {
-  border: 1px solid var(--cvos-divider);
+	border: 1px solid var(--cvos-divider);
 }
 
 .root:not(.contrast) {
-  @supports (backdrop-filter: $blur) {
-    background-color: transparent;
-    backdrop-filter: $blur;
-  }
+	@supports (backdrop-filter: $blur) {
+		background-color: transparent;
+		backdrop-filter: $blur;
+	}
 }

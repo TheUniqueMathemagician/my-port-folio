@@ -1,9 +1,9 @@
-@import "../.../../styles/theme.scss";
+@import "../../styles/theme/";
 
 .root {
-  display: flex;
-  padding: $padding/2;
-  justify-content: space-between;
-  width: 100%;
-  background: var(--cvos-paper);
+	display: flex;
+	padding: $padding/2;
+	justify-content: space-between;
+	width: 100%;
+	background: var(--cvos-paper);
 }

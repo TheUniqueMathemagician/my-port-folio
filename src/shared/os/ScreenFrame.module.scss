@@ -1,11 +1,11 @@
-@import "../styles/theme.scss";
+@import "../../styles/theme/";
 
 .root {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  height: 100vh;
+	display: grid;
+	grid-template-rows: 1fr auto;
+	height: 100vh;
 }
 
 .mobile {
-  grid-template-rows: 1fr;
+	grid-template-rows: 1fr;
 }

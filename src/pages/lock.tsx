@@ -42,9 +42,7 @@ export default function Lock() {
           variant="blur"
           focusable
           size="md"
-          onClick={() => {
-            if (user) history.push("/workspace");
-          }}
+          to="/workspace"
         >
           Se connecter
         </Button>
