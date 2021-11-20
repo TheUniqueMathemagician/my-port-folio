@@ -1,4 +1,4 @@
-import {FC, memo, useCallback, useEffect, useRef} from "react";
+import {FC, memo, PropsWithChildren, useCallback, useEffect, useRef} from "react";
 import Button from "./input/Button";
 import classes from "./Tab.module.scss";
 
@@ -41,7 +41,6 @@ const Tab: FC<Props> = (props) => {
   return (
     <Button
       ripple
-      readOnly
       size="md"
       focusable
       className={rootClasses.join(" ")}
@@ -56,4 +55,4 @@ const Tab: FC<Props> = (props) => {
   );
 };
 
-export default memo(Tab);
+export default memo<PropsWithChildren<Props>>(Tab);
