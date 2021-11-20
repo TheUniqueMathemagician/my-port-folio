@@ -79,18 +79,17 @@ const About: FC<Props> = (props) => {
           value={ETabs.hobbies}
         />
       </Tabs>
-      {!small && (
-        <Button
-          focusable
-          fullWidth
-          startIcon
-          color="primary"
-          onClick={handleContactClick}
-        >
-          <Send></Send>
-          <span>Contacter</span>
-        </Button>
-      )}
+      {!small && <Button
+        focusable
+        fullWidth
+        startIcon
+        color="primary"
+        onClick={handleContactClick}
+      >
+        <Send></Send>
+        <span>Contacter</span>
+      </Button>
+      }
     </div>
     <TabPanel
       className={classes["tab-panel"]}

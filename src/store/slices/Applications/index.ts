@@ -33,7 +33,7 @@ interface State {
   zIndexes: string[];
 }
 
-let initialState: State = {
+const initialState: State = {
   pool: {},
   instances: {},
   dragging: false,
@@ -77,7 +77,7 @@ initialState.pool[Applications.Image] = {
   aid: Applications.Image,
   dimensions: defaultDimensions,
   displayName: "Image",
-  icon: "",
+  icon: "/images/applications/image.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},
@@ -105,7 +105,7 @@ initialState.pool[Applications.Maps] = {
   aid: Applications.Maps,
   dimensions: defaultDimensions,
   displayName: "Maps",
-  icon: "",
+  icon: "/images/applications/maps.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},
@@ -128,7 +128,7 @@ initialState.pool[Applications.Projects] = {
   aid: Applications.Projects,
   dimensions: defaultDimensions,
   displayName: "Projets",
-  icon: "images/applications/projects.svg",
+  icon: "/images/applications/projects.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},
@@ -142,7 +142,7 @@ initialState.pool[Applications.Randit] = {
   aid: Applications.Randit,
   dimensions: defaultDimensions,
   displayName: "Randit",
-  icon: "",
+  icon: "/images/applications/randit.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},
@@ -170,7 +170,7 @@ initialState.pool[Applications.Snake] = {
   aid: Applications.Snake,
   dimensions: {height: 600, width: 600},
   displayName: "le Serpent",
-  icon: "/image/applications/snake.svg",
+  icon: "/images/applications/snake.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},
@@ -185,7 +185,7 @@ initialState.pool[Applications.Welcome] = {
   aid: Applications.Welcome,
   dimensions: {height: 400, width: 400},
   displayName: "Bienvenue",
-  icon: "/image/applications/welcome.svg",
+  icon: "/images/applications/welcome.svg",
   maxDimensions: defaultMaxDimensions,
   minDimensions: defaultMinDimensions,
   position: {bottom: null, left: null, right: null, top: null},

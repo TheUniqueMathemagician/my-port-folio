@@ -1,4 +1,4 @@
-import {FC, memo, useCallback, useState} from "react";
+import {FC, memo, MouseEventHandler, useCallback, useState} from "react";
 import {IoLocationSharp} from "react-icons/io5";
 import {MdMail, MdPhone} from "react-icons/md";
 import {useDispatch, useSelector} from "../../../hooks/Store";
@@ -27,7 +27,7 @@ const Contact: FC = () => {
     new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0"))
   );
 
-  const handleMapsClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleMapsClick: (MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>) = useCallback((e) => {
     e.preventDefault();
     dispatch(runApplication({aid: Applications.Maps, args: {}}));
   }, [dispatch]);
@@ -109,7 +109,7 @@ const Contact: FC = () => {
           <Button
             align="start"
             focusable
-            onClick={() => handleMapsClick}
+            onClick={handleMapsClick}
             outlined
             size="md"
             startIcon
