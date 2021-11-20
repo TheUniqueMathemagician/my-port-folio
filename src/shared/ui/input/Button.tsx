@@ -1,12 +1,12 @@
 import Link from "next/link";
-import React, {AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, forwardRef, MouseEventHandler, PropsWithChildren, RefObject, useCallback, useEffect, useRef} from "react";
+import React, {DetailedHTMLProps, forwardRef, HTMLAttributes, MouseEventHandler, PropsWithChildren, RefObject, useCallback, useEffect, useRef} from "react";
 import contrastColor from "../../../functions/contrastColor";
 import {useSelector} from "../../../hooks/Store";
 import {TColor} from "../../../types/TColor";
 import {TSize} from "../../../types/TSize";
 import classes from "./Button.module.scss";
 
-type HTMLProps = DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+type HTMLProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
 
 interface PropsButtonA extends HTMLProps {
   align?: "center" | "end" | "start";
@@ -70,7 +70,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     setTimeout(() => {ripples.remove();}, 666);
   }, [ripple, readOnly]);
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
+  const handleClick: MouseEventHandler<HTMLElement> = useCallback((e) => {
     if (readOnly || !ref.current) return;
 
     if (ripple) {
@@ -115,7 +115,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
   if (loading) rootClasses.push(classes["loading"]);
 
   if (props.to) return <Link href={props.to}>
-    <a className={rootClasses.join(" ")} {...rest} ref={ref as any}>
+    <a className={rootClasses.join(" ")} {...rest} ref={ref as any} onClick={handleClick}>
       <div className={classes["content"]}>{children}</div>
       <div className={classes["loader"]}>
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
