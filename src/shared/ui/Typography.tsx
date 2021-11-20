@@ -7,26 +7,8 @@ interface Props {
   noSelect?: boolean;
   noWrap?: boolean;
   variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "body" | "p";
-  tag?:
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "h5"
-  | "h6"
-  | "div"
-  | "p"
-  | "label"
-  | "li"
-  | "span";
-  color?:
-  | "error"
-  | "hint"
-  | "info"
-  | "primary"
-  | "secondary"
-  | "success"
-  | "warning";
+  tag?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "p" | "label" | "li" | "span";
+  color?: "error" | "hint" | "info" | "primary" | "secondary" | "success" | "warning";
 }
 
 const Typography: FunctionComponent<Props> = (props) => {
@@ -46,10 +28,7 @@ const Typography: FunctionComponent<Props> = (props) => {
   if (tag) el = tag;
   else if (variant) el = variant === "body" ? "div" : variant;
 
-  return createElement(el, {
-    children,
-    className: rootClasses.join(" ")
-  });
+  return createElement(el, {children, className: rootClasses.join(" ")});
 };
 
 export default memo<PropsWithChildren<Props>>(Typography);

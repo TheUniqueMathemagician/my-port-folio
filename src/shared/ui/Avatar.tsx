@@ -1,12 +1,8 @@
+import {FunctionComponent, memo, useCallback} from "react";
+import {TSize} from "../../types/TSize";
 import classes from "./Avatar.module.scss";
-import { FunctionComponent, memo, useCallback } from "react";
-import { TSize } from "../../types/TSize";
 
-interface IProps
-  extends React.DetailedHTMLProps<
-    React.ImgHTMLAttributes<HTMLImageElement>,
-    HTMLImageElement
-  > {
+interface IProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
   alt: string;
   src: string;
   size?: TSize;
@@ -15,14 +11,11 @@ interface IProps
 }
 
 const Avatar: FunctionComponent<IProps> = (props) => {
-  const { alt, className, src, outlined, size, square, ...other } = props;
+  const {alt, className, src, outlined, size, square, ...other} = props;
 
-  const handleDragStart = useCallback(
-    (e: React.DragEvent<HTMLImageElement>) => {
-      e.preventDefault();
-    },
-    []
-  );
+  const handleDragStart = useCallback((e: React.DragEvent<HTMLImageElement>) => {
+    e.preventDefault();
+  }, []);
 
   const rootClasses = [classes["root"]];
 
@@ -31,15 +24,13 @@ const Avatar: FunctionComponent<IProps> = (props) => {
   if (square) rootClasses.push(classes["square"]);
   if (className) rootClasses.push(className);
 
-  return (
-    <img
-      onDragStart={handleDragStart}
-      alt={alt}
-      src={src}
-      className={rootClasses.join(" ")}
-      {...other}
-    ></img>
-  );
+  return <img
+    onDragStart={handleDragStart}
+    alt={alt}
+    src={src}
+    className={rootClasses.join(" ")}
+    {...other}
+  ></img>;
 };
 
 export default memo(Avatar);

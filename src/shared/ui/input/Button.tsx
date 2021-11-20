@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, {AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useRef} from "react";
+import React, {AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, forwardRef, MouseEventHandler, PropsWithChildren, RefObject, useCallback, useEffect, useRef} from "react";
 import contrastColor from "../../../functions/contrastColor";
 import {useSelector} from "../../../hooks/Store";
 import {TColor} from "../../../types/TColor";
@@ -71,7 +71,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     setTimeout(() => {ripples.remove();}, 666);
   }, [ripple, readOnly]);
 
-  const handleClick = useCallback((e: React.MouseEvent) => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
     if (!ripple || readOnly || !ref.current) return;
 
     const BC = ref.current.getBoundingClientRect();
@@ -85,6 +85,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 
     ref.current.prepend(element);
 
+    onClick?.(e);
     setTimeout(() => {element.remove();}, 666);
   }, [ripple, readOnly]);
 

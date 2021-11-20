@@ -21,15 +21,7 @@ interface HorizontalPosition {
 }
 
 const Tabs: FunctionComponent<Props> = (props) => {
-  const {
-    children,
-    className,
-    defaultValue,
-    direction,
-    onChange,
-    separator,
-    shouldRefresh
-  } = props;
+  const {children, className, defaultValue, direction, onChange, separator, shouldRefresh} = props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [tabValue, setTabValue] = useState<number>(defaultValue ?? 0);
@@ -38,20 +30,17 @@ const Tabs: FunctionComponent<Props> = (props) => {
 
   const vertical = useMemo(() => direction === "left" || direction === "right", [direction]);
 
-  const handleInput = useCallback(
-    (e: Event) => {
-      e.stopPropagation();
+  const handleInput = useCallback((e: Event) => {
+    e.stopPropagation();
 
-      const event = e as CustomEvent;
-      const target = e.target as HTMLDivElement;
+    const event = e as CustomEvent;
+    const target = e.target as HTMLDivElement;
 
-      setTabValue(event.detail);
+    setTabValue(event.detail);
 
-      if (vertical) setIndicatorPosition({top: target.offsetTop, height: target.offsetHeight});
-      else setIndicatorPosition({left: target.offsetLeft, width: target.offsetWidth});
-    },
-    [vertical]
-  );
+    if (vertical) setIndicatorPosition({top: target.offsetTop, height: target.offsetHeight});
+    else setIndicatorPosition({left: target.offsetLeft, width: target.offsetWidth});
+  }, [vertical]);
 
   const refresh = useCallback(() => {
     const els = ref.current?.querySelectorAll("button:not(:last-child)");

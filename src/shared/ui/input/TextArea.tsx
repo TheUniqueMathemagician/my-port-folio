@@ -22,9 +22,7 @@ const TextArea: FC<Props> = (props) => {
   const changeHandler = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
 
-    if (autoResize) {
-      e.target.style.height = `${ e.target.scrollHeight + 2 }px`;
-    }
+    if (autoResize) e.target.style.height = `${ e.target.scrollHeight + 2 }px`;
 
     onChange?.(e);
   }, [autoResize, onChange]);
