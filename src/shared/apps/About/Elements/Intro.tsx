@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {FC, memo} from "react";
 import generateID from "../../../../functions/generateID";
 import {useSelector} from "../../../../hooks/Store";
@@ -105,9 +106,7 @@ const Intro: FC<Props> = (props) => {
           className={classes["name"]}
           background="background"
         >
-          <Typography variant="h2" tag="h1" className={classes["name"]}>
-            TAMBURRINI Yannick
-          </Typography>
+          <Typography variant="h2" tag="h1" className={classes["name"]}>TAMBURRINI Yannick</Typography>
         </Paper>
       </div>
       <div className={classes["text-container"]}>
@@ -118,45 +117,37 @@ const Intro: FC<Props> = (props) => {
           fron-tend tels que Vue et React en TypeScript
         </Typography>
       </div>
-      <Typography variant="body">
-        PS: Ce n'est pas moi sur l'image, mais en attendant ça fait joli :p
-      </Typography>
+      <Typography variant="body">PS: Ce n'est pas moi sur l'image, mais en attendant ça fait joli :p</Typography>
     </header>
     <Divider inset></Divider>
     <Typography variant="h4">Mes compétences</Typography>
     <article className={classes["skills"]}>
       <Paper spaced className={classes["bubble"]} background="paper">
         {/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
-        <img
-          src={require("../../../../assets/images/solved.svg").default}
+        <Image
+          src={"/images/solved.svg"}
           alt="UI/UX"
-          className={classes["icon"]}
+          layout="fill"
         />
-        <Typography variant="h6" tag="h5">
-          Problem solving
-        </Typography>
+        <Typography variant="h6" tag="h5">Problem solving</Typography>
       </Paper>
       <Paper spaced className={classes["bubble"]} background="paper">
         {/* <div>Icônes conçues par <a href="https://www.flaticon.com/fr/auteurs/xnimrodx" title="xnimrodx">xnimrodx</a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com</a></div> */}
-        <img
-          src={require("../../../../assets/images/ui.svg").default}
+        <Image
+          src={"/images/ui.svg"}
           alt="UI/UX"
-          className={classes["icon"]}
+          layout="fill"
         />
-        <Typography variant="h6" tag="h5">
-          UI / UX
-        </Typography>
+        <Typography variant="h6" tag="h5">UI / UX</Typography>
       </Paper>
       <Paper spaced className={classes["bubble"]} background="paper">
         {/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
-        <img
-          src={require("../../../../assets/images/innovation.svg").default}
+        <Image
+          src={"/images/innovation.svg"}
           alt="UI/UX"
-          className={classes["icon"]}
+          layout="fill"
         />
-        <Typography variant="h6" tag="h5">
-          Innovation
-        </Typography>
+        <Typography variant="h6" tag="h5">Innovation</Typography>
       </Paper>
     </article>
     <Divider inset></Divider>
@@ -183,7 +174,7 @@ const Intro: FC<Props> = (props) => {
                 </Typography>
                 <Typography variant="body" tag="li">
                   Maintenance curative et préventive ( tableaux électriques,
-                  tours & fraiseuses, moteurs asynchrones, étuves, etc... )
+                  tours &amp; fraiseuses, moteurs asynchrones, étuves, etc... )
                 </Typography>
               </ul>
             </div>
