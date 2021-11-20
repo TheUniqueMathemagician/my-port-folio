@@ -1,10 +1,10 @@
 export type TColor =
-  | "text"
   | "background"
+  | "error"
+  | "info"
+  | "paper"
   | "primary"
   | "secondary"
-  | "info"
   | "success"
-  | "warning"
-  | "error"
-  | "paper";
+  | "text"
+  | "warning";

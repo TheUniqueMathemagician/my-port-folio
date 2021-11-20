@@ -72,21 +72,24 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
   }, [ripple, readOnly]);
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
-    if (!ripple || readOnly || !ref.current) return;
+    if (readOnly || !ref.current) return;
 
-    const BC = ref.current.getBoundingClientRect();
-    const x = e.clientX - BC.x;
-    const y = e.clientY - BC.y;
-    const element = document.createElement("span");
+    if (ripple) {
+      const BC = ref.current.getBoundingClientRect();
+      const x = e.clientX - BC.x;
+      const y = e.clientY - BC.y;
+      const element = document.createElement("span");
 
-    element.classList.add(classes["ripple"]);
-    element.style.left = `${ x }px`;
-    element.style.top = `${ y }px`;
+      element.classList.add(classes["ripple"]);
+      element.style.left = `${ x }px`;
+      element.style.top = `${ y }px`;
 
-    ref.current.prepend(element);
+      ref.current.prepend(element);
+
+      setTimeout(() => {element.remove();}, 666);
+    }
 
     onClick?.(e);
-    setTimeout(() => {element.remove();}, 666);
   }, [ripple, readOnly]);
 
   useEffect(() => {
