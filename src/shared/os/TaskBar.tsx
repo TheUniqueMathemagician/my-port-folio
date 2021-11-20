@@ -1,5 +1,6 @@
 import {useRouter} from "next/dist/client/router";
-import {memo, useCallback, useRef, useState} from "react";
+import Image from "next/image";
+import {FC, memo, MouseEventHandler, useRef, useState} from "react";
 import {IoLogOutOutline} from "react-icons/io5";
 import {MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend} from "react-icons/md";
 import {batch} from "react-redux";
@@ -17,16 +18,16 @@ import TaskBarMenu from "./TaskBarMenu";
 import TaskBarTimeDate from "./TaskBarTimeDate";
 
 enum EMenuShown {
-  none,
-  main,
-  contact,
-  language
+  None,
+  Main,
+  Contact,
+  Language
 }
 
 const Send = memo(() => <MdSend></MdSend>);
 
-const TaskBar = () => {
-  const [menuShown, setMenuShown] = useState<EMenuShown>(EMenuShown.none);
+const TaskBar: FC = () => {
+  const [menuShown, setMenuShown] = useState(EMenuShown.None);
 
   const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast);
   const instances = useSelector((store) => store.applications.instances, (left, right) => {
@@ -61,28 +62,57 @@ const TaskBar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const closeMenu = useCallback(() => {
-    setMenuShown(EMenuShown.none);
-  }, []);
-
   const rootClasses = [classes["root"]];
 
+  const closeMenu = () => {
+    setMenuShown(EMenuShown.None);
+  };
+
+  const handleMainMenuClick: MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (menuShown === EMenuShown.Main) closeMenu();
+    else setMenuShown(EMenuShown.Main);
+  };
+
+  const handleContactMenuClick = () => {
+    if (menuShown === EMenuShown.Contact) closeMenu();
+    else setMenuShown(EMenuShown.Contact);
+  };
+
+  const handleLanguageMenuClick = () => {
+    if (menuShown === EMenuShown.Language) closeMenu();
+    else setMenuShown(EMenuShown.Language);
+  };
+
+  const handleLockMenuClick = () => {
+    router.push("/lock");
+  };
+
+  const handleDisconnectMenuClick = () => {
+    batch(() => {
+      for (const pid of Object.keys(instances)) dispatch(closeApplication({pid}));
+      dispatch(setHasRanStartupApplications(false));
+      dispatch(setCurrentUserID(""));
+    });
+
+    router.push("/lock");
+  };
+
+  const handleShutdownMenuClick = () => {
+    batch(() => {
+      for (const pid of Object.keys(instances)) dispatch(closeApplication({pid}));
+      dispatch(setHasRanStartupApplications(false));
+      dispatch(setCurrentUserID(""));
+    });
+
+    router.push("/boot");
+  };
+
+  const handleMenuApplicationClick = (aid: number) => {
+    dispatch(runApplication({aid, args: {}}));
+    closeMenu();
+  };
+
   if (contrast) rootClasses.push(classes["contrast"]);
-
-  //#region Menu position calculations
-
-  // TODO: need fix
-
-  // const contactMenuLeftPosition = 0;
-  // const contactButton: HTMLButtonElement = contactButtonRef.current as HTMLButtonElement;
-  // if (contactButton) {
-  //   const clientWidth = contactButton.clientWidth;
-  //   const offsetLeft = contactButton.offsetLeft;
-  // }
-
-  // const langMenuLeftPosition = 0;
-
-  //#endregion
 
   return <>
     <div className={rootClasses.join(" ")} ref={taskBarRef}>
@@ -90,24 +120,22 @@ const TaskBar = () => {
         size="md"
         focusable
         ripple
-        onClick={() => {
-          if (menuShown === EMenuShown.main) closeMenu();
-          else setMenuShown(EMenuShown.main);
-        }}
+        onClick={handleMainMenuClick}
       >
         <Menu></Menu>
       </Button>
+
       <Divider inset margin vertical></Divider>
-      <div className={classes["apps"]}>
+
+      <ul className={classes["apps"]}>
         {Object.keys(instances)
           .map((x) => instances[x])
           .filter((app) => app.type === "window")
-          .map((instance) => (
+          .map((instance) => <li key={instance.pid}>
             <Button
               size="md"
               ripple
               focusable
-              key={instance.pid}
               onClick={() => {
                 if (instance.type === "window") {
                   batch(() => {
@@ -119,41 +147,44 @@ const TaskBar = () => {
             >
               <img src={instance.icon} alt={instance.displayName} />
             </Button>
-          ))}
-      </div>
+          </li>
+          )}
+      </ul>
+
       <Divider inset margin vertical></Divider>
+
       <Button
         size="md"
         ripple
         focusable
         ref={contactButtonRef}
-        onClick={() => {
-          if (menuShown === EMenuShown.contact) closeMenu();
-          else setMenuShown(EMenuShown.contact);
-        }}
+        onClick={handleContactMenuClick}
       >
         <Send></Send>
       </Button>
+
       <Divider inset margin vertical></Divider>
+
       <Button
         size="md"
         ripple
         focusable
         ref={langButtonRef}
-        onClick={() => {
-          if (menuShown === EMenuShown.language) closeMenu();
-          else setMenuShown(EMenuShown.language);
-        }}
+        onClick={handleLanguageMenuClick}
       >
         Français
       </Button>
+
       <Divider inset margin vertical></Divider>
+
+      {/* FIXME => no ripple effect*/}
       <Button size="md" readOnly ripple>
         <TaskBarTimeDate></TaskBarTimeDate>
       </Button>
     </div>
+
     <TaskBarMenu
-      shown={menuShown === EMenuShown.main}
+      shown={menuShown === EMenuShown.Main}
       position={{
         bottom: taskBarRef.current?.clientHeight ?? 0,
         left: 0,
@@ -169,25 +200,27 @@ const TaskBar = () => {
               <Button
                 ripple
                 size="md"
-                focusable={menuShown === EMenuShown.main}
-                onClick={() => {
-                  dispatch(runApplication({aid: +key, args: {}}));
-                  closeMenu();
-                }}
+                focusable={menuShown === EMenuShown.Main}
+                onClick={() => handleMenuApplicationClick(+key)}
                 startIcon
                 align="start"
                 fullWidth
               >
-                <img
+                <Image
                   alt={applications[+key].displayName}
                   src={applications[+key].icon}
-                ></img>
+                  layout="fixed"
+                  width={24}
+                  height={24}
+                ></Image>
                 <span>{applications[+key].displayName} </span>
               </Button>
             </li>
           ))}
       </ul>
+
       <Divider inset margin></Divider>
+
       <ul>
         <li>
           <Button
@@ -195,7 +228,7 @@ const TaskBar = () => {
             fullWidth
             size="md"
             ripple
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             onClick={() => {
               dispatch(runApplication({aid: Applications.Settings, args: {tab: "profile"}}));
               closeMenu();
@@ -210,7 +243,7 @@ const TaskBar = () => {
             fullWidth
             size="md"
             ripple
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             onClick={() => {
               dispatch(runApplication({aid: Applications.Settings, args: {}}));
               closeMenu();
@@ -225,7 +258,7 @@ const TaskBar = () => {
             fullWidth
             ripple
             size="md"
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             onClick={() => {
               dispatch(runApplication({aid: Applications.Manager, args: {}}));
               closeMenu();
@@ -235,17 +268,17 @@ const TaskBar = () => {
           </Button>
         </li>
       </ul>
+
       <Divider inset margin></Divider>
+
       <ul>
         <li>
           <Button
             align="start"
             color="success"
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             fullWidth
-            onClick={() => {
-              router.push("/lock");
-            }}
+            onClick={handleLockMenuClick}
             ripple
             size="md"
             startIcon
@@ -258,16 +291,9 @@ const TaskBar = () => {
           <Button
             align="start"
             color="warning"
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             fullWidth
-            onClick={() => {
-              router.push("/lock");
-              batch(() => {
-                Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
-                dispatch(setHasRanStartupApplications(false));
-                dispatch(setCurrentUserID(""));
-              });
-            }}
+            onClick={handleDisconnectMenuClick}
             ripple
             size="md"
             startIcon
@@ -280,16 +306,9 @@ const TaskBar = () => {
           <Button
             align="start"
             color="error"
-            focusable={menuShown === EMenuShown.main}
+            focusable={menuShown === EMenuShown.Main}
             fullWidth
-            onClick={() => {
-              batch(() => {
-                Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
-                dispatch(setHasRanStartupApplications(false));
-                dispatch(setCurrentUserID(""));
-                router.push("/boot");
-              });
-            }}
+            onClick={handleShutdownMenuClick}
             ripple
             size="md"
             startIcon
@@ -300,11 +319,11 @@ const TaskBar = () => {
         </li>
       </ul>
     </TaskBarMenu>
+
     <TaskBarMenu
-      shown={menuShown === EMenuShown.contact}
+      shown={menuShown === EMenuShown.Contact}
       position={{
         bottom: taskBarRef.current?.clientHeight ?? 0,
-        // left: contactMenuLeftPosition,
         left: null,
         right: 0,
         top: null
@@ -315,7 +334,7 @@ const TaskBar = () => {
           <Button
             align="start"
             size="md"
-            focusable={menuShown === EMenuShown.contact}
+            focusable={menuShown === EMenuShown.Contact}
             fullWidth
             startIcon
             to="mailto: tamburrini.yannick@gmail.com"
@@ -329,7 +348,7 @@ const TaskBar = () => {
           <Button
             align="start"
             size="md"
-            focusable={menuShown === EMenuShown.contact}
+            focusable={menuShown === EMenuShown.Contact}
             fullWidth
             startIcon
             to="tel:+32 498 62 77 16"
@@ -341,11 +360,11 @@ const TaskBar = () => {
         </li>
       </ul>
     </TaskBarMenu>
+
     <TaskBarMenu
-      shown={menuShown === EMenuShown.language}
+      shown={menuShown === EMenuShown.Language}
       position={{
         bottom: taskBarRef.current?.clientHeight ?? 0,
-        // left: langMenuLeftPosition,
         left: null,
         right: 0,
         top: null
@@ -369,4 +388,4 @@ const TaskBar = () => {
   </>;
 };
 
-export default memo(TaskBar);
+export default TaskBar;

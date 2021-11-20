@@ -14,7 +14,7 @@ const TaskBarMenu: FC<Props> = ({shown, position, children}) => {
 
   const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast);
 
-  if (!shown && typeof position.bottom === "number") position.bottom = position.bottom - 6;
+  if (!shown && position.bottom) position.bottom = position.bottom - 6;
 
   if (contrast) rootClasses.push(classes["contrast"]);
   if (shown) rootClasses.push(classes["shown"]);
