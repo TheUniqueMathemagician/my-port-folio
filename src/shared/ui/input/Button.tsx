@@ -90,7 +90,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     }
 
     onClick?.(e);
-  }, [ripple, readOnly]);
+  }, [ripple, readOnly, onClick]);
 
   useEffect(() => {
     if (!ref.current) return;
