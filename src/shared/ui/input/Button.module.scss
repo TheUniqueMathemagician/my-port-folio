@@ -1,5 +1,7 @@
 @import "../../../styles/theme/";
 
+$colors: ("background", "disabled", "divider", "error", "hint", "info", "paper", "primary", "secondary", "success", "text", "ctext", "warning");
+
 .root {
 	display: inline-block;
 	position: relative;
@@ -48,11 +50,11 @@
 		padding: $space-lg;
 	}
 
-	// @each $color in $colors {
-	// 	&.#{$color} .content {
-	// 		color: var(--cvos-#{$color});
-	// 	}
-	// }
+	@each $color in $colors {
+		&.#{$color} .content {
+			color: var(--cvos-#{$color});
+		}
+	}
 	&.filled .content {
 		color: var(--cvos-tet);
 	}
@@ -179,11 +181,11 @@
 .outlined {
 	border: 1px solid var(--cvos-divider);
 
-	// @each $color in $colors {
-	// 	&.#{$color} {
-	// 		border-color: var(--cvos-#{$color});
-	// 	}
-	// }
+	@each $color in $colors {
+		&.#{$color} {
+			border-color: var(--cvos-#{$color});
+		}
+	}
 }
 
 .blur {
@@ -193,11 +195,11 @@
 		@supports (backdrop-filter: $blur) {
 			backdrop-filter: $blur;
 
-			// @each $color in $colors {
-			// 	&.#{$color} {
-			// 		background-color: var(--cvos-#{$color}#{-33});
-			// 	}
-			// }
+			@each $color in $colors {
+				&.#{$color} {
+					background-color: var(--cvos-#{$color}#{-33});
+				}
+			}
 		}
 	}
 }
@@ -206,11 +208,11 @@
 	background-color: var(--cvos-paper-33);
 	color: var(--text-color);
 
-	// @each $color in $colors {
-	// 	&.#{$color} {
-	// 		background-color: var(--cvos-#{$color});
-	// 	}
-	// }
+	@each $color in $colors {
+		&.#{$color} {
+			background-color: var(--cvos-#{$color});
+		}
+	}
 }
 
 .contrast {
@@ -292,11 +294,14 @@ button.root {
 }
 
 .root {
-	// @each $color in $colors {
-	// 	&.#{$color}:not(.filled) .loader circle {
-	// 		stroke: var(--cvos-#{$color});
-	// 	}
-	// }
+	@each $color in $colors {
+		&.#{$color} {
+			color: var(--cvos-#{$color}-text);
+		}
+		&.#{$color}:not(.filled) .loader circle {
+			stroke: var(--cvos-#{$color});
+		}
+	}
 }
 
 @keyframes svg-animation {

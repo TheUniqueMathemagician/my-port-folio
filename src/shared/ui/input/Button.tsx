@@ -48,10 +48,9 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
   const {ripple, readOnly, color, fullWidth, size, variant, startIcon, endIcon, align, contrast, outlined, isIcon, className, loading, children, onClick, ...rest} = props;
 
   const innerRef = useRef<HTMLElement>(null);
-  const ref = (parentRef as RefObject<HTMLButtonElement>) ?? innerRef;
+  const ref = (parentRef as RefObject<HTMLElement>) ?? innerRef;
 
-  const palette = useSelector((store) => store.theme.palette);
-  const colorScheme = useSelector((store) => store.theme.colorScheme);
+  const backgroundColor = useSelector((store) => store.theme.palette[color ?? "background"][store.theme.colorScheme]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLElement>) => {
     if (e.code !== "Space" || !ripple || readOnly || !ref.current) return;
@@ -97,9 +96,8 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 
     const button = ref.current;
 
-    const backgroundColor = palette[color ?? "background"][colorScheme];
     button.style.setProperty("--text-color", contrastColor(backgroundColor));
-  }, [colorScheme, palette, color]);
+  }, [backgroundColor]);
 
   const rootClasses = [classes["root"]];
 
@@ -117,7 +115,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
   if (loading) rootClasses.push(classes["loading"]);
 
   if (props.to) return <Link href={props.to}>
-    <a className={rootClasses.join(" ")} {...rest}>
+    <a className={rootClasses.join(" ")} {...rest} ref={ref as any}>
       <div className={classes["content"]}>{children}</div>
       <div className={classes["loader"]}>
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -127,7 +125,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     </a>
   </Link>;
 
-  return <button className={rootClasses.join(" ")} onClick={handleClick} onKeyPress={handleKeyPress} ref={ref} {...rest}>
+  return <button className={rootClasses.join(" ")} onClick={handleClick} onKeyPress={handleKeyPress} ref={ref as any} {...rest}>
     <div className={classes["content"]}>{children}</div>
     <div className={classes["loader"]}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
