@@ -23,6 +23,7 @@ const MenuBar: FC<Props> = (props) => {
   const handleContactClick = useCallback(() => {
     dispatch(runApplication({aid: Applications.Contact, args: {}}));
   }, [dispatch]);
+
   const handleCloseClick = useCallback(() => {
     dispatch(closeApplication({pid}));
   }, [dispatch, pid]);

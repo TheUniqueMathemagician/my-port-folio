@@ -50,7 +50,7 @@ const Window: FC<Props> = ({pid, boundaries, borderOffset, resizerWidth}) => {
 
   let width: number | "" = "";
   let height: number | "" = "";
-  let tmpPosition: IPosition = {
+  const tmpPosition: IPosition = {
     bottom: null,
     left: null,
     right: null,
@@ -59,24 +59,12 @@ const Window: FC<Props> = ({pid, boundaries, borderOffset, resizerWidth}) => {
 
   const checkBoundaries = () => {
     if (position.left) {
-      if (
-        position.left <
-        boundaries.x1 - (dimensions.width ?? 0) + borderOffset
-      ) {
-        tmpPosition.left =
-          boundaries.x1 - (dimensions.width ?? 0) + borderOffset;
-      }
-      if (position.left > boundaries.x2 - borderOffset) {
-        tmpPosition.left = boundaries.x2 - borderOffset;
-      }
+      if (position.left < boundaries.x1 - (dimensions.width ?? 0) + borderOffset) tmpPosition.left = boundaries.x1 - (dimensions.width ?? 0) + borderOffset;
+      if (position.left > boundaries.x2 - borderOffset) tmpPosition.left = boundaries.x2 - borderOffset;
     }
     if (position.top) {
-      if (position.top < boundaries.y1) {
-        tmpPosition.top = boundaries.y1;
-      }
-      if (position.top > boundaries.y2 - borderOffset) {
-        tmpPosition.top = boundaries.y2 - borderOffset;
-      }
+      if (position.top < boundaries.y1) tmpPosition.top = boundaries.y1;
+      if (position.top > boundaries.y2 - borderOffset) tmpPosition.top = boundaries.y2 - borderOffset;
     }
   };
 
@@ -89,10 +77,8 @@ const Window: FC<Props> = ({pid, boundaries, borderOffset, resizerWidth}) => {
     tmpPosition.bottom = position.bottom;
     checkBoundaries();
   } else if (position.bottom === null && position.left === null && position.right === null && position.top === null) {
-    tmpPosition.left =
-      (boundaries.x2 - boundaries.x1 - (dimensions.width ?? 0)) / 2;
-    tmpPosition.top =
-      (boundaries.y2 - boundaries.y1 - (dimensions.height ?? 0)) / 2;
+    tmpPosition.left = (boundaries.x2 - boundaries.x1 - (dimensions.width ?? 0)) / 2;
+    tmpPosition.top = (boundaries.y2 - boundaries.y1 - (dimensions.height ?? 0)) / 2;
     width = dimensions.width ?? 0;
     height = dimensions.height ?? 0;
     checkBoundaries();
@@ -145,12 +131,7 @@ const Window: FC<Props> = ({pid, boundaries, borderOffset, resizerWidth}) => {
       windowRef={windowRef}
     ></WindowHeader>
     <div className={backgroundClasses.join(" ")}>
-      {renderComponent
-        ? createElement(renderComponent, {
-          args,
-          pid
-        })
-        : null}
+      {renderComponent ? createElement(renderComponent, {args, pid}) : null}
     </div>
   </motion.section>;
 };

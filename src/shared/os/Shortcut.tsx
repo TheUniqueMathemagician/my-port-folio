@@ -9,13 +9,14 @@ interface Props {
 
 const Shortcut: FC<Props> = (props) => {
   const {aid} = props;
+
   const dispatch = useDispatch();
 
   const application = useSelector((store) => store.applications.pool[aid]);
   const isMobile = useSelector((store) => store.os.isMobile);
 
   const handleDoubleClick = useCallback(() => {
-    dispatch(runApplication({aid, args: {}}));
+    if (!isMobile) dispatch(runApplication({aid, args: {}}));
   }, [aid, dispatch]);
 
   const handleClick = useCallback(() => {

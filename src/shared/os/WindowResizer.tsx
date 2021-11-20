@@ -72,37 +72,21 @@ const WindowResizer: FC<Props> = (props) => {
     ];
 
     if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
-      if (resizeMode !== EResize.bottomRight) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.bottomRight}));
-      }
+      if (resizeMode !== EResize.bottomRight) dispatch(setResizeMode({pid, resizeMode: EResize.bottomRight}));
     } else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
-      if (resizeMode !== EResize.bottomLeft) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.bottomLeft}));
-      }
+      if (resizeMode !== EResize.bottomLeft) dispatch(setResizeMode({pid, resizeMode: EResize.bottomLeft}));
     } else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
-      if (resizeMode !== EResize.topRight) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.topRight}));
-      }
+      if (resizeMode !== EResize.topRight) dispatch(setResizeMode({pid, resizeMode: EResize.topRight}));
     } else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
-      if (resizeMode !== EResize.topLeft) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.topLeft}));
-      }
+      if (resizeMode !== EResize.topLeft) dispatch(setResizeMode({pid, resizeMode: EResize.topLeft}));
     } else if (e.pageX >= x2 - width) {
-      if (resizeMode !== EResize.right) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.right}));
-      }
+      if (resizeMode !== EResize.right) dispatch(setResizeMode({pid, resizeMode: EResize.right}));
     } else if (e.pageY >= y2 - width) {
-      if (resizeMode !== EResize.bottom) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.bottom}));
-      }
+      if (resizeMode !== EResize.bottom) dispatch(setResizeMode({pid, resizeMode: EResize.bottom}));
     } else if (e.pageY <= y1 + width) {
-      if (resizeMode !== EResize.top) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.top}));
-      }
+      if (resizeMode !== EResize.top) dispatch(setResizeMode({pid, resizeMode: EResize.top}));
     } else if (e.pageX <= x1 + width) {
-      if (resizeMode !== EResize.left) {
-        dispatch(setResizeMode({pid, resizeMode: EResize.left}));
-      }
+      if (resizeMode !== EResize.left) dispatch(setResizeMode({pid, resizeMode: EResize.left}));
     } else {
       dispatch(setResizeMode({pid, resizeMode: EResize.none}));
     }
@@ -219,45 +203,27 @@ const WindowResizer: FC<Props> = (props) => {
     const restrictedPosition = {
       top: () => {
         const top = tmpPosition.top();
-        if (maxDimensions.height && top < limit.min.top()) {
-          return limit.min.top();
-        }
-        if (minDimensions.height && top > limit.max.top()) {
-          return limit.max.top();
-        }
-        if (top < 0) {
-          return 0;
-        }
+        if (maxDimensions.height && top < limit.min.top()) return limit.min.top();
+        if (minDimensions.height && top > limit.max.top()) return limit.max.top();
+        if (top < 0) return 0;
         return top;
       },
       left: () => {
         const left = tmpPosition.left();
-        if (maxDimensions.width && left < limit.min.left()) {
-          return limit.min.left();
-        }
-        if (minDimensions.width && left > limit.max.left()) {
-          return limit.max.left();
-        }
+        if (maxDimensions.width && left < limit.min.left()) return limit.min.left();
+        if (minDimensions.width && left > limit.max.left()) return limit.max.left();
         return left;
       },
       bottom: () => {
-        let bottom = tmpPosition.bottom();
-        if (maxDimensions.height && bottom < limit.min.bottom()) {
-          return limit.min.bottom();
-        }
-        if (minDimensions.height && bottom > limit.max.bottom()) {
-          return limit.max.bottom();
-        }
+        const bottom = tmpPosition.bottom();
+        if (maxDimensions.height && bottom < limit.min.bottom()) return limit.min.bottom();
+        if (minDimensions.height && bottom > limit.max.bottom()) return limit.max.bottom();
         return bottom;
       },
       right: () => {
-        let right = tmpPosition.right();
-        if (maxDimensions.width && right < limit.min.right()) {
-          return limit.min.right();
-        }
-        if (minDimensions.width && right > limit.max.right()) {
-          return limit.max.right();
-        }
+        const right = tmpPosition.right();
+        if (maxDimensions.width && right < limit.min.right()) return limit.min.right();
+        if (minDimensions.width && right > limit.max.right()) return limit.max.right();
         return right;
       }
     };
@@ -312,32 +278,29 @@ const WindowResizer: FC<Props> = (props) => {
     }
   }, [pid, windowRef, dispatch, minDimensions, maxDimensions, resizeMode, position]);
 
-  const handleResizerDragMouseUp = useCallback(
-    (e: globalThis.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
+  const handleResizerDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-      document.body.style.cursor = "";
+    document.body.style.cursor = "";
 
-      const window = windowRef.current;
+    const window = windowRef.current;
 
-      if (!window) return;
+    if (!window) return;
 
-      batch(() => {
-        dispatch(
-          setDimensions({
-            pid,
-            dimensions: {
-              height: window.offsetHeight,
-              width: window.offsetWidth
-            }
-          })
-        );
-        dispatch(setResizing({pid, resizing: false}));
-      });
-    },
-    [dispatch, windowRef, pid]
-  );
+    batch(() => {
+      dispatch(
+        setDimensions({
+          pid,
+          dimensions: {
+            height: window.offsetHeight,
+            width: window.offsetWidth
+          }
+        })
+      );
+      dispatch(setResizing({pid, resizing: false}));
+    });
+  }, [dispatch, windowRef, pid]);
 
   useEffect(() => {
     if (resizing) {

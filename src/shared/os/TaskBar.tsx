@@ -2,6 +2,7 @@ import {useRouter} from "next/dist/client/router";
 import {memo, useCallback, useRef, useState} from "react";
 import {IoLogOutOutline} from "react-icons/io5";
 import {MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend} from "react-icons/md";
+import {batch} from "react-redux";
 import {useDispatch, useSelector} from "../../hooks/Store";
 import {closeApplication, runApplication, sendToFront, setMinimized} from "../../store/slices/Applications";
 import {Applications} from "../../store/slices/Applications/Types";
@@ -32,6 +33,7 @@ const TaskBar = () => {
     for (const key in left) {
       const leftItem = left[key];
       const rightItem = right[key];
+
       if (leftItem?.displayName !== rightItem?.displayName) return false;
     }
 
@@ -43,6 +45,7 @@ const TaskBar = () => {
     for (const key in left) {
       const leftItem = left[key];
       const rightItem = right[key];
+
       if (leftItem?.displayName !== rightItem?.displayName) return false;
     }
 
@@ -68,7 +71,7 @@ const TaskBar = () => {
 
   //#region Menu position calculations
 
-  // TOO: need fix
+  // TODO: need fix
 
   // const contactMenuLeftPosition = 0;
   // const contactButton: HTMLButtonElement = contactButtonRef.current as HTMLButtonElement;
@@ -88,11 +91,8 @@ const TaskBar = () => {
         focusable
         ripple
         onClick={() => {
-          if (menuShown === EMenuShown.main) {
-            closeMenu();
-          } else {
-            setMenuShown(EMenuShown.main);
-          }
+          if (menuShown === EMenuShown.main) closeMenu();
+          else setMenuShown(EMenuShown.main);
         }}
       >
         <Menu></Menu>
@@ -110,10 +110,10 @@ const TaskBar = () => {
               key={instance.pid}
               onClick={() => {
                 if (instance.type === "window") {
-                  dispatch(
-                    setMinimized({pid: instance.pid, minimized: false})
-                  );
-                  dispatch(sendToFront({pid: instance.pid}));
+                  batch(() => {
+                    dispatch(setMinimized({pid: instance.pid, minimized: false}));
+                    dispatch(sendToFront({pid: instance.pid}));
+                  });
                 }
               }}
             >
@@ -128,11 +128,8 @@ const TaskBar = () => {
         focusable
         ref={contactButtonRef}
         onClick={() => {
-          if (menuShown === EMenuShown.contact) {
-            closeMenu();
-          } else {
-            setMenuShown(EMenuShown.contact);
-          }
+          if (menuShown === EMenuShown.contact) closeMenu();
+          else setMenuShown(EMenuShown.contact);
         }}
       >
         <Send></Send>
@@ -144,11 +141,8 @@ const TaskBar = () => {
         focusable
         ref={langButtonRef}
         onClick={() => {
-          if (menuShown === EMenuShown.language) {
-            closeMenu();
-          } else {
-            setMenuShown(EMenuShown.language);
-          }
+          if (menuShown === EMenuShown.language) closeMenu();
+          else setMenuShown(EMenuShown.language);
         }}
       >
         Français
@@ -268,9 +262,11 @@ const TaskBar = () => {
             fullWidth
             onClick={() => {
               router.push("/lock");
-              Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
-              dispatch(setHasRanStartupApplications(false));
-              dispatch(setCurrentUserID(""));
+              batch(() => {
+                Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
+                dispatch(setHasRanStartupApplications(false));
+                dispatch(setCurrentUserID(""));
+              });
             }}
             ripple
             size="md"
@@ -287,10 +283,12 @@ const TaskBar = () => {
             focusable={menuShown === EMenuShown.main}
             fullWidth
             onClick={() => {
-              Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
-              dispatch(setHasRanStartupApplications(false));
-              dispatch(setCurrentUserID(""));
-              router.push("/boot");
+              batch(() => {
+                Object.keys(instances).forEach((key) => {dispatch(closeApplication({pid: key}));});
+                dispatch(setHasRanStartupApplications(false));
+                dispatch(setCurrentUserID(""));
+                router.push("/boot");
+              });
             }}
             ripple
             size="md"

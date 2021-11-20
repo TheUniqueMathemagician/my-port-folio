@@ -39,36 +39,23 @@ const WindowHeader: FC<IProps> = (props) => {
 
   //#region button handlers
 
-  const handleRedClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
-      dispatch(closeApplication({pid}));
-    },
-    [dispatch, pid]
-  );
+  const handleRedClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    dispatch(closeApplication({pid}));
+  }, [dispatch, pid]);
 
-  const handleOrangeClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      dispatch(sendToFront({pid}));
-      if (maximized) {
-        dispatch(setMaximized({pid, maximized: ESnap.none}));
-      } else {
-        dispatch(setMaximized({pid, maximized: ESnap.top}));
-      }
-    },
-    [maximized, dispatch, pid]
-  );
+  const handleOrangeClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(sendToFront({pid}));
+    dispatch(maximized ? setMaximized({pid, maximized: ESnap.none}) : setMaximized({pid, maximized: ESnap.top}));
+  }, [maximized, dispatch, pid]);
 
-  const handleGreenClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dispatch(setMinimized({pid, minimized: true}));
-    },
-    [pid, dispatch]
-  );
+  const handleGreenClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(setMinimized({pid, minimized: true}));
+  }, [pid, dispatch]);
 
   const handleButtonMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,182 +66,192 @@ const WindowHeader: FC<IProps> = (props) => {
 
   //#region dragging handlers
 
-  const handleDragMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      e.preventDefault();
+  const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return;
 
-      if (maximized) {
-        const header = headerRef.current;
-        if (header) {
-          let x = (dimensions.width || 0) / 2;
-          let y = header.clientHeight / 2;
-          setOffset({x, y});
-        }
-      } else {
-        const window = windowRef.current;
-        if (window) {
-          let x = e.pageX - window.offsetLeft;
-          let y = e.pageY - window.offsetTop;
-          setOffset({x, y});
-        }
-      }
+    e.preventDefault();
 
-      document.body.style.cursor = "grabbing";
-      dispatch(setDragging({pid, dragging: true}));
-    },
-    [dispatch, pid, windowRef, dimensions.width, maximized]
-  );
-
-  const handleDragMouseMove = useCallback(
-    (e: globalThis.MouseEvent) => {
+    if (maximized) {
       const header = headerRef.current;
-      if (!header) return;
 
-      e.stopPropagation();
-      e.preventDefault();
-
-      const shouldSnapToTop = e.pageY - 1 <= boundaries.y1;
-      const shouldSnapToBottom = e.pageY + 1 >= boundaries.y2;
-      const shouldSnapToLeft = e.pageX - 1 <= boundaries.x1;
-      const shouldSnapToRight = e.pageX + 1 >= boundaries.x2;
-
-      if (shouldSnapToTop && shouldSnapToLeft) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: "50%",
-            top: 0,
-            left: 0,
-            right: "50%"
-          })
-        );
-        setSnap(ESnap.topLeft);
-      } else if (shouldSnapToTop && shouldSnapToRight) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: "50%",
-            top: 0,
-            left: "50%",
-            right: 0
-          })
-        );
-        setSnap(ESnap.topRight);
-      } else if (shouldSnapToBottom && shouldSnapToLeft) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: 0,
-            top: "50%",
-            left: 0,
-            right: "50%"
-          })
-        );
-        setSnap(ESnap.bottomLeft);
-      } else if (shouldSnapToBottom && shouldSnapToRight) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: 0,
-            top: "50%",
-            left: "50%",
-            right: 0
-          })
-        );
-        setSnap(ESnap.bottomRight);
-      } else if (shouldSnapToTop) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: 0,
-            top: 0,
-            left: 0,
-            right: 0
-          })
-        );
-        setSnap(ESnap.top);
-      } else if (shouldSnapToLeft) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: 0,
-            top: 0,
-            left: 0,
-            right: "50%"
-          })
-        );
-        setSnap(ESnap.left);
-      } else if (shouldSnapToRight) {
-        dispatch(setSnapShadowVisibility(true));
-        dispatch(
-          setSnapShadowPosition({
-            bottom: 0,
-            top: 0,
-            left: "50%",
-            right: 0
-          })
-        );
-        setSnap(ESnap.right);
-      } else if (shouldSnapToBottom) {
-      } else {
-        if (snapShadowVisible) {
-          dispatch(setSnapShadowVisibility(false));
-        }
-        if (maximized) {
-          dispatch(setMaximized({pid, maximized: ESnap.none}));
-        }
-        setSnap(ESnap.none);
+      if (header) {
+        let x = (dimensions.width || 0) / 2;
+        let y = header.clientHeight / 2;
+        setOffset({x, y});
       }
+    } else {
+      const window = windowRef.current;
 
-      const tmpPosition = {
-        left: e.pageX - offset.x,
-        top: e.pageY - offset.y,
-        right: null,
-        bottom: null
-      };
-
-      dispatch(setPosition({pid, position: tmpPosition}));
-
-      if (!snapShadowVisible) {
-        const window = windowRef.current;
-        if (window) {
-          const snapShadowPosition = {
-            bottom:
-              boundaries.y2 -
-              boundaries.y1 -
-              window.offsetTop -
-              window.clientHeight,
-            left: window.offsetLeft,
-            right:
-              boundaries.x2 -
-              boundaries.x1 -
-              window.offsetLeft -
-              window.clientWidth,
-            top: window.offsetTop
-          };
-
-          dispatch(setSnapShadowPosition(snapShadowPosition));
-        }
+      if (window) {
+        let x = e.pageX - window.offsetLeft;
+        let y = e.pageY - window.offsetTop;
+        setOffset({x, y});
       }
-    },
-    [dispatch, boundaries, offset, snapShadowVisible, windowRef, maximized, pid]
-  );
+    }
 
-  const handleDragMouseUp = useCallback(
-    (e: globalThis.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
-      document.body.style.cursor = "";
+    document.body.style.cursor = "grabbing";
 
+    dispatch(setDragging({pid, dragging: true}));
+  }, [dispatch, pid, windowRef, dimensions.width, maximized]);
+
+  // TODO: batch this to increase performance
+  const handleDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
+    const header = headerRef.current;
+
+    if (!header) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    const shouldSnapToTop = e.pageY - 1 <= boundaries.y1;
+    const shouldSnapToBottom = e.pageY + 1 >= boundaries.y2;
+    const shouldSnapToLeft = e.pageX - 1 <= boundaries.x1;
+    const shouldSnapToRight = e.pageX + 1 >= boundaries.x2;
+
+    if (shouldSnapToTop && shouldSnapToLeft) {
       batch(() => {
-        dispatch(setDragging({pid, dragging: false}));
-        dispatch(setSnapShadowVisibility(false));
-        dispatch(setMaximized({pid, maximized: snap}));
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: "50%",
+            top: 0,
+            left: 0,
+            right: "50%"
+          })
+        );
       });
-    },
-    [pid, dispatch, snap]
-  );
+      setSnap(ESnap.topLeft);
+    } else if (shouldSnapToTop && shouldSnapToRight) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: "50%",
+            top: 0,
+            left: "50%",
+            right: 0
+          })
+        );
+      });
+      setSnap(ESnap.topRight);
+    } else if (shouldSnapToBottom && shouldSnapToLeft) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: 0,
+            top: "50%",
+            left: 0,
+            right: "50%"
+          })
+        );
+      });
+      setSnap(ESnap.bottomLeft);
+    } else if (shouldSnapToBottom && shouldSnapToRight) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: 0,
+            top: "50%",
+            left: "50%",
+            right: 0
+          })
+        );
+      });
+      setSnap(ESnap.bottomRight);
+    } else if (shouldSnapToTop) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0
+          })
+        );
+      });
+      setSnap(ESnap.top);
+    } else if (shouldSnapToLeft) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: 0,
+            top: 0,
+            left: 0,
+            right: "50%"
+          })
+        );
+      });
+      setSnap(ESnap.left);
+    } else if (shouldSnapToRight) {
+      batch(() => {
+        dispatch(setSnapShadowVisibility(true));
+        dispatch(
+          setSnapShadowPosition({
+            bottom: 0,
+            top: 0,
+            left: "50%",
+            right: 0
+          })
+        );
+      });
+      setSnap(ESnap.right);
+    } else if (shouldSnapToBottom) {
+    } else {
+      batch(() => {
+        if (snapShadowVisible) dispatch(setSnapShadowVisibility(false));
+        if (maximized) dispatch(setMaximized({pid, maximized: ESnap.none}));
+      });
+      setSnap(ESnap.none);
+    }
+
+    const tmpPosition = {
+      left: e.pageX - offset.x,
+      top: e.pageY - offset.y,
+      right: null,
+      bottom: null
+    };
+
+    dispatch(setPosition({pid, position: tmpPosition}));
+
+    if (!snapShadowVisible) {
+      const window = windowRef.current;
+
+      if (window) {
+        const snapShadowPosition = {
+          bottom:
+            boundaries.y2 -
+            boundaries.y1 -
+            window.offsetTop -
+            window.clientHeight,
+          left: window.offsetLeft,
+          right:
+            boundaries.x2 -
+            boundaries.x1 -
+            window.offsetLeft -
+            window.clientWidth,
+          top: window.offsetTop
+        };
+
+        dispatch(setSnapShadowPosition(snapShadowPosition));
+      }
+    }
+  }, [dispatch, boundaries, offset, snapShadowVisible, windowRef, maximized, pid]);
+
+  const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    document.body.style.cursor = "";
+
+    batch(() => {
+      dispatch(setDragging({pid, dragging: false}));
+      dispatch(setSnapShadowVisibility(false));
+      dispatch(setMaximized({pid, maximized: snap}));
+    });
+  }, [pid, dispatch, snap]);
 
   //#endregion
 
@@ -262,6 +259,7 @@ const WindowHeader: FC<IProps> = (props) => {
     if (dragging) {
       document.addEventListener("mousemove", handleDragMouseMove);
       document.addEventListener("mouseup", handleDragMouseUp);
+
       return () => {
         document.removeEventListener("mousemove", handleDragMouseMove);
         document.removeEventListener("mouseup", handleDragMouseUp);
