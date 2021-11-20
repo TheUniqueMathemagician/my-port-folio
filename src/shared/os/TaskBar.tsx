@@ -103,8 +103,8 @@ const TaskBar: FC = () => {
       dispatch(setHasRanStartupApplications(false));
       dispatch(setCurrentUserID(""));
     });
-
-    router.push("/boot");
+    // TODO: find a better solution !, this is a hack
+    setTimeout(() => router.replace("/"), 0);
   };
 
   const handleMenuApplicationClick = (aid: number) => {
