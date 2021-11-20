@@ -1,4 +1,5 @@
-import {FC, memo} from "react";
+import Image from "next/image";
+import {FC, memo, PropsWithChildren} from "react";
 import Paper from "../../../ui/Paper";
 import Typography from "../../../ui/Typography";
 import classes from "./Hobbies.module.scss";
@@ -12,10 +13,12 @@ const Hobbies: FC<Props> = () => {
     <Typography variant="h4">Loisirs</Typography>
     <Typography variant="h5">Code</Typography>
     <Paper spaced background="paper" className={classes["paper"]}>
-      <img
-        src={require("../../../../assets/images/coding.svg").default}
-        alt="Coding"
-      />
+      <Image
+        src={"/images/coding.svg"} alt="Coding"
+        layout="fixed"
+        width={100}
+        height={100}
+      ></Image>
       <Typography variant="p">
         Evidemment le code et le développement en font partie. J'ai commencé
         vers à l'adolescence et j'ai très vite accroché. Bien que la vie et
@@ -25,10 +28,13 @@ const Hobbies: FC<Props> = () => {
     </Paper>
     <Typography variant="h5">Guitare</Typography>
     <Paper spaced background="paper" className={classes["paper"]}>
-      <img
-        src={require("../../../../assets/images/guitar.svg").default}
-        alt="Coding"
-      />
+      <Image
+        src={"/images/guitar.svg"}
+        alt="Guitare"
+        layout="fixed"
+        width={100}
+        height={100}
+      ></Image>
       <Typography variant="p">
         Je joue de la guitare depuis une bonne décénie et je ne m'en lasse
         pas. Actuellement je ne suis pas dans un groupe, mais si vous cherchez
@@ -38,10 +44,13 @@ const Hobbies: FC<Props> = () => {
     </Paper>
     <Typography variant="h5">Nature</Typography>
     <Paper spaced background="paper" className={classes["paper"]}>
-      <img
-        src={require("../../../../assets/images/nature.svg").default}
-        alt="Coding"
-      />
+      <Image
+        src={"/images/nature.svg"}
+        alt="Nature"
+        layout="fixed"
+        width={100}
+        height={100}
+      ></Image>
       <Typography variant="p">
         J'aime tout ce qui touche à la nature, que ce soit une promenade en
         forêt ou encore entretenir mon petit potager.
@@ -49,10 +58,13 @@ const Hobbies: FC<Props> = () => {
     </Paper>
     <Typography variant="h5">Technologies</Typography>
     <Paper spaced background="paper" className={classes["paper"]}>
-      <img
-        src={require("../../../../assets/images/electronics.svg").default}
-        alt="Coding"
-      />
+      <Image
+        src={"/images/electronics.svg"}
+        alt="Electronics"
+        layout="fixed"
+        width={100}
+        height={100}
+      ></Image>
       <Typography variant="p">
         Je suis un grand amateur de nouvelles technologies, qu'elles soient
         domestiques ou industrielles. Il m'arrive de temps à autres de
@@ -62,4 +74,4 @@ const Hobbies: FC<Props> = () => {
   </div>;
 };
 
-export default memo(Hobbies);
+export default memo<PropsWithChildren<Props>>(Hobbies);
