@@ -31,6 +31,7 @@ const Settings: FC<Props> = (props) => {
 
   //#region Selectors
 
+  const users = useSelector((store) => store.users.elements);
   const background = useSelector((store) => store.theme.palette.background[store.theme.colorScheme]);
   const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast);
   const colorScheme = useSelector((store) => store.theme.colorScheme);
@@ -44,7 +45,6 @@ const Settings: FC<Props> = (props) => {
     if (instance.breakpoint === EBreakpoints.xs) return true;
     return false;
   });
-  const users = useSelector((store) => store.users.elements);
 
   //#endregion
 
@@ -54,6 +54,7 @@ const Settings: FC<Props> = (props) => {
 
   useEffect(() => {
     const root = document.getElementById("root");
+
     Object.keys(palette).forEach((key) => {
       const value = ((palette as any)[key] as any)[colorScheme];
       root?.style.setProperty(`--cvos-${ key }`, value);
@@ -65,47 +66,39 @@ const Settings: FC<Props> = (props) => {
   }, [palette, colorScheme]);
 
   const handleBackgroundInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      setBackgroundColor({
-        [EColorScheme.contrast]: e.target.value,
-        [EColorScheme.dark]: e.target.value,
-        [EColorScheme.default]: e.target.value,
-        [EColorScheme.light]: e.target.value
-      })
-    );
+    dispatch(setBackgroundColor({
+      [EColorScheme.contrast]: e.target.value,
+      [EColorScheme.dark]: e.target.value,
+      [EColorScheme.default]: e.target.value,
+      [EColorScheme.light]: e.target.value
+    }));
   }, [dispatch]);
 
   const handleResetBackground = useCallback(() => {
-    dispatch(
-      setBackgroundColor({
-        [EColorScheme.contrast]: "#000000",
-        [EColorScheme.dark]: "#333333",
-        [EColorScheme.default]: "#cccccc",
-        [EColorScheme.light]: "#ffffff"
-      })
-    );
+    dispatch(setBackgroundColor({
+      [EColorScheme.contrast]: "#000000",
+      [EColorScheme.dark]: "#333333",
+      [EColorScheme.default]: "#cccccc",
+      [EColorScheme.light]: "#ffffff"
+    }));
   }, [dispatch]);
 
   const handlePrimaryInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      setPrimaryColor({
-        [EColorScheme.contrast]: e.target.value,
-        [EColorScheme.dark]: e.target.value,
-        [EColorScheme.default]: e.target.value,
-        [EColorScheme.light]: e.target.value
-      })
-    );
+    dispatch(setPrimaryColor({
+      [EColorScheme.contrast]: e.target.value,
+      [EColorScheme.dark]: e.target.value,
+      [EColorScheme.default]: e.target.value,
+      [EColorScheme.light]: e.target.value
+    }));
   }, [dispatch]);
 
   const handleResetPrimary = useCallback(() => {
-    dispatch(
-      setPrimaryColor({
-        [EColorScheme.contrast]: "#ffff00",
-        [EColorScheme.dark]: "#4489f8",
-        [EColorScheme.default]: "#0075db",
-        [EColorScheme.light]: "#0088ff"
-      })
-    );
+    dispatch(setPrimaryColor({
+      [EColorScheme.contrast]: "#ffff00",
+      [EColorScheme.dark]: "#4489f8",
+      [EColorScheme.default]: "#0075db",
+      [EColorScheme.light]: "#0088ff"
+    }));
   }, [dispatch]);
 
   const otherUsersKeys = Object.keys(users).filter(
