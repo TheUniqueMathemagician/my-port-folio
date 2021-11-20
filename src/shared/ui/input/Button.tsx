@@ -68,7 +68,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     button.appendChild(ripples);
 
     setTimeout(() => {ripples.remove();}, 666);
-  }, [ripple, readOnly]);
+  }, [ripple, readOnly, ref]);
 
   const handleClick: MouseEventHandler<HTMLElement> = useCallback((e) => {
     if (readOnly || !ref.current) return;
@@ -89,7 +89,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     }
 
     onClick?.(e);
-  }, [ripple, readOnly, onClick]);
+  }, [ripple, readOnly, onClick, ref]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -97,7 +97,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     const button = ref.current;
 
     button.style.setProperty("--text-color", contrastColor(backgroundColor));
-  }, [backgroundColor]);
+  }, [backgroundColor, ref]);
 
   const rootClasses = [classes["root"]];
 
@@ -134,5 +134,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
     </div>
   </button>;
 });
+
+Button.displayName = "Button";
 
 export default Button;

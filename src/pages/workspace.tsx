@@ -1,6 +1,6 @@
 import {motion} from "framer-motion";
 import {useRouter} from "next/router";
-import {memo, useEffect, useLayoutEffect} from "react";
+import {memo, useEffect} from "react";
 import {useDispatch, useSelector} from "../hooks/Store";
 import DaemonFrame from "../shared/os/DaemonFrame";
 import ScreenFrame from "../shared/os/ScreenFrame";
@@ -19,7 +19,7 @@ const WorkSpace = () => {
   const hasRanStartupApplications = useSelector((store) => store.os.hasRanStartupApplications);
   const user = useSelector((store) => store.users.elements[store.users.currentUserID]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!user) router.replace("/lock");
   });
 

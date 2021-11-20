@@ -135,11 +135,11 @@ const Loading: FC<LoadingProps> = (props) => {
     if (++count.current > loader.length) return setTimeout(onAnimationEnd, 333);
     setLoader(Array(count.current).fill("█").join("") + Array(loader.length - count.current).fill("-").join(""));
     setTimeout(handleAnimationComplete, Math.random() * 350);
-  }, []);
+  }, [loader.length, onAnimationEnd]);
 
   useEffect(() => {
     setTimeout(handleAnimationComplete, timing * loader.length);
-  }, []);
+  }, [loader.length, handleAnimationComplete]);
 
   return (
     <p className={classes["progress"]}>
@@ -175,7 +175,7 @@ const Home: NextPage = () => {
 
   const handleLoaded = useCallback(() => {
     globalThis.setTimeout(() => {router.replace("/lock");}, 666);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     router.prefetch("/lock");
