@@ -1,6 +1,10 @@
-import {FC} from "react";
-import classes from "./TableHead.module.scss";
+import { FC, ReactNode } from "react"
+import classes from "./TableHead.module.scss"
 
-const TableHead: FC = ({children}) => <thead className={classes["root"]}>{children}</thead>;
+type Props = {
+	children: ReactNode
+}
 
-export default TableHead;
+const TableHead: FC<Props> = ({ children }) => <thead className={classes["root"]}>{children}</thead>
+
+export default TableHead

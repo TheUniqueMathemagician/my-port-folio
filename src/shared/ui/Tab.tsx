@@ -1,58 +1,52 @@
-import {FC, memo, PropsWithChildren, useCallback, useEffect, useRef} from "react";
-import Button from "./input/Button";
-import classes from "./Tab.module.scss";
+import { FC, memo, useCallback, useEffect, useRef } from "react"
+import Button from "./input/Button"
+import classes from "./Tab.module.scss"
 
-interface Props {
-  label: string;
-  value: number;
-  active: boolean;
+type Props = {
+	active: boolean
+	label: string
+	value: number
 }
 
 const Tab: FC<Props> = (props) => {
-  const {active, label, value} = props;
+	const { active, label, value } = props
 
-  const ref = useRef<HTMLButtonElement>(null);
+	const ref = useRef<HTMLButtonElement>(null)
 
-  const handleclick = useCallback(() => {
-    const button = ref.current;
-    if (button) {
-      button.dispatchEvent(
-        new CustomEvent<number>("input", {
-          detail: value,
-          bubbles: true
-        })
-      );
-    }
-  }, [value]);
+	const handleclick = useCallback(() => {
+		const button = ref.current
 
-  useEffect(() => {
-    if (ref.current && active) {
-      ref.current.dispatchEvent(
-        new CustomEvent<number>("input", {
-          detail: value,
-          bubbles: true
-        })
-      );
-    }
-  }, [active, value]);
+		if (!button) return
 
-  const rootClasses = [classes["root"]];
+		button.dispatchEvent(new CustomEvent<number>("input", { detail: value, bubbles: true }))
+	}, [value])
 
-  return (
-    <Button
-      ripple
-      size="md"
-      focusable
-      className={rootClasses.join(" ")}
-      onClick={handleclick}
-      ref={ref}
-      role="tab"
-      title={label}
-      aria-controls={`tabpanel-${ value }`}
-    >
-      {label}
-    </Button>
-  );
-};
+	useEffect(() => {
+		if (ref.current && active) {
+			ref.current.dispatchEvent(
+				new CustomEvent<number>("input", {
+					detail: value,
+					bubbles: true,
+				})
+			)
+		}
+	}, [active, value])
 
-export default memo<PropsWithChildren<Props>>(Tab);
+	const rootClasses = [classes["root"]]
+
+	return <Button
+		ripple
+		size="md"
+		focusable
+		className={rootClasses.join(" ")}
+		onClick={handleclick}
+		ref={ref}
+		role="tab"
+		title={label}
+		aria-controls={`tabpanel-${value}`}
+	>
+		{label}
+	</Button>
+}
+
+export default memo<Props>(Tab)

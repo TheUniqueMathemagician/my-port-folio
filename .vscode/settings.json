@@ -1,33 +1,62 @@
 {
-	"editor.detectIndentation": false,
-	"editor.tabSize": 2,
-	"prettier.useTabs": true,
-	"editor.formatOnSave": true,
-	"html.format.endWithNewline": true,
-	"html.format.wrapAttributes": "force-expand-multiline",
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-	"javascript.format.insertSpaceAfterConstructor": true,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
-	"javascript.format.semicolons": "insert",
-	"files.exclude": {
-		".gitignore": true,
-		"**/.next": true,
-		"next-env.d.ts": true,
-		"node_modules": true,
-		"package-lock.json": true,
-		".vscode": true,
-		".eslintrc.json": true
-	},
-	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
-	"typescript.format.insertSpaceAfterTypeAssertion": true,
-	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-	"typescript.format.insertSpaceAfterConstructor": true,
-	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
-	"typescript.format.semicolons": "insert",
-	"[css]": {
-		"editor.defaultFormatter": "bradlc.vscode-tailwindcss"
-	},
+  // Editor
+  "diffEditor.maxFileSize": 2,
+  "editor.detectIndentation": false,
+  "editor.foldingImportsByDefault": false,
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+  // Files
+  "files.eol": "\r\n",
+  "files.exclude": {
+    ".gitignore": true,
+    ".vscode": true,
+    "**/.eslintrc.json": true,
+    "**/.next": true,
+    "**/next-env.d.ts": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "database": true,
+  },
+  "files.insertFinalNewline": true,
+  "files.maxMemoryForLargeFilesMB": 2048,
+  "files.trimFinalNewlines": true,
+  // HTML
+  "html.format.endWithNewline": true,
+  // Javascript
+  "javascript.format.semicolons": "remove",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  "javascript.preferences.quoteStyle": "double",
+  // Typescript
+  "typescript.format.insertSpaceAfterTypeAssertion": true,
+  "typescript.format.semicolons": "remove",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.quoteStyle": "double",
+  "typescript.format.insertSpaceAfterCommaDelimiter": true,
+  // CSS, SCSS, LESS
+  "css.lint.important": "error",
+  "scss.lint.important": "error",
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // PRETTIER
+  "prettier.arrowParens": "always",
+  "prettier.enable": true,
+  "prettier.endOfLine": "crlf",
+  "prettier.jsxSingleQuote": false,
+  "prettier.proseWrap": "always",
+  "prettier.quoteProps": "consistent",
+  "prettier.semi": false,
+  "prettier.singleQuote": false,
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "es5",
+  "prettier.useTabs": true,
 }

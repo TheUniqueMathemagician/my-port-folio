@@ -1,27 +1,31 @@
-import {FC} from "react";
-import {useSelector} from "../../hooks/Store";
-import classes from "./ScreenFrame.module.scss";
+import { FC, ReactNode } from "react"
+import { useSelector } from "../../hooks/Store"
+import classes from "./ScreenFrame.module.scss"
 
-const ScreenFrame: FC = ({children}) => {
-  const bg = useSelector((store) => store.theme.workspaceBackgroundURL);
+type Props = {
+	children: ReactNode
+}
 
-  const isMobile = useSelector((store) => store.os.isMobile);
+const ScreenFrame: FC<Props> = ({ children }) => {
+	const bg = useSelector((store) => store.theme.workspaceBackgroundURL)
 
-  const rootClasses = [classes["root"]];
+	const isMobile = useSelector((store) => store.os.isMobile)
 
-  if (isMobile) rootClasses.push(classes["mobile"]);
+	const rootClasses = [classes["root"]]
 
-  return <div
-    style={{
-      background: `url(${ bg })`,
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover"
-    }}
-    className={rootClasses.join(" ")}
-  >
-    {children}
-  </div>;
-};
+	if (isMobile) rootClasses.push(classes["mobile"])
 
-export default ScreenFrame;
+	return <div
+		style={{
+			background: `url(${bg})`,
+			backgroundPosition: "center",
+			backgroundRepeat: "no-repeat",
+			backgroundSize: "cover",
+		}}
+		className={rootClasses.join(" ")}
+	>
+		{children}
+	</div>
+}
+
+export default ScreenFrame

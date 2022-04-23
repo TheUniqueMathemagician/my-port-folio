@@ -1,6 +1,10 @@
-import {FC} from "react";
-import classes from "./TableFoot.module.scss";
+import { FC, ReactNode } from "react"
+import classes from "./TableFoot.module.scss"
 
-const TableFoot: FC = ({children}) => <tfoot className={classes["root"]}>{children}</tfoot>;
+type Props = {
+	children: ReactNode
+}
 
-export default TableFoot;
+const TableFoot: FC<Props> = ({ children }) => <tfoot className={classes["root"]}>{children}</tfoot>
+
+export default TableFoot

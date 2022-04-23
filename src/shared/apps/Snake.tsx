@@ -1,5 +1,5 @@
-import {FC, memo} from "react";
+import { FC, memo } from "react"
 
-const Snake: FC = () => <div>Snake app</div>;
+const Snake: FC = () => <div>Snake app</div>
 
-export default memo(Snake);
+export default memo(Snake)

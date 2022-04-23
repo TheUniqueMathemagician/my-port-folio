@@ -1,5 +1,9 @@
-import {FC} from "react";
+import { FC, ReactNode } from "react"
 
-const TableBody: FC = ({children}) => <tbody>{children}</tbody>;
+type Props = {
+	children: ReactNode
+}
 
-export default TableBody;
+const TableBody: FC<Props> = ({ children }) => <tbody>{children}</tbody>
+
+export default TableBody

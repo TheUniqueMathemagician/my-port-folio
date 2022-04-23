@@ -1,6 +1,25 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "@next/next/no-document-import-in-page": "off"
-  }
+    "prefer-const": "error",
+    "camelcase": "error",
+    "arrow-parens": "error",
+    "max-params": [
+      "error",
+      {
+        "max": 3
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-await-in-loop": "error",
+    "spaced-comment": "error",
+    "no-empty": "error"
+  },
+  "ignorePatterns": [
+    "next-env.d.ts",
+    "next.config.js"
+  ]
 }

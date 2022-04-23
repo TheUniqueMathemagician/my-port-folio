@@ -1,6 +1,10 @@
-import {FC} from "react";
-import classes from "./TableRow.module.scss";
+import { FC, ReactNode } from "react"
+import classes from "./TableRow.module.scss"
 
-const TableRow: FC = ({children}) => <tr className={classes["root"]}>{children}</tr>;
+type Props = {
+	children: ReactNode
+}
 
-export default TableRow;
+const TableRow: FC<Props> = ({ children }) => <tr className={classes["root"]}>{children}</tr>
+
+export default TableRow

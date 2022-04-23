@@ -1,6 +1,8 @@
-import {FC, memo, PropsWithChildren} from "react";
-import classes from "./RadioGroup.module.scss";
+import { FC, memo, PropsWithChildren } from "react"
+import classes from "./RadioGroup.module.scss"
 
-const RadioGroup: FC = ({children}) => <div className={classes["root"]}>{children}</div>;
+type Props = PropsWithChildren<{}>
 
-export default memo<PropsWithChildren<{}>>(RadioGroup);
+const RadioGroup: FC<Props> = ({ children }) => <div className={classes["root"]}>{children}</div>
+
+export default memo<Props>(RadioGroup)

@@ -1,53 +1,42 @@
-import {motion} from "framer-motion";
-import {useRouter} from "next/router";
-import {memo, useEffect} from "react";
-import {useDispatch, useSelector} from "../hooks/Store";
-import DaemonFrame from "../shared/os/DaemonFrame";
-import ScreenFrame from "../shared/os/ScreenFrame";
-import ShortcutFrame from "../shared/os/ShortcutFrame";
-import TaskBar from "../shared/os/TaskBar";
-import WindowFrame from "../shared/os/WindowFrame";
-import WorkspaceFrame from "../shared/os/WorkspaceFrame";
-import {runApplication} from "../store/slices/Applications";
-import {setHasRanStartupApplications} from "../store/slices/OS";
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "../hooks/Store"
+import DaemonFrame from "../shared/os/DaemonFrame"
+import ScreenFrame from "../shared/os/ScreenFrame"
+import ShortcutFrame from "../shared/os/ShortcutFrame"
+import TaskBar from "../shared/os/TaskBar"
+import WindowFrame from "../shared/os/WindowFrame"
+import WorkspaceFrame from "../shared/os/WorkspaceFrame"
+import { runApplication } from "../store/slices/Applications"
+import { setHasRanStartupApplications } from "../store/slices/OS"
+import { Page } from "../types/Page"
 
-const WorkSpace = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
+const WorkSpace: Page = () => {
+	const dispatch = useDispatch()
+	const router = useRouter()
 
-  const applications = useSelector((store) => store.applications.pool);
-  const hasRanStartupApplications = useSelector((store) => store.os.hasRanStartupApplications);
-  const user = useSelector((store) => store.users.elements[store.users.currentUserID]);
+	const applications = useSelector((store) => store.applications.pool)
+	const hasRanStartupApplications = useSelector((store) => store.os.hasRanStartupApplications)
+	const user = useSelector((store) => store.users.elements[store.users.currentUserID])
 
-  useEffect(() => {
-    if (!user) router.replace("/lock");
-  });
+	useEffect(() => { if (!user) router.replace("/lock") })
 
-  useEffect(() => {
-    if (!hasRanStartupApplications) {
-      Object.keys(applications).forEach((key) => {
-        const aid = +key;
-        if (applications[aid].runOnStartup) dispatch(runApplication({aid, args: {}}));
-      });
-      dispatch(setHasRanStartupApplications(true));
-    }
-  }, [dispatch, hasRanStartupApplications, applications]);
+	useEffect(() => {
+		if (hasRanStartupApplications) return
 
-  return <motion.div
-    initial={{opacity: 0}}
-    animate={{opacity: 1}}
-    exit={{opacity: 0}}
-    transition={{duration: 0.3}}
-  >
-    <DaemonFrame></DaemonFrame>
-    <ScreenFrame>
-      <WorkspaceFrame>
-        <ShortcutFrame></ShortcutFrame>
-        <WindowFrame></WindowFrame>
-      </WorkspaceFrame>
-      <TaskBar></TaskBar>
-    </ScreenFrame>
-  </motion.div>;
-};
+		for (const key in applications) if (applications[key].runOnStartup) dispatch(runApplication({ aid: +key, args: {} }))
 
-export default memo(WorkSpace);
+		dispatch(setHasRanStartupApplications(true))
+	}, [dispatch, hasRanStartupApplications, applications])
+
+	return <ScreenFrame>
+		<WorkspaceFrame>
+			<ShortcutFrame></ShortcutFrame>
+			<WindowFrame></WindowFrame>
+			<DaemonFrame></DaemonFrame>
+		</WorkspaceFrame>
+		<TaskBar></TaskBar>
+	</ScreenFrame>
+}
+
+export default WorkSpace

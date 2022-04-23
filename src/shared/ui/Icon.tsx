@@ -1,5 +1,9 @@
-import React, {FC, memo} from "react";
+import React, { FC, memo, ReactNode } from "react"
 
-const Icon: FC = ({children}) => <>{React.Children.only(children)}</>;
+type Props = {
+	children: ReactNode
+}
 
-export default memo(Icon);
+const Icon: FC<Props> = ({ children }) => <>{React.Children.only(children)}</>
+
+export default memo(Icon)

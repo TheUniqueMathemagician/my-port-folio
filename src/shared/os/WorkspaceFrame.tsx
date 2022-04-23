@@ -1,6 +1,10 @@
-import React, {FC, memo, PropsWithChildren} from "react";
-import styles from "./WorkspaceFrame.module.scss";
+import { FC, memo, ReactNode } from "react"
+import styles from "./WorkspaceFrame.module.scss"
 
-const WorkspaceFrame: FC = ({children}) => <div className={styles["workspace-frame"]}>{children}</div>;
+type Props = {
+	children: ReactNode
+}
 
-export default memo<PropsWithChildren<{}>>(WorkspaceFrame);
+const WorkspaceFrame: FC<Props> = ({ children }) => <div className={styles["workspace-frame"]}>{children}</div>
+
+export default memo<Props>(WorkspaceFrame)
