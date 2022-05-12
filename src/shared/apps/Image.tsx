@@ -1,3 +1,4 @@
+import NextImage from "next/image"
 import { FC, memo } from "react"
 import classes from "./Image.module.scss"
 
@@ -7,7 +8,7 @@ type Props = {
 }
 
 const Image: FC<Props> = ({ args: { alt, src } }) => <div className={classes["root"]}>
-	<img alt={alt} src={src} />
+	<NextImage alt={alt} src={src} layout="fill" objectFit="cover" unoptimized />
 </div>
 
 export default memo<Props>(Image)

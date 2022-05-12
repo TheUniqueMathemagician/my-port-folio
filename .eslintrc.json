@@ -1,25 +1,57 @@
 {
-  "extends": "next/core-web-vitals",
-  "rules": {
-    "prefer-const": "error",
-    "camelcase": "error",
-    "arrow-parens": "error",
-    "max-params": [
-      "error",
-      {
-        "max": 3
-      }
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "no-await-in-loop": "error",
-    "spaced-comment": "error",
-    "no-empty": "error"
-  },
-  "ignorePatterns": [
-    "next-env.d.ts",
-    "next.config.js"
-  ]
+	"extends": "next/core-web-vitals",
+	"rules": {
+		"prefer-const": "error",
+		"camelcase": "error",
+		"arrow-parens": "error",
+		"max-params": [
+			"error",
+			{
+				"max": 3
+			}
+		],
+		"comma-dangle": [
+			"error",
+			"always-multiline"
+		],
+		"no-await-in-loop": "error",
+		"spaced-comment": "error",
+		"no-empty": "error",
+		"no-loop-func": "error",
+		"no-var": "error",
+		"jsx-quotes": [
+			"error",
+			"prefer-double"
+		],
+		"no-else-return": "warn",
+		"no-unused-vars": "off",
+		"no-empty-function": "error",
+		"no-useless-return": "error",
+		"no-eval": "error",
+		"no-return-await": "error",
+		"newline-before-return": "error",
+		"quotes": [
+			"error",
+			"double"
+		],
+		"quote-props": [
+			"error",
+			"consistent-as-needed"
+		],
+		"no-unused-expressions": "error",
+		"no-unneeded-ternary": "error",
+		"require-await": "error",
+		"prefer-arrow-callback": "error",
+		"no-useless-constructor": "error",
+		"no-lone-blocks": "error",
+		"no-lonely-if": "error",
+		"no-unmodified-loop-condition": "error",
+		"yoda": "error",
+		"no-with": "error"
+	},
+	"ignorePatterns": [
+		"node_modules/",
+		"next.config.js",
+		".next/"
+	]
 }

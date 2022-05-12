@@ -40,6 +40,7 @@ const Manager: FC<Props> = (props) => {
 				if (leftItem.displayName !== rightItem.displayName) return false
 			}
 			if (Object.keys(left).length !== Object.keys(right).length) return false
+
 			return true
 		}
 	)
@@ -48,6 +49,7 @@ const Manager: FC<Props> = (props) => {
 		const instance = store.applications.instances[pid] as WindowInstance
 		if (instance.breakpoint === EBreakpoints.sm) return true
 		if (instance.breakpoint === EBreakpoints.xs) return true
+
 		return false
 	})
 
@@ -97,33 +99,32 @@ const Manager: FC<Props> = (props) => {
 					<TableBody>
 						{Object.keys(applications).map((key) => {
 							const aid = +key
-							return (
-								<TableRow key={key}>
-									<TableCell>{applications[aid].displayName}</TableCell>
-									<TableCell align="center">{aid}</TableCell>
-									<TableCell align="center">
-										<form action="#" onSubmit={(e) => e.preventDefault()}>
-											<Checkbox
-												color="primary"
-												checked={applications[aid].runOnStartup}
-												onChange={(e) => {
-													dispatch(
-														setRunOnStartup({
-															aid,
-															runOnStartup: e.target.checked,
-														})
-													)
-												}}
-											></Checkbox>
-										</form>
-									</TableCell>
-									<TableCell align="center">
-										<Typography variant="body">
-											{applications[aid].type === "window" ? "Oui" : "Non"}
-										</Typography>
-									</TableCell>
-								</TableRow>
-							)
+
+							return <TableRow key={key}>
+								<TableCell>{applications[aid].displayName}</TableCell>
+								<TableCell align="center">{aid}</TableCell>
+								<TableCell align="center">
+									<form action="#" onSubmit={(e) => e.preventDefault()}>
+										<Checkbox
+											color="primary"
+											checked={applications[aid].runOnStartup}
+											onChange={(e) => {
+												dispatch(
+													setRunOnStartup({
+														aid,
+														runOnStartup: e.target.checked,
+													})
+												)
+											}}
+										></Checkbox>
+									</form>
+								</TableCell>
+								<TableCell align="center">
+									<Typography variant="body">
+										{applications[aid].type === "window" ? "Oui" : "Non"}
+									</Typography>
+								</TableCell>
+							</TableRow>
 						})}
 					</TableBody>
 					<TableFoot>

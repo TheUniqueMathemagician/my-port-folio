@@ -73,6 +73,7 @@ const LoadingTitle: FC<LoadingTitleProps> = (props) => {
 			if (index > 2) setIndex(0)
 			else setIndex((index) => index + 1)
 		}, 100 + 300 * Math.random())
+
 		return () => window.clearTimeout(timeout)
 	}, [index])
 

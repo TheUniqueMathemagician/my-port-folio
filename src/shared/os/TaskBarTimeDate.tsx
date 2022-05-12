@@ -6,6 +6,7 @@ const TaskBarTimeDate = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => { setDate(Date.now()) }, 1000)
+
 		return () => { clearInterval(interval) }
 	}, [])
 

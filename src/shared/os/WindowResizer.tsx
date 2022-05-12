@@ -206,27 +206,35 @@ const WindowResizer: FC<Props> = (props) => {
 		const restrictedPosition = {
 			top: () => {
 				const top = tmpPosition.top()
+
 				if (maxDimensions.height && top < limit.min.top()) return limit.min.top()
 				if (minDimensions.height && top > limit.max.top()) return limit.max.top()
 				if (top < 0) return 0
+
 				return top
 			},
 			left: () => {
 				const left = tmpPosition.left()
+
 				if (maxDimensions.width && left < limit.min.left()) return limit.min.left()
 				if (minDimensions.width && left > limit.max.left()) return limit.max.left()
+
 				return left
 			},
 			bottom: () => {
 				const bottom = tmpPosition.bottom()
+
 				if (maxDimensions.height && bottom < limit.min.bottom()) return limit.min.bottom()
 				if (minDimensions.height && bottom > limit.max.bottom()) return limit.max.bottom()
+
 				return bottom
 			},
 			right: () => {
 				const right = tmpPosition.right()
+
 				if (maxDimensions.width && right < limit.min.right()) return limit.min.right()
 				if (minDimensions.width && right > limit.max.right()) return limit.max.right()
+
 				return right
 			},
 		}

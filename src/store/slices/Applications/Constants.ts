@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react"
+import { FC } from "react"
 import About from "../../../shared/apps/About"
 import Contact from "../../../shared/apps/Contact"
 import Image from "../../../shared/apps/Image"
@@ -30,18 +30,16 @@ interface RunApp {
 	pid: string
 }
 
-export const applicationsMap = new Map<Applications, FunctionComponent<RunApp>>(
-	[
-		[Applications.About, About],
-		[Applications.Contact, Contact],
-		[Applications.Image, Image],
-		[Applications.Manager, Manager],
-		[Applications.Maps, Maps],
-		[Applications.NightWatcher, NightWatcher],
-		[Applications.Randit, Randit],
-		[Applications.Projects, Projects],
-		[Applications.Settings, Settings],
-		[Applications.Snake, Snake],
-		[Applications.Welcome, Welcome],
-	]
-)
+export const applicationsMap = new Map<Applications, FC<RunApp>>([
+	[Applications.About, About],
+	[Applications.Contact, Contact],
+	[Applications.Image, Image],
+	[Applications.Manager, Manager],
+	[Applications.Maps, Maps],
+	[Applications.NightWatcher, NightWatcher],
+	[Applications.Randit, Randit],
+	[Applications.Projects, Projects],
+	[Applications.Settings, Settings],
+	[Applications.Snake, Snake],
+	[Applications.Welcome, Welcome],
+])

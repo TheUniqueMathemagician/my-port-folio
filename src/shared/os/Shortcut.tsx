@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { FC, KeyboardEvent, memo, useCallback } from "react"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { runApplication } from "../../store/slices/Applications"
@@ -39,7 +40,7 @@ const Shortcut: FC<Props> = (props) => {
 		}}
 	>
 		<figure>
-			<img src={application.icon} alt={application.displayName} />
+			<Image src={application.icon} alt={application.displayName} layout="fill" unoptimized />
 			<figcaption>{application.displayName}</figcaption>
 		</figure>
 	</button>

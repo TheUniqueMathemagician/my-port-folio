@@ -9,7 +9,7 @@ import { IPosition } from "../../../types/IPosition"
 import { defaultDimensions, defaultMaxDimensions, defaultMinDimensions } from "./Constants"
 import { Applications, DaemonApplication, DaemonInstance, WindowApplication, WindowInstance } from "./Types"
 
-interface State {
+type State = {
 	pool: {
 		[aid: number]: DaemonApplication | WindowApplication
 	}
@@ -192,7 +192,7 @@ export const applicationsSlice = createSlice({
 	initialState,
 	reducers: {
 		setRunOnStartup(
-			state,
+			state: State,
 			action: PayloadAction<{
 				aid: Applications
 				runOnStartup: boolean
@@ -201,7 +201,7 @@ export const applicationsSlice = createSlice({
 			const application = state.pool[action.payload.aid]
 			application.runOnStartup = action.payload.runOnStartup
 		},
-		closeApplication(state, action: PayloadAction<{ pid: string }>) {
+		closeApplication(state: State, action: PayloadAction<{ pid: string }>) {
 			if (!state.instances[action.payload.pid]) return
 			delete state.instances[action.payload.pid]
 			state.zIndexes = state.zIndexes.filter(
@@ -209,7 +209,7 @@ export const applicationsSlice = createSlice({
 			)
 		},
 		runApplication(
-			state,
+			state: State,
 			action: PayloadAction<{
 				aid: number
 				args: { [key: string]: string }
@@ -258,7 +258,7 @@ export const applicationsSlice = createSlice({
 					break
 			}
 		},
-		sendToFront(state, action: PayloadAction<{ pid: string }>) {
+		sendToFront(state: State, action: PayloadAction<{ pid: string }>) {
 			const instanceIndex = state.zIndexes.findIndex(
 				(zIndex) => zIndex === action.payload.pid
 			)
@@ -266,21 +266,21 @@ export const applicationsSlice = createSlice({
 			state.zIndexes.push(action.payload.pid)
 		},
 		setBreakpoint(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; breakpoint: EBreakpoints }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).breakpoint = action.payload.breakpoint
 		},
 		setDimensions(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; dimensions: IDimensions }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).dimensions = action.payload.dimensions
 		},
 		setDragging(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; dragging: boolean }>
 		) {
 			const instance = state.instances[action.payload.pid];
@@ -288,45 +288,45 @@ export const applicationsSlice = createSlice({
 			state.dragging = action.payload.dragging
 		},
 		setPosition(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; position: IPosition }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).position = action.payload.position
 		},
 		setMaximized(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; maximized: ESnap }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).maximized = action.payload.maximized
 		},
 		setMinimized(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; minimized: boolean }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).minimized = action.payload.minimized
 		},
 		setResizeMode(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; resizeMode: EResize }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).resizeMode = action.payload.resizeMode
 		},
 		setResizing(
-			state,
+			state: State,
 			action: PayloadAction<{ pid: string; resizing: boolean }>
 		) {
 			const instance = state.instances[action.payload.pid];
 			(instance as WindowInstance).resizing = action.payload.resizing
 			state.resizing = action.payload.resizing
 		},
-		setSnapShadowVisibility(state, action: PayloadAction<boolean>) {
+		setSnapShadowVisibility(state: State, action: PayloadAction<boolean>) {
 			state.snapShadow.visible = action.payload
 		},
-		setSnapShadowPosition(state, action: PayloadAction<IdomPosition>) {
+		setSnapShadowPosition(state: State, action: PayloadAction<IdomPosition>) {
 			state.snapShadow.position = action.payload
 		},
 	},

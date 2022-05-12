@@ -81,8 +81,10 @@ const Intro: FC<Props> = (props) => {
 
 	const small = useSelector((store) => {
 		const instance = store.applications.instances[pid] as WindowInstance
+
 		if (instance.breakpoint === EBreakpoints.sm) return true
 		if (instance.breakpoint === EBreakpoints.xs) return true
+
 		return false
 	})
 

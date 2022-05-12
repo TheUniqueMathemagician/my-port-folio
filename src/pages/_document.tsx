@@ -3,6 +3,7 @@ import Document, { DocumentContext, Head, Html, Main, NextScript } from "next/do
 export default class AppDocument extends Document {
 	public static override async getInitialProps(ctx: DocumentContext) {
 		const initialProps = await Document.getInitialProps(ctx)
+
 		return { ...initialProps }
 	}
 
