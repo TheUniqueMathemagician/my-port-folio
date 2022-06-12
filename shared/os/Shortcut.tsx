@@ -41,7 +41,7 @@ const Shortcut: FC<Props> = (props) => {
 		}}
 	>
 		<figure>
-			<Image src={application.icon} alt={application.displayName} layout="fill" unoptimized />
+			<Image src={application.icon} alt={application.displayName} layout="fixed" width={32} height={32} />
 			<figcaption>{application.displayName}</figcaption>
 		</figure>
 	</button>
