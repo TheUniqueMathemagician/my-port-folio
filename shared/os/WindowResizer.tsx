@@ -1,11 +1,11 @@
+import { WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
+import { Resize } from "@/types/Resize"
+import { Snap } from "@/types/Snap"
 import React, { FC, memo, RefObject, useCallback, useEffect, useMemo, useRef } from "react"
 import { batch } from "react-redux"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { setBreakpoint, setDimensions, setMaximized, setPosition, setResizeMode, setResizing } from "../../store/slices/Applications"
-import { WindowInstance } from "../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../types/EBreakpoints"
-import { EResize } from "../../types/EResize"
-import { ESnap } from "../../types/ESnap"
 import styles from "./WindowResizer.module.scss"
 
 interface Props {
@@ -18,29 +18,29 @@ const WindowResizer: FC<Props> = (props) => {
 	const { pid, width, windowRef } = props
 
 	const cursor = useMemo(() =>
-		new Map<EResize, string>([
-			[EResize.top, "ns-resize"],
-			[EResize.bottom, "ns-resize"],
-			[EResize.left, "ew-resize"],
-			[EResize.right, "ew-resize"],
-			[EResize.topLeft, "nwse-resize"],
-			[EResize.topRight, "nesw-resize"],
-			[EResize.bottomLeft, "nesw-resize"],
-			[EResize.bottomRight, "nwse-resize"],
+		new Map<Resize, string>([
+			[Resize.top, "ns-resize"],
+			[Resize.bottom, "ns-resize"],
+			[Resize.left, "ew-resize"],
+			[Resize.right, "ew-resize"],
+			[Resize.topLeft, "nwse-resize"],
+			[Resize.topRight, "nesw-resize"],
+			[Resize.bottomLeft, "nesw-resize"],
+			[Resize.bottomRight, "nwse-resize"],
 		]),
 		[]
 	)
 
 	const csscursor = useMemo(() =>
-		new Map<EResize, string>([
-			[EResize.top, "resize-top"],
-			[EResize.bottom, "resize-bottom"],
-			[EResize.left, "resize-left"],
-			[EResize.right, "resize-right"],
-			[EResize.topLeft, "resize-top-left"],
-			[EResize.topRight, "resize-top-right"],
-			[EResize.bottomLeft, "resize-bottom-left"],
-			[EResize.bottomRight, "resize-bottom-right"],
+		new Map<Resize, string>([
+			[Resize.top, "resize-top"],
+			[Resize.bottom, "resize-bottom"],
+			[Resize.left, "resize-left"],
+			[Resize.right, "resize-right"],
+			[Resize.topLeft, "resize-top-left"],
+			[Resize.topRight, "resize-top-right"],
+			[Resize.bottomLeft, "resize-bottom-left"],
+			[Resize.bottomRight, "resize-bottom-right"],
 		]),
 		[]
 	)
@@ -72,23 +72,23 @@ const WindowResizer: FC<Props> = (props) => {
 		]
 
 		if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
-			if (resizeMode !== EResize.bottomRight) dispatch(setResizeMode({ pid, resizeMode: EResize.bottomRight }))
+			if (resizeMode !== Resize.bottomRight) dispatch(setResizeMode({ pid, resizeMode: Resize.bottomRight }))
 		} else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
-			if (resizeMode !== EResize.bottomLeft) dispatch(setResizeMode({ pid, resizeMode: EResize.bottomLeft }))
+			if (resizeMode !== Resize.bottomLeft) dispatch(setResizeMode({ pid, resizeMode: Resize.bottomLeft }))
 		} else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
-			if (resizeMode !== EResize.topRight) dispatch(setResizeMode({ pid, resizeMode: EResize.topRight }))
+			if (resizeMode !== Resize.topRight) dispatch(setResizeMode({ pid, resizeMode: Resize.topRight }))
 		} else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
-			if (resizeMode !== EResize.topLeft) dispatch(setResizeMode({ pid, resizeMode: EResize.topLeft }))
+			if (resizeMode !== Resize.topLeft) dispatch(setResizeMode({ pid, resizeMode: Resize.topLeft }))
 		} else if (e.pageX >= x2 - width) {
-			if (resizeMode !== EResize.right) dispatch(setResizeMode({ pid, resizeMode: EResize.right }))
+			if (resizeMode !== Resize.right) dispatch(setResizeMode({ pid, resizeMode: Resize.right }))
 		} else if (e.pageY >= y2 - width) {
-			if (resizeMode !== EResize.bottom) dispatch(setResizeMode({ pid, resizeMode: EResize.bottom }))
+			if (resizeMode !== Resize.bottom) dispatch(setResizeMode({ pid, resizeMode: Resize.bottom }))
 		} else if (e.pageY <= y1 + width) {
-			if (resizeMode !== EResize.top) dispatch(setResizeMode({ pid, resizeMode: EResize.top }))
+			if (resizeMode !== Resize.top) dispatch(setResizeMode({ pid, resizeMode: Resize.top }))
 		} else if (e.pageX <= x1 + width) {
-			if (resizeMode !== EResize.left) dispatch(setResizeMode({ pid, resizeMode: EResize.left }))
+			if (resizeMode !== Resize.left) dispatch(setResizeMode({ pid, resizeMode: Resize.left }))
 		} else {
-			dispatch(setResizeMode({ pid, resizeMode: EResize.none }))
+			dispatch(setResizeMode({ pid, resizeMode: Resize.none }))
 		}
 	},
 		[pid, dispatch, width, windowRef, resizeMode, resizing, resizable, resizerRef]
@@ -111,7 +111,7 @@ const WindowResizer: FC<Props> = (props) => {
 		if (!windowFrame) return
 
 		batch(() => {
-			dispatch(setMaximized({ pid, maximized: ESnap.none }))
+			dispatch(setMaximized({ pid, maximized: Snap.none }))
 			dispatch(setResizing({ pid, resizing: true }))
 			dispatch(setPosition({
 				pid,
@@ -179,12 +179,12 @@ const WindowResizer: FC<Props> = (props) => {
 			},
 		}
 
-		let breakpoint = EBreakpoints.xl
+		let breakpoint = Breakpoints.xl
 
-		if (window.offsetWidth <= 1200) breakpoint = EBreakpoints.lg
-		if (window.offsetWidth <= 1024) breakpoint = EBreakpoints.md
-		if (window.offsetWidth <= 768) breakpoint = EBreakpoints.sm
-		if (window.offsetWidth <= 480) breakpoint = EBreakpoints.xs
+		if (window.offsetWidth <= 1200) breakpoint = Breakpoints.lg
+		if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
+		if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
+		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
 
 		const dispatchPositionAndBreakpoint = ({ bottom, left, right, top }: { bottom?: number; left?: number; right?: number; top?: number }) => {
 			batch(() => {
@@ -240,45 +240,45 @@ const WindowResizer: FC<Props> = (props) => {
 		}
 
 		switch (resizeMode) {
-			case EResize.top: {
+			case Resize.top: {
 				return dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 				})
 			}
-			case EResize.left: {
+			case Resize.left: {
 				return dispatchPositionAndBreakpoint({
 					left: restrictedPosition.left(),
 				})
 			}
-			case EResize.bottom: {
+			case Resize.bottom: {
 				return dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 				})
 			}
-			case EResize.right: {
+			case Resize.right: {
 				return dispatchPositionAndBreakpoint({
 					right: restrictedPosition.right(),
 				})
 			}
-			case EResize.topLeft: {
+			case Resize.topLeft: {
 				return dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					left: restrictedPosition.left(),
 				})
 			}
-			case EResize.topRight: {
+			case Resize.topRight: {
 				return dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					right: restrictedPosition.right(),
 				})
 			}
-			case EResize.bottomLeft: {
+			case Resize.bottomLeft: {
 				return dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					left: restrictedPosition.left(),
 				})
 			}
-			case EResize.bottomRight: {
+			case Resize.bottomRight: {
 				return dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					right: restrictedPosition.right(),

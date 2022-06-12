@@ -4,8 +4,8 @@ import classes from "./Text.module.scss"
 type Props = PropsWithChildren<{
 	readonly className?: string
 	readonly defaultValue?: string
-	readonly fullWidth?: boolean
 	readonly disabled?: boolean
+	readonly fullWidth?: boolean
 	readonly label?: string
 	readonly name?: string
 	readonly onChange?: React.ChangeEventHandler<HTMLInputElement>
@@ -34,8 +34,8 @@ const Text: FC<Props> = (props) => {
 			className={className}
 			defaultValue={defaultValue}
 			disabled={disabled}
-			onChange={handleChange}
 			name={name}
+			onChange={handleChange}
 			required={required}
 			type={type ?? "text"}
 			value={value}

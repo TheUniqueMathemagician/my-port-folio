@@ -1,10 +1,10 @@
+import { Applications, WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
+import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, useState } from "react"
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { closeApplication, sendToFront, setRunOnStartup } from "../../store/slices/Applications"
-import { WindowInstance } from "../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../types/EBreakpoints"
-import { EColorScheme } from "../../types/EColorScheme"
 import Button from "../ui/input/Button"
 import ButtonGroup from "../ui/input/ButtonGroup"
 import Checkbox from "../ui/input/Checkbox"
@@ -29,16 +29,18 @@ const Manager: FC<Props> = (props) => {
 	const { pid } = props
 
 	const applications = useSelector((store) => store.applications.pool)
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const instances = useSelector((store) => store.applications.instances,
 		(left, right) => {
 			for (const key in left) {
 				const leftItem = left[key]
 				const rightItem = right[key]
+
 				if (!leftItem) return false
 				if (!rightItem) return false
 				if (leftItem.displayName !== rightItem.displayName) return false
 			}
+
 			if (Object.keys(left).length !== Object.keys(right).length) return false
 
 			return true
@@ -46,9 +48,12 @@ const Manager: FC<Props> = (props) => {
 	)
 	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
 	const small = useSelector((store) => {
-		const instance = store.applications.instances[pid] as WindowInstance
-		if (instance.breakpoint === EBreakpoints.sm) return true
-		if (instance.breakpoint === EBreakpoints.xs) return true
+		const instance = store.applications.instances[pid]
+
+		if (instance.type === "daemon") return false
+
+		if (instance.breakpoint === Breakpoints.sm) return true
+		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})
@@ -98,7 +103,7 @@ const Manager: FC<Props> = (props) => {
 					</TableHead>
 					<TableBody>
 						{Object.keys(applications).map((key) => {
-							const aid = +key
+							const aid = +key as Applications
 
 							return <TableRow key={key}>
 								<TableCell>{applications[aid].displayName}</TableCell>

@@ -1,48 +1,48 @@
+import { useSelector } from "@/hooks/Store"
+import { Color } from "@/types/Color"
+import { Size } from "@/types/Size"
 import Link from "next/link"
 import React, { DetailedHTMLProps, forwardRef, HTMLAttributes, MouseEventHandler, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from "react"
 import contrastColor from "../../../functions/contrastColor"
-import { useSelector } from "../../../hooks/Store"
-import { TColor } from "../../../types/TColor"
-import { TSize } from "../../../types/TSize"
 import classes from "./Button.module.scss"
 
 type HTMLProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 
 interface PropsButtonA extends HTMLProps {
-	align?: "center" | "end" | "start"
-	color?: TColor
-	contrast?: boolean
-	endIcon?: boolean
-	focusable?: boolean
-	fullWidth?: boolean
-	isIcon?: boolean
-	loading?: boolean
-	outlined?: boolean
-	readOnly?: undefined
-	ripple?: boolean
-	size?: TSize
-	startIcon?: boolean
-	to: string
-	variant?: "flat" | "filled" | "blur"
+	readonly align?: "center" | "end" | "start"
+	readonly color?: Color
+	readonly contrast?: boolean
+	readonly endIcon?: boolean
+	readonly focusable?: boolean
+	readonly fullWidth?: boolean
+	readonly isIcon?: boolean
+	readonly loading?: boolean
+	readonly outlined?: boolean
+	readonly readOnly?: undefined
+	readonly ripple?: boolean
+	readonly size?: Size
+	readonly startIcon?: boolean
+	readonly to: string
+	readonly variant?: "flat" | "filled" | "blur"
 }
 
 interface PropsButtonB extends HTMLProps {
-	align?: "center" | "end" | "start"
-	color?: TColor
-	contrast?: boolean
-	disabled?: boolean
-	endIcon?: boolean
-	focusable?: boolean
-	fullWidth?: boolean
-	isIcon?: boolean
-	loading?: boolean
-	outlined?: boolean
-	readOnly?: boolean
-	ripple?: boolean
-	size?: TSize
-	startIcon?: boolean
-	to?: undefined
-	variant?: "flat" | "filled" | "blur"
+	readonly align?: "center" | "end" | "start"
+	readonly color?: Color
+	readonly contrast?: boolean
+	readonly disabled?: boolean
+	readonly endIcon?: boolean
+	readonly focusable?: boolean
+	readonly fullWidth?: boolean
+	readonly isIcon?: boolean
+	readonly loading?: boolean
+	readonly outlined?: boolean
+	readonly readOnly?: boolean
+	readonly ripple?: boolean
+	readonly size?: Size
+	readonly startIcon?: boolean
+	readonly to?: undefined
+	readonly variant?: "flat" | "filled" | "blur"
 }
 
 const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | PropsButtonB>>((props, parentRef) => {

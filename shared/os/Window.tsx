@@ -1,19 +1,18 @@
+import { WindowInstance } from "@/types/Application"
+import { Boundaries } from "@/types/Boundaries"
+import { ColorScheme } from "@/types/ColorScheme"
+import { Position } from "@/types/Position"
 import { createElement, FC, memo, MouseEventHandler, useCallback, useRef } from "react"
 import { useDispatch, useSelector } from "../../hooks/Store"
-import { sendToFront } from "../../store/slices/Applications"
-import { applicationsMap } from "../../store/slices/Applications/Constants"
-import { WindowInstance } from "../../store/slices/Applications/Types"
-import { EColorScheme } from "../../types/EColorScheme"
-import { IBoundaries } from "../../types/IBoundaries"
-import { IPosition } from "../../types/IPosition"
+import { applicationsMap, sendToFront } from "../../store/slices/Applications"
 import classes from "./Window.module.scss"
 import WindowHeader from "./WindowHeader"
 import WindowResizer from "./WindowResizer"
 
 interface Props {
-	pid: string
-	boundaries: IBoundaries
 	borderOffset: number
+	boundaries: Boundaries
+	pid: string
 	resizerWidth: number
 }
 
@@ -21,7 +20,7 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 	const windowRef = useRef<HTMLDivElement>(null)
 
 	const zIndexes = useSelector((store) => store.applications.zIndexes)
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const maximized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).maximized)
 	const minimized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).minimized)
 	const dimensions = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dimensions)
@@ -49,7 +48,7 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 
 	let width: number | "" = ""
 	let height: number | "" = ""
-	const tmpPosition: IPosition = {
+	const tmpPosition: Position = {
 		bottom: null,
 		left: null,
 		right: null,

@@ -22,6 +22,7 @@ const Time: FC<TimeProps> = (props) => {
 			if (time > 0) setTime(time)
 			else setTime(0)
 		}, 1000)
+
 		return () => { clearInterval(interval) }
 	}, [date, onAvailable])
 

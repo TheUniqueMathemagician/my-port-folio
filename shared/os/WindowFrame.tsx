@@ -1,20 +1,19 @@
+import { useSelector } from "@/hooks/Store"
+import { Boundaries } from "@/types/Boundaries"
+import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react"
-import { useSelector } from "../../hooks/Store"
-import { EColorScheme } from "../../types/EColorScheme"
-import { IBoundaries } from "../../types/IBoundaries"
 import Window from "./Window"
 import classes from "./WindowFrame.module.scss"
-
 
 const WindowFrame: FC = () => {
 	const instances = useSelector((store) => store.applications.instances)
 	const ShadowPosition = useSelector((store) => store.applications.snapShadow.position)
 	const shadowShown = useSelector((store) => store.applications.snapShadow.visible)
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const dragging = useSelector((store) => store.applications.dragging)
 	const resizing = useSelector((store) => store.applications.resizing)
 
-	const [boundaries, setBoundaries] = useState<IBoundaries>({ x1: 0, y1: 0, x2: 0, y2: 0 })
+	const [boundaries, setBoundaries] = useState<Boundaries>({ x1: 0, y1: 0, x2: 0, y2: 0 })
 
 	const frameRef = useRef<HTMLDivElement>(null)
 

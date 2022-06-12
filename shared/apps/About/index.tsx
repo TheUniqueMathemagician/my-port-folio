@@ -1,10 +1,10 @@
+import { Applications, WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
+import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, useCallback, useState } from "react"
 import { MdSend } from "react-icons/md"
 import { useDispatch, useSelector } from "../../../hooks/Store"
 import { runApplication } from "../../../store/slices/Applications"
-import { Applications, WindowInstance } from "../../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../../types/EBreakpoints"
-import { EColorScheme } from "../../../types/EColorScheme"
 import Button from "../../ui/input/Button"
 import Tab from "../../ui/Tab"
 import TabPanel from "../../ui/TabPanel"
@@ -20,8 +20,8 @@ type Props = {
 
 enum ETabs {
 	about,
+	hobbies,
 	skills,
-	hobbies
 }
 
 const Send = memo(MdSend)
@@ -33,13 +33,13 @@ const About: FC<Props> = (props) => {
 
 	const dispatch = useDispatch()
 
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
 	const small = useSelector((store) => {
 		const instance = store.applications.instances[pid] as WindowInstance
 
-		if (instance.breakpoint === EBreakpoints.sm) return true
-		if (instance.breakpoint === EBreakpoints.xs) return true
+		if (instance.breakpoint === Breakpoints.sm) return true
+		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})

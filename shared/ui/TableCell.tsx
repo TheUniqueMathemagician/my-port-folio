@@ -2,8 +2,8 @@ import { FC, memo, ReactNode } from "react"
 import classes from "./TableCell.module.scss"
 
 type Props = {
-	children: ReactNode
 	align?: "start" | "center" | "end"
+	children: ReactNode
 	heading?: boolean
 }
 

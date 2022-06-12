@@ -1,18 +1,18 @@
+import { WindowInstance } from "@/types/Application"
+import { Boundaries } from "@/types/Boundaries"
+import { Breakpoints } from "@/types/Breakpoints"
+import { ColorScheme } from "@/types/ColorScheme"
+import { Offset } from "@/types/Offset"
+import { Snap } from "@/types/Snap"
 import { FC, memo, RefObject, useCallback, useEffect, useRef, useState } from "react"
 import { batch } from "react-redux"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { closeApplication, sendToFront, setBreakpoint, setDragging, setMaximized, setMinimized, setPosition, setSnapShadowPosition, setSnapShadowVisibility } from "../../store/slices/Applications"
-import { WindowInstance } from "../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../types/EBreakpoints"
-import { EColorScheme } from "../../types/EColorScheme"
-import { ESnap } from "../../types/ESnap"
-import { IBoundaries } from "../../types/IBoundaries"
-import { IOffset } from "../../types/IOffset"
 import classes from "./WindowHeader.module.scss"
 
 type Props = {
+	boundaries: Boundaries
 	pid: string
-	boundaries: IBoundaries
 	windowRef: RefObject<HTMLDivElement>
 }
 
@@ -23,17 +23,17 @@ const WindowHeader: FC<Props> = (props) => {
 
 	const dispatch = useDispatch()
 
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const snapShadowVisible = useSelector((store) => store.applications.snapShadow.visible)
 	const maximized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).maximized)
 	const dimensions = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dimensions)
 	const dragging = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dragging)
 	const displayName = useSelector((store) => (store.applications.instances[pid] as WindowInstance).displayName)
 
-	const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0 })
-	const [snap, setSnap] = useState<ESnap>(ESnap.none)
+	const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 })
+	const [snap, setSnap] = useState<Snap>(Snap.none)
 
-	const handleDragDoubleClick = useCallback(() => dispatch(setMaximized({ pid, maximized: ESnap.top })), [pid, dispatch])
+	const handleDragDoubleClick = useCallback(() => dispatch(setMaximized({ pid, maximized: Snap.top })), [pid, dispatch])
 
 	// #region button handlers
 
@@ -46,7 +46,7 @@ const WindowHeader: FC<Props> = (props) => {
 	const handleOrangeClick = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 		dispatch(sendToFront({ pid }))
-		dispatch(maximized ? setMaximized({ pid, maximized: ESnap.none }) : setMaximized({ pid, maximized: ESnap.top }))
+		dispatch(maximized ? setMaximized({ pid, maximized: Snap.none }) : setMaximized({ pid, maximized: Snap.top }))
 	}, [maximized, dispatch, pid])
 
 	const handleGreenClick = useCallback((e: React.MouseEvent) => {
@@ -118,7 +118,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.topLeft)
+			setSnap(Snap.topLeft)
 		} else if (shouldSnapToTop && shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -131,7 +131,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.topRight)
+			setSnap(Snap.topRight)
 		} else if (shouldSnapToBottom && shouldSnapToLeft) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -144,7 +144,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.bottomLeft)
+			setSnap(Snap.bottomLeft)
 		} else if (shouldSnapToBottom && shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -157,7 +157,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.bottomRight)
+			setSnap(Snap.bottomRight)
 		} else if (shouldSnapToTop) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -170,7 +170,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.top)
+			setSnap(Snap.top)
 		} else if (shouldSnapToLeft) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -183,7 +183,7 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.left)
+			setSnap(Snap.left)
 		} else if (shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -196,13 +196,13 @@ const WindowHeader: FC<Props> = (props) => {
 					})
 				)
 			})
-			setSnap(ESnap.right)
+			setSnap(Snap.right)
 		} else {
 			batch(() => {
 				if (snapShadowVisible) dispatch(setSnapShadowVisibility(false))
-				if (maximized) dispatch(setMaximized({ pid, maximized: ESnap.none }))
+				if (maximized) dispatch(setMaximized({ pid, maximized: Snap.none }))
 			})
-			setSnap(ESnap.none)
+			setSnap(Snap.none)
 		}
 
 		const tmpPosition = {
@@ -271,12 +271,12 @@ const WindowHeader: FC<Props> = (props) => {
 
 		if (!window) return
 
-		let breakpoint = EBreakpoints.xl
+		let breakpoint = Breakpoints.xl
 
-		if (window.offsetWidth <= 1200) breakpoint = EBreakpoints.lg
-		if (window.offsetWidth <= 1024) breakpoint = EBreakpoints.md
-		if (window.offsetWidth <= 768) breakpoint = EBreakpoints.sm
-		if (window.offsetWidth <= 480) breakpoint = EBreakpoints.xs
+		if (window.offsetWidth <= 1200) breakpoint = Breakpoints.lg
+		if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
+		if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
+		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
 
 		dispatch(setBreakpoint({ pid, breakpoint }))
 	}, [maximized, windowRef, dispatch, pid])

@@ -27,13 +27,13 @@
 	"html.format.endWithNewline": true,
 	// Javascript
 	"javascript.format.semicolons": "remove",
-	"javascript.preferences.importModuleSpecifier": "relative",
+	"javascript.preferences.importModuleSpecifier": "shortest",
 	"javascript.preferences.importModuleSpecifierEnding": "minimal",
 	"javascript.preferences.quoteStyle": "double",
 	// Typescript
 	"typescript.format.insertSpaceAfterTypeAssertion": true,
 	"typescript.format.semicolons": "remove",
-	"typescript.preferences.importModuleSpecifier": "relative",
+	"typescript.preferences.importModuleSpecifier": "shortest",
 	"typescript.preferences.importModuleSpecifierEnding": "minimal",
 	"typescript.preferences.quoteStyle": "double",
 	"typescript.format.insertSpaceAfterCommaDelimiter": true,

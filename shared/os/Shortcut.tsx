@@ -1,3 +1,4 @@
+import { Applications } from "@/types/Application"
 import Image from "next/image"
 import { FC, KeyboardEvent, memo, useCallback } from "react"
 import { useDispatch, useSelector } from "../../hooks/Store"
@@ -5,7 +6,7 @@ import { runApplication } from "../../store/slices/Applications"
 import styles from "./Shortcut.module.scss"
 
 type Props = {
-	aid: number
+	aid: Applications
 }
 
 const Shortcut: FC<Props> = (props) => {

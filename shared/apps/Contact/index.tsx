@@ -1,10 +1,10 @@
+import { Applications } from "@/types/Application"
+import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, MouseEventHandler, useCallback, useState } from "react"
 import { IoLocationSharp } from "react-icons/io5"
 import { MdMail, MdPhone } from "react-icons/md"
 import { useDispatch, useSelector } from "../../../hooks/Store"
 import { runApplication } from "../../../store/slices/Applications"
-import { Applications } from "../../../store/slices/Applications/Types"
-import { EColorScheme } from "../../../types/EColorScheme"
 import Button from "../../ui/input/Button"
 import Text from "../../ui/input/Text"
 import TextArea from "../../ui/input/TextArea"
@@ -20,12 +20,10 @@ const Phone = memo(MdPhone)
 const Contact: FC = () => {
 	const dispatch = useDispatch()
 
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 
-	const [loading, setLoading] = useState<boolean>(false)
-	const [resendDate, setResendDate] = useState<Date>(
-		new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0"))
-	)
+	const [loading, setLoading] = useState(false)
+	const [resendDate, setResendDate] = useState(new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0")))
 
 	const handleMapsClick: (MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>) = useCallback((e) => {
 		e.preventDefault()

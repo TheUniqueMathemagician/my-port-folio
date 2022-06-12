@@ -1,12 +1,12 @@
+import { Size } from "@/types/Size"
 import { FC, memo } from "react"
-import { TSize } from "../../../types/TSize"
 import Mark from "../../icons/Mark"
 import classes from "./Checkbox.module.scss"
 
 type Props = Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onClick" | "size" | "type"> & {
-	color?: "primary" | "secondary" | "info" | "success" | "warning" | "error"
-	onClick?: React.MouseEventHandler<HTMLLabelElement>
-	size?: TSize
+	readonly color?: "primary" | "secondary" | "info" | "success" | "warning" | "error"
+	readonly onClick?: React.MouseEventHandler<HTMLLabelElement>
+	readonly size?: Size
 }
 
 const Checkbox: FC<Props> = (props) => {

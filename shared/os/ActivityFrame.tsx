@@ -11,9 +11,8 @@ const ActivityFrame: FC = () => {
 	return <div className={rootClasses.join(" ")}>
 		{Object.keys(instances)
 			.filter((key) => instances[key].type === "window")
-			.map((key) => (
-				<Activity pid={key} key={instances[key].pid}></Activity>
-			))}
+			.map((key) => <Activity pid={key} key={instances[key].pid}></Activity>)
+		}
 	</div>
 }
 

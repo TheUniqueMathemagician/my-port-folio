@@ -1,8 +1,8 @@
+import { Applications, WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
 import { FC, memo, PropsWithChildren } from "react"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { runApplication } from "../../store/slices/Applications"
-import { Applications, WindowInstance } from "../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../types/EBreakpoints"
 import Avatar from "../ui/Avatar"
 import Button from "../ui/input/Button"
 import Paper from "../ui/Paper"
@@ -28,8 +28,8 @@ const Projects: FC<Props> = (props) => {
 	const small = useSelector((store) => {
 		const instance = store.applications.instances[pid] as WindowInstance
 
-		if (instance.breakpoint === EBreakpoints.sm) return true
-		if (instance.breakpoint === EBreakpoints.xs) return true
+		if (instance.breakpoint === Breakpoints.sm) return true
+		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})

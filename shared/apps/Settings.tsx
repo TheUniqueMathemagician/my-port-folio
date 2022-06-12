@@ -1,10 +1,10 @@
+import { WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
+import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, PropsWithChildren, useCallback, useEffect, useState } from "react"
 import { MdInfo } from "react-icons/md"
 import { useDispatch, useSelector } from "../../hooks/Store"
-import { WindowInstance } from "../../store/slices/Applications/Types"
 import { setBackgroundColor, setColorScheme, setPrimaryColor } from "../../store/slices/Theme"
-import { EBreakpoints } from "../../types/EBreakpoints"
-import { EColorScheme } from "../../types/EColorScheme"
 import Avatar from "../ui/Avatar"
 import Container from "../ui/Container"
 import Button from "../ui/input/Button"
@@ -33,7 +33,7 @@ const Settings: FC<Props> = (props) => {
 
 	const users = useSelector((store) => store.users.elements)
 	const background = useSelector((store) => store.theme.palette.background[store.theme.colorScheme])
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const colorScheme = useSelector((store) => store.theme.colorScheme)
 	const currentUserID = useSelector((store) => store.users.currentUserID)
 	const palette = useSelector((store) => store.theme.palette)
@@ -41,8 +41,8 @@ const Settings: FC<Props> = (props) => {
 	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
 	const small = useSelector((store) => {
 		const instance = store.applications.instances[pid] as WindowInstance
-		if (instance.breakpoint === EBreakpoints.sm) return true
-		if (instance.breakpoint === EBreakpoints.xs) return true
+		if (instance.breakpoint === Breakpoints.sm) return true
+		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})
@@ -68,37 +68,37 @@ const Settings: FC<Props> = (props) => {
 
 	const handleBackgroundInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch(setBackgroundColor({
-			[EColorScheme.contrast]: e.target.value,
-			[EColorScheme.dark]: e.target.value,
-			[EColorScheme.default]: e.target.value,
-			[EColorScheme.light]: e.target.value,
+			[ColorScheme.contrast]: e.target.value,
+			[ColorScheme.dark]: e.target.value,
+			[ColorScheme.default]: e.target.value,
+			[ColorScheme.light]: e.target.value,
 		}))
 	}, [dispatch])
 
 	const handleResetBackground = useCallback(() => {
 		dispatch(setBackgroundColor({
-			[EColorScheme.contrast]: "#000000",
-			[EColorScheme.dark]: "#333333",
-			[EColorScheme.default]: "#cccccc",
-			[EColorScheme.light]: "#ffffff",
+			[ColorScheme.contrast]: "#000000",
+			[ColorScheme.dark]: "#333333",
+			[ColorScheme.default]: "#cccccc",
+			[ColorScheme.light]: "#ffffff",
 		}))
 	}, [dispatch])
 
 	const handlePrimaryInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch(setPrimaryColor({
-			[EColorScheme.contrast]: e.target.value,
-			[EColorScheme.dark]: e.target.value,
-			[EColorScheme.default]: e.target.value,
-			[EColorScheme.light]: e.target.value,
+			[ColorScheme.contrast]: e.target.value,
+			[ColorScheme.dark]: e.target.value,
+			[ColorScheme.default]: e.target.value,
+			[ColorScheme.light]: e.target.value,
 		}))
 	}, [dispatch])
 
 	const handleResetPrimary = useCallback(() => {
 		dispatch(setPrimaryColor({
-			[EColorScheme.contrast]: "#ffff00",
-			[EColorScheme.dark]: "#4489f8",
-			[EColorScheme.default]: "#0075db",
-			[EColorScheme.light]: "#0088ff",
+			[ColorScheme.contrast]: "#ffff00",
+			[ColorScheme.dark]: "#4489f8",
+			[ColorScheme.default]: "#0075db",
+			[ColorScheme.light]: "#0088ff",
 		}))
 	}, [dispatch])
 
@@ -116,7 +116,7 @@ const Settings: FC<Props> = (props) => {
 			direction={small ? "bottom" : "right"}
 			shouldRefresh={resizing}
 			onChange={handleTabChange}
-			separator={colorScheme === EColorScheme.contrast}
+			separator={colorScheme === ColorScheme.contrast}
 		>
 			<Tab label="Theme" value={0} active={panelIndex === 0} />
 			<Tab label="Langue" value={1} active={panelIndex === 1} />
@@ -134,34 +134,34 @@ const Settings: FC<Props> = (props) => {
 					<Radio
 						name={pid + "_theme"}
 						label="Défaut"
-						value={EColorScheme.default}
+						value={ColorScheme.default}
 						noSelect
-						checked={colorScheme === EColorScheme.default}
-						onChange={() => dispatch(setColorScheme(EColorScheme.default))}
+						checked={colorScheme === ColorScheme.default}
+						onChange={() => dispatch(setColorScheme(ColorScheme.default))}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
 						label="Clair"
-						value={EColorScheme.light}
+						value={ColorScheme.light}
 						noSelect
-						checked={colorScheme === EColorScheme.light}
-						onChange={() => dispatch(setColorScheme(EColorScheme.light))}
+						checked={colorScheme === ColorScheme.light}
+						onChange={() => dispatch(setColorScheme(ColorScheme.light))}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
 						label="Sombre"
-						value={EColorScheme.dark}
+						value={ColorScheme.dark}
 						noSelect
-						checked={colorScheme === EColorScheme.dark}
-						onChange={() => dispatch(setColorScheme(EColorScheme.dark))}
+						checked={colorScheme === ColorScheme.dark}
+						onChange={() => dispatch(setColorScheme(ColorScheme.dark))}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
 						label="Contrasté"
-						value={EColorScheme.contrast}
+						value={ColorScheme.contrast}
 						noSelect
-						checked={colorScheme === EColorScheme.contrast}
-						onChange={() => dispatch(setColorScheme(EColorScheme.contrast))}
+						checked={colorScheme === ColorScheme.contrast}
+						onChange={() => dispatch(setColorScheme(ColorScheme.contrast))}
 					></Radio>
 				</RadioGroup>
 				<br />
@@ -188,7 +188,7 @@ const Settings: FC<Props> = (props) => {
 					></input>
 					<Button
 						color="primary"
-						contrast={colorScheme === EColorScheme.contrast}
+						contrast={colorScheme === ColorScheme.contrast}
 						focusable
 						ripple
 						size="md"
@@ -213,7 +213,7 @@ const Settings: FC<Props> = (props) => {
 					></input>
 					<Button
 						color="primary"
-						contrast={colorScheme === EColorScheme.contrast}
+						contrast={colorScheme === ColorScheme.contrast}
 						focusable
 						ripple
 						size="md"

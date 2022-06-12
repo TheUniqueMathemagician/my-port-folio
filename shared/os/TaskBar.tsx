@@ -1,15 +1,15 @@
+import { Applications } from "@/types/Application"
+import { ColorScheme } from "@/types/ColorScheme"
 import { useRouter } from "next/dist/client/router"
 import Image from "next/image"
 import { FC, memo, MouseEventHandler, useRef, useState } from "react"
 import { IoLogOutOutline } from "react-icons/io5"
 import { MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend } from "react-icons/md"
 import { batch } from "react-redux"
+import { setHasRanStartupApplications } from "store/slices/OS"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { closeApplication, runApplication, sendToFront, setMinimized } from "../../store/slices/Applications"
-import { Applications } from "../../store/slices/Applications/Types"
-import { setHasRanStartupApplications } from "../../store/slices/OS"
 import { setCurrentUserID } from "../../store/slices/Users"
-import { EColorScheme } from "../../types/EColorScheme"
 import Menu from "../icons/Menu"
 import Divider from "../ui/Divider"
 import Button from "../ui/input/Button"
@@ -18,10 +18,10 @@ import TaskBarMenu from "./TaskBarMenu"
 import TaskBarTimeDate from "./TaskBarTimeDate"
 
 enum EMenuShown {
-	None,
-	Main,
 	Contact,
-	Language
+	Language,
+	Main,
+	None,
 }
 
 const Send = memo(MdSend)
@@ -29,7 +29,7 @@ const Send = memo(MdSend)
 const TaskBar: FC = () => {
 	const [menuShown, setMenuShown] = useState(EMenuShown.None)
 
-	const contrast = useSelector((store) => store.theme.colorScheme === EColorScheme.contrast)
+	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
 	const instances = useSelector((store) => store.applications.instances, (left, right) => {
 		for (const key in left) {
 			const leftItem = left[key]
@@ -44,8 +44,10 @@ const TaskBar: FC = () => {
 	})
 	const applications = useSelector((store) => store.applications.pool, (left, right) => {
 		for (const key in left) {
-			const leftItem = left[key]
-			const rightItem = right[key]
+			const applicationKey = +key as Applications
+
+			const leftItem = left[applicationKey]
+			const rightItem = right[applicationKey]
 
 			if (leftItem?.displayName !== rightItem?.displayName) return false
 		}
@@ -191,7 +193,8 @@ const TaskBar: FC = () => {
 		>
 			<ul>
 				{Object.keys(applications)
-					.filter((key) => !!applications[+key].shortcut)
+					.map((key) => +key as Applications)
+					.filter((key) => Boolean(applications[key].shortcut))
 					.map((key) => (
 						<li key={key}>
 							<Button
@@ -204,13 +207,13 @@ const TaskBar: FC = () => {
 								fullWidth
 							>
 								<Image
-									alt={applications[+key].displayName}
-									src={applications[+key].icon}
+									alt={applications[key].displayName}
+									src={applications[key].icon}
 									layout="fixed"
 									width={24}
 									height={24}
 								></Image>
-								<span>{applications[+key].displayName} </span>
+								<span>{applications[key].displayName} </span>
 							</Button>
 						</li>
 					))}

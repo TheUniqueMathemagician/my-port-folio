@@ -1,9 +1,9 @@
+import { WindowInstance } from "@/types/Application"
+import { Breakpoints } from "@/types/Breakpoints"
 import Image from "next/image"
 import { FC, memo } from "react"
 import generateID from "../../../../functions/generateID"
 import { useSelector } from "../../../../hooks/Store"
-import { WindowInstance } from "../../../../store/slices/Applications/Types"
-import { EBreakpoints } from "../../../../types/EBreakpoints"
 import Avatar from "../../../ui/Avatar"
 import Divider from "../../../ui/Divider"
 import Paper from "../../../ui/Paper"
@@ -82,8 +82,8 @@ const Intro: FC<Props> = (props) => {
 	const small = useSelector((store) => {
 		const instance = store.applications.instances[pid] as WindowInstance
 
-		if (instance.breakpoint === EBreakpoints.sm) return true
-		if (instance.breakpoint === EBreakpoints.xs) return true
+		if (instance.breakpoint === Breakpoints.sm) return true
+		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})

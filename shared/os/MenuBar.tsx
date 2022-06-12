@@ -1,12 +1,11 @@
+import { Applications } from "@/types/Application"
 import { FC, memo, useCallback } from "react"
 import { IoMdClose } from "react-icons/io"
 import { MdSend } from "react-icons/md"
 import { useDispatch } from "../../hooks/Store"
 import { closeApplication, runApplication } from "../../store/slices/Applications"
-import { Applications } from "../../store/slices/Applications/Types"
 import Button from "../ui/input/Button"
 import classes from "./MenuBar.module.scss"
-
 
 const Close = memo(IoMdClose)
 const Send = memo(MdSend)

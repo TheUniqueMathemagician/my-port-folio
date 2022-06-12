@@ -1,14 +1,14 @@
 import Image from "next/image"
 import { DetailedHTMLProps, FC, HTMLAttributes, memo } from "react"
-import { TSize } from "../../types/TSize"
+import { Size } from "../../types/Size"
 import classes from "./Avatar.module.scss"
 
 type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
 	alt: string
-	src: string
-	size?: TSize
 	outlined?: boolean
+	size?: Size
 	square?: boolean
+	src: string
 }
 
 const Avatar: FC<Props> = (props) => {
@@ -20,19 +20,10 @@ const Avatar: FC<Props> = (props) => {
 	if (size) rootClasses.push(classes[size])
 	if (square) rootClasses.push(classes["square"])
 	if (className) rootClasses.push(className)
-
 	if (!src) return <div className={rootClasses.join(" ")}></div>
 
-	return <div className={rootClasses.join(" ")}    {...other}		>
-		<Image
-			alt={alt}
-			src={src}
-			layout="fill"
-			unoptimized
-			unselectable="on"
-			objectFit="cover"
-		>
-		</Image>
+	return <div className={rootClasses.join(" ")} {...other}>
+		<Image alt={alt} src={src} layout="fill" unoptimized unselectable="on" objectFit="cover" />
 	</div>
 }
 

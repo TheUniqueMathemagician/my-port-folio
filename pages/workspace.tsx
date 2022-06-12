@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { batch } from "react-redux"
 import { useDispatch, useSelector } from "../hooks/Store"
 import DaemonFrame from "../shared/os/DaemonFrame"
 import ScreenFrame from "../shared/os/ScreenFrame"
@@ -9,6 +10,7 @@ import WindowFrame from "../shared/os/WindowFrame"
 import WorkspaceFrame from "../shared/os/WorkspaceFrame"
 import { runApplication } from "../store/slices/Applications"
 import { setHasRanStartupApplications } from "../store/slices/OS"
+import { Applications } from "../types/Application"
 import { Page } from "../types/Page"
 
 const WorkSpace: Page = () => {
@@ -24,9 +26,17 @@ const WorkSpace: Page = () => {
 	useEffect(() => {
 		if (hasRanStartupApplications) return
 
-		for (const key in applications) if (applications[key].runOnStartup) dispatch(runApplication({ aid: +key, args: {} }))
+		batch(() => {
+			for (const key in applications) {
+				const applicationKey: Applications = +key
 
-		dispatch(setHasRanStartupApplications(true))
+				if (!applications[applicationKey]?.runOnStartup) return
+
+				dispatch(runApplication({ aid: applicationKey, args: {} }))
+			}
+
+			dispatch(setHasRanStartupApplications(true))
+		})
 	}, [dispatch, hasRanStartupApplications, applications])
 
 	return <ScreenFrame>

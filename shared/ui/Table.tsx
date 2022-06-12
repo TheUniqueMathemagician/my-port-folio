@@ -1,13 +1,12 @@
+import { Size } from "@/types/Size"
 import { FC, memo, ReactNode } from "react"
-import { TSize } from "../../types/TSize"
 import classes from "./Table.module.scss"
 
 type Props = {
 	children: ReactNode
 	fullWidth?: boolean
 	outlined?: boolean
-	size?: TSize
-
+	size?: Size
 }
 
 const Table: FC<Props> = (props) => {

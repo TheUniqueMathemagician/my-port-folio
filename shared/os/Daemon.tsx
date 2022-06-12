@@ -1,7 +1,7 @@
+import { DaemonInstance } from "@/types/Application"
 import { createElement, FC } from "react"
+import { applicationsMap } from "store/slices/Applications"
 import { useSelector } from "../../hooks/Store"
-import { applicationsMap } from "../../store/slices/Applications/Constants"
-import { DaemonInstance } from "../../store/slices/Applications/Types"
 
 type Props = {
 	pid: string
