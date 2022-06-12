@@ -1,14 +1,6 @@
+import { ColorPalette } from "@/types/ColorPalette"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ColorScheme } from "../../types/ColorScheme"
-
-type Color = string
-
-type ColorPalette = {
-	[ColorScheme.contrast]: Color
-	[ColorScheme.dark]: Color
-	[ColorScheme.default]: Color
-	[ColorScheme.light]: Color
-}
 
 type Font = {
 	fontSize: string
@@ -46,7 +38,7 @@ type ThemeState = {
 	workspaceBackgroundURL: string
 }
 
-const initialState: ThemeState = {
+export const initialState: ThemeState = {
 	colorScheme: ColorScheme.dark,
 	palette: {
 		background: {
