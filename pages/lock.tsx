@@ -13,7 +13,7 @@ const Lock: Page = () => {
 	const users = useSelector((store) => store.users.elements)
 	const user = useSelector((store) => store.users.elements[store.users.currentUserID])
 
-	useEffect(() => { for (const [key] of Object.entries(users)) dispatch(setCurrentUserID(key)) }, [users, dispatch])
+	useEffect(() => { for (const key in users) dispatch(setCurrentUserID(key)) }, [users, dispatch])
 
 	return <main className={classes["root"]}	>
 		<div className={classes["bg"]}></div>

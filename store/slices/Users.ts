@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import generateID from "../../functions/generateID"
 
-interface IUser {
+type User = {
 	displayName: string
 	id: string
-	language: "en" | "fr"
+	language: "en" | "fr" | "de"
 	password?: string
 	profileImage: typeof window.Image | null
 	profileImageURL: string
 }
 
-interface UsersState {
-	elements: { [uid: string]: IUser }
+type UsersState = {
 	currentUserID: string
+	elements: { [uid: string]: User }
 }
 
 const initialState: UsersState = { elements: {}, currentUserID: "" }
@@ -32,7 +32,7 @@ export const usersSlice = createSlice({
 	name: "users",
 	initialState,
 	reducers: {
-		setCurrentUserID(state, action: PayloadAction<string>) {
+		setCurrentUserID(state: UsersState, action: PayloadAction<string>) {
 			state.currentUserID = action.payload
 		},
 	},

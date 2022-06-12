@@ -12,14 +12,13 @@
 	// Files
 	"files.eol": "\r\n",
 	"files.exclude": {
-		".gitignore": true,
+		"**/.gitignore": true,
 		".vscode": true,
 		"**/.eslintrc.json": true,
 		"**/.next": true,
 		"**/next-env.d.ts": true,
 		"**/node_modules": true,
 		"**/package-lock.json": true,
-		"database": true,
 	},
 	"files.insertFinalNewline": true,
 	"files.maxMemoryForLargeFilesMB": 2048,

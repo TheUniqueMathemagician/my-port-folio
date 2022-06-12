@@ -1,8 +1,8 @@
-import { EBreakpoints } from "../../../types/EBreakpoints"
-import { EResize } from "../../../types/EResize"
-import { ESnap } from "../../../types/ESnap"
-import { IDimensions } from "../../../types/IDimensions"
-import { IPosition } from "../../../types/IPosition"
+import { Breakpoints } from "./Breakpoints"
+import { Dimensions } from "./Dimensions"
+import { Position } from "./Position"
+import { Resize } from "./Resize"
+import { Snap } from "./Snap"
 
 export enum Applications {
 	About,
@@ -18,7 +18,7 @@ export enum Applications {
 	Welcome
 }
 
-export interface Application {
+export type Application = {
 	readonly aid: Applications
 	readonly displayName: string
 	readonly icon: string
@@ -31,15 +31,15 @@ export interface DaemonApplication extends Application {
 }
 
 export interface WindowApplication extends Application {
-	readonly dimensions: IDimensions
-	readonly maxDimensions: IDimensions
-	readonly minDimensions: IDimensions
-	readonly position: IPosition
+	readonly dimensions: Dimensions
+	readonly maxDimensions: Dimensions
+	readonly minDimensions: Dimensions
+	readonly position: Position
 	readonly resizable: boolean
 	readonly type: "window"
 }
 
-export interface Instance {
+export type Instance = {
 	readonly args: { [key: string]: string }
 	readonly component: Applications
 	readonly displayName: string
@@ -52,16 +52,16 @@ export interface DaemonInstance extends Instance {
 }
 
 export interface WindowInstance extends Instance {
-	breakpoint: EBreakpoints
-	position: IPosition
-	dimensions: IDimensions
-	minDimensions: IDimensions
-	maxDimensions: IDimensions
+	breakpoint: Breakpoints
+	position: Position
+	dimensions: Dimensions
+	minDimensions: Dimensions
+	maxDimensions: Dimensions
 	resizable: boolean
-	resizeMode: EResize
+	resizeMode: Resize
 	resizing: boolean
 	dragging: boolean
 	minimized: boolean
-	maximized: ESnap
+	maximized: Snap
 	type: "window"
 }

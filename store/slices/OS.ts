@@ -15,10 +15,10 @@ export const osSlice = createSlice({
 	name: "os",
 	initialState,
 	reducers: {
-		setHasRanStartupApplications(state, action: PayloadAction<boolean>) {
+		setHasRanStartupApplications(state: OsState, action: PayloadAction<boolean>) {
 			state.hasRanStartupApplications = action.payload
 		},
-		reset(state) {
+		reset(state: OsState) {
 			state.hasRanStartupApplications = false
 		},
 	},

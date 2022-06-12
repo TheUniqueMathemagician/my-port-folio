@@ -1,0 +1,10 @@
+export type Color =
+	| "background"
+	| "error"
+	| "info"
+	| "paper"
+	| "primary"
+	| "secondary"
+	| "success"
+	| "text"
+	| "warning"
