@@ -2,22 +2,23 @@ import { useSelector } from "@/hooks/Store"
 import { Boundaries } from "@/types/Boundaries"
 import { ColorScheme } from "@/types/ColorScheme"
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react"
+import { fromEvent, throttleTime } from "rxjs"
 import Window from "./Window"
 import classes from "./WindowFrame.module.scss"
 
 const WindowFrame: FC = () => {
 	const instances = useSelector((store) => store.applications.instances)
-	const ShadowPosition = useSelector((store) => store.applications.snapShadow.position)
-	const shadowShown = useSelector((store) => store.applications.snapShadow.visible)
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const dragging = useSelector((store) => store.applications.dragging)
-	const resizing = useSelector((store) => store.applications.resizing)
+	const isContrasted = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
+	const isDragging = useSelector((store) => store.applications.dragging)
+	const isResizing = useSelector((store) => store.applications.resizing)
+	const isShadowVisible = useSelector((store) => store.applications.snapShadow.visible)
+	const shadowPosition = useSelector((store) => store.applications.snapShadow.position)
 
 	const [boundaries, setBoundaries] = useState<Boundaries>({ x1: 0, y1: 0, x2: 0, y2: 0 })
 
 	const frameRef = useRef<HTMLDivElement>(null)
 
-	const resizeHandler = useCallback(() => {
+	const handleResize = useCallback(() => {
 		const frame = frameRef.current
 
 		if (!frame) return
@@ -31,47 +32,48 @@ const WindowFrame: FC = () => {
 	}, [])
 
 	useEffect(() => {
-		resizeHandler()
+		handleResize()
 
-		window.addEventListener("resize", resizeHandler)
+		const resizeSubscription = fromEvent(window, "resize")
+			.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+			.subscribe(handleResize)
 
-		return () => { window.removeEventListener("resize", resizeHandler) }
-	}, [resizeHandler])
+		return () => { resizeSubscription.unsubscribe() }
+	}, [handleResize])
 
 	const rootClasses = [classes["root"]]
 	const shadowClasses = [classes["shadow"]]
 
-	if (contrast) shadowClasses.push(classes["contrast"])
+	if (isContrasted) shadowClasses.push(classes["contrast"])
 
-	if (dragging) rootClasses.push(classes["dragging"])
-	if (resizing) rootClasses.push(classes["resizing"])
+	if (isDragging) rootClasses.push(classes["dragging"])
+	if (isResizing) rootClasses.push(classes["resizing"])
 
 	// TODO: put snap shadow in its own component
 	return <div className={rootClasses.join(" ")} ref={frameRef}>
 		<div
 			style={{
-				transitionDuration: shadowShown ? ".3s" : "",
+				transitionDuration: isShadowVisible ? ".3s" : "",
 				transitionTimingFunction: "ease",
-				transitionProperty: "bottom, top,left,right",
-				bottom: ShadowPosition.bottom ?? "",
-				left: ShadowPosition.left ?? "",
-				right: ShadowPosition.right ?? "",
-				top: ShadowPosition.top ?? "",
-				visibility: shadowShown ? "visible" : "collapse",
+				transitionProperty: "bottom,top,left,right",
+				bottom: shadowPosition.bottom ?? "",
+				left: shadowPosition.left ?? "",
+				right: shadowPosition.right ?? "",
+				top: shadowPosition.top ?? "",
+				visibility: isShadowVisible ? "visible" : "collapse",
 			}}
 			className={shadowClasses.join(" ")}
 		></div>
 		{Object.keys(instances)
 			.filter((key) => instances[key].type === "window")
-			.map((key) => (
-				<Window
-					pid={key}
-					boundaries={boundaries}
-					borderOffset={16}
-					resizerWidth={4}
-					key={instances[key].pid}
-				></Window>
-			))}
+			.map((key) => <Window
+				pid={key}
+				boundaries={boundaries}
+				borderOffset={16}
+				resizerWidth={4}
+				key={instances[key].pid}
+			/>
+			)}
 	</div>
 }
 

@@ -1,5 +1,7 @@
 {
-	"extends": "next/core-web-vitals",
+	"extends": [
+		"next"
+	],
 	"rules": {
 		"prefer-const": "error",
 		"camelcase": "error",

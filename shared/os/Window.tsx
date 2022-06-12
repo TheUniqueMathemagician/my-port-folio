@@ -73,18 +73,23 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 		tmpPosition.left = position.left
 		tmpPosition.right = position.right
 		tmpPosition.bottom = position.bottom
+
 		checkBoundaries()
 	} else if (position.bottom === null && position.left === null && position.right === null && position.top === null) {
 		tmpPosition.left = (boundaries.x2 - boundaries.x1 - (dimensions.width ?? 0)) / 2
 		tmpPosition.top = (boundaries.y2 - boundaries.y1 - (dimensions.height ?? 0)) / 2
+
 		width = dimensions.width ?? 0
 		height = dimensions.height ?? 0
+
 		checkBoundaries()
 	} else {
 		tmpPosition.top = position.top
 		tmpPosition.left = position.left
+
 		width = dimensions.width ?? 0
 		height = dimensions.height ?? 0
+
 		checkBoundaries()
 	}
 
@@ -100,15 +105,15 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 		onFocus={handleWindowFocus}
 		className={rootClasses.join(" ")}
 		style={{
-			zIndex,
-			top: tmpPosition.top ?? "",
-			left: tmpPosition.left ?? "",
 			bottom: tmpPosition.bottom ?? "",
-			right: tmpPosition.right ?? "",
 			height: height,
-			width: width,
+			left: tmpPosition.left ?? "",
 			opacity: dragging ? "0.7" : "",
+			right: tmpPosition.right ?? "",
+			top: tmpPosition.top ?? "",
 			visibility: minimized ? "collapse" : "visible",
+			width: width,
+			zIndex,
 		}}
 		ref={windowRef}
 		onDragStart={() => false}
@@ -117,15 +122,15 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 	>
 		<WindowResizer
 			pid={pid}
-			windowRef={windowRef}
 			width={resizerWidth}
+			windowRef={windowRef}
 		></WindowResizer>
 		<WindowHeader
-			pid={pid}
 			boundaries={boundaries}
+			pid={pid}
 			windowRef={windowRef}
 		></WindowHeader>
-		<div className={backgroundClasses.join(" ")}>
+		<div className={backgroundClasses.join(" ")} style={{ pointerEvents: dragging ? "none" : "auto" }}>
 			{renderComponent ? createElement(renderComponent, { args, pid }) : null}
 		</div>
 	</section>

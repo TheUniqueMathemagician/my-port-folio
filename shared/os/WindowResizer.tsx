@@ -2,48 +2,43 @@ import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
-import React, { FC, memo, RefObject, useCallback, useEffect, useMemo, useRef } from "react"
+import React, { FC, memo, RefObject, useCallback, useEffect, useRef } from "react"
 import { batch } from "react-redux"
+import { fromEvent, throttleTime } from "rxjs"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { setBreakpoint, setDimensions, setMaximized, setPosition, setResizeMode, setResizing } from "../../store/slices/Applications"
 import styles from "./WindowResizer.module.scss"
 
-interface Props {
+type Props = {
 	pid: string
-	windowRef: RefObject<HTMLDivElement>
 	width: number
+	windowRef: RefObject<HTMLDivElement>
 }
+
+const cursors = new Map<Resize, string>([
+	[Resize.bottom, "ns-resize"],
+	[Resize.bottomLeft, "nesw-resize"],
+	[Resize.bottomRight, "nwse-resize"],
+	[Resize.left, "ew-resize"],
+	[Resize.right, "ew-resize"],
+	[Resize.top, "ns-resize"],
+	[Resize.topLeft, "nwse-resize"],
+	[Resize.topRight, "nesw-resize"],
+])
+
+const cssCursors = new Map<Resize, string>([
+	[Resize.bottom, "resize-bottom"],
+	[Resize.bottomLeft, "resize-bottom-left"],
+	[Resize.bottomRight, "resize-bottom-right"],
+	[Resize.left, "resize-left"],
+	[Resize.right, "resize-right"],
+	[Resize.top, "resize-top"],
+	[Resize.topLeft, "resize-top-left"],
+	[Resize.topRight, "resize-top-right"],
+])
 
 const WindowResizer: FC<Props> = (props) => {
 	const { pid, width, windowRef } = props
-
-	const cursor = useMemo(() =>
-		new Map<Resize, string>([
-			[Resize.top, "ns-resize"],
-			[Resize.bottom, "ns-resize"],
-			[Resize.left, "ew-resize"],
-			[Resize.right, "ew-resize"],
-			[Resize.topLeft, "nwse-resize"],
-			[Resize.topRight, "nesw-resize"],
-			[Resize.bottomLeft, "nesw-resize"],
-			[Resize.bottomRight, "nwse-resize"],
-		]),
-		[]
-	)
-
-	const csscursor = useMemo(() =>
-		new Map<Resize, string>([
-			[Resize.top, "resize-top"],
-			[Resize.bottom, "resize-bottom"],
-			[Resize.left, "resize-left"],
-			[Resize.right, "resize-right"],
-			[Resize.topLeft, "resize-top-left"],
-			[Resize.topRight, "resize-top-right"],
-			[Resize.bottomLeft, "resize-bottom-left"],
-			[Resize.bottomRight, "resize-bottom-right"],
-		]),
-		[]
-	)
 
 	const resizerRef = useRef<HTMLDivElement>(null)
 
@@ -90,9 +85,7 @@ const WindowResizer: FC<Props> = (props) => {
 		} else {
 			dispatch(setResizeMode({ pid, resizeMode: Resize.none }))
 		}
-	},
-		[pid, dispatch, width, windowRef, resizeMode, resizing, resizable, resizerRef]
-	)
+	}, [dispatch, pid, resizable, resizeMode, resizing, width, windowRef])
 
 	const handleResizerDragMouseDown = useCallback((e: React.MouseEvent) => {
 		if (e.button !== 0 || !resizable) return
@@ -100,7 +93,7 @@ const WindowResizer: FC<Props> = (props) => {
 		e.stopPropagation()
 		e.preventDefault()
 
-		document.body.style.cursor = cursor.get(resizeMode) || ""
+		document.body.style.cursor = cursors.get(resizeMode) || ""
 
 		const window = windowRef.current
 
@@ -114,23 +107,15 @@ const WindowResizer: FC<Props> = (props) => {
 			dispatch(setMaximized({ pid, maximized: Snap.none }))
 			dispatch(setResizing({ pid, resizing: true }))
 			dispatch(setPosition({
-				pid,
-				position: {
-					bottom:
-						windowFrame.offsetHeight -
-						window.offsetTop -
-						window.offsetHeight,
+				pid, position: {
+					bottom: windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
 					left: window.offsetLeft,
-					right:
-						windowFrame.offsetWidth -
-						window.offsetLeft -
-						window.offsetWidth,
+					right: windowFrame.offsetWidth - window.offsetLeft - window.offsetWidth,
 					top: window.offsetTop,
 				},
-			})
-			)
+			}))
 		})
-	}, [dispatch, windowRef, pid, resizable, resizeMode, cursor])
+	}, [resizable, resizeMode, windowRef, dispatch, pid])
 
 	const handleResizerDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
 		const window = windowRef.current
@@ -150,41 +135,25 @@ const WindowResizer: FC<Props> = (props) => {
 
 		const limit = {
 			min: {
-				bottom: () =>
-					windowFrame.offsetHeight -
-					window.offsetTop -
-					(maxDimensions.height ?? 0),
-				left: () =>
-					window.offsetLeft + window.offsetWidth - (maxDimensions.width ?? 0),
-				right: () =>
-					windowFrame.offsetWidth -
-					window.offsetLeft -
-					(maxDimensions.width ?? 0),
-				top: () =>
-					window.offsetTop + window.offsetHeight - (maxDimensions.height ?? 0),
+				bottom: () => windowFrame.offsetHeight - window.offsetTop - (maxDimensions.height ?? 0),
+				left: () => window.offsetLeft + window.offsetWidth - (maxDimensions.width ?? 0),
+				right: () => windowFrame.offsetWidth - window.offsetLeft - (maxDimensions.width ?? 0),
+				top: () => window.offsetTop + window.offsetHeight - (maxDimensions.height ?? 0),
 			},
 			max: {
-				bottom: () =>
-					windowFrame.offsetHeight -
-					window.offsetTop -
-					(minDimensions.height ?? 0),
-				left: () =>
-					window.offsetLeft + window.offsetWidth - (minDimensions.width ?? 0),
-				right: () =>
-					windowFrame.offsetWidth -
-					window.offsetLeft -
-					(minDimensions.width ?? 0),
-				top: () =>
-					window.offsetTop + window.offsetHeight - (minDimensions.height ?? 0),
+				bottom: () => windowFrame.offsetHeight - window.offsetTop - (minDimensions.height ?? 0),
+				left: () => window.offsetLeft + window.offsetWidth - (minDimensions.width ?? 0),
+				right: () => windowFrame.offsetWidth - window.offsetLeft - (minDimensions.width ?? 0),
+				top: () => window.offsetTop + window.offsetHeight - (minDimensions.height ?? 0),
 			},
 		}
 
 		let breakpoint = Breakpoints.xl
 
 		if (window.offsetWidth <= 1200) breakpoint = Breakpoints.lg
-		if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
-		if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
-		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
+		else if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
+		else if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
+		else breakpoint = Breakpoints.xs
 
 		const dispatchPositionAndBreakpoint = ({ bottom, left, right, top }: { bottom?: number; left?: number; right?: number; top?: number }) => {
 			batch(() => {
@@ -287,7 +256,20 @@ const WindowResizer: FC<Props> = (props) => {
 			default:
 				break
 		}
-	}, [pid, windowRef, dispatch, minDimensions, maxDimensions, resizeMode, position])
+	}, [
+		windowRef,
+		resizeMode,
+		maxDimensions.height,
+		maxDimensions.width,
+		minDimensions.height,
+		minDimensions.width,
+		dispatch,
+		pid,
+		position.bottom,
+		position.left,
+		position.right,
+		position.top,
+	])
 
 	const handleResizerDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
 		e.stopPropagation()
@@ -300,34 +282,31 @@ const WindowResizer: FC<Props> = (props) => {
 		if (!window) return
 
 		batch(() => {
-			dispatch(
-				setDimensions({
-					pid,
-					dimensions: {
-						height: window.offsetHeight,
-						width: window.offsetWidth,
-					},
-				})
-			)
+			dispatch(setDimensions({ pid, dimensions: { height: window.offsetHeight, width: window.offsetWidth } }))
 			dispatch(setResizing({ pid, resizing: false }))
 		})
 	}, [dispatch, windowRef, pid])
 
 	useEffect(() => {
 		if (resizing) {
-			document.addEventListener("mousemove", handleResizerDragMouseMove)
-			document.addEventListener("mouseup", handleResizerDragMouseUp)
+			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
+				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.subscribe(handleResizerDragMouseMove)
+			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
+				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.subscribe(handleResizerDragMouseUp)
 
 			return () => {
-				document.removeEventListener("mousemove", handleResizerDragMouseMove)
-				document.removeEventListener("mouseup", handleResizerDragMouseUp)
+				s1.unsubscribe()
+				s2.unsubscribe()
 			}
 		}
-	}, [resizing, resizeMode, handleResizerDragMouseMove, handleResizerDragMouseUp])
+	}, [handleResizerDragMouseMove, handleResizerDragMouseUp, resizing])
 
 	const resizerClasses: string[] = [styles["window-resizer"]]
+	const cssCursor = cssCursors.get(resizeMode)
 
-	resizerClasses.push(styles[csscursor.get(resizeMode) ?? ""])
+	if (cssCursor) resizerClasses.push(styles[cssCursor])
 
 	return <div
 		className={resizerClasses.join(" ")}

@@ -11,7 +11,8 @@
     "react-icons": "^4.4.0",
     "react-query": "^3.39.1",
     "react-redux": "^8.0.2",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.42",

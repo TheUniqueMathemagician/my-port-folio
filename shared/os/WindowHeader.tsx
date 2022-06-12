@@ -6,6 +6,7 @@ import { Offset } from "@/types/Offset"
 import { Snap } from "@/types/Snap"
 import { FC, memo, RefObject, useCallback, useEffect, useRef, useState } from "react"
 import { batch } from "react-redux"
+import { fromEvent, throttleTime } from "rxjs"
 import { useDispatch, useSelector } from "../../hooks/Store"
 import { closeApplication, sendToFront, setBreakpoint, setDragging, setMaximized, setMinimized, setPosition, setSnapShadowPosition, setSnapShadowVisibility } from "../../store/slices/Applications"
 import classes from "./WindowHeader.module.scss"
@@ -40,18 +41,23 @@ const WindowHeader: FC<Props> = (props) => {
 	const handleRedClick = useCallback((e: React.MouseEvent) => {
 		e.stopPropagation()
 		e.preventDefault()
+
 		dispatch(closeApplication({ pid }))
 	}, [dispatch, pid])
 
 	const handleOrangeClick = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
-		dispatch(sendToFront({ pid }))
-		dispatch(maximized ? setMaximized({ pid, maximized: Snap.none }) : setMaximized({ pid, maximized: Snap.top }))
-	}, [maximized, dispatch, pid])
+
+		batch(() => {
+			dispatch(sendToFront({ pid }))
+			dispatch(maximized ? setMaximized({ pid, maximized: Snap.none }) : setMaximized({ pid, maximized: Snap.top }))
+		})
+	}, [dispatch, pid, maximized])
 
 	const handleGreenClick = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
+
 		dispatch(setMinimized({ pid, minimized: true }))
 	}, [pid, dispatch])
 
@@ -90,9 +96,8 @@ const WindowHeader: FC<Props> = (props) => {
 		document.body.style.cursor = "grabbing"
 
 		dispatch(setDragging({ pid, dragging: true }))
-	}, [dispatch, pid, windowRef, dimensions.width, maximized])
+	}, [maximized, dimensions.width, dispatch, pid, windowRef])
 
-	// TODO: batch this to increase performance
 	const handleDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
 		const header = headerRef.current
 
@@ -117,8 +122,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: "50%",
 					})
 				)
+
+				setSnap(Snap.topLeft)
 			})
-			setSnap(Snap.topLeft)
 		} else if (shouldSnapToTop && shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -130,8 +136,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: 0,
 					})
 				)
+
+				setSnap(Snap.topRight)
 			})
-			setSnap(Snap.topRight)
 		} else if (shouldSnapToBottom && shouldSnapToLeft) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -143,8 +150,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: "50%",
 					})
 				)
+
+				setSnap(Snap.bottomLeft)
 			})
-			setSnap(Snap.bottomLeft)
 		} else if (shouldSnapToBottom && shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -156,8 +164,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: 0,
 					})
 				)
+
+				setSnap(Snap.bottomRight)
 			})
-			setSnap(Snap.bottomRight)
 		} else if (shouldSnapToTop) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -169,8 +178,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: 0,
 					})
 				)
+
+				setSnap(Snap.top)
 			})
-			setSnap(Snap.top)
 		} else if (shouldSnapToLeft) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -182,8 +192,9 @@ const WindowHeader: FC<Props> = (props) => {
 						right: "50%",
 					})
 				)
+
+				setSnap(Snap.left)
 			})
-			setSnap(Snap.left)
 		} else if (shouldSnapToRight) {
 			batch(() => {
 				dispatch(setSnapShadowVisibility(true))
@@ -195,14 +206,16 @@ const WindowHeader: FC<Props> = (props) => {
 						right: 0,
 					})
 				)
+
+				setSnap(Snap.right)
 			})
-			setSnap(Snap.right)
 		} else {
 			batch(() => {
 				if (snapShadowVisible) dispatch(setSnapShadowVisibility(false))
 				if (maximized) dispatch(setMaximized({ pid, maximized: Snap.none }))
+
+				setSnap(Snap.none)
 			})
-			setSnap(Snap.none)
 		}
 
 		const tmpPosition = {
@@ -236,7 +249,19 @@ const WindowHeader: FC<Props> = (props) => {
 				dispatch(setSnapShadowPosition(snapShadowPosition))
 			}
 		}
-	}, [dispatch, boundaries, offset, snapShadowVisible, windowRef, maximized, pid])
+	}, [
+		boundaries.x1,
+		boundaries.x2,
+		boundaries.y1,
+		boundaries.y2,
+		dispatch,
+		maximized,
+		offset.x,
+		offset.y,
+		pid,
+		snapShadowVisible,
+		windowRef,
+	])
 
 	const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
 		e.stopPropagation()
@@ -255,17 +280,20 @@ const WindowHeader: FC<Props> = (props) => {
 
 	useEffect(() => {
 		if (dragging) {
-			document.addEventListener("mousemove", handleDragMouseMove)
-			document.addEventListener("mouseup", handleDragMouseUp)
+			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
+				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.subscribe(handleDragMouseMove)
+			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
+				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.subscribe(handleDragMouseUp)
 
 			return () => {
-				document.removeEventListener("mousemove", handleDragMouseMove)
-				document.removeEventListener("mouseup", handleDragMouseUp)
+				s1.unsubscribe()
+				s2.unsubscribe()
 			}
 		}
-	}, [dragging, handleDragMouseMove, handleDragMouseUp])
+	}, [handleDragMouseMove, handleDragMouseUp, dragging])
 
-	// TODO: need further performance improvments
 	useEffect(() => {
 		const window = windowRef.current
 
@@ -279,7 +307,7 @@ const WindowHeader: FC<Props> = (props) => {
 		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
 
 		dispatch(setBreakpoint({ pid, breakpoint }))
-	}, [maximized, windowRef, dispatch, pid])
+	}, [windowRef, dispatch, pid])
 
 	const rootClasses = [classes["root"]]
 
@@ -309,7 +337,7 @@ const WindowHeader: FC<Props> = (props) => {
 				onMouseDown={handleButtonMouseDown}
 			></button>
 		</div>
-		<div className={classes["title"]}>{displayName}</div>
+		<h3 className={classes["title"]}>{displayName}</h3>
 	</div>
 }
 
