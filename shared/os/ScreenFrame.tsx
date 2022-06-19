@@ -1,5 +1,6 @@
+import { useOsStore } from "context/os"
+import { useThemeStore } from "context/theme"
 import { FC, ReactNode } from "react"
-import { useSelector } from "../../hooks/Store"
 import classes from "./ScreenFrame.module.scss"
 
 type Props = {
@@ -7,9 +8,9 @@ type Props = {
 }
 
 const ScreenFrame: FC<Props> = ({ children }) => {
-	const bg = useSelector((store) => store.theme.workspaceBackgroundURL)
+	const workspaceBackgroundURL = useThemeStore((store) => store.workspaceBackgroundURL)
 
-	const isMobile = useSelector((store) => store.os.isMobile)
+	const isMobile = useOsStore((store) => store.isMobile)
 
 	const rootClasses = [classes["root"]]
 
@@ -17,7 +18,7 @@ const ScreenFrame: FC<Props> = ({ children }) => {
 
 	return <div
 		style={{
-			background: `url(${bg})`,
+			background: `url(${workspaceBackgroundURL})`,
 			backgroundPosition: "center",
 			backgroundRepeat: "no-repeat",
 			backgroundSize: "cover",

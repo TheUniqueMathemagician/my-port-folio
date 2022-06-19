@@ -1,37 +1,35 @@
+import { useThemeStore } from "context/theme"
 import { AppProps } from "next/dist/shared/lib/router/router"
 import Head from "next/head"
-import { FC, useCallback, useEffect } from "react"
+import { FC } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { Provider } from "react-redux"
-import { initialState as themeInitialState } from "store/slices/Theme"
-import { store } from "../store"
 import "../styles/global.scss"
 import { Page } from "../types/Page"
 
 type AppPropsWithLayout = AppProps & { Component: Page }
 
 const Setup: FC = () => {
-	const setRootVariables = useCallback(() => {
-		const root = document.getElementById("__next")
+	const palette = useThemeStore((store) => store.palette)
+	const colorScheme = useThemeStore((store) => store.colorScheme)
 
-		for (const key in themeInitialState.palette) {
-			type Palette = typeof themeInitialState.palette
-			const paletteKey = key as keyof Palette
-			const value = themeInitialState.palette[paletteKey][themeInitialState.colorScheme]
+	const colorProperties = []
 
-			root?.style.setProperty(`--cvos-${key}`, value)
-			// root?.style.setProperty(`--cvos-${key}-20`, `${value}14`);
-			root?.style.setProperty(`--cvos-${key}-33`, `${value}55`)
-			root?.style.setProperty(`--cvos-${key}-50`, `${value}80`)
-			root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`)
-		}
-	}, [])
+	for (const key in palette) {
+		type Palette = typeof palette
 
-	useEffect(() => {
-		if (typeof window !== "undefined") setRootVariables()
-	}, [setRootVariables])
+		const paletteKey = key as keyof Palette
+		const value = palette[paletteKey][colorScheme]
 
-	return null
+		colorProperties.push(`--cvos-${key}:${value};`)
+		colorProperties.push(`--cvos-${key}-20:${value}14;`)
+		colorProperties.push(`--cvos-${key}-33:${value}55;`)
+		colorProperties.push(`--cvos-${key}-50:${value}80;`)
+		colorProperties.push(`--cvos-${key}-67:${value}aa;`)
+	}
+
+	const colorPropertiesString = `#__next{${colorProperties.join("")}}`
+
+	return <style jsx>{colorPropertiesString}</style>
 }
 
 const client = new QueryClient()
@@ -39,13 +37,11 @@ const client = new QueryClient()
 const App: FC<AppPropsWithLayout> = ({ Component, pageProps }) => {
 	const getLayout = Component.layout || ((page) => page)
 
-	return <Provider store={store}>
-		<QueryClientProvider client={client}>
-			<Head><title>Tamburrini Yannick</title></Head>
-			<Setup />
-			{getLayout(<Component {...pageProps} />)}
-		</QueryClientProvider>
-	</Provider>
+	return <QueryClientProvider client={client}>
+		<Head><title>Tamburrini Yannick</title></Head>
+		<Setup />
+		{getLayout(<Component {...pageProps} />)}
+	</QueryClientProvider>
 }
 
 export default App

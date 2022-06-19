@@ -1,43 +1,43 @@
+import { useApplicationsStore } from "context/applications"
+import { useOsStore } from "context/os"
+import { useUsersStore } from "context/users"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { batch } from "react-redux"
-import { useDispatch, useSelector } from "../hooks/Store"
 import DaemonFrame from "../shared/os/DaemonFrame"
 import ScreenFrame from "../shared/os/ScreenFrame"
 import ShortcutFrame from "../shared/os/ShortcutFrame"
 import TaskBar from "../shared/os/TaskBar"
 import WindowFrame from "../shared/os/WindowFrame"
 import WorkspaceFrame from "../shared/os/WorkspaceFrame"
-import { runApplication } from "../store/slices/Applications"
-import { setHasRanStartupApplications } from "../store/slices/OS"
 import { Applications } from "../types/Application"
 import { Page } from "../types/Page"
 
 const WorkSpace: Page = () => {
-	const dispatch = useDispatch()
 	const router = useRouter()
 
-	const applications = useSelector((store) => store.applications.pool)
-	const hasRanStartupApplications = useSelector((store) => store.os.hasRanStartupApplications)
-	const user = useSelector((store) => store.users.elements[store.users.currentUserID])
+	const applications = useApplicationsStore((store) => store.pool)
+	const hasRanStartupApplications = useOsStore((store) => store.hasRanStartupApplications)
+	const user = useUsersStore((store) => store.elements[store.currentUserID])
+
+	const setHasRanStartupApplications = useOsStore((store) => store.setHasRanStartupApplications)
+
+	const runApplication = useApplicationsStore((store) => store.runApplication)
 
 	useEffect(() => { if (!user) router.replace("/lock") })
 
 	useEffect(() => {
 		if (hasRanStartupApplications) return
 
-		batch(() => {
-			for (const key in applications) {
-				const applicationKey: Applications = +key
+		for (const key in applications) {
+			const applicationKey: Applications = +key
 
-				if (!applications[applicationKey]?.runOnStartup) return
+			if (!applications[applicationKey]?.runOnStartup) return
 
-				dispatch(runApplication({ aid: applicationKey, args: {} }))
-			}
+			runApplication(applicationKey, {})
+		}
 
-			dispatch(setHasRanStartupApplications(true))
-		})
-	}, [dispatch, hasRanStartupApplications, applications])
+		setHasRanStartupApplications(true)
+	}, [hasRanStartupApplications, applications, runApplication, setHasRanStartupApplications])
 
 	return <ScreenFrame>
 		<WorkspaceFrame>

@@ -1,9 +1,9 @@
 import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
+import { useApplicationsStore } from "context/applications"
 import Image from "next/image"
 import { FC, memo } from "react"
 import generateID from "../../../../functions/generateID"
-import { useSelector } from "../../../../hooks/Store"
 import Avatar from "../../../ui/Avatar"
 import Divider from "../../../ui/Divider"
 import Paper from "../../../ui/Paper"
@@ -79,8 +79,8 @@ const itEducation: Education[] = [
 const Intro: FC<Props> = (props) => {
 	const { pid } = props
 
-	const small = useSelector((store) => {
-		const instance = store.applications.instances[pid] as WindowInstance
+	const small = useApplicationsStore((store) => {
+		const instance = store.instances[pid] as WindowInstance
 
 		if (instance.breakpoint === Breakpoints.sm) return true
 		if (instance.breakpoint === Breakpoints.xs) return true

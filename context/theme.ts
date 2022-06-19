@@ -1,13 +1,13 @@
 import { ColorPalette } from "@/types/ColorPalette"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { ColorScheme } from "../../types/ColorScheme"
+import { ColorScheme } from "@/types/ColorScheme"
+import create from "zustand"
 
 type Font = {
 	fontSize: string
 	lineHeight: string
 }
 
-type ThemeState = {
+type ThemeStore = {
 	colorScheme: ColorScheme
 	palette: {
 		background: ColorPalette
@@ -36,9 +36,14 @@ type ThemeState = {
 	}
 	workspaceBackground: typeof Image | null
 	workspaceBackgroundURL: string
+	setBackgroundColor: (colorPalette: ColorPalette) => void
+	setColorScheme: (colorScheme: ColorScheme) => void
+	setPrimaryColor: (colorPalette: ColorPalette) => void
+	setSecondaryColor: (colorPalette: ColorPalette) => void
+	setWorkspaceBackgroundURL: (url: string) => void
 }
 
-export const initialState: ThemeState = {
+export const useThemeStore = create<ThemeStore>((set, get) => ({
 	colorScheme: ColorScheme.dark,
 	palette: {
 		background: {
@@ -154,36 +159,27 @@ export const initialState: ThemeState = {
 	workspaceBackground: null,
 	workspaceBackgroundURL:
 		"https://images.unsplash.com/photo-1536859975388-b5e6623e9223?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80",
-}
+	setWorkspaceBackgroundURL: (workspaceBackgroundURL) => set(() => ({ workspaceBackgroundURL })),
+	setColorScheme: (colorScheme) => set(() => ({ colorScheme })),
+	setBackgroundColor: (background) => {
+		const state = get()
 
-export const themeSlice = createSlice({
-	name: "theme",
-	initialState,
-	reducers: {
-		setWorkspaceBackgroundURL: (state: ThemeState, action: PayloadAction<string>) => {
-			state.workspaceBackgroundURL = action.payload
-		},
-		setColorScheme: (state: ThemeState, action: PayloadAction<ColorScheme>) => {
-			state.colorScheme = action.payload
-		},
-		setBackgroundColor: (state: ThemeState, action: PayloadAction<ColorPalette>) => {
-			state.palette.background = action.payload
-		},
-		setPrimaryColor: (state: ThemeState, action: PayloadAction<ColorPalette>) => {
-			state.palette.primary = action.payload
-		},
-		setSecondaryColor: (state: ThemeState, action: PayloadAction<ColorPalette>) => {
-			state.palette.secondary = action.payload
-		},
+		state.palette.background = background
+
+		set(() => ({}))
 	},
-})
+	setPrimaryColor: (primary) => {
+		const state = get()
 
-export const {
-	setWorkspaceBackgroundURL,
-	setColorScheme,
-	setBackgroundColor,
-	setPrimaryColor,
-	setSecondaryColor,
-} = themeSlice.actions
+		state.palette.primary = primary
 
-export default themeSlice.reducer
+		set(() => ({}))
+	},
+	setSecondaryColor: (secondary) => {
+		const state = get()
+
+		state.palette.secondary = secondary
+
+		set(() => ({}))
+	},
+}))

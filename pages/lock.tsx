@@ -1,19 +1,18 @@
+import { useUsersStore } from "context/users"
 import { useEffect } from "react"
-import { useDispatch, useSelector } from "../hooks/Store"
 import Avatar from "../shared/ui/Avatar"
 import Button from "../shared/ui/input/Button"
 import Typography from "../shared/ui/Typography"
-import { setCurrentUserID } from "../store/slices/Users"
 import classes from "../styles/pages/Lock.module.scss"
 import { Page } from "../types/Page"
 
 const Lock: Page = () => {
-	const dispatch = useDispatch()
+	const users = useUsersStore((store) => store.elements)
+	const user = useUsersStore((store) => store.elements[store.currentUserID])
 
-	const users = useSelector((store) => store.users.elements)
-	const user = useSelector((store) => store.users.elements[store.users.currentUserID])
+	const setCurrentUserID = useUsersStore((store) => store.setCurrentUserID)
 
-	useEffect(() => { for (const key in users) dispatch(setCurrentUserID(key)) }, [users, dispatch])
+	useEffect(() => { for (const key in users) setCurrentUserID(key) }, [users, setCurrentUserID])
 
 	return <main className={classes["root"]}	>
 		<div className={classes["bg"]}></div>
@@ -41,7 +40,7 @@ const Lock: Page = () => {
 						focusable
 						ripple
 						key={key}
-						onClick={() => dispatch(setCurrentUserID(key))}
+						onClick={() => setCurrentUserID(key)}
 					>
 						<Avatar alt="Image de profil" src={users[key].profileImageURL}></Avatar>
 						<Typography variant="body">{users[key].displayName}</Typography>

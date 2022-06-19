@@ -1,10 +1,10 @@
 import { Applications, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
+import { useApplicationsStore } from "context/applications"
+import { useThemeStore } from "context/theme"
 import { FC, memo, useState } from "react"
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { closeApplication, sendToFront, setRunOnStartup } from "../../store/slices/Applications"
 import Button from "../ui/input/Button"
 import ButtonGroup from "../ui/input/ButtonGroup"
 import Checkbox from "../ui/input/Checkbox"
@@ -28,9 +28,9 @@ type Props = {
 const Manager: FC<Props> = (props) => {
 	const { pid } = props
 
-	const applications = useSelector((store) => store.applications.pool)
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const instances = useSelector((store) => store.applications.instances,
+	const applications = useApplicationsStore((store) => store.pool)
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const instances = useApplicationsStore((store) => store.instances,
 		(left, right) => {
 			for (const key in left) {
 				const leftItem = left[key]
@@ -46,9 +46,9 @@ const Manager: FC<Props> = (props) => {
 			return true
 		}
 	)
-	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
-	const small = useSelector((store) => {
-		const instance = store.applications.instances[pid]
+	const resizing = useApplicationsStore((store) => store.instances[pid] as WindowInstance).resizing
+	const small = useApplicationsStore((store) => {
+		const instance = store.instances[pid]
 
 		if (instance.type === "daemon") return false
 
@@ -58,9 +58,11 @@ const Manager: FC<Props> = (props) => {
 		return false
 	})
 
-	const [panelIndex, setPanelIndex] = useState(0)
+	const setRunOnStartup = useApplicationsStore((store) => store.setRunOnStartup)
+	const closeApplication = useApplicationsStore((store) => store.closeApplication)
+	const sendToFront = useApplicationsStore((store) => store.sendToFront)
 
-	const dispatch = useDispatch()
+	const [panelIndex, setPanelIndex] = useState(0)
 
 	const rootClasses = [classes["root"]]
 
@@ -113,14 +115,7 @@ const Manager: FC<Props> = (props) => {
 										<Checkbox
 											color="primary"
 											checked={applications[aid].runOnStartup}
-											onChange={(e) => {
-												dispatch(
-													setRunOnStartup({
-														aid,
-														runOnStartup: e.target.checked,
-													})
-												)
-											}}
+											onChange={(e) => setRunOnStartup(aid, e.target.checked)}
 										></Checkbox>
 									</form>
 								</TableCell>
@@ -176,9 +171,7 @@ const Manager: FC<Props> = (props) => {
 											isIcon
 											ripple
 											size="xs"
-											onClick={() => {
-												dispatch(closeApplication({ pid: key }))
-											}}
+											onClick={() => closeApplication(key)}
 										>
 											<MdDelete></MdDelete>
 										</Button>
@@ -189,7 +182,8 @@ const Manager: FC<Props> = (props) => {
 												size="xs"
 												onClick={() => {
 													const instance = instances[key]
-													if (instance.type === "window") dispatch(sendToFront({ pid: key }))
+
+													if (instance.type === "window") sendToFront(key)
 												}}
 											>
 												<MdCenterFocusStrong color="primary"></MdCenterFocusStrong>

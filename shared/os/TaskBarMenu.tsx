@@ -1,7 +1,7 @@
 import { ColorScheme } from "@/types/ColorScheme"
 import { Position } from "@/types/Position"
+import { useThemeStore } from "context/theme"
 import { FC, memo, ReactNode } from "react"
-import { useSelector } from "../../hooks/Store"
 import classes from "./TaskBarMenu.module.scss"
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 const TaskBarMenu: FC<Props> = ({ shown, position, children }) => {
 	const rootClasses = [classes["root"]]
 
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 
 	if (!shown && position.bottom) position.bottom = position.bottom - 6
 

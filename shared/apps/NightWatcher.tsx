@@ -1,8 +1,8 @@
+import { useApplicationsStore } from "context/applications"
 import { FC, memo, useEffect, useState } from "react"
-import { useSelector } from "../../hooks/Store"
 
 const NightWatcher: FC = () => {
-	const count = useSelector((store) => Object.keys(store.applications.instances).length)
+	const count = useApplicationsStore((store) => Object.keys(store.instances).length)
 	const [hasWarned, setHasWarned] = useState(false)
 
 	useEffect(() => {

@@ -1,8 +1,8 @@
 import { Applications } from "@/types/Application"
+import { useApplicationsStore } from "context/applications"
+import { useOsStore } from "context/os"
 import Image from "next/image"
 import { FC, KeyboardEvent, memo, useCallback } from "react"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { runApplication } from "../../store/slices/Applications"
 import styles from "./Shortcut.module.scss"
 
 type Props = {
@@ -12,18 +12,18 @@ type Props = {
 const Shortcut: FC<Props> = (props) => {
 	const { aid } = props
 
-	const dispatch = useDispatch()
+	const runApplication = useApplicationsStore((store) => store.runApplication)
 
-	const application = useSelector((store) => store.applications.pool[aid])
-	const isMobile = useSelector((store) => store.os.isMobile)
+	const application = useApplicationsStore((store) => store.pool[aid])
+	const isMobile = useOsStore((store) => store.isMobile)
 
 	const handleDoubleClick = useCallback(() => {
-		if (!isMobile) dispatch(runApplication({ aid, args: {} }))
-	}, [aid, dispatch, isMobile])
+		if (!isMobile) runApplication(aid, {})
+	}, [aid, isMobile, runApplication])
 
 	const handleClick = useCallback(() => {
-		if (isMobile) dispatch(runApplication({ aid, args: {} }))
-	}, [aid, dispatch, isMobile])
+		if (isMobile) runApplication(aid, {})
+	}, [aid, isMobile, runApplication])
 
 	return <button
 		className={styles["shortcut"]}
@@ -33,7 +33,7 @@ const Shortcut: FC<Props> = (props) => {
 			switch (e.code) {
 				case "Enter":
 				case "Space":
-					dispatch(runApplication({ aid, args: {} }))
+					runApplication(aid, {})
 					break
 				default:
 					break

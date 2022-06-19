@@ -1,15 +1,14 @@
 import { Applications } from "@/types/Application"
 import { ColorScheme } from "@/types/ColorScheme"
+import { useApplicationsStore } from "context/applications"
+import { useOsStore } from "context/os"
+import { useThemeStore } from "context/theme"
+import { useUsersStore } from "context/users"
 import { useRouter } from "next/dist/client/router"
 import Image from "next/image"
 import { FC, memo, MouseEventHandler, useRef, useState } from "react"
 import { IoLogOutOutline } from "react-icons/io5"
 import { MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend } from "react-icons/md"
-import { batch } from "react-redux"
-import { setHasRanStartupApplications } from "store/slices/OS"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { closeApplication, runApplication, sendToFront, setMinimized } from "../../store/slices/Applications"
-import { setCurrentUserID } from "../../store/slices/Users"
 import Menu from "../icons/Menu"
 import Divider from "../ui/Divider"
 import Button from "../ui/input/Button"
@@ -29,40 +28,22 @@ const Send = memo(MdSend)
 const TaskBar: FC = () => {
 	const [menuShown, setMenuShown] = useState(EMenuShown.None)
 
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const instances = useSelector((store) => store.applications.instances, (left, right) => {
-		for (const key in left) {
-			const leftItem = left[key]
-			const rightItem = right[key]
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const instances = useApplicationsStore((store) => store.instances)
+	const applications = useApplicationsStore((store) => store.pool)
 
-			if (leftItem?.displayName !== rightItem?.displayName) return false
-		}
-
-		if (Object.keys(left)?.length !== Object.keys(right)?.length) return false
-
-		return true
-	})
-	const applications = useSelector((store) => store.applications.pool, (left, right) => {
-		for (const key in left) {
-			const applicationKey = +key as Applications
-
-			const leftItem = left[applicationKey]
-			const rightItem = right[applicationKey]
-
-			if (leftItem?.displayName !== rightItem?.displayName) return false
-		}
-
-		if (Object.keys(left)?.length !== Object.keys(right)?.length) return false
-
-		return true
-	})
+	const runApplication = useApplicationsStore((store) => store.runApplication)
+	const sendToFront = useApplicationsStore((store) => store.sendToFront)
+	const setMinimized = useApplicationsStore((store) => store.setMinimized)
+	const closeApplication = useApplicationsStore((store) => store.closeApplication)
+	const setHasRanStartupApplications = useOsStore((store) => store.setHasRanStartupApplications)
+	const setCurrentUserID = useUsersStore((store) => store.setCurrentUserID)
 
 	const contactButtonRef = useRef<HTMLButtonElement>(null)
 	const langButtonRef = useRef<HTMLButtonElement>(null)
 	const taskBarRef = useRef<HTMLDivElement>(null)
 
 	const router = useRouter()
-	const dispatch = useDispatch()
 
 	const rootClasses = [classes["root"]]
 
@@ -88,27 +69,22 @@ const TaskBar: FC = () => {
 	}
 
 	const handleDisconnectMenuClick = () => {
-		batch(() => {
-			for (const pid of Object.keys(instances)) dispatch(closeApplication({ pid }))
-			dispatch(setHasRanStartupApplications(false))
-			dispatch(setCurrentUserID(""))
-		})
-
+		for (const pid of Object.keys(instances)) closeApplication(pid)
+		setHasRanStartupApplications(false)
+		setCurrentUserID("")
 		router.push("/lock")
 	}
 
 	const handleShutdownMenuClick = () => {
-		batch(() => {
-			for (const pid of Object.keys(instances)) dispatch(closeApplication({ pid }))
-			dispatch(setHasRanStartupApplications(false))
-			dispatch(setCurrentUserID(""))
-		})
+		for (const pid of Object.keys(instances)) closeApplication(pid)
+		setHasRanStartupApplications(false)
+		setCurrentUserID("")
 		// TODO: find a better solution !, this is a hack
 		setTimeout(() => router.replace("/"), 0)
 	}
 
 	const handleMenuApplicationClick = (aid: number) => {
-		dispatch(runApplication({ aid, args: {} }))
+		runApplication(aid, {})
 		closeMenu()
 	}
 
@@ -138,10 +114,8 @@ const TaskBar: FC = () => {
 							focusable
 							onClick={() => {
 								if (instance.type === "window") {
-									batch(() => {
-										dispatch(setMinimized({ pid: instance.pid, minimized: false }))
-										dispatch(sendToFront({ pid: instance.pid }))
-									})
+									setMinimized(instance.pid, false)
+									sendToFront(instance.pid)
 								}
 							}}
 						>
@@ -230,7 +204,7 @@ const TaskBar: FC = () => {
 						ripple
 						focusable={menuShown === EMenuShown.Main}
 						onClick={() => {
-							dispatch(runApplication({ aid: Applications.Settings, args: { tab: "profile" } }))
+							runApplication(Applications.Settings, { tab: "profile" })
 							closeMenu()
 						}}
 					>
@@ -245,7 +219,7 @@ const TaskBar: FC = () => {
 						ripple
 						focusable={menuShown === EMenuShown.Main}
 						onClick={() => {
-							dispatch(runApplication({ aid: Applications.Settings, args: {} }))
+							runApplication(Applications.Settings, {})
 							closeMenu()
 						}}
 					>
@@ -260,7 +234,7 @@ const TaskBar: FC = () => {
 						size="md"
 						focusable={menuShown === EMenuShown.Main}
 						onClick={() => {
-							dispatch(runApplication({ aid: Applications.Manager, args: {} }))
+							runApplication(Applications.Manager, {})
 							closeMenu()
 						}}
 					>

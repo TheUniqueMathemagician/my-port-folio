@@ -1,9 +1,9 @@
+import { useApplicationsStore } from "context/applications"
 import { FC } from "react"
-import { useSelector } from "../../hooks/Store"
 import Daemon from "./Daemon"
 
 const DaemonFrame: FC = () => {
-	const instances = useSelector((store) => store.applications.instances)
+	const instances = useApplicationsStore((store) => store.instances)
 
 	return <>
 		{Object.keys(instances)

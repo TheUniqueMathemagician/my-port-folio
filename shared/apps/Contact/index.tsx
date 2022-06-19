@@ -1,10 +1,10 @@
 import { Applications } from "@/types/Application"
 import { ColorScheme } from "@/types/ColorScheme"
+import { useApplicationsStore } from "context/applications"
+import { useThemeStore } from "context/theme"
 import { FC, memo, MouseEventHandler, useCallback, useState } from "react"
 import { IoLocationSharp } from "react-icons/io5"
 import { MdMail, MdPhone } from "react-icons/md"
-import { useDispatch, useSelector } from "../../../hooks/Store"
-import { runApplication } from "../../../store/slices/Applications"
 import Button from "../../ui/input/Button"
 import Text from "../../ui/input/Text"
 import TextArea from "../../ui/input/TextArea"
@@ -18,17 +18,18 @@ const Mail = memo(MdMail)
 const Phone = memo(MdPhone)
 
 const Contact: FC = () => {
-	const dispatch = useDispatch()
-
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 
 	const [loading, setLoading] = useState(false)
 	const [resendDate, setResendDate] = useState(new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0")))
 
+	const runApplication = useApplicationsStore((store) => store.runApplication)
+
 	const handleMapsClick: (MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>) = useCallback((e) => {
 		e.preventDefault()
-		dispatch(runApplication({ aid: Applications.Maps, args: {} }))
-	}, [dispatch])
+
+		runApplication(Applications.Maps, {})
+	}, [runApplication])
 
 	const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()

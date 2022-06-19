@@ -5,9 +5,10 @@ const TaskBarTimeDate = () => {
 	const [date, setDate] = useState<number>(Date.now())
 
 	useEffect(() => {
-		const interval = setInterval(() => { setDate(Date.now()) }, 1000)
+		// FIXME: Huge perfomance issue
+		// const interval = setInterval(() => { setDate(Date.now()) }, 1000)
 
-		return () => { clearInterval(interval) }
+		// return () => { clearInterval(interval) }
 	}, [])
 
 	const _time = new Date(date).toLocaleTimeString().slice(0, -3)

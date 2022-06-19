@@ -4,11 +4,10 @@ import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
 import { Offset } from "@/types/Offset"
 import { Snap } from "@/types/Snap"
+import { useApplicationsStore } from "context/applications"
+import { useThemeStore } from "context/theme"
 import { FC, memo, RefObject, useCallback, useEffect, useRef, useState } from "react"
-import { batch } from "react-redux"
 import { fromEvent, throttleTime } from "rxjs"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { closeApplication, sendToFront, setBreakpoint, setDragging, setMaximized, setMinimized, setPosition, setSnapShadowPosition, setSnapShadowVisibility } from "../../store/slices/Applications"
 import classes from "./WindowHeader.module.scss"
 
 type Props = {
@@ -22,19 +21,27 @@ const WindowHeader: FC<Props> = (props) => {
 
 	const headerRef = useRef<HTMLDivElement>(null)
 
-	const dispatch = useDispatch()
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const dimensions = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).dimensions)
+	const displayName = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).displayName)
+	const dragging = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).dragging)
+	const maximized = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).maximized)
+	const snapShadowVisible = useApplicationsStore((store) => store.snapShadow.visible)
 
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const snapShadowVisible = useSelector((store) => store.applications.snapShadow.visible)
-	const maximized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).maximized)
-	const dimensions = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dimensions)
-	const dragging = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dragging)
-	const displayName = useSelector((store) => (store.applications.instances[pid] as WindowInstance).displayName)
+	const closeApplication = useApplicationsStore((store) => store.closeApplication)
+	const sendToFront = useApplicationsStore((store) => store.sendToFront)
+	const setBreakpoint = useApplicationsStore((store) => store.setBreakpoint)
+	const setDragging = useApplicationsStore((store) => store.setDragging)
+	const setMaximized = useApplicationsStore((store) => store.setMaximized)
+	const setMinimized = useApplicationsStore((store) => store.setMinimized)
+	const setPosition = useApplicationsStore((store) => store.setPosition)
+	const setSnapShadowPosition = useApplicationsStore((store) => store.setSnapShadowPosition)
+	const setSnapShadowVisibility = useApplicationsStore((store) => store.setSnapShadowVisibility)
 
 	const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 })
 	const [snap, setSnap] = useState<Snap>(Snap.none)
 
-	const handleDragDoubleClick = useCallback(() => dispatch(setMaximized({ pid, maximized: Snap.top })), [pid, dispatch])
+	const handleDragDoubleClick = useCallback(() => setMaximized(pid, Snap.top), [setMaximized, pid])
 
 	// #region button handlers
 
@@ -42,24 +49,22 @@ const WindowHeader: FC<Props> = (props) => {
 		e.stopPropagation()
 		e.preventDefault()
 
-		dispatch(closeApplication({ pid }))
-	}, [dispatch, pid])
+		closeApplication(pid)
+	}, [closeApplication, pid])
 
 	const handleOrangeClick = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 
-		batch(() => {
-			dispatch(sendToFront({ pid }))
-			dispatch(maximized ? setMaximized({ pid, maximized: Snap.none }) : setMaximized({ pid, maximized: Snap.top }))
-		})
-	}, [dispatch, pid, maximized])
+		sendToFront(pid)
+		setMaximized(pid, maximized ? Snap.none : Snap.top)
+	}, [sendToFront, pid, setMaximized, maximized])
 
 	const handleGreenClick = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
 
-		dispatch(setMinimized({ pid, minimized: true }))
-	}, [pid, dispatch])
+		setMinimized(pid, true)
+	}, [setMinimized, pid])
 
 	const handleButtonMouseDown = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
@@ -73,7 +78,7 @@ const WindowHeader: FC<Props> = (props) => {
 	const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
 		if (e.button !== 0) return
 
-		e.preventDefault()
+		// e.preventDefault()
 
 		if (maximized) {
 			const header = headerRef.current
@@ -95,8 +100,8 @@ const WindowHeader: FC<Props> = (props) => {
 
 		document.body.style.cursor = "grabbing"
 
-		dispatch(setDragging({ pid, dragging: true }))
-	}, [maximized, dimensions.width, dispatch, pid, windowRef])
+		setDragging(pid, true)
+	}, [maximized, setDragging, pid, dimensions.width, windowRef])
 
 	const handleDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
 		const header = headerRef.current
@@ -112,110 +117,75 @@ const WindowHeader: FC<Props> = (props) => {
 		const shouldSnapToRight = e.pageX + 1 >= boundaries.x2
 
 		if (shouldSnapToTop && shouldSnapToLeft) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: "50%",
-						top: 0,
-						left: 0,
-						right: "50%",
-					})
-				)
-
-				setSnap(Snap.topLeft)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: "50%",
+				top: 0,
+				left: 0,
+				right: "50%",
 			})
+			setSnap(Snap.topLeft)
 		} else if (shouldSnapToTop && shouldSnapToRight) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: "50%",
-						top: 0,
-						left: "50%",
-						right: 0,
-					})
-				)
-
-				setSnap(Snap.topRight)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: "50%",
+				top: 0,
+				left: "50%",
+				right: 0,
 			})
+			setSnap(Snap.topRight)
 		} else if (shouldSnapToBottom && shouldSnapToLeft) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: 0,
-						top: "50%",
-						left: 0,
-						right: "50%",
-					})
-				)
-
-				setSnap(Snap.bottomLeft)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: 0,
+				top: "50%",
+				left: 0,
+				right: "50%",
 			})
+
+			setSnap(Snap.bottomLeft)
 		} else if (shouldSnapToBottom && shouldSnapToRight) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: 0,
-						top: "50%",
-						left: "50%",
-						right: 0,
-					})
-				)
-
-				setSnap(Snap.bottomRight)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: 0,
+				top: "50%",
+				left: "50%",
+				right: 0,
 			})
+
+			setSnap(Snap.bottomRight)
 		} else if (shouldSnapToTop) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: 0,
-						top: 0,
-						left: 0,
-						right: 0,
-					})
-				)
-
-				setSnap(Snap.top)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: 0,
+				top: 0,
+				left: 0,
+				right: 0,
 			})
+			setSnap(Snap.top)
 		} else if (shouldSnapToLeft) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: 0,
-						top: 0,
-						left: 0,
-						right: "50%",
-					})
-				)
-
-				setSnap(Snap.left)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: 0,
+				top: 0,
+				left: 0,
+				right: "50%",
 			})
+			setSnap(Snap.left)
 		} else if (shouldSnapToRight) {
-			batch(() => {
-				dispatch(setSnapShadowVisibility(true))
-				dispatch(
-					setSnapShadowPosition({
-						bottom: 0,
-						top: 0,
-						left: "50%",
-						right: 0,
-					})
-				)
-
-				setSnap(Snap.right)
+			setSnapShadowVisibility(true)
+			setSnapShadowPosition({
+				bottom: 0,
+				top: 0,
+				left: "50%",
+				right: 0,
 			})
+			setSnap(Snap.right)
 		} else {
-			batch(() => {
-				if (snapShadowVisible) dispatch(setSnapShadowVisibility(false))
-				if (maximized) dispatch(setMaximized({ pid, maximized: Snap.none }))
+			if (snapShadowVisible) setSnapShadowVisibility(false)
+			if (maximized) setMaximized(pid, Snap.none)
 
-				setSnap(Snap.none)
-			})
+			setSnap(Snap.none)
 		}
 
 		const tmpPosition = {
@@ -225,7 +195,7 @@ const WindowHeader: FC<Props> = (props) => {
 			bottom: null,
 		}
 
-		dispatch(setPosition({ pid, position: tmpPosition }))
+		setPosition(pid, tmpPosition)
 
 		if (!snapShadowVisible) {
 			const window = windowRef.current
@@ -246,7 +216,7 @@ const WindowHeader: FC<Props> = (props) => {
 					top: window.offsetTop,
 				}
 
-				dispatch(setSnapShadowPosition(snapShadowPosition))
+				setSnapShadowPosition(snapShadowPosition)
 			}
 		}
 	}, [
@@ -254,27 +224,25 @@ const WindowHeader: FC<Props> = (props) => {
 		boundaries.x2,
 		boundaries.y1,
 		boundaries.y2,
-		dispatch,
 		maximized,
 		offset.x,
 		offset.y,
 		pid,
+		setMaximized,
+		setPosition,
+		setSnapShadowPosition,
+		setSnapShadowVisibility,
 		snapShadowVisible,
 		windowRef,
 	])
 
 	const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
-		e.stopPropagation()
-		e.preventDefault()
-
 		document.body.style.cursor = ""
 
-		batch(() => {
-			dispatch(setDragging({ pid, dragging: false }))
-			dispatch(setSnapShadowVisibility(false))
-			dispatch(setMaximized({ pid, maximized: snap }))
-		})
-	}, [pid, dispatch, snap])
+		setDragging(pid, false)
+		setSnapShadowVisibility(false)
+		setMaximized(pid, snap)
+	}, [setDragging, pid, setSnapShadowVisibility, setMaximized, snap])
 
 	// #endregion
 
@@ -306,8 +274,8 @@ const WindowHeader: FC<Props> = (props) => {
 		if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
 		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
 
-		dispatch(setBreakpoint({ pid, breakpoint }))
-	}, [windowRef, dispatch, pid])
+		setBreakpoint(pid, breakpoint)
+	}, [windowRef, pid, setBreakpoint])
 
 	const rootClasses = [classes["root"]]
 

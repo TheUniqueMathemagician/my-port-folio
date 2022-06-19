@@ -1,10 +1,10 @@
+import { useApplicationsStore } from "context/applications"
 import { FC } from "react"
-import { useSelector } from "../../hooks/Store"
 import Activity from "./Activity"
 import classes from "./ActivityFrame.module.scss"
 
 const ActivityFrame: FC = () => {
-	const instances = useSelector((store) => store.applications.instances)
+	const instances = useApplicationsStore((store) => store.instances)
 
 	const rootClasses = [classes["root"]]
 

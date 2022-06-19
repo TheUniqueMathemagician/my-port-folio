@@ -2,44 +2,45 @@ import { WindowInstance } from "@/types/Application"
 import { Boundaries } from "@/types/Boundaries"
 import { ColorScheme } from "@/types/ColorScheme"
 import { Position } from "@/types/Position"
+import { applicationsMap, useApplicationsStore } from "context/applications"
+import { useThemeStore } from "context/theme"
 import { createElement, FC, memo, MouseEventHandler, useCallback, useRef } from "react"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { applicationsMap, sendToFront } from "../../store/slices/Applications"
 import classes from "./Window.module.scss"
 import WindowHeader from "./WindowHeader"
 import WindowResizer from "./WindowResizer"
 
-interface Props {
-	borderOffset: number
-	boundaries: Boundaries
-	pid: string
-	resizerWidth: number
+type Props = {
+	readonly borderOffset: number
+	readonly boundaries: Boundaries
+	readonly pid: string
+	readonly resizerWidth: number
 }
 
-const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
+const Window: FC<Props> = (props) => {
+	const { pid, boundaries, borderOffset, resizerWidth } = props
+
 	const windowRef = useRef<HTMLDivElement>(null)
 
-	const zIndexes = useSelector((store) => store.applications.zIndexes)
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const maximized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).maximized)
-	const minimized = useSelector((store) => (store.applications.instances[pid] as WindowInstance).minimized)
-	const dimensions = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dimensions)
-	const position = useSelector((store) => (store.applications.instances[pid] as WindowInstance).position)
-	const dragging = useSelector((store) => (store.applications.instances[pid] as WindowInstance).dragging)
-	const resizing = useSelector((store) => (store.applications.instances[pid] as WindowInstance).resizing)
-	const component = useSelector((store) => (store.applications.instances[pid] as WindowInstance).component)
-	const args = useSelector((store) => (store.applications.instances[pid] as WindowInstance).args)
+	const args = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).args)
+	const component = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).component)
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const dimensions = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).dimensions)
+	const dragging = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).dragging)
+	const maximized = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).maximized)
+	const minimized = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).minimized)
+	const position = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).position)
+	const resizing = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizing)
+	const zIndexes = useApplicationsStore((store) => store.zIndexes)
 
-	const dispatch = useDispatch()
+	const sendToFront = useApplicationsStore((store) => store.sendToFront)
 
 	const handleWindowMouseDown: MouseEventHandler<HTMLElement> = useCallback((e) => {
 		if (e.button !== 0) return
-		if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) dispatch(sendToFront({ pid }))
-	}, [dispatch, pid, zIndexes])
 
-	const handleWindowFocus = useCallback(() => {
-		if (zIndexes.findIndex((id) => id === pid) !== zIndexes.length - 1) dispatch(sendToFront({ pid }))
-	}, [dispatch, pid, zIndexes])
+		sendToFront(pid)
+	}, [pid, sendToFront])
+
+	const handleWindowFocus = useCallback(() => sendToFront(pid), [pid, sendToFront])
 
 	// #region window rendering checks
 
@@ -106,13 +107,12 @@ const Window: FC<Props> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 		className={rootClasses.join(" ")}
 		style={{
 			bottom: tmpPosition.bottom ?? "",
-			height: height,
+			height,
 			left: tmpPosition.left ?? "",
-			opacity: dragging ? "0.7" : "",
 			right: tmpPosition.right ?? "",
 			top: tmpPosition.top ?? "",
 			visibility: minimized ? "collapse" : "visible",
-			width: width,
+			width,
 			zIndex,
 		}}
 		ref={windowRef}

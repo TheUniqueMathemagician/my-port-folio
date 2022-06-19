@@ -1,10 +1,11 @@
 import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
+import { useApplicationsStore } from "context/applications"
+import { useThemeStore } from "context/theme"
+import { useUsersStore } from "context/users"
 import { FC, memo, PropsWithChildren, useCallback, useEffect, useState } from "react"
 import { MdInfo } from "react-icons/md"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { setBackgroundColor, setColorScheme, setPrimaryColor } from "../../store/slices/Theme"
 import Avatar from "../ui/Avatar"
 import Container from "../ui/Container"
 import Button from "../ui/input/Button"
@@ -27,25 +28,26 @@ const Settings: FC<Props> = (props) => {
 
 	const [panelIndex, setPanelIndex] = useState(args["tab"] === "profile" ? 2 : 0)
 
-	const dispatch = useDispatch()
-
 	// #region Selectors
 
-	const users = useSelector((store) => store.users.elements)
-	const background = useSelector((store) => store.theme.palette.background[store.theme.colorScheme])
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
-	const colorScheme = useSelector((store) => store.theme.colorScheme)
-	const currentUserID = useSelector((store) => store.users.currentUserID)
-	const palette = useSelector((store) => store.theme.palette)
-	const primary = useSelector((store) => store.theme.palette.primary[store.theme.colorScheme])
-	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
-	const small = useSelector((store) => {
-		const instance = store.applications.instances[pid] as WindowInstance
+	const users = useUsersStore((store) => store.elements)
+	const background = useThemeStore((store) => store.palette.background[store.colorScheme])
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const colorScheme = useThemeStore((store) => store.colorScheme)
+	const currentUserID = useUsersStore((store) => store.currentUserID)
+	const palette = useThemeStore((store) => store.palette)
+	const primary = useThemeStore((store) => store.palette.primary[store.colorScheme])
+	const resizing = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizing)
+	const small = useApplicationsStore((store) => {
+		const instance = store.instances[pid] as WindowInstance
 		if (instance.breakpoint === Breakpoints.sm) return true
 		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})
+	const setBackgroundColor = useThemeStore((store) => store.setBackgroundColor)
+	const setPrimaryColor = useThemeStore((store) => store.setPrimaryColor)
+	const setColorScheme = useThemeStore((store) => store.setColorScheme)
 
 	// #endregion
 
@@ -67,40 +69,40 @@ const Settings: FC<Props> = (props) => {
 	}, [palette, colorScheme])
 
 	const handleBackgroundInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		dispatch(setBackgroundColor({
+		setBackgroundColor({
 			[ColorScheme.contrast]: e.target.value,
 			[ColorScheme.dark]: e.target.value,
 			[ColorScheme.default]: e.target.value,
 			[ColorScheme.light]: e.target.value,
-		}))
-	}, [dispatch])
+		})
+	}, [setBackgroundColor])
 
 	const handleResetBackground = useCallback(() => {
-		dispatch(setBackgroundColor({
+		setBackgroundColor({
 			[ColorScheme.contrast]: "#000000",
 			[ColorScheme.dark]: "#333333",
 			[ColorScheme.default]: "#cccccc",
 			[ColorScheme.light]: "#ffffff",
-		}))
-	}, [dispatch])
+		})
+	}, [setBackgroundColor])
 
 	const handlePrimaryInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		dispatch(setPrimaryColor({
+		setPrimaryColor({
 			[ColorScheme.contrast]: e.target.value,
 			[ColorScheme.dark]: e.target.value,
 			[ColorScheme.default]: e.target.value,
 			[ColorScheme.light]: e.target.value,
-		}))
-	}, [dispatch])
+		})
+	}, [setPrimaryColor])
 
 	const handleResetPrimary = useCallback(() => {
-		dispatch(setPrimaryColor({
+		setPrimaryColor({
 			[ColorScheme.contrast]: "#ffff00",
 			[ColorScheme.dark]: "#4489f8",
 			[ColorScheme.default]: "#0075db",
 			[ColorScheme.light]: "#0088ff",
-		}))
-	}, [dispatch])
+		})
+	}, [setPrimaryColor])
 
 	const otherUsersKeys = Object.keys(users).filter(
 		(key) => key !== users[currentUserID]?.id
@@ -137,7 +139,7 @@ const Settings: FC<Props> = (props) => {
 						value={ColorScheme.default}
 						noSelect
 						checked={colorScheme === ColorScheme.default}
-						onChange={() => dispatch(setColorScheme(ColorScheme.default))}
+						onChange={() => setColorScheme(ColorScheme.default)}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
@@ -145,7 +147,7 @@ const Settings: FC<Props> = (props) => {
 						value={ColorScheme.light}
 						noSelect
 						checked={colorScheme === ColorScheme.light}
-						onChange={() => dispatch(setColorScheme(ColorScheme.light))}
+						onChange={() => setColorScheme(ColorScheme.light)}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
@@ -153,7 +155,7 @@ const Settings: FC<Props> = (props) => {
 						value={ColorScheme.dark}
 						noSelect
 						checked={colorScheme === ColorScheme.dark}
-						onChange={() => dispatch(setColorScheme(ColorScheme.dark))}
+						onChange={() => setColorScheme(ColorScheme.dark)}
 					></Radio>
 					<Radio
 						name={pid + "_theme"}
@@ -161,7 +163,7 @@ const Settings: FC<Props> = (props) => {
 						value={ColorScheme.contrast}
 						noSelect
 						checked={colorScheme === ColorScheme.contrast}
-						onChange={() => dispatch(setColorScheme(ColorScheme.contrast))}
+						onChange={() => setColorScheme(ColorScheme.contrast)}
 					></Radio>
 				</RadioGroup>
 				<br />

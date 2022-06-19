@@ -1,6 +1,6 @@
-import { useSelector } from "@/hooks/Store"
 import { Color } from "@/types/Color"
 import { Size } from "@/types/Size"
+import { useThemeStore } from "context/theme"
 import Link from "next/link"
 import React, { DetailedHTMLProps, forwardRef, HTMLAttributes, MouseEventHandler, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from "react"
 import contrastColor from "../../../functions/contrastColor"
@@ -51,7 +51,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 	const innerRef = useRef<HTMLElement>(null)
 	const ref = (parentRef as RefObject<HTMLElement>) ?? innerRef
 
-	const backgroundColor = useSelector((store) => store.theme.palette[color ?? "background"][store.theme.colorScheme])
+	const backgroundColor = useThemeStore((store) => store.palette[color ?? "background"][store.colorScheme])
 
 	const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLElement>) => {
 		if (e.code !== "Space" || !ripple || readOnly || !ref.current) return

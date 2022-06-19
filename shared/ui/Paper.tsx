@@ -1,6 +1,6 @@
-import { useSelector } from "@/hooks/Store"
 import { Color } from "@/types/Color"
 import { ColorScheme } from "@/types/ColorScheme"
+import { useThemeStore } from "context/theme"
 import { createElement, DetailedHTMLProps, FC, HTMLAttributes, memo } from "react"
 import classes from "./Paper.module.scss"
 
@@ -16,7 +16,7 @@ type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> &
 const Paper: FC<Props> = (props) => {
 	const { background, blur, children, className, fullWidth, outlined, spaced, tag, ...other } = props
 
-	const contrast = useSelector((store) => store.theme.colorScheme === ColorScheme.contrast)
+	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 
 	const rootClasses = [classes["root"]]
 

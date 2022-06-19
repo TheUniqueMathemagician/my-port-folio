@@ -1,9 +1,8 @@
 import { Applications } from "@/types/Application"
+import { useApplicationsStore } from "context/applications"
 import { FC, memo, useCallback } from "react"
 import { IoMdClose } from "react-icons/io"
 import { MdSend } from "react-icons/md"
-import { useDispatch } from "../../hooks/Store"
-import { closeApplication, runApplication } from "../../store/slices/Applications"
 import Button from "../ui/input/Button"
 import classes from "./MenuBar.module.scss"
 
@@ -17,11 +16,12 @@ type Props = {
 const MenuBar: FC<Props> = (props) => {
 	const { pid } = props
 
-	const dispatch = useDispatch()
+	const runApplication = useApplicationsStore((store) => store.runApplication)
+	const closeApplication = useApplicationsStore((store) => store.closeApplication)
 
-	const handleContactClick = useCallback(() => dispatch(runApplication({ aid: Applications.Contact, args: {} })), [dispatch])
+	const handleContactClick = useCallback(() => runApplication(Applications.Contact, {}), [runApplication])
 
-	const handleCloseClick = useCallback(() => dispatch(closeApplication({ pid })), [dispatch, pid])
+	const handleCloseClick = useCallback(() => closeApplication(pid), [closeApplication, pid])
 
 	const rootClasses = [classes["root"]]
 

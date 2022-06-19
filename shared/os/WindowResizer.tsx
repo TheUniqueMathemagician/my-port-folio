@@ -2,11 +2,9 @@ import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
+import { useApplicationsStore } from "context/applications"
 import React, { FC, memo, RefObject, useCallback, useEffect, useRef } from "react"
-import { batch } from "react-redux"
 import { fromEvent, throttleTime } from "rxjs"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { setBreakpoint, setDimensions, setMaximized, setPosition, setResizeMode, setResizing } from "../../store/slices/Applications"
 import styles from "./WindowResizer.module.scss"
 
 type Props = {
@@ -42,14 +40,19 @@ const WindowResizer: FC<Props> = (props) => {
 
 	const resizerRef = useRef<HTMLDivElement>(null)
 
-	const dispatch = useDispatch()
+	const resizable = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizable)
+	const resizing = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizing)
+	const resizeMode = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizeMode)
+	const position = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).position)
+	const maxDimensions = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).maxDimensions)
+	const minDimensions = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).minDimensions)
 
-	const resizable = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizable
-	const resizing = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizing
-	const resizeMode = useSelector((store) => store.applications.instances[pid] as WindowInstance).resizeMode
-	const position = useSelector((store) => store.applications.instances[pid] as WindowInstance).position
-	const maxDimensions = useSelector((store) => store.applications.instances[pid] as WindowInstance).maxDimensions
-	const minDimensions = useSelector((store) => store.applications.instances[pid] as WindowInstance).minDimensions
+	const setBreakpoint = useApplicationsStore((store) => store.setBreakpoint)
+	const setDimensions = useApplicationsStore((store) => store.setDimensions)
+	const setMaximized = useApplicationsStore((store) => store.setMaximized)
+	const setPosition = useApplicationsStore((store) => store.setPosition)
+	const setResizeMode = useApplicationsStore((store) => store.setResizeMode)
+	const setResizing = useApplicationsStore((store) => store.setResizing)
 
 	const handleResizerMouseMove = useCallback((e: React.MouseEvent) => {
 		if (resizing || !resizable) return
@@ -67,25 +70,25 @@ const WindowResizer: FC<Props> = (props) => {
 		]
 
 		if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
-			if (resizeMode !== Resize.bottomRight) dispatch(setResizeMode({ pid, resizeMode: Resize.bottomRight }))
+			if (resizeMode !== Resize.bottomRight) setResizeMode(pid, Resize.bottomRight)
 		} else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
-			if (resizeMode !== Resize.bottomLeft) dispatch(setResizeMode({ pid, resizeMode: Resize.bottomLeft }))
+			if (resizeMode !== Resize.bottomLeft) setResizeMode(pid, Resize.bottomLeft)
 		} else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
-			if (resizeMode !== Resize.topRight) dispatch(setResizeMode({ pid, resizeMode: Resize.topRight }))
+			if (resizeMode !== Resize.topRight) setResizeMode(pid, Resize.topRight)
 		} else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
-			if (resizeMode !== Resize.topLeft) dispatch(setResizeMode({ pid, resizeMode: Resize.topLeft }))
+			if (resizeMode !== Resize.topLeft) setResizeMode(pid, Resize.topLeft)
 		} else if (e.pageX >= x2 - width) {
-			if (resizeMode !== Resize.right) dispatch(setResizeMode({ pid, resizeMode: Resize.right }))
+			if (resizeMode !== Resize.right) setResizeMode(pid, Resize.right)
 		} else if (e.pageY >= y2 - width) {
-			if (resizeMode !== Resize.bottom) dispatch(setResizeMode({ pid, resizeMode: Resize.bottom }))
+			if (resizeMode !== Resize.bottom) setResizeMode(pid, Resize.bottom)
 		} else if (e.pageY <= y1 + width) {
-			if (resizeMode !== Resize.top) dispatch(setResizeMode({ pid, resizeMode: Resize.top }))
+			if (resizeMode !== Resize.top) setResizeMode(pid, Resize.top)
 		} else if (e.pageX <= x1 + width) {
-			if (resizeMode !== Resize.left) dispatch(setResizeMode({ pid, resizeMode: Resize.left }))
+			if (resizeMode !== Resize.left) setResizeMode(pid, Resize.left)
 		} else {
-			dispatch(setResizeMode({ pid, resizeMode: Resize.none }))
+			setResizeMode(pid, Resize.none)
 		}
-	}, [dispatch, pid, resizable, resizeMode, resizing, width, windowRef])
+	}, [pid, resizable, resizeMode, resizing, setResizeMode, width, windowRef])
 
 	const handleResizerDragMouseDown = useCallback((e: React.MouseEvent) => {
 		if (e.button !== 0 || !resizable) return
@@ -103,19 +106,15 @@ const WindowResizer: FC<Props> = (props) => {
 
 		if (!windowFrame) return
 
-		batch(() => {
-			dispatch(setMaximized({ pid, maximized: Snap.none }))
-			dispatch(setResizing({ pid, resizing: true }))
-			dispatch(setPosition({
-				pid, position: {
-					bottom: windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
-					left: window.offsetLeft,
-					right: windowFrame.offsetWidth - window.offsetLeft - window.offsetWidth,
-					top: window.offsetTop,
-				},
-			}))
+		setMaximized(pid, Snap.none)
+		setResizing(pid, true)
+		setPosition(pid, {
+			bottom: windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
+			left: window.offsetLeft,
+			right: windowFrame.offsetWidth - window.offsetLeft - window.offsetWidth,
+			top: window.offsetTop,
 		})
-	}, [resizable, resizeMode, windowRef, dispatch, pid])
+	}, [resizable, resizeMode, windowRef, setMaximized, pid, setResizing, setPosition])
 
 	const handleResizerDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
 		const window = windowRef.current
@@ -156,20 +155,13 @@ const WindowResizer: FC<Props> = (props) => {
 		else breakpoint = Breakpoints.xs
 
 		const dispatchPositionAndBreakpoint = ({ bottom, left, right, top }: { bottom?: number; left?: number; right?: number; top?: number }) => {
-			batch(() => {
-				dispatch(
-					setPosition({
-						pid,
-						position: {
-							bottom: bottom !== undefined ? bottom : position.bottom,
-							left: left !== undefined ? left : position.left,
-							right: right !== undefined ? right : position.right,
-							top: top !== undefined ? top : position.top,
-						},
-					})
-				)
-				dispatch(setBreakpoint({ pid, breakpoint }))
+			setPosition(pid, {
+				bottom: bottom !== undefined ? bottom : position.bottom,
+				left: left !== undefined ? left : position.left,
+				right: right !== undefined ? right : position.right,
+				top: top !== undefined ? top : position.top,
 			})
+			setBreakpoint(pid, breakpoint)
 		}
 
 		const restrictedPosition = {
@@ -263,7 +255,8 @@ const WindowResizer: FC<Props> = (props) => {
 		maxDimensions.width,
 		minDimensions.height,
 		minDimensions.width,
-		dispatch,
+		setBreakpoint,
+		setPosition,
 		pid,
 		position.bottom,
 		position.left,
@@ -281,11 +274,9 @@ const WindowResizer: FC<Props> = (props) => {
 
 		if (!window) return
 
-		batch(() => {
-			dispatch(setDimensions({ pid, dimensions: { height: window.offsetHeight, width: window.offsetWidth } }))
-			dispatch(setResizing({ pid, resizing: false }))
-		})
-	}, [dispatch, windowRef, pid])
+		setDimensions(pid, { height: window.offsetHeight, width: window.offsetWidth })
+		setResizing(pid, false)
+	}, [windowRef, setDimensions, pid, setResizing])
 
 	useEffect(() => {
 		if (resizing) {

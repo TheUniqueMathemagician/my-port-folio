@@ -1,8 +1,7 @@
 import { Applications, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
+import { useApplicationsStore } from "context/applications"
 import { FC, memo, PropsWithChildren } from "react"
-import { useDispatch, useSelector } from "../../hooks/Store"
-import { runApplication } from "../../store/slices/Applications"
 import Avatar from "../ui/Avatar"
 import Button from "../ui/input/Button"
 import Paper from "../ui/Paper"
@@ -23,16 +22,16 @@ type Props = {
 const Projects: FC<Props> = (props) => {
 	const { pid } = props
 
-	const dispatch = useDispatch()
-
-	const small = useSelector((store) => {
-		const instance = store.applications.instances[pid] as WindowInstance
+	const small = useApplicationsStore((store) => {
+		const instance = store.instances[pid] as WindowInstance
 
 		if (instance.breakpoint === Breakpoints.sm) return true
 		if (instance.breakpoint === Breakpoints.xs) return true
 
 		return false
 	})
+
+	const runApplication = useApplicationsStore((store) => store.runApplication)
 
 	const rootClasses = [classes["root"]]
 
@@ -53,17 +52,10 @@ const Projects: FC<Props> = (props) => {
 					<Button
 						isIcon
 						focusable
-						onClick={() => {
-							dispatch(
-								runApplication({
-									aid: Applications.Image,
-									args: {
-										alt: "Port-folio",
-										src: "https://i.ibb.co/P4Zj5hZ/SPOILER-Desktop-2.png",
-									},
-								})
-							)
-						}}
+						onClick={() => runApplication(Applications.Image, {
+							alt: "Port-folio",
+							src: "https://i.ibb.co/P4Zj5hZ/SPOILER-Desktop-2.png",
+						})}
 						className={classes["project-link"]}
 					>
 						<Avatar
@@ -107,9 +99,7 @@ const Projects: FC<Props> = (props) => {
 							<span
 								className={classes["link"]}
 								onClick={() => {
-									dispatch(
-										runApplication({ aid: Applications.Contact, args: {} })
-									)
+									runApplication(Applications.Contact, {})
 								}}
 							>
 								&nbsp;vous avez des questions&nbsp;
@@ -169,17 +159,10 @@ const Projects: FC<Props> = (props) => {
 					<Button
 						isIcon
 						focusable
-						onClick={() => {
-							dispatch(
-								runApplication({
-									aid: Applications.Image,
-									args: {
-										alt: "Lost",
-										src: "https://i.ibb.co/Mgydw0M/theme-clair.png",
-									},
-								})
-							)
-						}}
+						onClick={() => runApplication(Applications.Image, {
+							alt: "Lost",
+							src: "https://i.ibb.co/Mgydw0M/theme-clair.png",
+						})}
 						className={classes["project-link"]}
 					>
 						<Avatar
@@ -230,9 +213,7 @@ const Projects: FC<Props> = (props) => {
 						isIcon
 						focusable
 						className={classes["project-link"]}
-						onClick={() =>
-							dispatch(runApplication({ aid: Applications.Randit, args: {} }))
-						}
+						onClick={() => runApplication(Applications.Randit, {})}
 					>
 						<Avatar
 							alt="Randit"
@@ -270,17 +251,10 @@ const Projects: FC<Props> = (props) => {
 					<Button
 						isIcon
 						focusable
-						onClick={() => {
-							dispatch(
-								runApplication({
-									aid: Applications.Image,
-									args: {
-										alt: "Lost",
-										src: "https://images.unsplash.com/photo-1515879128292-964efc3ebb25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2082&q=80",
-									},
-								})
-							)
-						}}
+						onClick={() => runApplication(Applications.Image, {
+							alt: "Lost",
+							src: "https://images.unsplash.com/photo-1515879128292-964efc3ebb25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2082&q=80",
+						})}
 						className={classes["project-link"]}
 					>
 						<Avatar
