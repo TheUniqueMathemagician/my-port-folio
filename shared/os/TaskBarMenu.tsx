@@ -23,10 +23,10 @@ const TaskBarMenu: FC<Props> = ({ shown, position, children }) => {
 	return <nav
 		className={rootClasses.join(" ")}
 		style={{
-			top: position.top ?? "",
-			left: position.left ?? "",
-			bottom: position.bottom ?? "",
-			right: position.right ?? "",
+			top: position.top ?? undefined,
+			left: position.left ?? undefined,
+			bottom: position.bottom ?? undefined,
+			right: position.right ?? undefined,
 		}}
 	>
 		{children}

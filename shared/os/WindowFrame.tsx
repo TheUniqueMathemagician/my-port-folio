@@ -53,13 +53,11 @@ const WindowFrame: FC = () => {
 	return <div className={rootClasses.join(" ")} ref={frameRef}>
 		<div
 			style={{
-				bottom: shadowPosition.bottom ?? "",
-				left: shadowPosition.left ?? "",
-				right: shadowPosition.right ?? "",
-				top: shadowPosition.top ?? "",
-				transitionDuration: isShadowVisible ? ".3s" : "",
-				transitionProperty: "bottom,top,left,right",
-				transitionTimingFunction: "ease",
+				bottom: shadowPosition.bottom ?? undefined,
+				left: shadowPosition.left ?? undefined,
+				right: shadowPosition.right ?? undefined,
+				top: shadowPosition.top ?? undefined,
+				transitionDuration: isShadowVisible ? ".3s" : undefined,
 				visibility: isShadowVisible ? "visible" : "collapse",
 			}}
 			className={shadowClasses.join(" ")}
