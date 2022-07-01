@@ -8,7 +8,7 @@ export default class AppDocument extends Document {
 	}
 
 	public override render() {
-		return <Html lang="en">
+		return <Html lang="fr">
 			<Head />
 			<body>
 				<Main />

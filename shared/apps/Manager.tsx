@@ -30,22 +30,7 @@ const Manager: FC<Props> = (props) => {
 
 	const applications = useApplicationsStore((store) => store.pool)
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
-	const instances = useApplicationsStore((store) => store.instances,
-		(left, right) => {
-			for (const key in left) {
-				const leftItem = left[key]
-				const rightItem = right[key]
-
-				if (!leftItem) return false
-				if (!rightItem) return false
-				if (leftItem.displayName !== rightItem.displayName) return false
-			}
-
-			if (Object.keys(left).length !== Object.keys(right).length) return false
-
-			return true
-		}
-	)
+	const instances = useApplicationsStore((store) => store.instances)
 	const resizing = useApplicationsStore((store) => store.instances[pid] as WindowInstance).resizing
 	const small = useApplicationsStore((store) => {
 		const instance = store.instances[pid]
@@ -61,6 +46,7 @@ const Manager: FC<Props> = (props) => {
 	const setRunOnStartup = useApplicationsStore((store) => store.setRunOnStartup)
 	const closeApplication = useApplicationsStore((store) => store.closeApplication)
 	const sendToFront = useApplicationsStore((store) => store.sendToFront)
+	const setMinimized = useApplicationsStore((store) => store.setMinimized)
 
 	const [panelIndex, setPanelIndex] = useState(0)
 
@@ -181,9 +167,8 @@ const Manager: FC<Props> = (props) => {
 												ripple
 												size="xs"
 												onClick={() => {
-													const instance = instances[key]
-
-													if (instance.type === "window") sendToFront(key)
+													setMinimized(key, false)
+													sendToFront(key)
 												}}
 											>
 												<MdCenterFocusStrong color="primary"></MdCenterFocusStrong>

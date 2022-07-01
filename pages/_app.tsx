@@ -29,7 +29,7 @@ const Setup: FC = () => {
 
 	const colorPropertiesString = `#__next{${colorProperties.join("")}}`
 
-	return <style jsx>{colorPropertiesString}</style>
+	return <style>{colorPropertiesString}</style>
 }
 
 const client = new QueryClient()
@@ -38,7 +38,10 @@ const App: FC<AppPropsWithLayout> = ({ Component, pageProps }) => {
 	const getLayout = Component.layout || ((page) => page)
 
 	return <QueryClientProvider client={client}>
-		<Head><title>Tamburrini Yannick</title></Head>
+		<Head>
+			<title>Tamburrini Yannick</title>
+			<meta name="description" content="Ceci est mon portfolio." />
+		</Head>
 		<Setup />
 		{getLayout(<Component {...pageProps} />)}
 	</QueryClientProvider>

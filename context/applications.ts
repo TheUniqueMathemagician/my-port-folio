@@ -394,7 +394,9 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 
 		application.runOnStartup = runOnStartup
 
-		set(() => ({}))
+		const pool = { ...state.pool }
+
+		set(() => ({ pool }))
 	},
 	setSnapShadowPosition: (position) => {
 		const state = get()

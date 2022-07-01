@@ -25,16 +25,39 @@ enum EMenuShown {
 
 const Send = memo(MdSend)
 
+type TaskIconButtonProps = {
+	pid: string
+}
+
+const TaskIconButton: FC<TaskIconButtonProps> = (props) => {
+	const { pid } = props
+
+	const displayName = useApplicationsStore((store) => store.instances[pid].displayName)
+	const icon = useApplicationsStore((store) => store.instances[pid].icon)
+	const setMinimized = useApplicationsStore((store) => store.setMinimized)
+	const sendToFront = useApplicationsStore((store) => store.sendToFront)
+
+	return <Button
+		size="md"
+		ripple
+		focusable
+		onClick={() => {
+			setMinimized(pid, false)
+			sendToFront(pid)
+		}}
+	>
+		<Image src={icon} alt={displayName} layout="fixed" width={24} height={24} objectFit="cover" />
+	</Button>
+}
+
 const TaskBar: FC = () => {
 	const [menuShown, setMenuShown] = useState(EMenuShown.None)
 
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
-	const instances = useApplicationsStore((store) => store.instances)
+	const instanceKeys = useApplicationsStore((store) => Object.keys(store.instances), (instanceKeys, nextInstanceKeys) => instanceKeys.length === nextInstanceKeys.length)
 	const applications = useApplicationsStore((store) => store.pool)
 
 	const runApplication = useApplicationsStore((store) => store.runApplication)
-	const sendToFront = useApplicationsStore((store) => store.sendToFront)
-	const setMinimized = useApplicationsStore((store) => store.setMinimized)
 	const closeApplication = useApplicationsStore((store) => store.closeApplication)
 	const setHasRanStartupApplications = useOsStore((store) => store.setHasRanStartupApplications)
 	const setCurrentUserID = useUsersStore((store) => store.setCurrentUserID)
@@ -69,14 +92,14 @@ const TaskBar: FC = () => {
 	}
 
 	const handleDisconnectMenuClick = () => {
-		for (const pid of Object.keys(instances)) closeApplication(pid)
+		for (const pid of instanceKeys) closeApplication(pid)
 		setHasRanStartupApplications(false)
 		setCurrentUserID("")
 		router.push("/lock")
 	}
 
 	const handleShutdownMenuClick = () => {
-		for (const pid of Object.keys(instances)) closeApplication(pid)
+		for (const pid of instanceKeys) closeApplication(pid)
 		setHasRanStartupApplications(false)
 		setCurrentUserID("")
 		// TODO: find a better solution !, this is a hack
@@ -104,25 +127,9 @@ const TaskBar: FC = () => {
 			<Divider inset margin vertical></Divider>
 
 			<ul className={classes["apps"]}>
-				{Object.keys(instances)
-					.map((x) => instances[x])
-					.filter((app) => app.type === "window")
-					.map((instance) => <li key={instance.pid}>
-						<Button
-							size="md"
-							ripple
-							focusable
-							onClick={() => {
-								if (instance.type === "window") {
-									setMinimized(instance.pid, false)
-									sendToFront(instance.pid)
-								}
-							}}
-						>
-							<img src={instance.icon} alt={instance.displayName} />
-						</Button>
-					</li>
-					)}
+				{instanceKeys.map((instanceKey) => <li key={instanceKey}>
+					<TaskIconButton pid={instanceKey} />
+				</li>)}
 			</ul>
 
 			<Divider inset margin vertical></Divider>
