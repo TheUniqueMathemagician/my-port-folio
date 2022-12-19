@@ -4,7 +4,7 @@ import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
 import React, { FC, memo, RefObject, useCallback, useEffect, useRef } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, interval, sample } from "rxjs"
 import styles from "./WindowResizer.module.scss"
 
 type Props = {
@@ -39,6 +39,8 @@ const WindowResizer: FC<Props> = (props) => {
 	const { pid, width, windowRef } = props
 
 	const resizerRef = useRef<HTMLDivElement>(null)
+
+	const animationFrame$ = useRef(interval(0, animationFrameScheduler))
 
 	const resizable = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizable)
 	const resizing = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizing)
@@ -281,10 +283,10 @@ const WindowResizer: FC<Props> = (props) => {
 	useEffect(() => {
 		if (resizing) {
 			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(sample(animationFrame$.current))
 				.subscribe(handleResizerDragMouseMove)
 			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(sample(animationFrame$.current))
 				.subscribe(handleResizerDragMouseUp)
 
 			return () => {

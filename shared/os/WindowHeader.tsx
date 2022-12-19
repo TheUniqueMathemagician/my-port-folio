@@ -7,7 +7,7 @@ import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FC, memo, RefObject, useCallback, useEffect, useRef, useState } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, interval, sample } from "rxjs"
 import classes from "./WindowHeader.module.scss"
 
 type Props = {
@@ -20,6 +20,8 @@ const WindowHeader: FC<Props> = (props) => {
 	const { pid, boundaries, windowRef } = props
 
 	const headerRef = useRef<HTMLDivElement>(null)
+
+	const animationFrame$ = useRef(interval(0, animationFrameScheduler))
 
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const dimensions = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).dimensions)
@@ -53,6 +55,7 @@ const WindowHeader: FC<Props> = (props) => {
 	}, [closeApplication, pid])
 
 	const handleOrangeClick = useCallback((e: React.MouseEvent) => {
+		e.stopPropagation()
 		e.preventDefault()
 
 		sendToFront(pid)
@@ -60,8 +63,8 @@ const WindowHeader: FC<Props> = (props) => {
 	}, [sendToFront, pid, setMaximized, maximized])
 
 	const handleGreenClick = useCallback((e: React.MouseEvent) => {
-		e.preventDefault()
 		e.stopPropagation()
+		e.preventDefault()
 
 		setMinimized(pid, true)
 	}, [setMinimized, pid])
@@ -71,14 +74,14 @@ const WindowHeader: FC<Props> = (props) => {
 		e.stopPropagation()
 	}, [])
 
-	// #endregion
+	// #endregion button handlers
 
 	// #region dragging handlers
 
 	const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
 		if (e.button !== 0) return
 
-		// e.preventDefault()
+		e.preventDefault()
 
 		if (maximized) {
 			const header = headerRef.current
@@ -244,15 +247,15 @@ const WindowHeader: FC<Props> = (props) => {
 		setMaximized(pid, snap)
 	}, [setDragging, pid, setSnapShadowVisibility, setMaximized, snap])
 
-	// #endregion
+	// #endregion dragging handlers
 
 	useEffect(() => {
 		if (dragging) {
 			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(sample(animationFrame$.current))
 				.subscribe(handleDragMouseMove)
 			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(sample(animationFrame$.current))
 				.subscribe(handleDragMouseUp)
 
 			return () => {
@@ -287,6 +290,8 @@ const WindowHeader: FC<Props> = (props) => {
 		onMouseDown={handleDragMouseDown}
 		onDoubleClick={handleDragDoubleClick}
 		draggable={false}
+		onDragStart={() => false}
+		onDrag={() => false}
 	>
 		<div className={classes["button-list"]}>
 			<button

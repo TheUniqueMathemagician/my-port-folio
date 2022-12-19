@@ -3,7 +3,7 @@ import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, interval, sample } from "rxjs"
 import Window from "./Window"
 import classes from "./WindowFrame.module.scss"
 
@@ -18,6 +18,8 @@ const WindowFrame: FC = () => {
 	const [boundaries, setBoundaries] = useState<Boundaries>({ x1: 0, y1: 0, x2: 0, y2: 0 })
 
 	const frameRef = useRef<HTMLDivElement>(null)
+
+	const animationFrame$ = useRef(interval(0, animationFrameScheduler))
 
 	const handleResize = useCallback(() => {
 		const frame = frameRef.current
@@ -36,7 +38,7 @@ const WindowFrame: FC = () => {
 		handleResize()
 
 		const resizeSubscription = fromEvent(window, "resize")
-			.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+			.pipe(sample(animationFrame$.current))
 			.subscribe(handleResize)
 
 		return () => { resizeSubscription.unsubscribe() }
@@ -50,28 +52,30 @@ const WindowFrame: FC = () => {
 	if (isResizing) rootClasses.push(classes["resizing"])
 
 	// TODO: put snap shadow in its own component
-	return <div className={rootClasses.join(" ")} ref={frameRef}>
-		<div
-			style={{
-				bottom: shadowPosition.bottom ?? undefined,
-				left: shadowPosition.left ?? undefined,
-				right: shadowPosition.right ?? undefined,
-				top: shadowPosition.top ?? undefined,
-				transitionDuration: isShadowVisible ? ".3s" : undefined,
-				visibility: isShadowVisible ? "visible" : "collapse",
-			}}
-			className={shadowClasses.join(" ")}
-		></div>
-		{instanceKeys
-			.map((key) => <Window
-				borderOffset={16}
-				boundaries={boundaries}
-				key={key}
-				pid={key}
-				resizerWidth={4}
-			/>
-			)}
-	</div>
+	return (
+		<div className={rootClasses.join(" ")} ref={frameRef}>
+			<div
+				style={{
+					bottom: shadowPosition.bottom ?? undefined,
+					left: shadowPosition.left ?? undefined,
+					right: shadowPosition.right ?? undefined,
+					top: shadowPosition.top ?? undefined,
+					transitionDuration: isShadowVisible ? ".3s" : undefined,
+					visibility: isShadowVisible ? "visible" : "collapse",
+				}}
+				className={shadowClasses.join(" ")}
+			></div>
+			{instanceKeys.map((key) => (
+				<Window
+					borderOffset={16}
+					boundaries={boundaries}
+					key={key}
+					pid={key}
+					resizerWidth={4}
+				/>
+			))}
+		</div>
+	)
 }
 
 export default memo(WindowFrame)
