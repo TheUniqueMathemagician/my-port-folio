@@ -18,7 +18,7 @@
 		"**/.next": true,
 		"**/next-env.d.ts": true,
 		"**/node_modules": true,
-		"**/package-lock.json": true,
+		"**/package-lock.json": true
 	},
 	"files.insertFinalNewline": true,
 	"files.maxMemoryForLargeFilesMB": 2048,
@@ -31,12 +31,15 @@
 	"javascript.preferences.importModuleSpecifierEnding": "minimal",
 	"javascript.preferences.quoteStyle": "double",
 	// Typescript
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.format.insertSpaceAfterCommaDelimiter": true,
 	"typescript.format.insertSpaceAfterTypeAssertion": true,
 	"typescript.format.semicolons": "remove",
 	"typescript.preferences.importModuleSpecifier": "shortest",
 	"typescript.preferences.importModuleSpecifierEnding": "minimal",
 	"typescript.preferences.quoteStyle": "double",
-	"typescript.format.insertSpaceAfterCommaDelimiter": true,
+	"typescript.suggest.autoImports": true,
+	"typescript.tsdk": "node_modules\\typescript\\lib",
 	// CSS, SCSS, LESS
 	"css.lint.important": "error",
 	"scss.lint.important": "error",
@@ -57,5 +60,5 @@
 	"prettier.singleQuote": false,
 	"prettier.tabWidth": 2,
 	"prettier.trailingComma": "es5",
-	"prettier.useTabs": true,
+	"prettier.useTabs": true
 }

@@ -7,38 +7,27 @@
 		"incremental": true,
 		"isolatedModules": true,
 		"jsx": "preserve",
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"module": "esnext",
 		"moduleResolution": "node",
 		"noEmit": true,
 		"noImplicitAny": true,
 		"noImplicitOverride": true,
 		"paths": {
-			"@/components/*": [
-				"shared/*"
-			],
-			"@/hooks/*": [
-				"hooks/*"
-			],
-			"@/types/*": [
-				"types/*"
-			],
+			"@/components/*": ["shared/*"],
+			"@/hooks/*": ["hooks/*"],
+			"@/types/*": ["types/*"]
 		},
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "es5",
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
 	},
-	"exclude": [
-		"node_modules"
-	],
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-	],
+	"exclude": ["node_modules"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }

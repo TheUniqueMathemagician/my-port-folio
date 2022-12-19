@@ -12,27 +12,31 @@ module.exports = {
 	images: {
 		domains: ["images.unsplash.com"]
 	},
-	webpack5: true,
-	headers: [
+	headers: async () => [
 		{
-			key: 'X-DNS-Prefetch-Control',
-			value: 'on'
-		},
-		{
-			key: 'X-XSS-Protection',
-			value: '1; mode=block'
-		},
-		{
-			key: 'Content-Security-Policy',
-			value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
-		},
-		{
-			key: 'X-Content-Type-Options',
-			value: 'nosniff'
-		},
-		{
-			key: 'X-Frame-Options',
-			value: 'sameorigin'
+			source: '/:path*',
+			headers: [
+				{
+					key: 'X-DNS-Prefetch-Control',
+					value: 'on'
+				},
+				{
+					key: 'X-XSS-Protection',
+					value: '1; mode=block'
+				},
+				// {
+				// 	key: 'Content-Security-Policy',
+				// 	value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+				// },
+				{
+					key: 'X-Content-Type-Options',
+					value: 'nosniff'
+				},
+				{
+					key: 'X-Frame-Options',
+					value: 'sameorigin'
+				}
+			]
 		}
-	]
+	],
 }
