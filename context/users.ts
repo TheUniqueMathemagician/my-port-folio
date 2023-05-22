@@ -1,4 +1,4 @@
-import create from "zustand"
+import { create } from "zustand"
 import generateID from "../functions/generateID"
 
 type User = {

@@ -17,7 +17,7 @@ import { Position } from "@/types/Position"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import { FC } from "react"
-import create from "zustand"
+import { create } from "zustand"
 import generateID from "../functions/generateID"
 
 type RunApp = {

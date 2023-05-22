@@ -1,6 +1,6 @@
 import { ColorPalette } from "@/types/ColorPalette"
 import { ColorScheme } from "@/types/ColorScheme"
-import create from "zustand"
+import { create } from "zustand"
 
 type Font = {
 	fontSize: string
