@@ -115,15 +115,13 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 	if (className) rootClasses.push(className)
 	if (loading) rootClasses.push(classes["loading"])
 
-	if (props.to) return <Link href={props.to}>
-		<a className={rootClasses.join(" ")} {...rest} ref={ref as any} onClick={handleClick}>
-			<div className={classes["content"]}>{children}</div>
-			<div className={classes["loader"]}>
-				<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-					<circle cx="50" cy="50" r="45" />
-				</svg>
-			</div>
-		</a>
+	if (props.to) return <Link href={props.to} className={rootClasses.join(" ")} {...rest} ref={ref as any} onClick={handleClick}>
+		<div className={classes["content"]}>{children}</div>
+		<div className={classes["loader"]}>
+			<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+				<circle cx="50" cy="50" r="45" />
+			</svg>
+		</div>
 	</Link>
 
 	return <button className={rootClasses.join(" ")} onClick={handleClick} onKeyPress={handleKeyPress} ref={ref as any} {...rest}>

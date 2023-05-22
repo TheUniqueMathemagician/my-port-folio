@@ -15,7 +15,6 @@ const Hobbies: FC<Props> = () => {
 		<Paper spaced background="paper" className={classes["paper"]}>
 			<Image
 				src={"/images/coding.svg"} alt="Coding"
-				layout="fixed"
 				width={100}
 				height={100}
 			></Image>
@@ -31,7 +30,6 @@ const Hobbies: FC<Props> = () => {
 			<Image
 				src={"/images/guitar.svg"}
 				alt="Guitare"
-				layout="fixed"
 				width={100}
 				height={100}
 			></Image>
@@ -47,7 +45,6 @@ const Hobbies: FC<Props> = () => {
 			<Image
 				src={"/images/nature.svg"}
 				alt="Nature"
-				layout="fixed"
 				width={100}
 				height={100}
 			></Image>
@@ -61,7 +58,6 @@ const Hobbies: FC<Props> = () => {
 			<Image
 				src={"/images/electronics.svg"}
 				alt="Electronics"
-				layout="fixed"
 				width={100}
 				height={100}
 			></Image>

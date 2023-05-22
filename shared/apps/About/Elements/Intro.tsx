@@ -127,27 +127,27 @@ const Intro: FC<Props> = (props) => {
 			<Paper spaced className={classes["bubble"]} background="paper">
 				{/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
 				<Image
-					src={"/images/solved.svg"}
 					alt="UI/UX"
-					layout="fill"
+					fill
+					src={"/images/solved.svg"}
 				/>
 				<Typography variant="h6" tag="h5">Problem solving</Typography>
 			</Paper>
 			<Paper spaced className={classes["bubble"]} background="paper">
 				{/* <div>Icônes conçues par <a href="https://www.flaticon.com/fr/auteurs/xnimrodx" title="xnimrodx">xnimrodx</a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com</a></div> */}
 				<Image
-					src={"/images/ui.svg"}
 					alt="UI/UX"
-					layout="fill"
+					fill
+					src={"/images/ui.svg"}
 				/>
 				<Typography variant="h6" tag="h5">UI / UX</Typography>
 			</Paper>
 			<Paper spaced className={classes["bubble"]} background="paper">
 				{/* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
 				<Image
-					src={"/images/innovation.svg"}
 					alt="UI/UX"
-					layout="fill"
+					fill
+					src={"/images/innovation.svg"}
 				/>
 				<Typography variant="h6" tag="h5">Innovation</Typography>
 			</Paper>

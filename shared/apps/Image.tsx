@@ -8,7 +8,7 @@ type Props = {
 }
 
 const Image: FC<Props> = ({ args: { alt, src } }) => <div className={classes["root"]}>
-	<NextImage alt={alt} src={src} layout="fill" objectFit="cover" unoptimized />
+	<NextImage alt={alt} src={src} fill style={{ objectFit: "cover" }} unoptimized />
 </div>
 
 export default memo<Props>(Image)

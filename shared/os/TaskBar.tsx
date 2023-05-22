@@ -182,10 +182,9 @@ const TaskBar: FC = () => {
 							>
 								<Image
 									alt={applications[key].displayName}
-									src={applications[key].icon}
-									layout="fixed"
-									width={24}
 									height={24}
+									src={applications[key].icon}
+									width={24}
 								></Image>
 								<span>{applications[key].displayName} </span>
 							</Button>
