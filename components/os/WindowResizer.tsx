@@ -3,7 +3,7 @@ import { Breakpoints } from "@/types/Breakpoints"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
-import React, { FunctionComponent, RefObject, memo, useCallback, useEffect, useRef } from "react"
+import React, { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef } from "react"
 import { fromEvent, throttleTime } from "rxjs"
 import styles from "./WindowResizer.module.scss"
 
@@ -54,7 +54,7 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 	const setResizeMode = useApplicationsStore((store) => store.setResizeMode)
 	const setResizing = useApplicationsStore((store) => store.setResizing)
 
-	const handleResizerMouseMove = useCallback((e: React.MouseEvent) => {
+	const handleResizerMouseMove = useCallback((e: MouseEvent) => {
 		if (resizing || !resizable) return
 
 		const resizer = resizerRef.current

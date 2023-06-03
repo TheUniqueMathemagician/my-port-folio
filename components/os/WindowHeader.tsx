@@ -6,7 +6,7 @@ import { Offset } from "@/types/Offset"
 import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
-import { FunctionComponent, RefObject, memo, useCallback, useEffect, useRef, useState } from "react"
+import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef, useState } from "react"
 import { fromEvent, throttleTime } from "rxjs"
 import classes from "./WindowHeader.module.scss"
 
@@ -45,28 +45,28 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 
 	// #region button handlers
 
-	const handleRedClick = useCallback((e: React.MouseEvent) => {
+	const handleRedClick = useCallback((e: MouseEvent) => {
 		e.stopPropagation()
 		e.preventDefault()
 
 		closeApplication(pid)
 	}, [closeApplication, pid])
 
-	const handleOrangeClick = useCallback((e: React.MouseEvent) => {
+	const handleOrangeClick = useCallback((e: MouseEvent) => {
 		e.preventDefault()
 
 		sendToFront(pid)
 		setMaximized(pid, maximized ? Snap.none : Snap.top)
 	}, [sendToFront, pid, setMaximized, maximized])
 
-	const handleGreenClick = useCallback((e: React.MouseEvent) => {
+	const handleGreenClick = useCallback((e: MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
 
 		setMinimized(pid, true)
 	}, [setMinimized, pid])
 
-	const handleButtonMouseDown = useCallback((e: React.MouseEvent) => {
+	const handleButtonMouseDown = useCallback((e: MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
 	}, [])
@@ -75,7 +75,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 
 	// #region dragging handlers
 
-	const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
+	const handleDragMouseDown = useCallback((e: MouseEvent) => {
 		if (e.button !== 0) return
 
 		// E.preventDefault()

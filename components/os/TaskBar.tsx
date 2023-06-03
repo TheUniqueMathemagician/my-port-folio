@@ -6,7 +6,7 @@ import { useThemeStore } from "context/theme"
 import { useUsersStore } from "context/users"
 import { useRouter } from "next/dist/client/router"
 import Image from "next/image"
-import { FC, memo, MouseEventHandler, useRef, useState } from "react"
+import { FC, MouseEventHandler, memo, useRef, useState } from "react"
 import { IoLogOutOutline } from "react-icons/io5"
 import { MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend } from "react-icons/md"
 import Menu from "../icons/Menu"
@@ -16,7 +16,7 @@ import classes from "./TaskBar.module.scss"
 import TaskBarMenu from "./TaskBarMenu"
 import TaskBarTimeDate from "./TaskBarTimeDate"
 
-enum EMenuShown {
+const enum MenuTab {
 	Contact,
 	Language,
 	Main,
@@ -26,7 +26,7 @@ enum EMenuShown {
 const Send = memo(MdSend)
 
 const TaskBar: FC = () => {
-	const [menuShown, setMenuShown] = useState(EMenuShown.None)
+	const [menuShown, setMenuShown] = useState(MenuTab.None)
 
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const instances = useApplicationsStore((store) => store.instances)
@@ -47,21 +47,21 @@ const TaskBar: FC = () => {
 
 	const rootClasses = [classes["root"]]
 
-	const closeMenu = () => setMenuShown(EMenuShown.None)
+	const closeMenu = () => setMenuShown(MenuTab.None)
 
 	const handleMainMenuClick: MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement> = (e) => {
-		if (menuShown === EMenuShown.Main) closeMenu()
-		else setMenuShown(EMenuShown.Main)
+		if (menuShown === MenuTab.Main) closeMenu()
+		else setMenuShown(MenuTab.Main)
 	}
 
 	const handleContactMenuClick = () => {
-		if (menuShown === EMenuShown.Contact) closeMenu()
-		else setMenuShown(EMenuShown.Contact)
+		if (menuShown === MenuTab.Contact) closeMenu()
+		else setMenuShown(MenuTab.Contact)
 	}
 
 	const handleLanguageMenuClick = () => {
-		if (menuShown === EMenuShown.Language) closeMenu()
-		else setMenuShown(EMenuShown.Language)
+		if (menuShown === MenuTab.Language) closeMenu()
+		else setMenuShown(MenuTab.Language)
 	}
 
 	const handleLockMenuClick = () => {
@@ -119,10 +119,9 @@ const TaskBar: FC = () => {
 								}
 							}}
 						>
-							<img src={instance.icon} alt={instance.displayName} />
+							<Image src={instance.icon} alt={instance.displayName} width={32} height={32} />
 						</Button>
-					</li>
-					)}
+					</li>)}
 			</ul>
 
 			<Divider inset margin vertical></Divider>
@@ -157,7 +156,7 @@ const TaskBar: FC = () => {
 		</div>
 
 		<TaskBarMenu
-			shown={menuShown === EMenuShown.Main}
+			shown={menuShown === MenuTab.Main}
 			position={{
 				bottom: taskBarRef.current?.clientHeight ?? 0,
 				left: 0,
@@ -167,15 +166,15 @@ const TaskBar: FC = () => {
 		>
 			<ul>
 				{Object.keys(applications)
-					.map((key) => +key as ApplicationId)
+					.map((key) => Number(key) as ApplicationId)
 					.filter((key) => Boolean(applications[key].shortcut))
 					.map((key) => (
 						<li key={key}>
 							<Button
 								ripple
 								size="md"
-								focusable={menuShown === EMenuShown.Main}
-								onClick={() => handleMenuApplicationClick(+key)}
+								focusable={menuShown === MenuTab.Main}
+								onClick={() => handleMenuApplicationClick(Number(key))}
 								startIcon
 								align="start"
 								fullWidth
@@ -201,7 +200,7 @@ const TaskBar: FC = () => {
 						fullWidth
 						size="md"
 						ripple
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						onClick={() => {
 							runApplication(ApplicationId.Settings, { tab: "profile" })
 							closeMenu()
@@ -216,7 +215,7 @@ const TaskBar: FC = () => {
 						fullWidth
 						size="md"
 						ripple
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						onClick={() => {
 							runApplication(ApplicationId.Settings, {})
 							closeMenu()
@@ -231,7 +230,7 @@ const TaskBar: FC = () => {
 						fullWidth
 						ripple
 						size="md"
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						onClick={() => {
 							runApplication(ApplicationId.Manager, {})
 							closeMenu()
@@ -249,7 +248,7 @@ const TaskBar: FC = () => {
 					<Button
 						align="start"
 						color="success"
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						fullWidth
 						onClick={handleLockMenuClick}
 						ripple
@@ -264,7 +263,7 @@ const TaskBar: FC = () => {
 					<Button
 						align="start"
 						color="warning"
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						fullWidth
 						onClick={handleDisconnectMenuClick}
 						ripple
@@ -279,7 +278,7 @@ const TaskBar: FC = () => {
 					<Button
 						align="start"
 						color="error"
-						focusable={menuShown === EMenuShown.Main}
+						focusable={menuShown === MenuTab.Main}
 						fullWidth
 						onClick={handleShutdownMenuClick}
 						ripple
@@ -294,7 +293,7 @@ const TaskBar: FC = () => {
 		</TaskBarMenu>
 
 		<TaskBarMenu
-			shown={menuShown === EMenuShown.Contact}
+			shown={menuShown === MenuTab.Contact}
 			position={{
 				bottom: taskBarRef.current?.clientHeight ?? 0,
 				left: null,
@@ -307,7 +306,7 @@ const TaskBar: FC = () => {
 					<Button
 						align="start"
 						size="md"
-						focusable={menuShown === EMenuShown.Contact}
+						focusable={menuShown === MenuTab.Contact}
 						fullWidth
 						startIcon
 						to="mailto: tamburrini.yannick@gmail.com"
@@ -321,7 +320,7 @@ const TaskBar: FC = () => {
 					<Button
 						align="start"
 						size="md"
-						focusable={menuShown === EMenuShown.Contact}
+						focusable={menuShown === MenuTab.Contact}
 						fullWidth
 						startIcon
 						to="tel:+32 498 62 77 16"
@@ -335,7 +334,7 @@ const TaskBar: FC = () => {
 		</TaskBarMenu>
 
 		<TaskBarMenu
-			shown={menuShown === EMenuShown.Language}
+			shown={menuShown === MenuTab.Language}
 			position={{
 				bottom: taskBarRef.current?.clientHeight ?? 0,
 				left: null,

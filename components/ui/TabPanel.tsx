@@ -24,4 +24,4 @@ const TabPanel: FunctionComponent<Props> = (props) => {
 	}, children)
 }
 
-export default memo<Props>(TabPanel)
+export default memo(TabPanel)

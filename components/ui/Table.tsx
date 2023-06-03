@@ -20,4 +20,4 @@ const Table: FunctionComponent<Props> = (props) => {
 	return <table className={rootClasses.join(" ")}>{children}</table>
 }
 
-export default memo<Props>(Table)
+export default memo(Table)

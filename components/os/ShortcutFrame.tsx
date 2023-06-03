@@ -5,10 +5,10 @@ import Shortcut from "./Shortcut"
 import styles from "./ShortcutFrame.module.scss"
 
 const ShortcutFrame: FC = () => {
-	const aids = useApplicationsStore((store) => Object.keys(store.pool).map((key) => +key as ApplicationId).filter((key) => store.pool[key].shortcut))
+	const applicationIds = useApplicationsStore((store) => Object.keys(store.pool).map((key) => Number(key) as ApplicationId).filter((key) => store.pool[key].shortcut))
 
 	return <div className={styles["root"]}>
-		{aids.map((aid) => (<Shortcut applicationId={aid} key={aid}></Shortcut>))}
+		{applicationIds.map((aid) => (<Shortcut applicationId={aid} key={aid}></Shortcut>))}
 	</div>
 }
 

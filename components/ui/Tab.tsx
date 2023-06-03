@@ -49,4 +49,4 @@ const Tab: FunctionComponent<Props> = (props) => {
 	</Button>
 }
 
-export default memo<Props>(Tab)
+export default memo(Tab)

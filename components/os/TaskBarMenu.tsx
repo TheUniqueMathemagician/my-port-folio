@@ -11,9 +11,9 @@ type Props = {
 }
 
 const TaskBarMenu: FunctionComponent<Props> = ({ shown, position, children }) => {
-	const rootClasses = [classes["root"]]
-
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+
+	const rootClasses = [classes["root"]]
 
 	if (!shown && position.bottom) position.bottom -= 6
 
@@ -33,4 +33,4 @@ const TaskBarMenu: FunctionComponent<Props> = ({ shown, position, children }) =>
 	</nav>
 }
 
-export default memo<Props>(TaskBarMenu)
+export default memo(TaskBarMenu)

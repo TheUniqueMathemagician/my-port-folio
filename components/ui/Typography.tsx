@@ -32,4 +32,4 @@ const Typography: FunctionComponent<Props> = (props) => {
 	return createElement(el, { className: rootClasses.join(" ") }, children)
 }
 
-export default memo<Props>(Typography)
+export default memo(Typography)

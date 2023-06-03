@@ -25,4 +25,4 @@ const TableCell: FunctionComponent<Props> = (props) => {
 	</td>
 }
 
-export default memo<Props>(TableCell)
+export default memo(TableCell)

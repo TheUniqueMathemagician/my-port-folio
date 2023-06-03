@@ -16,7 +16,7 @@ import { DomPosition } from "@/types/DomPosition"
 import { Position } from "@/types/Position"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
-import generateID from "utils/generateID"
+import generateID from "@/utils/generateID"
 import { create } from "zustand"
 
 type ApplicationsStore = {
@@ -310,6 +310,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 		instance.dimensions = dimensions
 
 		set(() => ({}))
+
+		return state
 	},
 	setDragging: (pid, dragging) => {
 		const state = get()

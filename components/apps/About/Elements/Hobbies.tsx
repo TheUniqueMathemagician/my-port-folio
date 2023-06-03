@@ -68,4 +68,4 @@ const Hobbies: FunctionComponent<Props> = () => <div className={classes["root"]}
 	</Paper>
 </div>
 
-export default memo<Props>(Hobbies)
+export default memo(Hobbies)

@@ -1,7 +1,7 @@
 import { ChangeEvent, ChangeEventHandler, FunctionComponent, PropsWithChildren, memo, useCallback, useState } from "react"
 import classes from "./Text.module.scss"
 
-type Props = PropsWithChildren<{
+type Props = PropsWithChildren & {
 	readonly className?: string
 	readonly defaultValue?: string
 	readonly disabled?: boolean
@@ -12,7 +12,7 @@ type Props = PropsWithChildren<{
 	readonly required?: boolean
 	readonly type?: "password" | "text" | "email" | "tel"
 	readonly validator?: RegExp
-}>
+}
 
 const Text: FunctionComponent<Props> = (props) => {
 	const { className, defaultValue, fullWidth, disabled, onChange, label, name, required, type } = props

@@ -31,4 +31,4 @@ const Paper: FunctionComponent<Props> = (props) => {
 	return createElement(tag ?? "div", { className: rootClasses.join(" "), ...other }, children)
 }
 
-export default memo<Props>(Paper)
+export default memo(Paper)

@@ -1,4 +1,4 @@
-import { FunctionComponent, PropsWithChildren, ReactNode, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { FunctionComponent, ReactNode, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import classes from "./Tabs.module.scss"
 
 type Props = {
@@ -124,4 +124,4 @@ const Tabs: FunctionComponent<Props> = (props) => {
 	</div>
 }
 
-export default memo<PropsWithChildren<Props>>(Tabs)
+export default memo(Tabs)
