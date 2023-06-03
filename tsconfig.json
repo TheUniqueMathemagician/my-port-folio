@@ -19,13 +19,16 @@
 		"noImplicitOverride": true,
 		"paths": {
 			"@/components/*": [
-				"shared/*"
+				"components/*"
 			],
 			"@/hooks/*": [
 				"hooks/*"
 			],
 			"@/types/*": [
 				"types/*"
+			],
+			"@/utils/*": [
+				"utils/*"
 			],
 		},
 		"resolveJsonModule": true,

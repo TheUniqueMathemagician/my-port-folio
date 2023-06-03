@@ -1,7 +1,7 @@
 import { useThemeStore } from "context/theme"
 import { AppProps } from "next/dist/shared/lib/router/router"
 import Head from "next/head"
-import { FC } from "react"
+import { FC, FunctionComponent } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import "../styles/global.scss"
 import { Page } from "../types/Page"
@@ -34,7 +34,7 @@ const Setup: FC = () => {
 
 const client = new QueryClient()
 
-const App: FC<AppPropsWithLayout> = ({ Component, pageProps }) => {
+const App: FunctionComponent<AppPropsWithLayout> = ({ Component, pageProps }) => {
 	const getLayout = Component.layout || ((page) => page)
 
 	return <QueryClientProvider client={client}>

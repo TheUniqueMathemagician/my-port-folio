@@ -1,5 +1,5 @@
+import generateID from "@/utils/generateID"
 import { create } from "zustand"
-import generateID from "../functions/generateID"
 
 type User = {
 	displayName: string

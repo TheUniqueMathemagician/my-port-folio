@@ -9,31 +9,31 @@ import Randit from "@/components/apps/Randit"
 import Settings from "@/components/apps/Settings"
 import Snake from "@/components/apps/Snake"
 import Welcome from "@/components/apps/Welcome"
-import { Applications, DaemonApplication, DaemonInstance, WindowApplication, WindowInstance } from "@/types/Application"
+import { ApplicationId, Arguments, DaemonApplication, DaemonInstance, WindowApplication, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { Dimensions } from "@/types/Dimensions"
 import { DomPosition } from "@/types/DomPosition"
 import { Position } from "@/types/Position"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
-import { FC } from "react"
+import { FunctionComponent } from "react"
+import generateID from "utils/generateID"
 import { create } from "zustand"
-import generateID from "../functions/generateID"
 
 type RunApp = {
-	args: any
+	args: Arguments
 	pid: string
 }
 
 type ApplicationsStore = {
 	dragging: boolean
-	instances: { [pid: string]: DaemonInstance | WindowInstance }
-	pool: { [aid in Applications]: DaemonApplication | WindowApplication }
+	instances: Record<string, DaemonInstance | WindowInstance>
+	pool: Record<ApplicationId, DaemonApplication | WindowApplication>
 	resizing: boolean
 	snapShadow: { position: DomPosition, visible: boolean }
 	zIndexes: string[]
 	closeApplication: (pid: string) => void
-	runApplication: (aid: Applications, args: { [key: string]: string }) => void
+	runApplication: (aid: ApplicationId, args: Arguments) => void
 	sendToFront: (pid: string) => void
 	setBreakpoint: (pid: string, breakpoint: Breakpoints) => void
 	setDimensions: (pid: string, dimensions: Dimensions) => void
@@ -43,7 +43,7 @@ type ApplicationsStore = {
 	setPosition: (pid: string, position: Position) => void
 	setResizeMode: (pid: string, resizeMode: Resize) => void
 	setResizing: (pid: string, resizing: boolean) => void
-	setRunOnStartup: (aid: Applications, runOnStartup: boolean) => void
+	setRunOnStartup: (aid: ApplicationId, runOnStartup: boolean) => void
 	setSnapShadowPosition: (domPosition: DomPosition) => void
 	setSnapShadowVisibility: (visible: boolean) => void
 }
@@ -63,26 +63,26 @@ export const defaultMinDimensions = {
 	width: 400,
 }
 
-export const applicationsMap = new Map<Applications, FC<RunApp>>([
-	[Applications.About, About],
-	[Applications.Contact, Contact],
-	[Applications.Image, Image],
-	[Applications.Manager, Manager],
-	[Applications.Maps, Maps],
-	[Applications.NightWatcher, NightWatcher],
-	[Applications.Randit, Randit],
-	[Applications.Projects, Projects],
-	[Applications.Settings, Settings],
-	[Applications.Snake, Snake],
-	[Applications.Welcome, Welcome],
+export const applicationsMap = new Map<ApplicationId, FunctionComponent<RunApp>>([
+	[ApplicationId.About, About],
+	[ApplicationId.Contact, Contact],
+	[ApplicationId.Image, Image],
+	[ApplicationId.Manager, Manager],
+	[ApplicationId.Maps, Maps],
+	[ApplicationId.NightWatcher, NightWatcher],
+	[ApplicationId.Randit, Randit],
+	[ApplicationId.Projects, Projects],
+	[ApplicationId.Settings, Settings],
+	[ApplicationId.Snake, Snake],
+	[ApplicationId.Welcome, Welcome],
 ])
 
 export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 	dragging: false,
 	instances: {},
 	pool: {
-		[Applications.About]: {
-			aid: Applications.About,
+		[ApplicationId.About]: {
+			applicationId: ApplicationId.About,
 			dimensions: defaultDimensions,
 			displayName: "A Propos",
 			icon: "/images/applications/about.svg",
@@ -94,8 +94,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "/images/applications/about.svg",
 			type: "window",
 		},
-		[Applications.Contact]: {
-			aid: Applications.Contact,
+		[ApplicationId.Contact]: {
+			applicationId: ApplicationId.Contact,
 			dimensions: { height: 600, width: 600 },
 			displayName: "Contact",
 			icon: "/images/applications/contact.svg",
@@ -107,8 +107,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "/images/applications/contact.svg",
 			type: "window",
 		},
-		[Applications.Image]: {
-			aid: Applications.Image,
+		[ApplicationId.Image]: {
+			applicationId: ApplicationId.Image,
 			dimensions: defaultDimensions,
 			displayName: "Image",
 			icon: "/images/applications/image.svg",
@@ -120,8 +120,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "",
 			type: "window",
 		},
-		[Applications.Manager]: {
-			aid: Applications.Manager,
+		[ApplicationId.Manager]: {
+			applicationId: ApplicationId.Manager,
 			dimensions: defaultDimensions,
 			displayName: "Gestionnaire d'applications",
 			icon: "/images/applications/manager.svg",
@@ -133,8 +133,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "",
 			type: "window",
 		},
-		[Applications.Maps]: {
-			aid: Applications.Maps,
+		[ApplicationId.Maps]: {
+			applicationId: ApplicationId.Maps,
 			dimensions: defaultDimensions,
 			displayName: "Maps",
 			icon: "/images/applications/maps.svg",
@@ -146,16 +146,16 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "",
 			type: "window",
 		},
-		[Applications.NightWatcher]: {
-			aid: Applications.NightWatcher,
+		[ApplicationId.NightWatcher]: {
+			applicationId: ApplicationId.NightWatcher,
 			displayName: "NightWatcher",
 			icon: "/images/applications/nightwatcher.svg",
 			runOnStartup: true,
 			shortcut: "",
 			type: "daemon",
 		},
-		[Applications.Projects]: {
-			aid: Applications.Projects,
+		[ApplicationId.Projects]: {
+			applicationId: ApplicationId.Projects,
 			dimensions: defaultDimensions,
 			displayName: "Projets",
 			icon: "/images/applications/projects.svg",
@@ -167,8 +167,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "/images/applications/projects.svg",
 			type: "window",
 		},
-		[Applications.Randit]: {
-			aid: Applications.Randit,
+		[ApplicationId.Randit]: {
+			applicationId: ApplicationId.Randit,
 			dimensions: defaultDimensions,
 			displayName: "Randit",
 			icon: "/images/applications/randit.svg",
@@ -180,8 +180,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "",
 			type: "window",
 		},
-		[Applications.Settings]: {
-			aid: Applications.Settings,
+		[ApplicationId.Settings]: {
+			applicationId: ApplicationId.Settings,
 			dimensions: defaultDimensions,
 			displayName: "Préférences du système",
 			icon: "/images/applications/settings.svg",
@@ -193,8 +193,8 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			shortcut: "",
 			type: "window",
 		},
-		[Applications.Snake]: {
-			aid: Applications.Snake,
+		[ApplicationId.Snake]: {
+			applicationId: ApplicationId.Snake,
 			dimensions: { height: 600, width: 600 },
 			displayName: "le Serpent",
 			icon: "/images/applications/snake.svg",
@@ -204,11 +204,11 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			resizable: true,
 			runOnStartup: false,
 			shortcut: "",
-			// shortcut: "/images/applications/snake.svg",
+			// Shortcut: "/images/applications/snake.svg",
 			type: "window",
 		},
-		[Applications.Welcome]: {
-			aid: Applications.Welcome,
+		[ApplicationId.Welcome]: {
+			applicationId: ApplicationId.Welcome,
 			dimensions: { height: 400, width: 400 },
 			displayName: "Bienvenue",
 			icon: "/images/applications/welcome.svg",
@@ -249,7 +249,7 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 		if (application.type === "daemon") {
 			state.instances[pid] = {
 				args,
-				component: application.aid,
+				applicationId: application.applicationId,
 				displayName: application.displayName,
 				icon: application.icon,
 				pid,
@@ -259,7 +259,7 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 			state.instances[pid] = {
 				args,
 				breakpoint: Breakpoints.xs,
-				component: application.aid,
+				applicationId: application.applicationId,
 				dimensions: application.dimensions,
 				displayName: application.displayName,
 				dragging: false,
@@ -412,4 +412,4 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 	},
 }))
 
-// export const useApplicationsStore = create(devtools(store))
+// Export const useApplicationsStore = create(devtools(store))
