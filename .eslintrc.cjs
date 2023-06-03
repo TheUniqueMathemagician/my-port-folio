@@ -83,7 +83,7 @@ module.exports = {
 		"no-extra-bind": "warn",
 		"no-extra-boolean-cast": "warn",
 		"no-extra-label": "warn",
-		"no-extra-parens": ["warn", "all", { nestedBinaryExpressions: false }],
+		// "no-extra-parens": ["warn", "all", { nestedBinaryExpressions: false }],
 		"no-extra-semi": "warn",
 		"no-fallthrough": "warn",
 		"no-floating-decimal": "warn",
