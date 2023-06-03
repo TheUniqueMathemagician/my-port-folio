@@ -1,10 +1,10 @@
-import { Arguments, WindowInstance } from "@/types/Application"
+import { RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { useUsersStore } from "context/users"
-import { ChangeEvent, FunctionComponent, PropsWithChildren, memo, useCallback, useEffect, useState } from "react"
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react"
 import { MdInfo } from "react-icons/md"
 import Avatar from "../ui/Avatar"
 import Container from "../ui/Container"
@@ -18,18 +18,13 @@ import Radio from "../ui/input/Radio"
 import RadioGroup from "../ui/input/RadioGroup"
 import classes from "./Settings.module.scss"
 
-type Props = {
-	pid: string
-	args: Arguments
-}
-
 const enum PanelIndex {
 	Language,
 	Theme,
 	Users,
 }
 
-const Settings: FunctionComponent<Props> = (props) => {
+const Settings: RunningApplicationComponent = (props) => {
 	const { args, pid } = props
 
 	const [panelIndex, setPanelIndex] = useState(args["tab"] === "profile" ? PanelIndex.Users : PanelIndex.Theme)
@@ -293,4 +288,4 @@ const Settings: FunctionComponent<Props> = (props) => {
 	</div>
 }
 
-export default memo<PropsWithChildren<Props>>(Settings)
+export default memo(Settings)

@@ -1,6 +1,6 @@
 const maxDepth = 2
 const complexity = 5
-const maxLinesPerFunction = 300
+const maxLinesPerFunction = 500
 const maxNestedCallbacks = 2
 const maxFunctionParameters = 3
 
@@ -188,7 +188,7 @@ module.exports = {
 		"semi-spacing": ["warn", { after: true, before: false }],
 		"semi-style": ["warn", "last"],
 		"sort-imports": ["warn", { ignoreDeclarationSort: true }],
-		"sort-keys": ["warn", "asc", { caseSensitive: true, natural: false }],
+		// "sort-keys": ["warn", "asc", { caseSensitive: true, natural: false }],
 		"sort-vars": "warn",
 		"space-before-blocks": ["warn", "always"],
 		"space-before-function-paren": ["warn", { anonymous: "always", asyncArrow: "always", named: "never" }],

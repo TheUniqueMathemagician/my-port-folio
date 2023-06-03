@@ -1,16 +1,12 @@
-import { ApplicationId, WindowInstance } from "@/types/Application"
+import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { useApplicationsStore } from "context/applications"
-import { FunctionComponent, PropsWithChildren, memo } from "react"
+import { memo } from "react"
 import Avatar from "../ui/Avatar"
 import Paper from "../ui/Paper"
 import Typography from "../ui/Typography"
 import Button from "../ui/input/Button"
 import classes from "./Projects.module.scss"
-
-type Props = {
-	pid: string
-}
 
 // https://ibb.co/JnBtVmx
 // https://ibb.co/x3VGHKB
@@ -19,7 +15,7 @@ type Props = {
 // https://ibb.co/TwDyj3m
 // https://ibb.co/BjV3gZV
 
-const Projects: FunctionComponent<Props> = (props) => {
+const Projects: RunningApplicationComponent = (props) => {
 	const { pid } = props
 
 	const small = useApplicationsStore((store) => {
@@ -282,4 +278,4 @@ const Projects: FunctionComponent<Props> = (props) => {
 	</div>
 }
 
-export default memo<PropsWithChildren<Props>>(Projects)
+export default memo(Projects)

@@ -1,11 +1,8 @@
+import { RunningApplicationComponent } from "@/types/Application"
 import { memo } from "react"
 import classes from "./Randit.module.scss"
 
-type Props = {
-	pid: string
-}
-
-const Randit: FunctionComponent<Props> = (props) => {
+const Randit: RunningApplicationComponent = (props) => {
 	const { pid } = props
 
 	return <iframe

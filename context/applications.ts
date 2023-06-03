@@ -9,21 +9,15 @@ import Randit from "@/components/apps/Randit"
 import Settings from "@/components/apps/Settings"
 import Snake from "@/components/apps/Snake"
 import Welcome from "@/components/apps/Welcome"
-import { ApplicationId, Arguments, DaemonApplication, DaemonInstance, WindowApplication, WindowInstance } from "@/types/Application"
+import { ApplicationId, Arguments, DaemonApplication, DaemonInstance, RunningApplicationComponent, WindowApplication, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { Dimensions } from "@/types/Dimensions"
 import { DomPosition } from "@/types/DomPosition"
 import { Position } from "@/types/Position"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
-import { FunctionComponent } from "react"
 import generateID from "utils/generateID"
 import { create } from "zustand"
-
-type RunApp = {
-	args: Arguments
-	pid: string
-}
 
 type ApplicationsStore = {
 	dragging: boolean
@@ -63,7 +57,7 @@ export const defaultMinDimensions = {
 	width: 400,
 }
 
-export const applicationsMap = new Map<ApplicationId, FunctionComponent<RunApp>>([
+export const applicationsMap = new Map<ApplicationId, RunningApplicationComponent>([
 	[ApplicationId.About, About],
 	[ApplicationId.Contact, Contact],
 	[ApplicationId.Image, Image],

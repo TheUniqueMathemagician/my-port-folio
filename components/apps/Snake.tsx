@@ -1,5 +1,6 @@
-import { FC, memo } from "react"
+import { RunningApplicationComponent } from "@/types/Application"
+import { memo } from "react"
 
-const Snake: FC = () => <div>Snake app</div>
+const Snake: RunningApplicationComponent = () => <div>Snake app</div>
 
 export default memo(Snake)

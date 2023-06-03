@@ -1,9 +1,9 @@
-import { ApplicationId, WindowInstance } from "@/types/Application"
+import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
-import { FunctionComponent, memo, useState } from "react"
+import { memo, useState } from "react"
 import { MdCenterFocusStrong, MdDelete } from "react-icons/md"
 import Paper from "../ui/Paper"
 import Tab from "../ui/Tab"
@@ -21,11 +21,7 @@ import ButtonGroup from "../ui/input/ButtonGroup"
 import Checkbox from "../ui/input/Checkbox"
 import classes from "./Manager.module.scss"
 
-type Props = {
-	pid: string
-}
-
-const Manager: FunctionComponent<Props> = (props) => {
+const Manager: RunningApplicationComponent = (props) => {
 	const { pid } = props
 
 	const applications = useApplicationsStore((store) => store.pool)
@@ -206,4 +202,4 @@ const Manager: FunctionComponent<Props> = (props) => {
 	</div>
 }
 
-export default memo<Props>(Manager)
+export default memo(Manager)

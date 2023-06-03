@@ -1,3 +1,4 @@
+import { FunctionComponent } from "react"
 import { Breakpoints } from "./Breakpoints"
 import { Dimensions } from "./Dimensions"
 import { Position } from "./Position"
@@ -69,3 +70,8 @@ export interface WindowInstance extends Instance {
 	resizing: boolean
 	type: "window"
 }
+
+export type RunningApplicationComponent = FunctionComponent<{
+	args: Arguments
+	pid: string
+}>

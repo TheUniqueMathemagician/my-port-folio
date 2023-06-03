@@ -1,15 +1,15 @@
-import { ApplicationId } from "@/types/Application"
+import { ApplicationId, RunningApplicationComponent } from "@/types/Application"
 import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
-import { FC, memo, MouseEventHandler, useCallback, useState } from "react"
+import { FormEvent, MouseEventHandler, memo, useCallback, useState } from "react"
 import { IoLocationSharp } from "react-icons/io5"
 import { MdMail, MdPhone } from "react-icons/md"
+import Paper from "../../ui/Paper"
+import Typography from "../../ui/Typography"
 import Button from "../../ui/input/Button"
 import Text from "../../ui/input/Text"
 import TextArea from "../../ui/input/TextArea"
-import Paper from "../../ui/Paper"
-import Typography from "../../ui/Typography"
 import Time from "./Elements/Time"
 import classes from "./index.module.scss"
 
@@ -17,11 +17,11 @@ const Sharp = memo(IoLocationSharp)
 const Mail = memo(MdMail)
 const Phone = memo(MdPhone)
 
-const Contact: FC = () => {
+const Contact: RunningApplicationComponent = () => {
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 
 	const [loading, setLoading] = useState(false)
-	const [resendDate, setResendDate] = useState(new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0")))
+	const [resendDate, setResendDate] = useState(new Date(parseInt(localStorage.getItem("contact-resend-date") ?? "0", 10)))
 
 	const runApplication = useApplicationsStore((store) => store.runApplication)
 
@@ -31,7 +31,7 @@ const Contact: FC = () => {
 		runApplication(ApplicationId.Maps, {})
 	}, [runApplication])
 
-	const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
 		if (loading) return
@@ -46,13 +46,15 @@ const Contact: FC = () => {
 
 		try {
 			const response = await fetch("/api/contact", {
-				method: "post",
-				headers,
 				body,
+				headers,
+				method: "post",
 			})
 			if (response.status === 200 || response.status === 429) {
 				const text = await response.text()
+
 				localStorage.setItem("contact-resend-date", text)
+
 				setResendDate(new Date(parseInt(text)))
 			}
 		} catch (_) {

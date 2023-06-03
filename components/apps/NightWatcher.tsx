@@ -1,10 +1,11 @@
+import { RunningApplicationComponent } from "@/types/Application"
 import { useApplicationsStore } from "context/applications"
-import { FC, memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 
 const LOG_INTERVAL_MS = 300000
 const MAX_INSTANCES = 30
 
-const NightWatcher: FC = () => {
+const NightWatcher: RunningApplicationComponent = () => {
 	const count = useApplicationsStore((store) => Object.keys(store.instances).length)
 	const [hasWarned, setHasWarned] = useState(false)
 

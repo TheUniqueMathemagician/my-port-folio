@@ -1,9 +1,9 @@
-import { ApplicationId, WindowInstance } from "@/types/Application"
+import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
-import { FunctionComponent, memo, useCallback, useState } from "react"
+import { memo, useCallback, useState } from "react"
 import { MdSend } from "react-icons/md"
 import Tab from "../../ui/Tab"
 import TabPanel from "../../ui/TabPanel"
@@ -14,10 +14,6 @@ import Intro from "./Elements/Intro"
 import Skills from "./Elements/Skills"
 import classes from "./index.module.scss"
 
-type Props = {
-	pid: string
-}
-
 const enum TabIndex {
 	About,
 	Hobbies,
@@ -26,7 +22,7 @@ const enum TabIndex {
 
 const Send = memo(MdSend)
 
-const About: FunctionComponent<Props> = (props) => {
+const About: RunningApplicationComponent = (props) => {
 	const { pid } = props
 
 	const [panelIndex, setPanelIndex] = useState<number>(0)

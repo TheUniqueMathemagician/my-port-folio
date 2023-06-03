@@ -1,11 +1,8 @@
-import { FunctionComponent, memo } from "react"
+import { RunningApplicationComponent } from "@/types/Application"
+import { memo } from "react"
 import classes from "./Maps.module.scss"
 
-type Props = {
-	pid: string
-}
-
-const Maps: FunctionComponent<Props> = ({ pid }) => <iframe
+const Maps: RunningApplicationComponent = ({ pid }) => <iframe
 	allowFullScreen
 	className={classes["root"]}
 	loading="lazy"
@@ -13,4 +10,4 @@ const Maps: FunctionComponent<Props> = ({ pid }) => <iframe
 	title={`${pid}_location_frame`}
 ></iframe>
 
-export default memo<Props>(Maps)
+export default memo(Maps)
