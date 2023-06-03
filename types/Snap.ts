@@ -1,11 +1,11 @@
-export enum Snap {
-	none,
-	topLeft,
-	top,
-	topRight,
-	right,
-	bottomRight,
+export const enum Snap {
 	bottom,
 	bottomLeft,
-	left
+	bottomRight,
+	left,
+	none,
+	right,
+	top,
+	topLeft,
+	topRight,
 }

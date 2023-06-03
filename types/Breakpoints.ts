@@ -1,7 +1,7 @@
 export enum Breakpoints {
-	xs,
-	sm,
-	md,
 	lg,
-	xl
+	md,
+	sm,
+	xl,
+	xs,
 }

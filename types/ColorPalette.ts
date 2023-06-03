@@ -1,8 +1,3 @@
 import { ColorScheme } from "./ColorScheme"
 
-export type ColorPalette = {
-	[ColorScheme.contrast]: string
-	[ColorScheme.dark]: string
-	[ColorScheme.default]: string
-	[ColorScheme.light]: string
-}
+export type ColorPalette = Record<ColorScheme, string>

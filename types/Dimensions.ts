@@ -1,4 +1,4 @@
 export type Dimensions = {
-	width: null | number
-	height: null | number
+	height: number | null
+	width: number | null
 }
