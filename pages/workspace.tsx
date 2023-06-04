@@ -17,7 +17,7 @@ const WorkSpace: Page = () => {
 
 	const applications = useApplicationsStore((store) => store.pool)
 	const hasRanStartupApplications = useOsStore((store) => store.hasRanStartupApplications)
-	const user = useUsersStore((store) => store.elements[store.currentUserID])
+	const user = useUsersStore((store) => store.elements[store.currentUserId])
 
 	const setHasRanStartupApplications = useOsStore((store) => store.setHasRanStartupApplications)
 

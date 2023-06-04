@@ -205,44 +205,60 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 					top: restrictedPosition.top(),
 				})
 			}
+
+				break
 			case Resize.left: {
 				dispatchPositionAndBreakpoint({
 					left: restrictedPosition.left(),
 				})
 			}
+
+				break
 			case Resize.bottom: {
 				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 				})
 			}
+
+				break
 			case Resize.right: {
 				dispatchPositionAndBreakpoint({
 					right: restrictedPosition.right(),
 				})
 			}
+
+				break
 			case Resize.topLeft: {
 				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					left: restrictedPosition.left(),
 				})
+
+				break
 			}
 			case Resize.topRight: {
 				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					right: restrictedPosition.right(),
 				})
+
+				break
 			}
 			case Resize.bottomLeft: {
 				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					left: restrictedPosition.left(),
 				})
+
+				break
 			}
 			case Resize.bottomRight: {
 				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					right: restrictedPosition.right(),
 				})
+
+				break
 			}
 			default:
 				break

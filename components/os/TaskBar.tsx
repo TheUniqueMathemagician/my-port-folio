@@ -38,7 +38,7 @@ const TaskBar: FunctionComponent = () => {
 	const setMinimized = useApplicationsStore((store) => store.setMinimized)
 	const closeApplication = useApplicationsStore((store) => store.closeApplication)
 	const setHasRanStartupApplications = useOsStore((store) => store.setHasRanStartupApplications)
-	const setCurrentUserID = useUsersStore((store) => store.setCurrentUserID)
+	const setCurrentUserId = useUsersStore((store) => store.setCurrentUserId)
 
 	const contactButtonRef = useRef<HTMLButtonElement>(null)
 	const langButtonRef = useRef<HTMLButtonElement>(null)
@@ -72,14 +72,14 @@ const TaskBar: FunctionComponent = () => {
 	const handleDisconnectMenuClick = () => {
 		for (const pid of Object.keys(instances)) closeApplication(pid)
 		setHasRanStartupApplications(false)
-		setCurrentUserID("")
+		setCurrentUserId("")
 		router.push("/lock")
 	}
 
 	const handleShutdownMenuClick = () => {
 		for (const pid of Object.keys(instances)) closeApplication(pid)
 		setHasRanStartupApplications(false)
-		setCurrentUserID("")
+		setCurrentUserId("")
 		// TODO: find a better solution !, this is a hack
 		setTimeout(() => router.replace("/"), 0)
 	}

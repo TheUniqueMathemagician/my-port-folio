@@ -7,13 +7,13 @@ import classes from "../styles/pages/Lock.module.scss"
 import { Page } from "../types/Page"
 
 const Lock: Page = () => {
-	const user = useUsersStore((store) => store.elements[store.currentUserID])
+	const user = useUsersStore((store) => store.elements[store.currentUserId])
 	const users = useUsersStore((store) => store.elements)
-	const setCurrentUserID = useUsersStore((store) => store.setCurrentUserID)
+	const setCurrentUserId = useUsersStore((store) => store.setCurrentUserId)
 
 	useEffect(() => {
-		for (const key in users) if (key) setCurrentUserID(key)
-	}, [users, setCurrentUserID])
+		for (const key in users) if (key) setCurrentUserId(key)
+	}, [users, setCurrentUserId])
 
 	return <main className={classes["root"]}	>
 		<div className={classes["bg"]}></div>
@@ -21,7 +21,7 @@ const Lock: Page = () => {
 			<Avatar
 				size="xl"
 				alt="Image de profil"
-				src={user?.profileImageURL}
+				src={user?.profileImageUrl}
 			></Avatar>
 			<Button
 				ripple
@@ -36,13 +36,13 @@ const Lock: Page = () => {
 				{Object.keys(users).map((key) => <Button
 					focusable
 					key={key}
-					onClick={() => setCurrentUserID(key)}
+					onClick={() => setCurrentUserId(key)}
 					ripple
 					size="md"
 					startIcon
 					variant="blur"
 				>
-					<Avatar alt="Image de profil" src={users[key].profileImageURL}></Avatar>
+					<Avatar alt="Image de profil" src={users[key].profileImageUrl}></Avatar>
 					<Typography variant="body">{users[key].displayName}</Typography>
 				</Button>)}
 			</div>

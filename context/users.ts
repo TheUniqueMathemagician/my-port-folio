@@ -7,13 +7,13 @@ type User = {
 	language: "en" | "fr" | "de"
 	password?: string
 	profileImage: typeof window.Image | null
-	profileImageURL: string
+	profileImageUrl: string
 }
 
 type UsersStore = {
-	currentUserID: string
+	currentUserId: string
 	elements: { [uid: string]: User }
-	setCurrentUserID: (uid: string) => void,
+	setCurrentUserId: (uid: string) => void,
 }
 
 const uid = generateID()
@@ -25,12 +25,12 @@ const elements: UsersStore["elements"] = {
 		language: "en",
 		password: "",
 		profileImage: null,
-		profileImageURL: "https://images.unsplash.com/photo-1526137844794-45f1041f397a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80",
+		profileImageUrl: "https://images.unsplash.com/photo-1526137844794-45f1041f397a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80",
 	},
 }
 
 export const useUsersStore = create<UsersStore>((set) => ({
-	currentUserID: uid,
+	currentUserId: uid,
 	elements,
-	setCurrentUserID: (currentUserID) => set(() => ({ currentUserID })),
+	setCurrentUserId: (currentUserId) => set(() => ({ currentUserId })),
 }))

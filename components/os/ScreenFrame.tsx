@@ -7,7 +7,7 @@ import classes from "./ScreenFrame.module.scss"
 type ScreenFrameProps = PropsWithChildren
 
 const ScreenFrame: FunctionComponent<ScreenFrameProps> = ({ children }) => {
-	const workspaceBackgroundURL = useThemeStore((store) => store.workspaceBackgroundURL)
+	const workspaceBackgroundUrl = useThemeStore((store) => store.workspaceBackgroundUrl)
 
 	const isMobile = useOsStore((store) => store.isMobile)
 
@@ -18,7 +18,7 @@ const ScreenFrame: FunctionComponent<ScreenFrameProps> = ({ children }) => {
 	return <div
 		className={classNameBuilder.build()}
 		style={{
-			background: `url(${workspaceBackgroundURL})`,
+			background: `url(${workspaceBackgroundUrl})`,
 			backgroundPosition: "center",
 			backgroundRepeat: "no-repeat",
 			backgroundSize: "cover",

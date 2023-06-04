@@ -36,7 +36,7 @@ const Settings: RunningApplicationComponent = (props) => {
 	const background = useThemeStore((store) => store.palette.background[store.colorScheme])
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const colorScheme = useThemeStore((store) => store.colorScheme)
-	const currentUserID = useUsersStore((store) => store.currentUserID)
+	const currentUserId = useUsersStore((store) => store.currentUserId)
 	const palette = useThemeStore((store) => store.palette)
 	const primary = useThemeStore((store) => store.palette.primary[store.colorScheme])
 	const resizing = useApplicationsStore((store) => Boolean(store.instances[pid]))
@@ -109,7 +109,7 @@ const Settings: RunningApplicationComponent = (props) => {
 	}, [setPrimaryColor])
 
 	const otherUsersKeys = Object.keys(users).filter(
-		(key) => key !== users[currentUserID]?.id
+		(key) => key !== users[currentUserId]?.id
 	)
 
 	const classNameBuilder = ClassName.builder(classes["root"])
@@ -261,10 +261,10 @@ const Settings: RunningApplicationComponent = (props) => {
 				<Container type="grid" orientation="row" space>
 					<Avatar
 						alt="Image de profil"
-						src={users[currentUserID].profileImageURL}
+						src={users[currentUserId].profileImageUrl}
 					></Avatar>
 					<Typography variant="body" noWrap noSelect>
-						{users[currentUserID].displayName}
+						{users[currentUserId].displayName}
 					</Typography>
 				</Container>
 				<Typography variant="h4" noWrap noSelect>
@@ -274,7 +274,7 @@ const Settings: RunningApplicationComponent = (props) => {
 					? otherUsersKeys.map((key) => <div key={key}>
 						<Avatar
 							alt="Image de profil"
-							src={users[key].profileImageURL}
+							src={users[key].profileImageUrl}
 						></Avatar>
 						<Typography variant="body" noWrap noSelect>
 							{users[key].displayName}
