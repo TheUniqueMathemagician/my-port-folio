@@ -15,10 +15,11 @@ const Setup: FC = () => {
 	const colorProperties = []
 
 	for (const key in palette) {
-		type Palette = typeof palette
+		const paletteKey = key as keyof typeof palette
 
-		const paletteKey = key as keyof Palette
-		const value = palette[paletteKey][colorScheme]
+		const value = palette[paletteKey]?.[colorScheme]
+
+		if (!value) continue
 
 		colorProperties.push(`--cvos-${key}:${value};`)
 		colorProperties.push(`--cvos-${key}-20:${value}14;`)

@@ -23,7 +23,7 @@ const Avatar: FunctionComponent<Props> = (props) => {
 	if (!src) return <div className={rootClasses.join(" ")}></div>
 
 	return <div className={rootClasses.join(" ")} {...other}>
-		<Image alt={alt} src={src} fill unoptimized unselectable="on" objectFit="cover" />
+		<Image alt={alt} src={src} fill unoptimized unselectable="on" style={{ objectFit: "cover" }} />
 	</div>
 }
 
