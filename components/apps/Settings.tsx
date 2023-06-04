@@ -19,8 +19,8 @@ import RadioGroup from "../ui/input/RadioGroup"
 import classes from "./Settings.module.scss"
 
 const enum PanelIndex {
-	Language,
 	Theme,
+	Language,
 	Users,
 }
 
@@ -53,7 +53,7 @@ const Settings: RunningApplicationComponent = (props) => {
 
 	// #endregion
 
-	const handleTabChange = useCallback((value: number) => {
+	const handleTabChange = useCallback((value: PanelIndex) => {
 		setPanelIndex(value)
 	}, [])
 
@@ -123,11 +123,11 @@ const Settings: RunningApplicationComponent = (props) => {
 			separator={colorScheme === ColorScheme.contrast}
 			shouldRefresh={resizing}
 		>
-			<Tab label="Theme" value={0} active={panelIndex === PanelIndex.Theme} />
-			<Tab label="Langue" value={1} active={panelIndex === PanelIndex.Language} />
-			<Tab label="Utilisateurs" value={2} active={panelIndex === PanelIndex.Users} />
+			<Tab label="Theme" value={PanelIndex.Theme} active={panelIndex === PanelIndex.Theme} />
+			<Tab label="Langue" value={PanelIndex.Language} active={panelIndex === PanelIndex.Language} />
+			<Tab label="Utilisateurs" value={PanelIndex.Users} active={panelIndex === PanelIndex.Users} />
 		</Tabs>
-		<TabPanel value={panelIndex} index={PanelIndex.Language} spaced>
+		<TabPanel value={panelIndex} index={PanelIndex.Theme} spaced>
 			<Typography variant="h3" noWrap noSelect>
 				Préférences du thème
 			</Typography>
@@ -230,7 +230,7 @@ const Settings: RunningApplicationComponent = (props) => {
 				</div>
 			</Paper>
 		</TabPanel>
-		<TabPanel value={panelIndex} index={1} spaced>
+		<TabPanel value={panelIndex} index={PanelIndex.Language} spaced>
 			<Typography variant="h3" noWrap noSelect>
 				Préférences linguistiques
 			</Typography>
@@ -249,7 +249,7 @@ const Settings: RunningApplicationComponent = (props) => {
 				</RadioGroup>
 			</Paper>
 		</TabPanel>
-		<TabPanel value={panelIndex} index={2} spaced>
+		<TabPanel value={panelIndex} index={PanelIndex.Users} spaced>
 			<Typography variant="h3" noWrap noSelect>
 				Préférences utilisateurs
 			</Typography>
