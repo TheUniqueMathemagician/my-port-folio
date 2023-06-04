@@ -1,5 +1,5 @@
 const maxDepth = 2
-const complexity = 5
+const complexity = 12
 const maxLinesPerFunction = 500
 const maxNestedCallbacks = 2
 const maxFunctionParameters = 3
