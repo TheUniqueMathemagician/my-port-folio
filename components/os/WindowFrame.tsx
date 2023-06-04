@@ -39,7 +39,9 @@ const WindowFrame: FC = () => {
 			.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
 			.subscribe(handleResize)
 
-		return () => { resizeSubscription.unsubscribe() }
+		return () => {
+			resizeSubscription.unsubscribe()
+		}
 	}, [handleResize])
 
 	const rootClasses = [classes["root"]]
@@ -69,8 +71,7 @@ const WindowFrame: FC = () => {
 				key={key}
 				pid={key}
 				resizerWidth={4}
-			/>
-			)}
+			/>)}
 	</div>
 }
 

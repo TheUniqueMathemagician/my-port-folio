@@ -39,9 +39,9 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 	const setSnapShadowVisibility = useApplicationsStore((store) => store.setSnapShadowVisibility)
 
 	const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 })
-	const [snap, setSnap] = useState<Snap>(Snap.none)
+	const [snap, setSnap] = useState<Snap>(Snap.None)
 
-	const handleDragDoubleClick = useCallback(() => setMaximized(pid, Snap.top), [setMaximized, pid])
+	const handleDragDoubleClick = useCallback(() => setMaximized(pid, Snap.Top), [setMaximized, pid])
 
 	// #region button handlers
 
@@ -56,7 +56,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 		e.preventDefault()
 
 		sendToFront(pid)
-		setMaximized(pid, maximized ? Snap.none : Snap.top)
+		setMaximized(pid, maximized ? Snap.None : Snap.Top)
 	}, [sendToFront, pid, setMaximized, maximized])
 
 	const handleGreenClick = useCallback((e: MouseEvent) => {
@@ -75,10 +75,10 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 
 	// #region dragging handlers
 
-	const handleDragMouseDown = useCallback((e: MouseEvent) => {
-		if (e.button !== 0) return
+	const handleDragMouseDown = useCallback((event: MouseEvent) => {
+		if (event.button !== 0) return
 
-		// E.preventDefault()
+		event.preventDefault()
 
 		if (maximized) {
 			const header = headerRef.current
@@ -86,14 +86,16 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 			if (header) {
 				const x = (dimensions.width || 0) / 2
 				const y = header.clientHeight / 2
+
 				setOffset({ x, y })
 			}
 		} else {
 			const window = windowRef.current
 
 			if (window) {
-				const x = e.pageX - window.offsetLeft
-				const y = e.pageY - window.offsetTop
+				const x = event.pageX - window.offsetLeft
+				const y = event.pageY - window.offsetTop
+
 				setOffset({ x, y })
 			}
 		}
@@ -101,20 +103,20 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 		document.body.style.cursor = "grabbing"
 
 		setDragging(pid, true)
-	}, [maximized, setDragging, pid, dimensions.width, windowRef])
+	}, [maximized, pid, setDragging, dimensions.width, windowRef])
 
-	const handleDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
+	const handleDragMouseMove = useCallback((event: globalThis.MouseEvent) => {
 		const header = headerRef.current
 
 		if (!header) return
 
-		e.stopPropagation()
-		e.preventDefault()
+		event.stopPropagation()
+		event.preventDefault()
 
-		const shouldSnapToTop = e.pageY - 1 <= boundaries.y1
-		const shouldSnapToBottom = e.pageY + 1 >= boundaries.y2
-		const shouldSnapToLeft = e.pageX - 1 <= boundaries.x1
-		const shouldSnapToRight = e.pageX + 1 >= boundaries.x2
+		const shouldSnapToTop = event.pageY - 1 <= boundaries.y1
+		const shouldSnapToBottom = event.pageY + 1 >= boundaries.y2
+		const shouldSnapToLeft = event.pageX - 1 <= boundaries.x1
+		const shouldSnapToRight = event.pageX + 1 >= boundaries.x2
 
 		if (shouldSnapToTop && shouldSnapToLeft) {
 			setSnapShadowVisibility(true)
@@ -124,7 +126,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				left: 0,
 				right: "50%",
 			})
-			setSnap(Snap.topLeft)
+			setSnap(Snap.TopLeft)
 		} else if (shouldSnapToTop && shouldSnapToRight) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -133,7 +135,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				left: "50%",
 				right: 0,
 			})
-			setSnap(Snap.topRight)
+			setSnap(Snap.TopRight)
 		} else if (shouldSnapToBottom && shouldSnapToLeft) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -143,7 +145,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				right: "50%",
 			})
 
-			setSnap(Snap.bottomLeft)
+			setSnap(Snap.BottomLeft)
 		} else if (shouldSnapToBottom && shouldSnapToRight) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -153,7 +155,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				right: 0,
 			})
 
-			setSnap(Snap.bottomRight)
+			setSnap(Snap.BottomRight)
 		} else if (shouldSnapToTop) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -162,7 +164,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				left: 0,
 				right: 0,
 			})
-			setSnap(Snap.top)
+			setSnap(Snap.Top)
 		} else if (shouldSnapToLeft) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -171,7 +173,7 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				left: 0,
 				right: "50%",
 			})
-			setSnap(Snap.left)
+			setSnap(Snap.Left)
 		} else if (shouldSnapToRight) {
 			setSnapShadowVisibility(true)
 			setSnapShadowPosition({
@@ -180,17 +182,17 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				left: "50%",
 				right: 0,
 			})
-			setSnap(Snap.right)
+			setSnap(Snap.Right)
 		} else {
 			if (snapShadowVisible) setSnapShadowVisibility(false)
-			if (maximized) setMaximized(pid, Snap.none)
+			if (maximized) setMaximized(pid, Snap.None)
 
-			setSnap(Snap.none)
+			setSnap(Snap.None)
 		}
 
 		const tmpPosition = {
-			left: e.pageX - offset.x,
-			top: e.pageY - offset.y,
+			left: event.pageX - offset.x,
+			top: event.pageY - offset.y,
 			right: null,
 			bottom: null,
 		}
@@ -260,6 +262,8 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 				s2.unsubscribe()
 			}
 		}
+
+		return () => null
 	}, [handleDragMouseMove, handleDragMouseUp, dragging])
 
 	useEffect(() => {
@@ -270,9 +274,9 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 		let breakpoint = Breakpoints.xl
 
 		if (window.offsetWidth <= 1200) breakpoint = Breakpoints.lg
-		if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
-		if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
-		if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
+		else if (window.offsetWidth <= 1024) breakpoint = Breakpoints.md
+		else if (window.offsetWidth <= 768) breakpoint = Breakpoints.sm
+		else if (window.offsetWidth <= 480) breakpoint = Breakpoints.xs
 
 		setBreakpoint(pid, breakpoint)
 	}, [windowRef, pid, setBreakpoint])

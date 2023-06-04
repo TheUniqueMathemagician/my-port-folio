@@ -3,7 +3,7 @@ import { Breakpoints } from "@/types/Breakpoints"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
-import React, { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef } from "react"
+import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef } from "react"
 import { fromEvent, throttleTime } from "rxjs"
 import styles from "./WindowResizer.module.scss"
 
@@ -54,7 +54,7 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 	const setResizeMode = useApplicationsStore((store) => store.setResizeMode)
 	const setResizing = useApplicationsStore((store) => store.setResizing)
 
-	const handleResizerMouseMove = useCallback((e: MouseEvent) => {
+	const handleResizerMouseMove = useCallback((event: MouseEvent) => {
 		if (resizing || !resizable) return
 
 		const resizer = resizerRef.current
@@ -62,41 +62,39 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 
 		if (!resizer || !window) return
 
-		const [x1, x2, y1, y2] = [
-			window.offsetLeft,
-			window.offsetLeft + window.offsetWidth,
-			window.offsetTop,
-			window.offsetTop + window.offsetHeight,
-		]
+		const x1 = window.offsetLeft
+		const x2 = window.offsetLeft + window.offsetWidth
+		const y1 = window.offsetTop
+		const y2 = window.offsetTop + window.offsetHeight
 
-		if (e.pageX >= x2 - width && e.pageY >= y2 - width) {
+		if (event.pageX >= x2 - width && event.pageY >= y2 - width) {
 			if (resizeMode !== Resize.bottomRight) setResizeMode(pid, Resize.bottomRight)
-		} else if (e.pageY >= y2 - width && e.pageX <= x1 + width) {
+		} else if (event.pageY >= y2 - width && event.pageX <= x1 + width) {
 			if (resizeMode !== Resize.bottomLeft) setResizeMode(pid, Resize.bottomLeft)
-		} else if (e.pageX >= x2 - width && e.pageY <= y1 + width) {
+		} else if (event.pageX >= x2 - width && event.pageY <= y1 + width) {
 			if (resizeMode !== Resize.topRight) setResizeMode(pid, Resize.topRight)
-		} else if (e.pageY <= y1 + width && e.pageX <= x1 + width) {
+		} else if (event.pageY <= y1 + width && event.pageX <= x1 + width) {
 			if (resizeMode !== Resize.topLeft) setResizeMode(pid, Resize.topLeft)
-		} else if (e.pageX >= x2 - width) {
+		} else if (event.pageX >= x2 - width) {
 			if (resizeMode !== Resize.right) setResizeMode(pid, Resize.right)
-		} else if (e.pageY >= y2 - width) {
+		} else if (event.pageY >= y2 - width) {
 			if (resizeMode !== Resize.bottom) setResizeMode(pid, Resize.bottom)
-		} else if (e.pageY <= y1 + width) {
+		} else if (event.pageY <= y1 + width) {
 			if (resizeMode !== Resize.top) setResizeMode(pid, Resize.top)
-		} else if (e.pageX <= x1 + width) {
+		} else if (event.pageX <= x1 + width) {
 			if (resizeMode !== Resize.left) setResizeMode(pid, Resize.left)
 		} else {
 			setResizeMode(pid, Resize.none)
 		}
 	}, [pid, resizable, resizeMode, resizing, setResizeMode, width, windowRef])
 
-	const handleResizerDragMouseDown = useCallback((e: React.MouseEvent) => {
-		if (e.button !== 0 || !resizable) return
+	const handleResizerDragMouseDown = useCallback((event: MouseEvent) => {
+		if (event.button !== 0 || !resizable) return
 
-		e.stopPropagation()
-		e.preventDefault()
+		event.stopPropagation()
+		event.preventDefault()
 
-		document.body.style.cursor = cursors.get(resizeMode) || ""
+		document.body.style.cursor = cursors.get(resizeMode) ?? ""
 
 		const window = windowRef.current
 
@@ -106,7 +104,7 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 
 		if (!windowFrame) return
 
-		setMaximized(pid, Snap.none)
+		setMaximized(pid, Snap.None)
 		setResizing(pid, true)
 		setPosition(pid, {
 			bottom: windowFrame.offsetHeight - window.offsetTop - window.offsetHeight,
@@ -116,7 +114,7 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 		})
 	}, [resizable, resizeMode, windowRef, setMaximized, pid, setResizing, setPosition])
 
-	const handleResizerDragMouseMove = useCallback((e: globalThis.MouseEvent) => {
+	const handleResizerDragMouseMove = useCallback((event: globalThis.MouseEvent) => {
 		const window = windowRef.current
 
 		if (!window) return
@@ -126,10 +124,10 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 		if (!windowFrame) return
 
 		const tmpPosition = {
-			bottom: () => windowFrame.offsetHeight - e.pageY,
-			left: () => e.pageX - windowFrame.offsetLeft,
-			right: () => windowFrame.offsetWidth - e.pageX - windowFrame.offsetLeft,
-			top: () => e.pageY - windowFrame.offsetTop,
+			bottom: () => windowFrame.offsetHeight - event.pageY,
+			left: () => event.pageX - windowFrame.offsetLeft,
+			right: () => windowFrame.offsetWidth - event.pageX - windowFrame.offsetLeft,
+			top: () => event.pageY - windowFrame.offsetTop,
 		}
 
 		const limit = {
@@ -292,6 +290,8 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 				s2.unsubscribe()
 			}
 		}
+
+		return () => null
 	}, [handleResizerDragMouseMove, handleResizerDragMouseUp, resizing])
 
 	const resizerClasses: string[] = [styles["window-resizer"]]

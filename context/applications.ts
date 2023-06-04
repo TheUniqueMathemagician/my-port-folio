@@ -259,7 +259,7 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 				dragging: false,
 				icon: application.icon,
 				maxDimensions: application.maxDimensions,
-				maximized: Snap.none,
+				maximized: Snap.None,
 				minDimensions: application.minDimensions,
 				minimized: false,
 				pid,
@@ -305,13 +305,11 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 
 		const instance = state.instances[pid]
 
-		if (instance.type === "daemon") return state
+		if (instance.type === "daemon") return
 
 		instance.dimensions = dimensions
 
 		set(() => ({}))
-
-		return state
 	},
 	setDragging: (pid, dragging) => {
 		const state = get()

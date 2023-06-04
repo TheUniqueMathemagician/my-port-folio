@@ -2,6 +2,7 @@ import { WindowInstance } from "@/types/Application"
 import { Boundaries } from "@/types/Boundaries"
 import { ColorScheme } from "@/types/ColorScheme"
 import { Position } from "@/types/Position"
+import { Snap } from "@/types/Snap"
 import { applicationsMap, useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FunctionComponent, MouseEventHandler, createElement, memo, useCallback, useRef } from "react"
@@ -67,7 +68,7 @@ const Window: FunctionComponent<Props> = (props) => {
 		}
 	}
 
-	if (maximized) {
+	if (maximized !== Snap.None) {
 		rootClasses.push(classes[`snap-${maximized}`])
 	} else if (resizing) {
 		tmpPosition.top = position.top
