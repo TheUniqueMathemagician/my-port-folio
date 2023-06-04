@@ -1,7 +1,8 @@
+import { ClassName } from "@/utils/ClassName"
 import { ChangeEvent, ChangeEventHandler, FunctionComponent, PropsWithChildren, memo, useCallback, useState } from "react"
 import classes from "./Text.module.scss"
 
-type Props = PropsWithChildren & {
+type TextProps = PropsWithChildren & {
 	readonly className?: string
 	readonly defaultValue?: string
 	readonly disabled?: boolean
@@ -14,7 +15,7 @@ type Props = PropsWithChildren & {
 	readonly validator?: RegExp
 }
 
-const Text: FunctionComponent<Props> = (props) => {
+const Text: FunctionComponent<TextProps> = (props) => {
 	const { className, defaultValue, fullWidth, disabled, onChange, label, name, required, type } = props
 
 	const [value, setValue] = useState<string>("")
@@ -25,11 +26,11 @@ const Text: FunctionComponent<Props> = (props) => {
 		onChange?.(e)
 	}, [onChange])
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (fullWidth) rootClasses.push(classes["full-width"])
+	if (fullWidth) classNameBuilder.add(classes["full-width"])
 
-	return <label className={rootClasses.join(" ")}>
+	return <label className={classNameBuilder.build()}>
 		<input
 			className={className}
 			defaultValue={defaultValue}

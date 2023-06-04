@@ -2,13 +2,13 @@ import { FunctionComponent, memo, useCallback, useEffect, useRef } from "react"
 import classes from "./Tab.module.scss"
 import Button from "./input/Button"
 
-type Props = {
+type TabProps = {
 	active: boolean
 	label: string
 	value: number
 }
 
-const Tab: FunctionComponent<Props> = (props) => {
+const Tab: FunctionComponent<TabProps> = (props) => {
 	const { active, label, value } = props
 
 	const ref = useRef<HTMLButtonElement>(null)
@@ -32,11 +32,9 @@ const Tab: FunctionComponent<Props> = (props) => {
 		}
 	}, [active, value])
 
-	const rootClasses = [classes["root"]]
-
 	return <Button
 		aria-controls={`tabpanel-${value}`}
-		className={rootClasses.join(" ")}
+		className={classes["root"]}
 		focusable
 		onClick={handleclick}
 		ref={ref}

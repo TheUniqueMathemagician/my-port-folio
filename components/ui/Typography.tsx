@@ -1,8 +1,8 @@
-import { FunctionComponent, ReactNode, createElement, memo } from "react"
+import { ClassName } from "@/utils/ClassName"
+import { FunctionComponent, PropsWithChildren, createElement, memo } from "react"
 import classes from "./Typography.module.scss"
 
-type Props = {
-	children: ReactNode
+type TypographyProps = PropsWithChildren & {
 	bold?: boolean
 	className?: string
 	color?: "error" | "hint" | "info" | "primary" | "secondary" | "success" | "warning"
@@ -12,24 +12,24 @@ type Props = {
 	variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h1" | "body" | "p"
 }
 
-const Typography: FunctionComponent<Props> = (props) => {
+const Typography: FunctionComponent<TypographyProps> = (props) => {
 	const { bold, children, className, color, noSelect, noWrap, tag, variant } = props
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (bold) rootClasses.push(classes["bold"])
-	if (className) rootClasses.push(className)
-	if (color) rootClasses.push(classes[color])
-	if (noSelect) rootClasses.push(classes["no-select"])
-	if (noWrap) rootClasses.push(classes["no-wrap"])
-	if (variant) rootClasses.push(classes[variant])
+	if (bold) classNameBuilder.add(classes["bold"])
+	if (className) classNameBuilder.add(className)
+	if (color) classNameBuilder.add(classes[color])
+	if (noSelect) classNameBuilder.add(classes["no-select"])
+	if (noWrap) classNameBuilder.add(classes["no-wrap"])
+	if (variant) classNameBuilder.add(classes[variant])
 
 	let el = "div"
 
 	if (tag) el = tag
 	else if (variant) el = variant === "body" ? "div" : variant
 
-	return createElement(el, { className: rootClasses.join(" ") }, children)
+	return createElement(el, { className: classNameBuilder.build() }, children)
 }
 
 export default memo(Typography)

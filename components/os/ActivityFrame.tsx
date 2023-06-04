@@ -1,14 +1,15 @@
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
-import { FC } from "react"
+import { FunctionComponent } from "react"
 import Activity from "./Activity"
 import classes from "./ActivityFrame.module.scss"
 
-const ActivityFrame: FC = () => {
+const ActivityFrame: FunctionComponent = () => {
 	const instances = useApplicationsStore((store) => store.instances)
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
 		{Object.keys(instances)
 			.filter((key) => instances[key].type === "window")
 			.map((key) => <Activity pid={key} key={instances[key].pid}></Activity>)

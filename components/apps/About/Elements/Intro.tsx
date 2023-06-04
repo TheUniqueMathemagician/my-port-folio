@@ -4,13 +4,14 @@ import Paper from "@/components/ui/Paper"
 import Typography from "@/components/ui/Typography"
 import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
+import { ClassName } from "@/utils/ClassName"
 import generateID from "@/utils/generateID"
 import { useApplicationsStore } from "context/applications"
 import Image from "next/image"
 import { FunctionComponent, memo } from "react"
 import classes from "./Intro.module.scss"
 
-type Props = {
+type IntroProps = {
 	pid: string
 }
 
@@ -76,7 +77,7 @@ const itEducation: Education[] = [
 	},
 ]
 
-const Intro: FunctionComponent<Props> = (props) => {
+const Intro: FunctionComponent<IntroProps> = (props) => {
 	const { pid } = props
 
 	const small = useApplicationsStore((store) => {
@@ -88,11 +89,11 @@ const Intro: FunctionComponent<Props> = (props) => {
 		return false
 	})
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (small) rootClasses.push(classes["small"])
+	if (small) classNameBuilder.add(classes["small"])
 
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
 		<header className={classes["intro"]}>
 			<div className={classes["avatar-container"]}>
 				<Avatar

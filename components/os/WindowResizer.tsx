@@ -2,12 +2,13 @@ import { WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef } from "react"
 import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import styles from "./WindowResizer.module.scss"
 
-type Props = {
+type WindowResizerProps = {
 	pid: string
 	width: number
 	windowRef: RefObject<HTMLDivElement>
@@ -35,7 +36,7 @@ const cssCursors = new Map<Resize, string>([
 	[Resize.topRight, "resize-top-right"],
 ])
 
-const WindowResizer: FunctionComponent<Props> = (props) => {
+const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 	const { pid, width, windowRef } = props
 
 	const resizerRef = useRef<HTMLDivElement>(null)
@@ -200,45 +201,45 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 
 		switch (resizeMode) {
 			case Resize.top: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 				})
 			}
 			case Resize.left: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					left: restrictedPosition.left(),
 				})
 			}
 			case Resize.bottom: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 				})
 			}
 			case Resize.right: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					right: restrictedPosition.right(),
 				})
 			}
 			case Resize.topLeft: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					left: restrictedPosition.left(),
 				})
 			}
 			case Resize.topRight: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					right: restrictedPosition.right(),
 				})
 			}
 			case Resize.bottomLeft: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					left: restrictedPosition.left(),
 				})
 			}
 			case Resize.bottomRight: {
-				return dispatchPositionAndBreakpoint({
+				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 					right: restrictedPosition.right(),
 				})
@@ -294,13 +295,13 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 		return () => null
 	}, [handleResizerDragMouseMove, handleResizerDragMouseUp, resizing])
 
-	const resizerClasses: string[] = [styles["window-resizer"]]
+	const resizerClassNameBuilder = ClassName.builder(styles["window-resizer"])
 	const cssCursor = cssCursors.get(resizeMode)
 
-	if (cssCursor) resizerClasses.push(styles[cssCursor])
+	if (cssCursor) resizerClassNameBuilder.add(styles[cssCursor])
 
 	return <div
-		className={resizerClasses.join(" ")}
+		className={resizerClassNameBuilder.build()}
 		ref={resizerRef}
 		onMouseMove={handleResizerMouseMove}
 		onMouseDown={handleResizerDragMouseDown}

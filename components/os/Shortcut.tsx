@@ -5,11 +5,11 @@ import Image from "next/image"
 import { FunctionComponent, KeyboardEvent, memo, useCallback } from "react"
 import styles from "./Shortcut.module.scss"
 
-type Props = {
+type ShortcutProps = {
 	applicationId: ApplicationId
 }
 
-const Shortcut: FunctionComponent<Props> = (props) => {
+const Shortcut: FunctionComponent<ShortcutProps> = (props) => {
 	const { applicationId: aid } = props
 
 	const runApplication = useApplicationsStore((store) => store.runApplication)

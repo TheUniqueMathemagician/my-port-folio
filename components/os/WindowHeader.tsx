@@ -4,19 +4,20 @@ import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
 import { Offset } from "@/types/Offset"
 import { Snap } from "@/types/Snap"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef, useState } from "react"
 import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import classes from "./WindowHeader.module.scss"
 
-type Props = {
+type WindowHeaderProps = {
 	boundaries: Boundaries
 	pid: string
 	windowRef: RefObject<HTMLDivElement>
 }
 
-const WindowHeader: FunctionComponent<Props> = (props) => {
+const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 	const { pid, boundaries, windowRef } = props
 
 	const headerRef = useRef<HTMLDivElement>(null)
@@ -281,12 +282,12 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 		setBreakpoint(pid, breakpoint)
 	}, [windowRef, pid, setBreakpoint])
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (contrast) rootClasses.push(classes["contrast"])
+	if (contrast) classNameBuilder.add(classes["contrast"])
 
 	return <div
-		className={rootClasses.join(" ")}
+		className={classNameBuilder.build()}
 		ref={headerRef}
 		onMouseDown={handleDragMouseDown}
 		onDoubleClick={handleDragDoubleClick}

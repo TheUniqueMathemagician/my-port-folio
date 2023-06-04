@@ -64,9 +64,7 @@ const Contact: RunningApplicationComponent = () => {
 		}
 	}, [loading])
 
-	const rootClasses = [classes["root"]]
-
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classes["root"]}>
 		<div className={classes["container"]}>
 			<Typography variant="h4">Me contacter</Typography>
 			<Paper outlined={contrast} spaced blur background="paper">

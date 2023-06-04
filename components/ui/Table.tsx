@@ -1,23 +1,23 @@
 import { Size } from "@/types/Size"
-import { FunctionComponent, ReactNode, memo } from "react"
+import { ClassName } from "@/utils/ClassName"
+import { FunctionComponent, PropsWithChildren, memo } from "react"
 import classes from "./Table.module.scss"
 
-type Props = {
-	children: ReactNode
+type TableProps = PropsWithChildren & {
 	fullWidth?: boolean
 	outlined?: boolean
 	size?: Size
 }
 
-const Table: FunctionComponent<Props> = (props) => {
+const Table: FunctionComponent<TableProps> = (props) => {
 	const { children, outlined, fullWidth } = props
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (fullWidth) rootClasses.push(classes["full-width"])
-	if (outlined) rootClasses.push(classes["outlined"])
+	if (fullWidth) classNameBuilder.add(classes["full-width"])
+	if (outlined) classNameBuilder.add(classes["outlined"])
 
-	return <table className={rootClasses.join(" ")}>{children}</table>
+	return <table className={classNameBuilder.build()}>{children}</table>
 }
 
 export default memo(Table)

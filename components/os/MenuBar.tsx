@@ -9,11 +9,11 @@ import classes from "./MenuBar.module.scss"
 const Close = memo(IoMdClose)
 const Send = memo(MdSend)
 
-type Props = {
+type MenuBarProps = {
 	pid: string
 }
 
-const MenuBar: FunctionComponent<Props> = (props) => {
+const MenuBar: FunctionComponent<MenuBarProps> = (props) => {
 	const { pid } = props
 
 	const runApplication = useApplicationsStore((store) => store.runApplication)
@@ -23,9 +23,7 @@ const MenuBar: FunctionComponent<Props> = (props) => {
 
 	const handleCloseClick = useCallback(() => closeApplication(pid), [closeApplication, pid])
 
-	const rootClasses = [classes["root"]]
-
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classes["root"]}>
 		<Button focusable startIcon onClick={handleCloseClick}>
 			<Close></Close>
 			<span>Fermer</span>

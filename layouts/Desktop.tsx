@@ -1,8 +1,8 @@
 import { AnimatePresence } from "framer-motion"
 import { FunctionComponent, PropsWithChildren, memo } from "react"
 
-type Props = PropsWithChildren
+type DesktopProps = PropsWithChildren
 
-const Desktop: FunctionComponent<Props> = ({ children }) => <AnimatePresence initial={false} exitBeforeEnter>{children}</AnimatePresence>
+const Desktop: FunctionComponent<DesktopProps> = ({ children }) => <AnimatePresence initial={false} exitBeforeEnter>{children}</AnimatePresence>
 
 export default memo(Desktop)

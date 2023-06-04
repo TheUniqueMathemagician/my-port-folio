@@ -1,12 +1,13 @@
 import { ApplicationId } from "@/types/Application"
 import { ColorScheme } from "@/types/ColorScheme"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useOsStore } from "context/os"
 import { useThemeStore } from "context/theme"
 import { useUsersStore } from "context/users"
 import { useRouter } from "next/dist/client/router"
 import Image from "next/image"
-import { FC, MouseEventHandler, memo, useRef, useState } from "react"
+import { FunctionComponent, MouseEventHandler, memo, useRef, useState } from "react"
 import { IoLogOutOutline } from "react-icons/io5"
 import { MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend } from "react-icons/md"
 import Menu from "../icons/Menu"
@@ -25,7 +26,7 @@ const enum MenuTab {
 
 const Send = memo(MdSend)
 
-const TaskBar: FC = () => {
+const TaskBar: FunctionComponent = () => {
 	const [menuShown, setMenuShown] = useState(MenuTab.None)
 
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
@@ -45,7 +46,7 @@ const TaskBar: FC = () => {
 
 	const router = useRouter()
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
 	const closeMenu = () => setMenuShown(MenuTab.None)
 
@@ -88,10 +89,10 @@ const TaskBar: FC = () => {
 		closeMenu()
 	}
 
-	if (contrast) rootClasses.push(classes["contrast"])
+	if (contrast) classNameBuilder.add(classes["contrast"])
 
 	return <>
-		<div className={rootClasses.join(" ")} ref={taskBarRef}>
+		<div className={classNameBuilder.build()} ref={taskBarRef}>
 			<Button
 				size="md"
 				focusable

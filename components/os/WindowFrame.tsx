@@ -1,13 +1,14 @@
 import { Boundaries } from "@/types/Boundaries"
 import { ColorScheme } from "@/types/ColorScheme"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
-import { FC, memo, useCallback, useEffect, useRef, useState } from "react"
+import { FunctionComponent, memo, useCallback, useEffect, useRef, useState } from "react"
 import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import Window from "./Window"
 import classes from "./WindowFrame.module.scss"
 
-const WindowFrame: FC = () => {
+const WindowFrame: FunctionComponent = () => {
 	const instanceKeys = useApplicationsStore((store) => Object.keys(store.instances), (a, b) => a.length === b.length)
 	const isContrasted = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const isDragging = useApplicationsStore((store) => store.dragging)
@@ -44,15 +45,15 @@ const WindowFrame: FC = () => {
 		}
 	}, [handleResize])
 
-	const rootClasses = [classes["root"]]
-	const shadowClasses = [classes["shadow"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
+	const shadowClassNameBuilder = ClassName.builder(classes["shadow"])
 
-	if (isContrasted) shadowClasses.push(classes["contrast"])
-	if (isDragging) rootClasses.push(classes["dragging"])
-	if (isResizing) rootClasses.push(classes["resizing"])
+	if (isContrasted) shadowClassNameBuilder.add(classes["contrast"])
+	if (isDragging) classNameBuilder.add(classes["dragging"])
+	if (isResizing) classNameBuilder.add(classes["resizing"])
 
 	// TODO: put snap shadow in its own component
-	return <div className={rootClasses.join(" ")} ref={frameRef}>
+	return <div className={classNameBuilder.build()} ref={frameRef}>
 		<div
 			style={{
 				bottom: shadowPosition.bottom ?? undefined,
@@ -62,7 +63,7 @@ const WindowFrame: FC = () => {
 				transitionDuration: isShadowVisible ? ".3s" : undefined,
 				visibility: isShadowVisible ? "visible" : "collapse",
 			}}
-			className={shadowClasses.join(" ")}
+			className={shadowClassNameBuilder.build()}
 		></div>
 		{instanceKeys
 			.map((key) => <Window

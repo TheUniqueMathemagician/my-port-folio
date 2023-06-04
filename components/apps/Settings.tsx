@@ -1,6 +1,7 @@
 import { RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { useUsersStore } from "context/users"
@@ -111,11 +112,11 @@ const Settings: RunningApplicationComponent = (props) => {
 		(key) => key !== users[currentUserID]?.id
 	)
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (small) rootClasses.push(classes["small"])
+	if (small) classNameBuilder.add(classes["small"])
 
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
 		<Tabs
 			defaultValue={panelIndex}
 			direction={small ? "bottom" : "right"}

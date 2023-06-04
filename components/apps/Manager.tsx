@@ -1,6 +1,7 @@
 import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { memo, useState } from "react"
@@ -59,11 +60,11 @@ const Manager: RunningApplicationComponent = (props) => {
 
 	const [panelIndex, setPanelIndex] = useState(0)
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (small) rootClasses.push(classes["small"])
+	if (small) classNameBuilder.add(classes["small"])
 
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
 		<Tabs
 			defaultValue={0}
 			direction={small ? "bottom" : "right"}

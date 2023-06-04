@@ -4,11 +4,11 @@ import Paper from "../../../ui/Paper"
 import Typography from "../../../ui/Typography"
 import classes from "./Hobbies.module.scss"
 
-type Props = {
+type HobbiesProps = {
 	pid: string
 }
 
-const Hobbies: FunctionComponent<Props> = () => <div className={classes["root"]}>
+const Hobbies: FunctionComponent<HobbiesProps> = () => <div className={classes["root"]}>
 	<Typography variant="h4">Loisirs</Typography>
 	<Typography variant="h5">Code</Typography>
 	<Paper spaced background="paper" className={classes["paper"]}>

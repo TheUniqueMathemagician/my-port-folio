@@ -2,11 +2,11 @@ import { DaemonInstance } from "@/types/Application"
 import { applicationsMap, useApplicationsStore } from "context/applications"
 import { FunctionComponent, createElement } from "react"
 
-type Props = {
+type DaemonProps = {
 	pid: string
 }
 
-const Daemon: FunctionComponent<Props> = (props) => {
+const Daemon: FunctionComponent<DaemonProps> = (props) => {
 	const { pid } = props
 
 	const component = useApplicationsStore((store) => (store.instances[pid] as DaemonInstance).applicationId)

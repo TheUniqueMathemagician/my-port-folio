@@ -3,6 +3,7 @@ import { Boundaries } from "@/types/Boundaries"
 import { ColorScheme } from "@/types/ColorScheme"
 import { Position } from "@/types/Position"
 import { Snap } from "@/types/Snap"
+import { ClassName } from "@/utils/ClassName"
 import { applicationsMap, useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FunctionComponent, MouseEventHandler, createElement, memo, useCallback, useRef } from "react"
@@ -10,14 +11,14 @@ import classes from "./Window.module.scss"
 import WindowHeader from "./WindowHeader"
 import WindowResizer from "./WindowResizer"
 
-type Props = {
+type WindowProps = {
 	readonly borderOffset: number
 	readonly boundaries: Boundaries
 	readonly pid: string
 	readonly resizerWidth: number
 }
 
-const Window: FunctionComponent<Props> = (props) => {
+const Window: FunctionComponent<WindowProps> = (props) => {
 	const { pid, boundaries, borderOffset, resizerWidth } = props
 
 	const windowRef = useRef<HTMLDivElement>(null)
@@ -45,8 +46,8 @@ const Window: FunctionComponent<Props> = (props) => {
 
 	// #region window rendering checks
 
-	const rootClasses = [classes["root"]]
-	const backgroundClasses = [classes["background"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
+	const backgroundClassNameBuilder = ClassName.builder(classes["background"])
 
 	let width: number | "" = ""
 	let height: number | "" = ""
@@ -69,7 +70,7 @@ const Window: FunctionComponent<Props> = (props) => {
 	}
 
 	if (maximized !== Snap.None) {
-		rootClasses.push(classes[`snap-${maximized}`])
+		classNameBuilder.add(classes[`snap-${maximized}`])
 	} else if (resizing) {
 		tmpPosition.top = position.top
 		tmpPosition.left = position.left
@@ -99,13 +100,13 @@ const Window: FunctionComponent<Props> = (props) => {
 
 	const zIndex = zIndexes.indexOf(pid)
 
-	if (contrast) rootClasses.push(classes["contrast"])
+	if (contrast) classNameBuilder.add(classes["contrast"])
 
 	const renderComponent = applicationsMap.get(component)
 
 	return <section
 		onFocus={handleWindowFocus}
-		className={rootClasses.join(" ")}
+		className={classNameBuilder.build()}
 		style={{
 			bottom: tmpPosition.bottom ?? "",
 			height,
@@ -121,17 +122,9 @@ const Window: FunctionComponent<Props> = (props) => {
 		draggable="false"
 		onMouseDown={handleWindowMouseDown}
 	>
-		<WindowResizer
-			pid={pid}
-			width={resizerWidth}
-			windowRef={windowRef}
-		></WindowResizer>
-		<WindowHeader
-			boundaries={boundaries}
-			pid={pid}
-			windowRef={windowRef}
-		></WindowHeader>
-		<div className={backgroundClasses.join(" ")} style={{ pointerEvents: dragging ? "none" : "auto" }}>
+		<WindowResizer pid={pid} width={resizerWidth} windowRef={windowRef}></WindowResizer>
+		<WindowHeader boundaries={boundaries} pid={pid} windowRef={windowRef}></WindowHeader>
+		<div className={backgroundClassNameBuilder.build()} style={{ pointerEvents: dragging ? "none" : "auto" }}>
 			{renderComponent ? createElement(renderComponent, { args, pid }) : null}
 		</div>
 	</section>

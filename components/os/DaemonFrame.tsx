@@ -1,8 +1,8 @@
 import { useApplicationsStore } from "context/applications"
-import { FC } from "react"
+import { FunctionComponent } from "react"
 import Daemon from "./Daemon"
 
-const DaemonFrame: FC = () => {
+const DaemonFrame: FunctionComponent = () => {
 	const instances = useApplicationsStore((store) => store.instances)
 
 	return <>

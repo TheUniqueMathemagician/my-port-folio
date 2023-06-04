@@ -1,8 +1,8 @@
-import { FunctionComponent, ReactNode, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { ClassName } from "@/utils/ClassName"
+import { FunctionComponent, PropsWithChildren, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import classes from "./Tabs.module.scss"
 
-type Props = {
-	children: ReactNode
+type TabsProps = PropsWithChildren & {
 	className?: string
 	defaultValue?: number
 	direction: "bottom" | "left" | "right" | "top"
@@ -21,7 +21,7 @@ type HorizontalPosition = {
 	width: number
 }
 
-const Tabs: FunctionComponent<Props> = (props) => {
+const Tabs: FunctionComponent<TabsProps> = (props) => {
 	const { children, className, defaultValue, direction, onChange, separator, shouldRefresh } = props
 
 	const ref = useRef<HTMLDivElement>(null)
@@ -91,29 +91,29 @@ const Tabs: FunctionComponent<Props> = (props) => {
 		}
 	}, [defaultValue, vertical])
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
 	switch (direction) {
 		case "bottom":
-			rootClasses.push(classes["bottom"])
+			classNameBuilder.add(classes["bottom"])
 			break
 		case "left":
-			rootClasses.push(classes["left"])
+			classNameBuilder.add(classes["left"])
 			break
 		case "right":
-			rootClasses.push(classes["right"])
+			classNameBuilder.add(classes["right"])
 			break
 		case "top":
-			rootClasses.push(classes["top"])
+			classNameBuilder.add(classes["top"])
 			break
 		default:
 			break
 	}
 
-	if (separator) rootClasses.push(classes["separator"])
-	if (className) rootClasses.push(className)
+	if (separator) classNameBuilder.add(classes["separator"])
+	if (className) classNameBuilder.add(className)
 
-	return <div aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"} className={rootClasses.join(" ")} >
+	return <div aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"} className={classNameBuilder.build()} >
 		<div className={classes["tabs"]} ref={ref} role="tablist">
 			{children}
 			<div

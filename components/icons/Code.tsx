@@ -1,9 +1,10 @@
 import { FunctionComponent, memo } from "react"
 import { IoCodeSlashOutline } from "react-icons/io5"
 
-type Props = {
+type CodeProps = {
 	className?: string
 }
-const Code: FunctionComponent<Props> = ({ className }) => <IoCodeSlashOutline className={className}></IoCodeSlashOutline>
+
+const Code: FunctionComponent<CodeProps> = ({ className }) => <IoCodeSlashOutline className={className}></IoCodeSlashOutline>
 
 export default memo(Code)

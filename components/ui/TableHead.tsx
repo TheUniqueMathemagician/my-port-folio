@@ -1,8 +1,8 @@
 import { FunctionComponent, PropsWithChildren } from "react"
 import classes from "./TableHead.module.scss"
 
-type Props = PropsWithChildren
+type TableHeadProps = PropsWithChildren
 
-const TableHead: FunctionComponent<Props> = ({ children }) => <thead className={classes["root"]}>{children}</thead>
+const TableHead: FunctionComponent<TableHeadProps> = ({ children }) => <thead className={classes["root"]}>{children}</thead>
 
 export default TableHead

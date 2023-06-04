@@ -3,7 +3,7 @@ import { MdStar } from "react-icons/md"
 import generateID from "utils/generateID"
 import classes from "./Rating.module.scss"
 
-type Props = PropsWithChildren & {
+type RatingProps = PropsWithChildren & {
 	readonly defaultValue?: number
 	readonly disabled?: boolean
 	readonly max?: number
@@ -15,7 +15,7 @@ type Props = PropsWithChildren & {
 
 const Star = memo(MdStar)
 
-const Rating: FunctionComponent<Props> = (props) => {
+const Rating: FunctionComponent<RatingProps> = (props) => {
 	const { onChange, defaultValue, max, min, disabled, output, readOnly } = props
 
 	const id = useRef<string>(generateID())
@@ -34,12 +34,10 @@ const Rating: FunctionComponent<Props> = (props) => {
 
 	const rates: number[] = []
 
-	const rootClasses = [classes["root"]]
-
 	for (let i = min ?? 0; i <= (max ?? 0); i++) rates.push(i)
 
 	// TODO: make this accessible with tabs
-	return <fieldset disabled={disabled} className={rootClasses.join(" ")}>
+	return <fieldset disabled={disabled} className={classes["root"]}>
 		{rates.map((i) => (
 			<label
 				key={i}

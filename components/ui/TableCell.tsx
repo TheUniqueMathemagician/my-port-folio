@@ -1,27 +1,28 @@
+import { ClassName } from "@/utils/ClassName"
 import { FunctionComponent, PropsWithChildren, memo } from "react"
 import classes from "./TableCell.module.scss"
 
-type Props = PropsWithChildren & {
+type TableCellProps = PropsWithChildren & {
 	align?: "start" | "center" | "end"
 	heading?: boolean
 }
 
-const TableCell: FunctionComponent<Props> = (props) => {
+const TableCell: FunctionComponent<TableCellProps> = (props) => {
 	const { align, children, heading } = props
 
-	const rootClasses = [classes["root"]]
-	const containerClasses = [classes["container"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
+	const containerClassNameBuilder = ClassName.builder(classes["container"])
 
-	if (align) containerClasses.push(classes[align])
+	if (align) containerClassNameBuilder.add(classes[align])
 
 	if (heading) {
-		return <th className={rootClasses.join(" ")}>
-			<div className={containerClasses.join(" ")}>{children}</div>
+		return <th className={classNameBuilder.build()}>
+			<div className={containerClassNameBuilder.build()}>{children}</div>
 		</th>
 	}
 
-	return <td className={rootClasses.join(" ")}>
-		<div className={containerClasses.join(" ")}>{children}</div>
+	return <td className={classNameBuilder.build()}>
+		<div className={containerClassNameBuilder.build()}>{children}</div>
 	</td>
 }
 

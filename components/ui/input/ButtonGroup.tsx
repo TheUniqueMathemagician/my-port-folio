@@ -1,8 +1,8 @@
 import { FunctionComponent, PropsWithChildren } from "react"
 import classes from "./ButtonGroup.module.scss"
 
-type Props = PropsWithChildren
+type ButtonGroupProps = PropsWithChildren
 
-const ButtonGroup: FunctionComponent<Props> = ({ children }) => <div className={classes["root"]}>{children}</div>
+const ButtonGroup: FunctionComponent<ButtonGroupProps> = ({ children }) => <div className={classes["root"]}>{children}</div>
 
 export default ButtonGroup

@@ -1,5 +1,6 @@
 import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { memo } from "react"
 import Avatar from "../ui/Avatar"
@@ -29,11 +30,11 @@ const Projects: RunningApplicationComponent = (props) => {
 
 	const runApplication = useApplicationsStore((store) => store.runApplication)
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (small) rootClasses.push(classes["small"])
+	if (small) classNameBuilder.add(classes["small"])
 
-	return <div className={rootClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
 		<div className={classes["grid"]}>
 			<Paper
 				tag="article"

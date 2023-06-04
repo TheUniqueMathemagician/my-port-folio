@@ -1,5 +1,6 @@
 import { Color } from "@/types/Color"
 import { Size } from "@/types/Size"
+import { ClassName } from "@/utils/ClassName"
 import contrastColor from "@/utils/contrastColor"
 import { useThemeStore } from "context/theme"
 import Link from "next/link"
@@ -8,7 +9,7 @@ import classes from "./Button.module.scss"
 
 type HTMLProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 
-interface PropsButtonA extends HTMLProps {
+interface ButtonAProps extends HTMLProps {
 	readonly align?: "center" | "end" | "start"
 	readonly color?: Color
 	readonly contrast?: boolean
@@ -26,7 +27,7 @@ interface PropsButtonA extends HTMLProps {
 	readonly variant?: "flat" | "filled" | "blur"
 }
 
-interface PropsButtonB extends HTMLProps {
+interface ButtonBProps extends HTMLProps {
 	readonly align?: "center" | "end" | "start"
 	readonly color?: Color
 	readonly contrast?: boolean
@@ -45,7 +46,7 @@ interface PropsButtonB extends HTMLProps {
 	readonly variant?: "flat" | "filled" | "blur"
 }
 
-const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | PropsButtonB>>((props, parentRef) => {
+const Button = forwardRef<HTMLButtonElement, PropsWithChildren<ButtonAProps | ButtonBProps>>((props, parentRef) => {
 	const { ripple, readOnly, color, fullWidth, size, variant, startIcon, endIcon, align, contrast, outlined, isIcon, className, loading, children, onClick, ...rest } = props
 
 	const innerRef = useRef<HTMLElement>(null)
@@ -100,23 +101,23 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 		button.style.setProperty("--text-color", contrastColor(backgroundColor))
 	}, [backgroundColor, ref])
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (fullWidth) rootClasses.push(classes["full-width"])
-	if (size) rootClasses.push(classes[size])
-	if (variant) rootClasses.push(classes[variant])
-	if (startIcon) rootClasses.push(classes["has-start-img"])
-	if (endIcon) rootClasses.push(classes["has-end-img"])
-	if (align) rootClasses.push(classes[`align--${align}`])
-	if (color) rootClasses.push(classes[color])
-	if (contrast) rootClasses.push(classes["contrast"])
-	if (outlined) rootClasses.push(classes["outlined"])
-	if (isIcon) rootClasses.push(classes["is-icon"])
-	if (className) rootClasses.push(className)
-	if (loading) rootClasses.push(classes["loading"])
+	if (fullWidth) classNameBuilder.add(classes["full-width"])
+	if (size) classNameBuilder.add(classes[size])
+	if (variant) classNameBuilder.add(classes[variant])
+	if (startIcon) classNameBuilder.add(classes["has-start-img"])
+	if (endIcon) classNameBuilder.add(classes["has-end-img"])
+	if (align) classNameBuilder.add(classes[`align--${align}`])
+	if (color) classNameBuilder.add(classes[color])
+	if (contrast) classNameBuilder.add(classes["contrast"])
+	if (outlined) classNameBuilder.add(classes["outlined"])
+	if (isIcon) classNameBuilder.add(classes["is-icon"])
+	if (className) classNameBuilder.add(className)
+	if (loading) classNameBuilder.add(classes["loading"])
 
 	if (props.to) {
-		return <Link href={props.to} className={rootClasses.join(" ")} {...rest} ref={ref as any} onClick={handleClick}>
+		return <Link href={props.to} className={classNameBuilder.build()} {...rest} ref={ref as any} onClick={handleClick}>
 			<div className={classes["content"]}>{children}</div>
 			<div className={classes["loader"]}>
 				<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -126,7 +127,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<PropsButtonA | Pr
 		</Link>
 	}
 
-	return <button className={rootClasses.join(" ")} onClick={handleClick} onKeyPress={handleKeyPress} ref={ref as any} {...rest}>
+	return <button className={classNameBuilder.build()} onClick={handleClick} onKeyPress={handleKeyPress} ref={ref as any} {...rest}>
 		<div className={classes["content"]}>{children}</div>
 		<div className={classes["loader"]}>
 			<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">

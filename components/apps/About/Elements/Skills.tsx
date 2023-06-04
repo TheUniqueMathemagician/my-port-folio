@@ -8,7 +8,7 @@ import classes from "./Skills.module.scss"
 // TODO: Make 3 columns, each defining an appreciation (junior, medior, senior).
 // Each categ. has it's filter.
 
-type Props = {
+type SkillsProps = {
 	pid: string
 }
 
@@ -240,7 +240,7 @@ const Filter = memo(() => <FaFilter style={{ color: "var(--cvos-text)" }}></FaFi
 
 Filter.displayName = "Filter"
 
-const Skills: FunctionComponent<Props> = () => {
+const Skills: FunctionComponent<SkillsProps> = () => {
 	const [ratingFilter, setRatingFilter] = useState(1)
 	const [ratingFilterType, setRatingFilterType] = useState<EEqualityOption>(EEqualityOption.greaterOrEqual)
 
@@ -269,7 +269,7 @@ const Skills: FunctionComponent<Props> = () => {
 				<Rating readOnly defaultValue={skill.level} min={1} max={5}></Rating>
 			</React.Fragment>
 		),
-		[]
+		[],
 	)
 
 	return <div className={classes["root"]}>

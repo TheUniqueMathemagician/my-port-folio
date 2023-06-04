@@ -1,8 +1,8 @@
 import { FunctionComponent, PropsWithChildren } from "react"
 import classes from "./TableFoot.module.scss"
 
-type Props = PropsWithChildren
+type TableFootProps = PropsWithChildren
 
-const TableFoot: FunctionComponent<Props> = ({ children }) => <tfoot className={classes["root"]}>{children}</tfoot>
+const TableFoot: FunctionComponent<TableFootProps> = ({ children }) => <tfoot className={classes["root"]}>{children}</tfoot>
 
 export default TableFoot

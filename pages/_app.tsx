@@ -1,14 +1,14 @@
 import { useThemeStore } from "context/theme"
 import { AppProps } from "next/dist/shared/lib/router/router"
 import Head from "next/head"
-import { FC, FunctionComponent } from "react"
+import { FunctionComponent } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import "../styles/global.scss"
 import { Page } from "../types/Page"
 
 type AppPropsWithLayout = AppProps & { Component: Page }
 
-const Setup: FC = () => {
+const Setup: FunctionComponent = () => {
 	const palette = useThemeStore((store) => store.palette)
 	const colorScheme = useThemeStore((store) => store.colorScheme)
 

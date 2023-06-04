@@ -1,9 +1,7 @@
-import { FunctionComponent, ReactNode } from "react"
+import { FunctionComponent, PropsWithChildren } from "react"
 
-type Props = {
-	children: ReactNode
-}
+type TableBodyProps = PropsWithChildren
 
-const TableBody: FunctionComponent<Props> = ({ children }) => <tbody>{children}</tbody>
+const TableBody: FunctionComponent<TableBodyProps> = ({ children }) => <tbody>{children}</tbody>
 
 export default TableBody

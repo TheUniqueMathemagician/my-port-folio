@@ -1,6 +1,7 @@
 import { ApplicationId, RunningApplicationComponent, WindowInstance } from "@/types/Application"
 import { Breakpoints } from "@/types/Breakpoints"
 import { ColorScheme } from "@/types/ColorScheme"
+import { ClassName } from "@/utils/ClassName"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { memo, useCallback, useState } from "react"
@@ -41,14 +42,14 @@ const About: RunningApplicationComponent = (props) => {
 
 	const handleContactClick = useCallback(() => runApplication(ApplicationId.Contact, {}), [runApplication])
 
-	const leftBarClasses = [classes["left-bar"]]
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
+	const leftBarClassNameBuilder = ClassName.builder(classes["left-bar"])
 
-	if (contrast) leftBarClasses.push(classes["contrast"])
-	if (small) rootClasses.push(classes["small"])
+	if (small) classNameBuilder.add(classes["small"])
+	if (contrast) leftBarClassNameBuilder.add(classes["contrast"])
 
-	return <div className={rootClasses.join(" ")}>
-		<div className={leftBarClasses.join(" ")}>
+	return <div className={classNameBuilder.build()}>
+		<div className={leftBarClassNameBuilder.build()}>
 			<Tabs
 				direction={small ? "top" : "right"}
 				defaultValue={0}

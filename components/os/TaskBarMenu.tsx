@@ -1,27 +1,29 @@
 import { ColorScheme } from "@/types/ColorScheme"
 import { Position } from "@/types/Position"
+import { ClassName } from "@/utils/ClassName"
 import { useThemeStore } from "context/theme"
-import { FunctionComponent, ReactNode, memo } from "react"
+import { FunctionComponent, PropsWithChildren, memo } from "react"
 import classes from "./TaskBarMenu.module.scss"
 
-type Props = {
-	children: ReactNode
+type TaskBarMenuProps = PropsWithChildren & {
 	position: Position
 	shown: boolean
 }
 
-const TaskBarMenu: FunctionComponent<Props> = ({ shown, position, children }) => {
+const TaskBarMenu: FunctionComponent<TaskBarMenuProps> = (props) => {
+	const { children, position, shown } = props
+
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
 	if (!shown && position.bottom) position.bottom -= 6
 
-	if (contrast) rootClasses.push(classes["contrast"])
-	if (shown) rootClasses.push(classes["shown"])
+	if (contrast) classNameBuilder.add(classes["contrast"])
+	if (shown) classNameBuilder.add(classes["shown"])
 
 	return <nav
-		className={rootClasses.join(" ")}
+		className={classNameBuilder.build()}
 		style={{
 			top: position.top ?? undefined,
 			left: position.left ?? undefined,

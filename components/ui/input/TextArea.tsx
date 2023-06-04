@@ -1,7 +1,8 @@
+import { ClassName } from "@/utils/ClassName"
 import { ChangeEvent, ChangeEventHandler, FunctionComponent, memo, useCallback, useState } from "react"
 import classes from "./TextArea.module.scss"
 
-type Props = {
+type TextAreaProps = {
 	readonly autoResize?: boolean
 	readonly className?: string
 	readonly defaultValue?: string
@@ -14,7 +15,7 @@ type Props = {
 	readonly vertical?: boolean
 }
 
-const TextArea: FunctionComponent<Props> = (props) => {
+const TextArea: FunctionComponent<TextAreaProps> = (props) => {
 	const { autoResize, className, defaultValue, disabled, fullWidth, label, name, onChange, required, vertical } = props
 
 	const [value, setValue] = useState<string>(defaultValue ?? "")
@@ -27,14 +28,14 @@ const TextArea: FunctionComponent<Props> = (props) => {
 		onChange?.(e)
 	}, [autoResize, onChange])
 
-	const rootClasses = [classes["root"]]
+	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (autoResize) rootClasses.push(classes["auto-resize"])
-	if (fullWidth) rootClasses.push(classes["full-width"])
-	if (vertical) rootClasses.push(classes["vertical"])
-	if (className) rootClasses.push(className)
+	if (autoResize) classNameBuilder.add(classes["auto-resize"])
+	if (className) classNameBuilder.add(className)
+	if (fullWidth) classNameBuilder.add(classes["full-width"])
+	if (vertical) classNameBuilder.add(classes["vertical"])
 
-	return <label className={rootClasses.join(" ")}>
+	return <label className={classNameBuilder.build()}>
 		<textarea
 			defaultValue={defaultValue}
 			disabled={disabled}

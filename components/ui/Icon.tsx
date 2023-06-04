@@ -1,7 +1,7 @@
 import React, { FunctionComponent, PropsWithChildren, memo } from "react"
 
-type Props = PropsWithChildren
+type IconProps = PropsWithChildren
 
-const Icon: FunctionComponent<Props> = ({ children }) => <>{React.Children.only(children)}</>
+const Icon: FunctionComponent<IconProps> = ({ children }) => <>{React.Children.only(children)}</>
 
 export default memo(Icon)
