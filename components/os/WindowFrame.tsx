@@ -3,7 +3,7 @@ import { ColorScheme } from "@/types/ColorScheme"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import Window from "./Window"
 import classes from "./WindowFrame.module.scss"
 
@@ -36,7 +36,7 @@ const WindowFrame: FC = () => {
 		handleResize()
 
 		const resizeSubscription = fromEvent(window, "resize")
-			.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+			.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 			.subscribe(handleResize)
 
 		return () => {

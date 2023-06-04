@@ -4,7 +4,7 @@ import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
 import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import styles from "./WindowResizer.module.scss"
 
 type Props = {
@@ -279,10 +279,10 @@ const WindowResizer: FunctionComponent<Props> = (props) => {
 	useEffect(() => {
 		if (resizing) {
 			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleResizerDragMouseMove)
 			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleResizerDragMouseUp)
 
 			return () => {

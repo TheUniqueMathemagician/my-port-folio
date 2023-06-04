@@ -7,7 +7,7 @@ import { Snap } from "@/types/Snap"
 import { useApplicationsStore } from "context/applications"
 import { useThemeStore } from "context/theme"
 import { FunctionComponent, MouseEvent, RefObject, memo, useCallback, useEffect, useRef, useState } from "react"
-import { fromEvent, throttleTime } from "rxjs"
+import { animationFrameScheduler, fromEvent, throttleTime } from "rxjs"
 import classes from "./WindowHeader.module.scss"
 
 type Props = {
@@ -251,10 +251,10 @@ const WindowHeader: FunctionComponent<Props> = (props) => {
 	useEffect(() => {
 		if (dragging) {
 			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleDragMouseMove)
 			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
-				.pipe(throttleTime(5, undefined, { leading: true, trailing: true }))
+				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleDragMouseUp)
 
 			return () => {
