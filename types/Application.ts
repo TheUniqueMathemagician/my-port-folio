@@ -1,10 +1,15 @@
+import { FunctionComponent } from "react"
 import { Breakpoints } from "./Breakpoints"
 import { Dimensions } from "./Dimensions"
 import { Position } from "./Position"
 import { Resize } from "./Resize"
 import { Snap } from "./Snap"
 
-export enum Applications {
+export type Argument = string | number | boolean | null
+
+export type Arguments = Record<string, Argument>
+
+export const enum ApplicationId {
 	About,
 	Contact,
 	Image,
@@ -15,11 +20,11 @@ export enum Applications {
 	Randit,
 	Settings,
 	Snake,
-	Welcome
+	Welcome,
 }
 
 export type Application = {
-	readonly aid: Applications
+	readonly applicationId: ApplicationId
 	readonly displayName: string
 	readonly icon: string
 	readonly shortcut: string
@@ -40,8 +45,8 @@ export interface WindowApplication extends Application {
 }
 
 export type Instance = {
-	readonly args: { [key: string]: string }
-	readonly component: Applications
+	readonly applicationId: ApplicationId
+	readonly args: Arguments
 	readonly displayName: string
 	readonly icon: string
 	readonly pid: string
@@ -53,15 +58,20 @@ export interface DaemonInstance extends Instance {
 
 export interface WindowInstance extends Instance {
 	breakpoint: Breakpoints
-	position: Position
 	dimensions: Dimensions
-	minDimensions: Dimensions
+	dragging: boolean
 	maxDimensions: Dimensions
+	maximized: Snap
+	minDimensions: Dimensions
+	minimized: boolean
+	position: Position
 	resizable: boolean
 	resizeMode: Resize
 	resizing: boolean
-	dragging: boolean
-	minimized: boolean
-	maximized: Snap
 	type: "window"
 }
+
+export type RunningApplicationComponent = FunctionComponent<{
+	args: Arguments
+	pid: string
+}>

@@ -1,6 +1,6 @@
 export type Position = {
-	bottom: null | number
-	left: null | number
-	right: null | number
-	top: null | number
+	bottom: number | null
+	left: number | null
+	right: number | null
+	top: number | null
 }

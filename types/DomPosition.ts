@@ -1,6 +1,6 @@
 export type DomPosition = {
-	bottom: null | number | "50%" | "100%"
-	left: null | number | "50%" | "100%"
-	right: null | number | "50%" | "100%"
-	top: null | number | "50%" | "100%"
+	bottom: number | "50%" | "100%" | null
+	left: number | "50%" | "100%" | null
+	right: number | "50%" | "100%" | null
+	top: number | "50%" | "100%" | null
 }

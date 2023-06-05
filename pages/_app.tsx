@@ -1,24 +1,25 @@
 import { useThemeStore } from "context/theme"
 import { AppProps } from "next/dist/shared/lib/router/router"
 import Head from "next/head"
-import { FC } from "react"
+import { FunctionComponent } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import "../styles/global.scss"
 import { Page } from "../types/Page"
 
 type AppPropsWithLayout = AppProps & { Component: Page }
 
-const Setup: FC = () => {
+const Setup: FunctionComponent = () => {
 	const palette = useThemeStore((store) => store.palette)
 	const colorScheme = useThemeStore((store) => store.colorScheme)
 
 	const colorProperties = []
 
 	for (const key in palette) {
-		type Palette = typeof palette
+		const paletteKey = key as keyof typeof palette
 
-		const paletteKey = key as keyof Palette
-		const value = palette[paletteKey][colorScheme]
+		const value = palette[paletteKey]?.[colorScheme]
+
+		if (!value) continue
 
 		colorProperties.push(`--cvos-${key}:${value};`)
 		colorProperties.push(`--cvos-${key}-20:${value}14;`)
@@ -34,7 +35,7 @@ const Setup: FC = () => {
 
 const client = new QueryClient()
 
-const App: FC<AppPropsWithLayout> = ({ Component, pageProps }) => {
+const App: FunctionComponent<AppPropsWithLayout> = ({ Component, pageProps }) => {
 	const getLayout = Component.layout || ((page) => page)
 
 	return <QueryClientProvider client={client}>

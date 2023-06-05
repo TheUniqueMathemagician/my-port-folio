@@ -1,6 +1,6 @@
-export enum ThemeColor {
-	default,
+export const enum ThemeColor {
+	contrast,
 	dark,
+	default,
 	light,
-	contrast
 }

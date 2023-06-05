@@ -1,6 +1,6 @@
-export enum ColorScheme {
-	default,
+export const enum ColorScheme {
+	contrast,
 	dark,
+	default,
 	light,
-	contrast
 }
