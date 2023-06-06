@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 import { useThemeStore } from "context/theme"
 import { AppProps } from "next/dist/shared/lib/router/router"
 import Head from "next/head"
@@ -45,6 +46,7 @@ const App: FunctionComponent<AppPropsWithLayout> = ({ Component, pageProps }) =>
 		</Head>
 		<Setup />
 		{getLayout(<Component {...pageProps} />)}
+		<Analytics />
 	</QueryClientProvider>
 }
 

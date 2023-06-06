@@ -2,6 +2,7 @@
 	"name": "my-port-folio",
 	"version": "0.3.0",
 	"dependencies": {
+		"@vercel/analytics": "^1.0.1",
 		"concurrently": "^8.1.0",
 		"framer-motion": "^10.12.16",
 		"next": "^13.4.4",
