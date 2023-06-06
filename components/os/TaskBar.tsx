@@ -106,23 +106,26 @@ const TaskBar: FunctionComponent = () => {
 
 			<ul className={classes["apps"]}>
 				{Object.keys(instances)
-					.map((x) => instances[x])
-					.filter((app) => app.type === "window")
-					.map((instance) => <li key={instance.pid}>
-						<Button
-							size="md"
-							ripple
-							focusable
-							onClick={() => {
-								if (instance.type === "window") {
-									setMinimized(instance.pid, false)
-									sendToFront(instance.pid)
-								}
-							}}
-						>
-							<Image src={instance.icon} alt={instance.displayName} width={32} height={32} />
-						</Button>
-					</li>)}
+					.filter((instanceKey) => instances[instanceKey].type === "window")
+					.map((instanceKey) => {
+						const instance = instances[instanceKey]
+
+						return <li key={instance.pid}>
+							<Button
+								size="md"
+								ripple
+								focusable
+								onClick={() => {
+									if (instance.type === "window") {
+										setMinimized(instance.pid, false)
+										sendToFront(instance.pid)
+									}
+								}}
+							>
+								<Image src={instance.icon} alt={instance.displayName} width={32} height={32} />
+							</Button>
+						</li>
+					})}
 			</ul>
 
 			<Divider inset margin vertical></Divider>

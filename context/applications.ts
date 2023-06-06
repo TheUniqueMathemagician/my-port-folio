@@ -296,7 +296,7 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 
 		const zIndexes = [...state.zIndexes]
 
-		set(() => ({ zIndexes }))
+		set({ zIndexes, instances: { ...state.instances } })
 	},
 	sendToFront: (pid) => {
 		const state = get()
