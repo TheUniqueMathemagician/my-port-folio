@@ -46,31 +46,31 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 
 	// #region button handlers
 
-	const handleRedClick = useCallback((e: MouseEvent) => {
-		e.stopPropagation()
-		e.preventDefault()
+	const handleRedClick = useCallback((event: MouseEvent) => {
+		event.stopPropagation()
+		event.preventDefault()
 
 		closeApplication(pid)
 	}, [closeApplication, pid])
 
-	const handleOrangeClick = useCallback((e: MouseEvent) => {
-		e.preventDefault()
+	const handleOrangeClick = useCallback((event: MouseEvent) => {
+		event.stopPropagation()
+		event.preventDefault()
 
 		sendToFront(pid)
-		setMaximized(pid, maximized ? Snap.None : Snap.Top)
+		setMaximized(pid, maximized == Snap.Top ? Snap.None : Snap.Top)
 	}, [sendToFront, pid, setMaximized, maximized])
 
-	const handleGreenClick = useCallback((e: MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
-		e.preventDefault()
+	const handleGreenClick = useCallback((event: MouseEvent) => {
+		event.stopPropagation()
+		event.preventDefault()
 
 		setMinimized(pid, true)
 	}, [setMinimized, pid])
 
-	const handleButtonMouseDown = useCallback((e: MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
+	const handleButtonMouseDown = useCallback((event: MouseEvent) => {
+		event.preventDefault()
+		event.stopPropagation()
 	}, [])
 
 	// #endregion button handlers
