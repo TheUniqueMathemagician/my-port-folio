@@ -29,8 +29,6 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 	const maximized = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).maximized)
 	const snapShadowVisible = useApplicationsStore((store) => store.snapShadow.visible)
 
-	const isMaximized = maximized == Snap.Top
-
 	const closeApplication = useApplicationsStore((store) => store.closeApplication)
 	const sendToFront = useApplicationsStore((store) => store.sendToFront)
 	const setBreakpoint = useApplicationsStore((store) => store.setBreakpoint)
@@ -60,8 +58,8 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 		event.preventDefault()
 
 		sendToFront(pid)
-		setMaximized(pid, isMaximized ? Snap.None : Snap.Top)
-	}, [sendToFront, pid, setMaximized, isMaximized])
+		setMaximized(pid, maximized === Snap.Top ? Snap.None : Snap.Top)
+	}, [sendToFront, pid, setMaximized, maximized])
 
 	const handleGreenClick = useCallback((event: MouseEvent) => {
 		event.stopPropagation()
@@ -84,16 +82,7 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 
 		event.preventDefault()
 
-		if (isMaximized) {
-			const header = headerRef.current
-
-			if (header) {
-				const x = (dimensions.width || 0) / 2
-				const y = header.clientHeight / 2
-
-				setOffset({ x, y })
-			}
-		} else {
+		if (maximized === Snap.None) {
 			const window = windowRef.current
 
 			if (window) {
@@ -102,12 +91,21 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 
 				setOffset({ x, y })
 			}
+		} else {
+			const header = headerRef.current
+
+			if (header) {
+				const x = (dimensions.width || 0) / 2
+				const y = header.clientHeight / 2
+
+				setOffset({ x, y })
+			}
 		}
 
 		document.body.style.cursor = "grabbing"
 
 		setDragging(pid, true)
-	}, [isMaximized, setDragging, pid, dimensions.width, windowRef])
+	}, [maximized, setDragging, pid, dimensions.width, windowRef])
 
 	const handleDragMouseMove = useCallback((event: globalThis.MouseEvent) => {
 		const header = headerRef.current
