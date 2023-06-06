@@ -253,7 +253,7 @@ export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
 
 		const instances = { ...state.instances }
 
-		set(() => ({ instances, zIndexes }))
+		set(structuredClone({ instances, zIndexes }))
 	},
 	runApplication: (aid, args) => {
 		const state = get()
