@@ -1,5 +1,6 @@
 import { ClassName } from "@/utils/ClassName"
 import { FunctionComponent, PropsWithChildren, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { animationFrameScheduler, interval } from "rxjs"
 import classes from "./Tabs.module.scss"
 
 type TabsProps = PropsWithChildren & {
@@ -56,12 +57,12 @@ const Tabs: FunctionComponent<TabsProps> = (props) => {
 
 	useLayoutEffect(() => {
 		if (shouldRefresh) {
-			refresh()
+			const subscription = interval(0, animationFrameScheduler).subscribe(refresh)
 
-			const it = setInterval(refresh, 10)
-
-			return () => clearInterval(it)
+			return () => subscription.unsubscribe()
 		}
+
+		return () => null
 	}, [refresh, shouldRefresh])
 
 	useEffect(() => {
@@ -83,10 +84,10 @@ const Tabs: FunctionComponent<TabsProps> = (props) => {
 		if (button) {
 			if (vertical) {
 				setIndicatorPosition({ top: button.offsetTop, height: button.offsetHeight })
-				setTimeout(() => { setTransition("top 0.3s ease,height 0.3s ease") }, 0)
+				setTimeout(() => setTransition("top 0.3s ease,height 0.3s ease"), 0)
 			} else {
 				setIndicatorPosition({ left: button.offsetLeft, width: button.offsetWidth })
-				setTimeout(() => { setTransition("left 0.3s ease,width 0.3s ease") }, 0)
+				setTimeout(() => setTransition("left 0.3s ease,width 0.3s ease"), 0)
 			}
 		}
 	}, [defaultValue, vertical])
