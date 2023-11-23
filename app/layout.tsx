@@ -1,3 +1,4 @@
+import Hotjar from "@/modules/global/Hotjar"
 import Setup from "@/modules/global/Setup"
 import "@/styles/global.scss"
 import type { FunctionComponent, PropsWithChildren } from "react"
@@ -10,6 +11,7 @@ const RootLayout: FunctionComponent<PropsWithChildren> = (props) => {
 			<Setup>
 				{children}
 			</Setup>
+			<Hotjar />
 		</body>
 	</html>
 }
