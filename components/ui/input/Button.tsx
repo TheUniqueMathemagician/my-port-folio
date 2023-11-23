@@ -9,7 +9,7 @@ import classes from "./Button.module.scss"
 
 type HTMLProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 
-interface ButtonAProps extends HTMLProps {
+type ButtonAProps = HTMLProps & {
 	readonly align?: "center" | "end" | "start"
 	readonly color?: Color
 	readonly contrast?: boolean
@@ -27,7 +27,7 @@ interface ButtonAProps extends HTMLProps {
 	readonly variant?: "flat" | "filled" | "blur"
 }
 
-interface ButtonBProps extends HTMLProps {
+type ButtonBProps = HTMLProps & {
 	readonly align?: "center" | "end" | "start"
 	readonly color?: Color
 	readonly contrast?: boolean

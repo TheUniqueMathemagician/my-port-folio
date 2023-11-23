@@ -31,11 +31,11 @@ export type Application = {
 	runOnStartup: boolean
 }
 
-export interface DaemonApplication extends Application {
+export type DaemonApplication = Application & {
 	readonly type: "daemon"
 }
 
-export interface WindowApplication extends Application {
+export type WindowApplication = Application & {
 	readonly dimensions: Dimensions
 	readonly maxDimensions: Dimensions
 	readonly minDimensions: Dimensions
@@ -52,11 +52,11 @@ export type Instance = {
 	readonly pid: string
 }
 
-export interface DaemonInstance extends Instance {
+export type DaemonInstance = Instance & {
 	type: "daemon"
 }
 
-export interface WindowInstance extends Instance {
+export type WindowInstance = Instance & {
 	breakpoint: Breakpoints
 	dimensions: Dimensions
 	dragging: boolean
