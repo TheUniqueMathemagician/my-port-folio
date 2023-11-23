@@ -40,7 +40,7 @@ const Setup: FunctionComponent<PropsWithChildren> = (props) => {
 	return <QueryClientProvider client={client}>
 		<Styles />
 		{children}
-		<Analytics />
+		<Analytics debug={false} />
 	</QueryClientProvider>
 }
 

@@ -7,11 +7,13 @@ const RootLayout: FunctionComponent<PropsWithChildren> = (props) => {
 	const { children } = props
 
 	return <html lang="en">
+		<head>
+			{process.env.NODE_ENV !== "development" && <Hotjar />}
+		</head>
 		<body>
 			<Setup>
 				{children}
 			</Setup>
-			<Hotjar />
 		</body>
 	</html>
 }
