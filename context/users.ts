@@ -1,5 +1,5 @@
 import generateID from "@/utils/generateID"
-import { create } from "zustand"
+import { createWithEqualityFn as createStore } from "zustand/traditional"
 
 type User = {
 	displayName: string
@@ -29,7 +29,7 @@ const elements: UsersStore["elements"] = {
 	},
 }
 
-export const useUsersStore = create<UsersStore>((set) => ({
+export const useUsersStore = createStore<UsersStore>((set) => ({
 	currentUserId: uid,
 	elements,
 	setCurrentUserId: (currentUserId) => set(() => ({ currentUserId })),

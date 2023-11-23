@@ -1,4 +1,4 @@
-import { create } from "zustand"
+import { createWithEqualityFn as createStore } from "zustand/traditional"
 
 type OsStore = {
 	hasRanStartupApplications: boolean
@@ -7,7 +7,7 @@ type OsStore = {
 	setHasRanStartupApplications: (value: boolean) => void
 }
 
-export const useOsStore = create<OsStore>((set) => ({
+export const useOsStore = createStore<OsStore>((set) => ({
 	hasRanStartupApplications: false,
 	isMobile: false,
 	reset: () => set(() => ({ hasRanStartupApplications: false })),

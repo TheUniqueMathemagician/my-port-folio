@@ -1,6 +1,6 @@
 import { ColorPalette } from "@/types/ColorPalette"
 import { ColorScheme } from "@/types/ColorScheme"
-import { create } from "zustand"
+import { createWithEqualityFn as createStore } from "zustand/traditional"
 
 type Font = {
 	fontSize: string
@@ -155,7 +155,7 @@ const typography: ThemeStore["typography"] = {
 	},
 }
 
-export const useThemeStore = create<ThemeStore>((set, get) => ({
+export const useThemeStore = createStore<ThemeStore>((set, get) => ({
 	colorScheme: ColorScheme.dark,
 	palette,
 	transparency: true,

@@ -17,7 +17,7 @@ import { Position } from "@/types/Position"
 import { Resize } from "@/types/Resize"
 import { Snap } from "@/types/Snap"
 import generateID from "@/utils/generateID"
-import { create } from "zustand"
+import { createWithEqualityFn as createStore } from "zustand/traditional"
 
 type ApplicationsStore = {
 	dragging: boolean
@@ -220,7 +220,7 @@ const welcomeApplication: WindowApplication = {
 	type: "window",
 }
 
-export const useApplicationsStore = create<ApplicationsStore>((set, get) => ({
+export const useApplicationsStore = createStore<ApplicationsStore>((set, get) => ({
 	dragging: false,
 	instances: {},
 	pool: {
