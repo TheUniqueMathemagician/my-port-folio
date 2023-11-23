@@ -1,18 +1,19 @@
+"use client"
+
 import DaemonFrame from "@/components/os/DaemonFrame"
 import ScreenFrame from "@/components/os/ScreenFrame"
 import ShortcutFrame from "@/components/os/ShortcutFrame"
 import TaskBar from "@/components/os/TaskBar"
 import WindowFrame from "@/components/os/WindowFrame"
 import WorkspaceFrame from "@/components/os/WorkspaceFrame"
-import { ApplicationId } from "@/types/Application"
+import type { ApplicationId } from "@/types/Application"
 import { useApplicationsStore } from "context/applications"
 import { useOsStore } from "context/os"
 import { useUsersStore } from "context/users"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { Page } from "../types/Page"
+import { useRouter } from "next/navigation"
+import { useEffect, type FunctionComponent } from "react"
 
-const WorkSpace: Page = () => {
+const WorkSpace: FunctionComponent = () => {
 	const router = useRouter()
 
 	const applications = useApplicationsStore((store) => store.pool)
@@ -45,11 +46,11 @@ const WorkSpace: Page = () => {
 
 	return <ScreenFrame>
 		<WorkspaceFrame>
-			<ShortcutFrame></ShortcutFrame>
-			<WindowFrame></WindowFrame>
-			<DaemonFrame></DaemonFrame>
+			<ShortcutFrame />
+			<WindowFrame />
+			<DaemonFrame />
 		</WorkspaceFrame>
-		<TaskBar></TaskBar>
+		<TaskBar />
 	</ScreenFrame>
 }
 

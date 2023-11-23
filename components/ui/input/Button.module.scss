@@ -250,11 +250,11 @@ $colors: ("background", "disabled", "divider", "error", "hint", "info", "paper",
 
 @keyframes ripple {
 	from {
-		opacity: 0.333;
+		opacity: 0.15;
 		transform: translate(-50%, -50%) scale(0);
 	}
 	50% {
-		opacity: 0.5;
+		opacity: 0.3;
 		transform: translate(-50%, -50%) scale(0.666);
 	}
 	to {

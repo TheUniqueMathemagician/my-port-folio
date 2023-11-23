@@ -18,11 +18,8 @@ type WindowProps = {
 	readonly resizerWidth: number
 }
 
-const Window: FunctionComponent<WindowProps> = (props) => {
-	const { pid, boundaries, borderOffset, resizerWidth } = props
-
+const Window: FunctionComponent<WindowProps> = ({ pid, boundaries, borderOffset, resizerWidth }) => {
 	const windowRef = useRef<HTMLDivElement>(null)
-
 	const args = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).args)
 	const component = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).applicationId)
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
@@ -33,7 +30,6 @@ const Window: FunctionComponent<WindowProps> = (props) => {
 	const position = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).position)
 	const resizing = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).resizing)
 	const zIndexes = useApplicationsStore((store) => store.zIndexes)
-
 	const sendToFront = useApplicationsStore((store) => store.sendToFront)
 
 	const handleWindowMouseDown: MouseEventHandler<HTMLElement> = useCallback((e) => {
@@ -42,15 +38,13 @@ const Window: FunctionComponent<WindowProps> = (props) => {
 		sendToFront(pid)
 	}, [pid, sendToFront])
 
-	const handleWindowFocus = useCallback(() => sendToFront(pid), [pid, sendToFront])
-
 	// #region window rendering checks
 
 	const classNameBuilder = ClassName.builder(classes["root"])
 	const backgroundClassNameBuilder = ClassName.builder(classes["background"])
 
-	let width: number | "" = ""
-	let height: number | "" = ""
+	let width: number | null = null
+	let height: number | null = null
 	const tmpPosition: Position = {
 		bottom: null,
 		left: null,
@@ -105,16 +99,16 @@ const Window: FunctionComponent<WindowProps> = (props) => {
 	const renderComponent = applicationsMap.get(component)
 
 	return <section
-		onFocus={handleWindowFocus}
+		onFocus={() => sendToFront(pid)}
 		className={classNameBuilder.build()}
 		style={{
 			bottom: tmpPosition.bottom ?? "",
-			height,
+			height: height ?? "",
 			left: tmpPosition.left ?? "",
 			right: tmpPosition.right ?? "",
 			top: tmpPosition.top ?? "",
 			visibility: minimized ? "collapse" : "visible",
-			width,
+			width: width ?? "",
 			zIndex,
 		}}
 		ref={windowRef}

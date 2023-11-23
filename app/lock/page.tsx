@@ -1,12 +1,13 @@
+"use client"
+
 import Avatar from "@/components/ui/Avatar"
 import Typography from "@/components/ui/Typography"
 import Button from "@/components/ui/input/Button"
+import classes from "@/styles/pages/Lock.module.scss"
 import { useUsersStore } from "context/users"
-import { useEffect } from "react"
-import classes from "../styles/pages/Lock.module.scss"
-import { Page } from "../types/Page"
+import { useEffect, type FunctionComponent } from "react"
 
-const Lock: Page = () => {
+const Lock: FunctionComponent = () => {
 	const user = useUsersStore((store) => store.elements[store.currentUserId])
 	const users = useUsersStore((store) => store.elements)
 	const setCurrentUserId = useUsersStore((store) => store.setCurrentUserId)
@@ -25,8 +26,8 @@ const Lock: Page = () => {
 			></Avatar>
 			<Button
 				ripple
-				variant="blur"
 				focusable
+				variant="filled"
 				size="md"
 				to="/workspace"
 			>

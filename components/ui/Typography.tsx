@@ -1,5 +1,5 @@
 import { ClassName } from "@/utils/ClassName"
-import { FunctionComponent, PropsWithChildren, createElement, memo } from "react"
+import { FunctionComponent, PropsWithChildren, createElement } from "react"
 import classes from "./Typography.module.scss"
 
 type TypographyProps = PropsWithChildren & {
@@ -24,12 +24,7 @@ const Typography: FunctionComponent<TypographyProps> = (props) => {
 	if (noWrap) classNameBuilder.add(classes["no-wrap"])
 	if (variant) classNameBuilder.add(classes[variant])
 
-	let el = "div"
-
-	if (tag) el = tag
-	else if (variant) el = variant === "body" ? "div" : variant
-
-	return createElement(el, { className: classNameBuilder.build() }, children)
+	return createElement(tag ?? "span", { className: classNameBuilder.build() }, children)
 }
 
-export default memo(Typography)
+export default Typography

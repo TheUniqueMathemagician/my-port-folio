@@ -187,7 +187,7 @@ module.exports = {
 		"semi": ["warn", "never"],
 		"semi-spacing": ["warn", { after: true, before: false }],
 		"semi-style": ["warn", "last"],
-		"sort-imports": ["warn", { ignoreDeclarationSort: true }],
+		// "sort-imports": ["warn", { ignoreDeclarationSort: true }],
 		// "sort-keys": ["warn", "asc", { caseSensitive: true, natural: false }],
 		"sort-vars": "warn",
 		"space-before-blocks": ["warn", "always"],

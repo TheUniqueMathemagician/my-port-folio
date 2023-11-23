@@ -204,36 +204,31 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 				})
-			}
-
 				break
+			}
 			case Resize.left: {
 				dispatchPositionAndBreakpoint({
 					left: restrictedPosition.left(),
 				})
-			}
-
 				break
+			}
 			case Resize.bottom: {
 				dispatchPositionAndBreakpoint({
 					bottom: restrictedPosition.bottom(),
 				})
-			}
-
 				break
+			}
 			case Resize.right: {
 				dispatchPositionAndBreakpoint({
 					right: restrictedPosition.right(),
 				})
-			}
-
 				break
+			}
 			case Resize.topLeft: {
 				dispatchPositionAndBreakpoint({
 					top: restrictedPosition.top(),
 					left: restrictedPosition.left(),
 				})
-
 				break
 			}
 			case Resize.topRight: {
@@ -241,7 +236,6 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 					top: restrictedPosition.top(),
 					right: restrictedPosition.right(),
 				})
-
 				break
 			}
 			case Resize.bottomLeft: {
@@ -249,7 +243,6 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 					bottom: restrictedPosition.bottom(),
 					left: restrictedPosition.left(),
 				})
-
 				break
 			}
 			case Resize.bottomRight: {
@@ -257,7 +250,6 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 					bottom: restrictedPosition.bottom(),
 					right: restrictedPosition.right(),
 				})
-
 				break
 			}
 			default:
@@ -295,16 +287,16 @@ const WindowResizer: FunctionComponent<WindowResizerProps> = (props) => {
 
 	useEffect(() => {
 		if (resizing) {
-			const s1 = fromEvent<globalThis.MouseEvent>(document, "mousemove")
+			const mouseMoveSubscription = fromEvent<globalThis.MouseEvent>(document, "mousemove")
 				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleResizerDragMouseMove)
-			const s2 = fromEvent<globalThis.MouseEvent>(document, "mouseup")
+			const mouseUpSubscription = fromEvent<globalThis.MouseEvent>(document, "mouseup")
 				.pipe(throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }))
 				.subscribe(handleResizerDragMouseUp)
 
 			return () => {
-				s1.unsubscribe()
-				s2.unsubscribe()
+				mouseMoveSubscription.unsubscribe()
+				mouseUpSubscription.unsubscribe()
 			}
 		}
 

@@ -5,9 +5,9 @@ import { useApplicationsStore } from "context/applications"
 import { useOsStore } from "context/os"
 import { useThemeStore } from "context/theme"
 import { useUsersStore } from "context/users"
-import { useRouter } from "next/dist/client/router"
 import Image from "next/image"
-import { FunctionComponent, MouseEventHandler, memo, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { memo, useRef, useState, type FunctionComponent, type MouseEventHandler } from "react"
 import { IoLogOutOutline } from "react-icons/io5"
 import { MdLock, MdMail, MdPhone, MdPowerSettingsNew, MdSend } from "react-icons/md"
 import Menu from "../icons/Menu"
@@ -86,8 +86,10 @@ const TaskBar: FunctionComponent = () => {
 
 	const handleMenuApplicationClick = (aid: number) => {
 		runApplication(aid, {})
-		closeMenu()
+		// CloseMenu()
 	}
+
+	// UseClickAway(() => closeMenu(), taskBarRef)
 
 	if (contrast) classNameBuilder.add(classes["contrast"])
 
@@ -158,7 +160,6 @@ const TaskBar: FunctionComponent = () => {
 				<TaskBarTimeDate></TaskBarTimeDate>
 			</Button>
 		</div>
-
 		<TaskBarMenu
 			shown={menuShown === MenuTab.Main}
 			position={{

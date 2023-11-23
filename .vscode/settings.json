@@ -21,10 +21,7 @@
 		"**/package-lock.json": true
 	},
 	"files.insertFinalNewline": true,
-	"files.maxMemoryForLargeFilesMB": 2048,
 	"files.trimFinalNewlines": true,
-	// HTML
-	"html.format.endWithNewline": true,
 	// Javascript
 	"javascript.format.semicolons": "remove",
 	"javascript.preferences.importModuleSpecifier": "shortest",
