@@ -25,7 +25,7 @@ module.exports = {
 		"comma-dangle": ["warn", "always-multiline"],
 		"comma-spacing": ["warn", { after: true, before: false }],
 		"comma-style": ["warn", "last"],
-		"complexity": ["warn", complexity],
+		// "complexity": ["warn", complexity],
 		"computed-property-spacing": ["warn", "never"],
 		"consistent-return": ["warn", { treatUndefinedAsUnspecified: true }],
 		"curly": ["warn", "multi-line", "consistent"],
