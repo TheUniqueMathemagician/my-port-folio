@@ -24,6 +24,12 @@
 			"@/hooks/*": [
 				"hooks/*"
 			],
+			"@/modules/*": [
+				"modules/*"
+			],
+			"@/styles/*": [
+				"styles/*"
+			],
 			"@/types/*": [
 				"types/*"
 			],
