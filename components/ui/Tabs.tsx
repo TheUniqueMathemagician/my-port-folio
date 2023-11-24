@@ -114,7 +114,7 @@ const Tabs: FunctionComponent<TabsProps> = (props) => {
 	if (separator) classNameBuilder.add(classes["separator"])
 	if (className) classNameBuilder.add(className)
 
-	return <div aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"} className={classNameBuilder.build()} >
+	return <div aria-label={vertical ? "Onglets verticaux" : "Onglets horizontaux"} className={classNameBuilder.build()}>
 		<div className={classes["tabs"]} ref={ref} role="tablist">
 			{children}
 			<div

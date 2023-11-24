@@ -15,13 +15,13 @@ const Activity: FunctionComponent<ActivityProps> = (props) => {
 	const { pid } = props
 
 	const zIndexes = useApplicationsStore((store) => store.zIndexes)
-	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const isContrastMode = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const component = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).applicationId)
 	const args = useApplicationsStore((store) => (store.instances[pid] as WindowInstance).args)
 
 	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (contrast) classNameBuilder.add(classes["contrast"])
+	if (isContrastMode) classNameBuilder.add(classes["contrast"])
 
 	const zIndex = zIndexes.indexOf(pid)
 	const renderComponent = applicationsMap.get(component)

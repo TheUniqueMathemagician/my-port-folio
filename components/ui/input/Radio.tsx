@@ -18,9 +18,9 @@ const Radio: FunctionComponent<RadioProps> = (props) => {
 	if (noSelect) classNameBuilder.add(classes["no-select"])
 
 	return <label className={classNameBuilder.build()} onClick={onClick}>
-		<input type="radio" {...other}></input>
+		<input type="radio" {...other} />
 		<div className={classes["radio"]}>
-			<div className={classes["effect"]}></div>
+			<div className={classes["effect"]} />
 		</div>
 		{label && <span className={classes["label"]}>{label}</span>}
 	</label>

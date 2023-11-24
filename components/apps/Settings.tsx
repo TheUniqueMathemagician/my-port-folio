@@ -33,14 +33,14 @@ const Settings: RunningApplicationComponent = (props) => {
 	// #region Selectors
 
 	const users = useUsersStore((store) => store.elements)
-	const background = useThemeStore((store) => store.palette.background[store.colorScheme])
-	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
+	const backgroundColor = useThemeStore((store) => store.palette.background[store.colorScheme])
+	const isContrastMode = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
 	const colorScheme = useThemeStore((store) => store.colorScheme)
 	const currentUserId = useUsersStore((store) => store.currentUserId)
-	const palette = useThemeStore((store) => store.palette)
-	const primary = useThemeStore((store) => store.palette.primary[store.colorScheme])
-	const resizing = useApplicationsStore((store) => Boolean(store.instances[pid]))
-	const small = useApplicationsStore((store) => {
+	const colorPalette = useThemeStore((store) => store.palette)
+	const primaryColor = useThemeStore((store) => store.palette.primary[store.colorScheme])
+	const isResizing = useApplicationsStore((store) => Boolean(store.instances[pid]))
+	const isSmall = useApplicationsStore((store) => {
 		const instance = store.instances[pid] as WindowInstance
 
 		if (instance.breakpoint === Breakpoints.sm) return true
@@ -61,8 +61,8 @@ const Settings: RunningApplicationComponent = (props) => {
 	useEffect(() => {
 		const root = document.getElementById("root")
 
-		Object.keys(palette).forEach((key) => {
-			const value = palette && palette[key as keyof typeof palette][colorScheme]
+		Object.keys(colorPalette).forEach((key) => {
+			const value = colorPalette && colorPalette[key as keyof typeof colorPalette][colorScheme]
 
 			root?.style.setProperty(`--cvos-${key}`, value)
 			root?.style.setProperty(`--cvos-${key}-20`, `${value}14`)
@@ -70,7 +70,7 @@ const Settings: RunningApplicationComponent = (props) => {
 			root?.style.setProperty(`--cvos-${key}-50`, `${value}80`)
 			root?.style.setProperty(`--cvos-${key}-67`, `${value}aa`)
 		})
-	}, [palette, colorScheme])
+	}, [colorPalette, colorScheme])
 
 	const handleBackgroundInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		setBackgroundColor({
@@ -114,15 +114,15 @@ const Settings: RunningApplicationComponent = (props) => {
 
 	const classNameBuilder = ClassName.builder(classes["root"])
 
-	if (small) classNameBuilder.add(classes["small"])
+	if (isSmall) classNameBuilder.add(classes["small"])
 
 	return <div className={classNameBuilder.build()}>
 		<Tabs
 			defaultValue={panelIndex}
-			direction={small ? "bottom" : "right"}
+			direction={isSmall ? "bottom" : "right"}
 			onChange={handleTabChange}
 			separator={colorScheme === ColorScheme.contrast}
-			shouldRefresh={resizing}
+			shouldRefresh={isResizing}
 		>
 			<Tab label="Theme" value={PanelIndex.Theme} active={panelIndex === PanelIndex.Theme} />
 			<Tab label="Langue" value={PanelIndex.Language} active={panelIndex === PanelIndex.Language} />
@@ -132,7 +132,7 @@ const Settings: RunningApplicationComponent = (props) => {
 			<Typography variant="h3" noWrap noSelect>
 				Préférences du thème
 			</Typography>
-			<Paper outlined={contrast} fullWidth spaced blur background="paper">
+			<Paper outlined={isContrastMode} fullWidth spaced blur background="paper">
 				<Typography variant="h4" noWrap noSelect>
 					Thème de l&apos;interface
 				</Typography>
@@ -181,7 +181,7 @@ const Settings: RunningApplicationComponent = (props) => {
 				</div>
 			</Paper>
 			<br />
-			<Paper outlined={contrast} fullWidth spaced blur background="paper">
+			<Paper outlined={isContrastMode} fullWidth spaced blur background="paper">
 				<Typography variant="h4" noWrap noSelect>
 					Couleur de l&apos;interface
 				</Typography>
@@ -189,7 +189,7 @@ const Settings: RunningApplicationComponent = (props) => {
 					<input
 						type="color"
 						name={`${pid}_background`}
-						value={background}
+						value={backgroundColor}
 						onChange={handleBackgroundInputChange}
 					></input>
 					<Button
@@ -206,7 +206,7 @@ const Settings: RunningApplicationComponent = (props) => {
 				</div>
 			</Paper>
 			<br />
-			<Paper outlined={contrast} fullWidth spaced blur background="paper">
+			<Paper outlined={isContrastMode} fullWidth spaced blur background="paper">
 				<Typography variant="h4" noWrap noSelect>
 					Couleur des éléments interactifs
 				</Typography>
@@ -214,7 +214,7 @@ const Settings: RunningApplicationComponent = (props) => {
 					<input
 						type="color"
 						name={`${pid}_primary`}
-						value={primary}
+						value={primaryColor}
 						onChange={handlePrimaryInputChange}
 					></input>
 					<Button
@@ -235,7 +235,7 @@ const Settings: RunningApplicationComponent = (props) => {
 			<Typography variant="h3" noWrap noSelect>
 				Préférences linguistiques
 			</Typography>
-			<Paper outlined={contrast} fullWidth spaced blur background="paper">
+			<Paper outlined={isContrastMode} fullWidth spaced blur background="paper">
 				<Typography variant="h4" noWrap noSelect>
 					Langue du système
 				</Typography>
@@ -254,7 +254,7 @@ const Settings: RunningApplicationComponent = (props) => {
 			<Typography variant="h3" noWrap noSelect>
 				Préférences utilisateurs
 			</Typography>
-			<Paper outlined={contrast} fullWidth spaced blur background="paper">
+			<Paper outlined={isContrastMode} fullWidth spaced blur background="paper">
 				<Typography variant="h4" noWrap noSelect>
 					Utilisateur actuel
 				</Typography>

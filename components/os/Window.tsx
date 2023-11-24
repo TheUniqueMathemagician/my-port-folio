@@ -102,13 +102,13 @@ const Window: FunctionComponent<WindowProps> = ({ pid, boundaries, borderOffset,
 		onFocus={() => sendToFront(pid)}
 		className={classNameBuilder.build()}
 		style={{
-			bottom: tmpPosition.bottom ?? "",
-			height: height ?? "",
-			left: tmpPosition.left ?? "",
-			right: tmpPosition.right ?? "",
-			top: tmpPosition.top ?? "",
+			bottom: tmpPosition.bottom ?? undefined,
+			height: height ?? undefined,
+			left: tmpPosition.left ?? undefined,
+			right: tmpPosition.right ?? undefined,
+			top: tmpPosition.top ?? undefined,
 			visibility: minimized ? "collapse" : "visible",
-			width: width ?? "",
+			width: width ?? undefined,
 			zIndex,
 		}}
 		ref={windowRef}

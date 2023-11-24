@@ -20,10 +20,10 @@ const Text: FunctionComponent<TextProps> = (props) => {
 
 	const [value, setValue] = useState<string>("")
 
-	const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-		setValue(e.target.value)
+	const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+		setValue(event.target.value)
 
-		onChange?.(e)
+		onChange?.(event)
 	}, [onChange])
 
 	const classNameBuilder = ClassName.builder(classes["root"])
@@ -40,9 +40,9 @@ const Text: FunctionComponent<TextProps> = (props) => {
 			required={required}
 			type={type ?? "text"}
 			value={value}
-		></input>
+		/>
 		{label && <span>{label}</span>}
-		<div className={classes["effect"]}></div>
+		<div className={classes["effect"]} />
 	</label>
 }
 

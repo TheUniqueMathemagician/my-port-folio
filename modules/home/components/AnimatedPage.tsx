@@ -26,9 +26,9 @@ const AnimatedPage: FunctionComponent = () => {
 	}, [router])
 
 	return <motion.main className={classes["root"]} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-		<Header onAnimationEnd={handleHeaderAnimationEnd}></Header>
-		{step > 0 && <LoadingTitle onAnimationEnd={handleLoadingTitleAnimationEnd}></LoadingTitle>}
-		{step > 1 && <Loading onAnimationEnd={handleLoaded}></Loading>}
+		<Header onAnimationEnd={handleHeaderAnimationEnd} />
+		{step > 0 && <LoadingTitle onAnimationEnd={handleLoadingTitleAnimationEnd} />}
+		{step > 1 && <Loading onAnimationEnd={handleLoaded} />}
 	</motion.main>
 }
 

@@ -13,7 +13,7 @@ type RatingProps = PropsWithChildren & {
 	readonly readOnly?: boolean
 }
 
-const Star = memo(MdStar)
+const StarIcon = memo(MdStar)
 
 const Rating: FunctionComponent<RatingProps> = (props) => {
 	const { onChange, defaultValue, max, min, disabled, output, readOnly } = props
@@ -54,9 +54,9 @@ const Rating: FunctionComponent<RatingProps> = (props) => {
 					name={`${id.current}_${i}`}
 					onChange={handleChange}
 					checked={i === state}
-				></input>
+				/>
 				<span id={id.current}>{i + 1} étoile(s)</span>
-				<Star></Star>
+				<StarIcon />
 			</label>
 		))}
 		{output && (

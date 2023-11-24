@@ -186,7 +186,7 @@ const Manager: RunningApplicationComponent = (props) => {
 								</ButtonGroup>
 							</TableCell>
 						</TableRow>)}
-					</TableBody >
+					</TableBody>
 					<TableFoot>
 						<TableRow>
 							<TableCell heading>Nom</TableCell>
@@ -198,10 +198,10 @@ const Manager: RunningApplicationComponent = (props) => {
 							</TableCell>
 						</TableRow>
 					</TableFoot>
-				</Table >
-			</Paper >
-		</TabPanel >
-	</div >
+				</Table>
+			</Paper>
+		</TabPanel>
+	</div>
 }
 
 export default memo(Manager)

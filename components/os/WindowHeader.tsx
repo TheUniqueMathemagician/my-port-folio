@@ -234,7 +234,7 @@ const WindowHeader: FunctionComponent<WindowHeaderProps> = (props) => {
 		windowRef,
 	])
 
-	const handleDragMouseUp = useCallback((e: globalThis.MouseEvent) => {
+	const handleDragMouseUp = useCallback(() => {
 		document.body.style.cursor = ""
 
 		setDragging(pid, false)

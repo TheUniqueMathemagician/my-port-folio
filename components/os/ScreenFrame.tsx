@@ -8,7 +8,6 @@ type ScreenFrameProps = PropsWithChildren
 
 const ScreenFrame: FunctionComponent<ScreenFrameProps> = ({ children }) => {
 	const workspaceBackgroundUrl = useThemeStore((store) => store.workspaceBackgroundUrl)
-
 	const isMobile = useOsStore((store) => store.isMobile)
 
 	const classNameBuilder = ClassName.builder(classes["root"])

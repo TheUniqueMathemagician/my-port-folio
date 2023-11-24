@@ -5,9 +5,6 @@ import Typography from "../../../ui/Typography"
 import Rating from "../../../ui/input/Rating"
 import classes from "./Skills.module.scss"
 
-// TODO: Make 3 columns, each defining an appreciation (junior, medior, senior).
-// Each categ. has it's filter.
-
 type SkillsProps = {
 	pid: string
 }
@@ -17,10 +14,10 @@ type Skill = {
 	name: string
 }
 
-enum EEqualityOption {
-	smallerOrEqual,
-	equal,
-	greaterOrEqual
+enum EqualityOption {
+	SmallerOrEqual,
+	Equal,
+	GreaterOrEqual
 }
 
 const languageSkills: Skill[] = [
@@ -242,16 +239,16 @@ Filter.displayName = "Filter"
 
 const Skills: FunctionComponent<SkillsProps> = () => {
 	const [ratingFilter, setRatingFilter] = useState(1)
-	const [ratingFilterType, setRatingFilterType] = useState<EEqualityOption>(EEqualityOption.greaterOrEqual)
+	const [ratingFilterType, setRatingFilterType] = useState<EqualityOption>(EqualityOption.GreaterOrEqual)
 
 	const filter = useCallback(
 		(skill: Skill) => {
 			switch (ratingFilterType) {
-				case EEqualityOption.smallerOrEqual:
+				case EqualityOption.SmallerOrEqual:
 					return skill.level <= ratingFilter
-				case EEqualityOption.equal:
+				case EqualityOption.Equal:
 					return skill.level === ratingFilter
-				case EEqualityOption.greaterOrEqual:
+				case EqualityOption.GreaterOrEqual:
 					return skill.level >= ratingFilter
 				default:
 					return false
@@ -290,19 +287,16 @@ const Skills: FunctionComponent<SkillsProps> = () => {
 				<Typography tag="span" variant="body">
 					Compétences
 				</Typography>
-				{/* TODO: make a select component */}
-				<select
-					onChange={(e) => setRatingFilterType(parseInt(e.target.value))}
-				>
-					<option value={EEqualityOption.greaterOrEqual}>{">="}</option>
-					<option value={EEqualityOption.equal}>{"="}</option>
-					<option value={EEqualityOption.smallerOrEqual}>{"<="}</option>
+				<select onChange={(e) => setRatingFilterType(parseInt(e.target.value, 10))}>
+					<option value={EqualityOption.GreaterOrEqual}>{">="}</option>
+					<option value={EqualityOption.Equal}>{"="}</option>
+					<option value={EqualityOption.SmallerOrEqual}>{"<="}</option>
 				</select>
 				<Rating
 					defaultValue={1}
 					min={1}
 					max={5}
-					onChange={(e) => setRatingFilter(parseInt(e.target.value))}
+					onChange={(e) => setRatingFilter(parseInt(e.target.value, 10))}
 				></Rating>
 			</div>
 		</form>
@@ -344,7 +338,6 @@ const Skills: FunctionComponent<SkillsProps> = () => {
 		<Typography variant="p">
 			Je compte apprendre ces différents éléments dans un avenir proche.
 		</Typography>
-		{/* TODO: make chips */}
 		<Paper spaced blur background="paper">
 			{incommingSkills.map((skill) => (
 				<Typography noWrap variant="body" key={skill.name}>

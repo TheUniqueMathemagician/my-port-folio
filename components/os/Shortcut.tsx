@@ -10,20 +10,19 @@ type ShortcutProps = {
 }
 
 const Shortcut: FunctionComponent<ShortcutProps> = (props) => {
-	const { applicationId: aid } = props
+	const { applicationId } = props
 
+	const application = useApplicationsStore((store) => store.pool[applicationId])
+	const isMobile = useOsStore((store) => store.isMobile)
 	const runApplication = useApplicationsStore((store) => store.runApplication)
 
-	const application = useApplicationsStore((store) => store.pool[aid])
-	const isMobile = useOsStore((store) => store.isMobile)
-
 	const handleDoubleClick = useCallback(() => {
-		if (!isMobile) runApplication(aid, {})
-	}, [aid, isMobile, runApplication])
+		if (!isMobile) runApplication(applicationId, {})
+	}, [applicationId, isMobile, runApplication])
 
 	const handleClick = useCallback(() => {
-		if (isMobile) runApplication(aid, {})
-	}, [aid, isMobile, runApplication])
+		if (isMobile) runApplication(applicationId, {})
+	}, [applicationId, isMobile, runApplication])
 
 	return <button
 		className={styles["shortcut"]}
@@ -33,7 +32,7 @@ const Shortcut: FunctionComponent<ShortcutProps> = (props) => {
 			switch (event.code) {
 				case "Enter":
 				case "Space":
-					runApplication(aid, {})
+					runApplication(applicationId, {})
 					break
 				default:
 					break

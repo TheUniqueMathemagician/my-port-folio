@@ -86,10 +86,7 @@ const TaskBar: FunctionComponent = () => {
 
 	const handleMenuApplicationClick = (aid: number) => {
 		runApplication(aid, {})
-		// CloseMenu()
 	}
-
-	// UseClickAway(() => closeMenu(), taskBarRef)
 
 	if (contrast) classNameBuilder.add(classes["contrast"])
 
@@ -101,10 +98,10 @@ const TaskBar: FunctionComponent = () => {
 				ripple
 				onClick={handleMainMenuClick}
 			>
-				<Menu></Menu>
+				<Menu />
 			</Button>
 
-			<Divider inset margin vertical></Divider>
+			<Divider inset margin vertical />
 
 			<ul className={classes["apps"]}>
 				{Object.keys(instances)
@@ -130,7 +127,7 @@ const TaskBar: FunctionComponent = () => {
 					})}
 			</ul>
 
-			<Divider inset margin vertical></Divider>
+			<Divider inset margin vertical />
 
 			<Button
 				size="md"
@@ -139,10 +136,10 @@ const TaskBar: FunctionComponent = () => {
 				ref={contactButtonRef}
 				onClick={handleContactMenuClick}
 			>
-				<Send></Send>
+				<Send />
 			</Button>
 
-			<Divider inset margin vertical></Divider>
+			<Divider inset margin vertical />
 
 			<Button
 				size="md"
@@ -154,10 +151,10 @@ const TaskBar: FunctionComponent = () => {
 				Français
 			</Button>
 
-			<Divider inset margin vertical></Divider>
+			<Divider inset margin vertical />
 
 			<Button size="md" readOnly ripple>
-				<TaskBarTimeDate></TaskBarTimeDate>
+				<TaskBarTimeDate />
 			</Button>
 		</div>
 		<TaskBarMenu
@@ -189,14 +186,14 @@ const TaskBar: FunctionComponent = () => {
 									height={24}
 									src={applications[key].icon}
 									width={24}
-								></Image>
+								/>
 								<span>{applications[key].displayName} </span>
 							</Button>
 						</li>
 					))}
 			</ul>
 
-			<Divider inset margin></Divider>
+			<Divider inset margin />
 
 			<ul>
 				<li>
@@ -246,7 +243,7 @@ const TaskBar: FunctionComponent = () => {
 				</li>
 			</ul>
 
-			<Divider inset margin></Divider>
+			<Divider inset margin />
 
 			<ul>
 				<li>
@@ -260,7 +257,7 @@ const TaskBar: FunctionComponent = () => {
 						size="md"
 						startIcon
 					>
-						<MdLock></MdLock>
+						<MdLock />
 						<span>Verouiller</span>
 					</Button>
 				</li>
@@ -275,7 +272,7 @@ const TaskBar: FunctionComponent = () => {
 						size="md"
 						startIcon
 					>
-						<IoLogOutOutline></IoLogOutOutline>
+						<IoLogOutOutline />
 						<span>Se déconnecter</span>
 					</Button>
 				</li>
@@ -290,7 +287,7 @@ const TaskBar: FunctionComponent = () => {
 						size="md"
 						startIcon
 					>
-						<MdPowerSettingsNew></MdPowerSettingsNew>
+						<MdPowerSettingsNew />
 						<span>Éteindre</span>
 					</Button>
 				</li>
@@ -317,7 +314,7 @@ const TaskBar: FunctionComponent = () => {
 						to="mailto: tamburrini.yannick@gmail.com"
 						onClick={closeMenu}
 					>
-						<MdMail></MdMail>
+						<MdMail />
 						<span>tamburrini.yannick@gmail.com</span>
 					</Button>
 				</li>
@@ -331,7 +328,7 @@ const TaskBar: FunctionComponent = () => {
 						to="tel:+32 498 62 77 16"
 						onClick={closeMenu}
 					>
-						<MdPhone></MdPhone>
+						<MdPhone />
 						<span>+32 498 62 77 16</span>
 					</Button>
 				</li>

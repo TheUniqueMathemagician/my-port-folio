@@ -13,9 +13,9 @@ import TextArea from "../../ui/input/TextArea"
 import Time from "./Elements/Time"
 import classes from "./index.module.scss"
 
-const Sharp = memo(IoLocationSharp)
-const Mail = memo(MdMail)
-const Phone = memo(MdPhone)
+const SharpIcon = memo(IoLocationSharp)
+const MailIcon = memo(MdMail)
+const PhoneIcon = memo(MdPhone)
 
 const Contact: RunningApplicationComponent = () => {
 	const contrast = useThemeStore((store) => store.colorScheme === ColorScheme.contrast)
@@ -78,7 +78,7 @@ const Contact: RunningApplicationComponent = () => {
 						to="mailto: tamburrini.yannick@gmail.com"
 						variant="filled"
 					>
-						<Mail></Mail>
+						<MailIcon></MailIcon>
 						<Typography variant="body" noWrap>
 							tamburrini.yannick@gmail.com
 						</Typography>
@@ -95,7 +95,7 @@ const Contact: RunningApplicationComponent = () => {
 						to="tel:+32 498 62 77 16"
 						variant="filled"
 					>
-						<Phone></Phone>
+						<PhoneIcon></PhoneIcon>
 						<Typography variant="body" noWrap>
 							+32 498 62 77 16
 						</Typography>
@@ -113,7 +113,7 @@ const Contact: RunningApplicationComponent = () => {
 						to="https://www.google.com/maps/place/Avenue+des+Lanciers+45,+4900+Spa/@50.4888358,5.8542398,17z/data=!3m1!4b1!4m5!3m4!1s0x47c0617fcf8a2513:0xe0e509238ab82a8e!8m2!3d50.4888324!4d5.8564285"
 						variant="filled"
 					>
-						<Sharp></Sharp>
+						<SharpIcon></SharpIcon>
 						<Typography variant="body" noWrap>
 							Avenue des Lanciers 45, 4900 Spa, Liège Belgique
 						</Typography>

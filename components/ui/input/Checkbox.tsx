@@ -10,6 +10,8 @@ type CheckboxProps = Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement
 	readonly size?: Size
 }
 
+const MarkIcon = memo(Mark)
+
 const Checkbox: FunctionComponent<CheckboxProps> = (props) => {
 	const { className, color, onClick, size, ...other } = props
 
@@ -20,10 +22,10 @@ const Checkbox: FunctionComponent<CheckboxProps> = (props) => {
 	if (size) classNameBuilder.add(classes[size])
 
 	return <label className={classNameBuilder.build()} onClick={onClick}>
-		<input type="checkbox" {...other}></input>
+		<input type="checkbox" {...other} />
 		<div className={classes["checkbox"]}>
-			<div className={classes["effect"]}></div>
-			<Mark></Mark>
+			<div className={classes["effect"]} />
+			<MarkIcon />
 		</div>
 	</label>
 }

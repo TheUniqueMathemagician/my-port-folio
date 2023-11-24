@@ -6,8 +6,8 @@ import { MdSend } from "react-icons/md"
 import Button from "../ui/input/Button"
 import classes from "./MenuBar.module.scss"
 
-const Close = memo(IoMdClose)
-const Send = memo(MdSend)
+const CloseIcon = memo(IoMdClose)
+const SendIcon = memo(MdSend)
 
 type MenuBarProps = {
 	pid: string
@@ -25,11 +25,11 @@ const MenuBar: FunctionComponent<MenuBarProps> = (props) => {
 
 	return <div className={classes["root"]}>
 		<Button focusable startIcon onClick={handleCloseClick}>
-			<Close></Close>
+			<CloseIcon />
 			<span>Fermer</span>
 		</Button>
 		<Button focusable startIcon color="primary" onClick={handleContactClick}>
-			<Send></Send>
+			<SendIcon />
 			<span>Contacter</span>
 		</Button>
 	</div>
